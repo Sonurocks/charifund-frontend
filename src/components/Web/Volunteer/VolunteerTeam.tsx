@@ -23,7 +23,7 @@ const VolunteerTeam = ({ bg = '' }: { bg?: string }) => {
     if (bg && bg.trim() !== '') {
       setBgColor(bg)
     } else {
-      setBgColor(`bg-[url('/assets/bg-one-volunteer.png')]`)
+      setBgColor(`bg-[url('/assets/bg-one-volunteer.webp')]`)
     }
   })
 

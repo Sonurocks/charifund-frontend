@@ -3,7 +3,7 @@
 
 "use client";
 
-import { Formik, Form } from "formik";
+import React, { Suspense, lazy } from "react";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
@@ -14,6 +14,10 @@ import InputField from "../../UI/web/InputField";
 import Button from "../../UI/web/Buttons/Button";
 import ButtonLoader from "../../UI/web/Loader/ButtonLoader";
 import { VolunteerInformationForm } from "@/src/services/web";
+
+// Dynamic imports for Formik components
+const Formik = lazy(() => import("formik").then(module => ({ default: module.Formik })));
+const Form = lazy(() => import("formik").then(module => ({ default: module.Form })));
 
 // ✅ Initial values
 const initialValues: VolunteerValues = {
@@ -62,13 +66,30 @@ const VolunteerForm = () => {
       </p>
 
       {/* Form */}
-      <Formik
-        initialValues={initialValues}
-        validationSchema={volunteerSchema}
-        onSubmit={handleSubmit}
-      >
-        {({ isSubmitting }) => (
-          <Form className="space-y-6 ">
+      <Suspense fallback={
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="w-full h-12 bg-gray-200 rounded animate-pulse"></div>
+            <div className="w-full h-12 bg-gray-200 rounded animate-pulse"></div>
+          </div>
+          <div className="w-full h-12 bg-gray-200 rounded animate-pulse"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="w-full h-12 bg-gray-200 rounded animate-pulse"></div>
+            <div className="w-full h-12 bg-gray-200 rounded animate-pulse"></div>
+          </div>
+          <div className="w-full h-24 bg-gray-200 rounded animate-pulse"></div>
+          <div className="w-fit">
+            <div className="w-24 h-12 bg-gray-200 rounded animate-pulse"></div>
+          </div>
+        </div>
+      }>
+        <Formik<VolunteerValues>
+          initialValues={initialValues}
+          validationSchema={volunteerSchema}
+          onSubmit={handleSubmit}
+        >
+          {({ isSubmitting }) => (
+            <Form className="space-y-6 ">
             {/* First + Last Name */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
               <InputField name="firstName" placeholder={t("firstName")} icon="mdi:account" />
@@ -105,6 +126,7 @@ const VolunteerForm = () => {
           </Form>
         )}
       </Formik>
+      </Suspense>
     </div>
   );
 };

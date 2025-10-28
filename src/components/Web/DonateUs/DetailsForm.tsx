@@ -1,5 +1,8 @@
  "use client";
-import { Formik, Form } from "formik";
+import React, { Suspense, lazy } from "react";
+// Dynamic imports for Formik components
+const Formik = lazy(() => import("formik").then(module => ({ default: module.Formik })));
+const Form = lazy(() => import("formik").then(module => ({ default: module.Form })));
 import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
@@ -46,11 +49,26 @@ const DetailsForm = () => {
     return (
         <div className="w-full mx-auto bg-white">
             <h2 className="text-2xl font-bold mb-6">{t("Details Information")}</h2>
-            <Formik
-                initialValues={initialValues}
-                validationSchema={DetailsformSchema}
-                onSubmit={handleSubmit}
-            >
+            <Suspense fallback={
+                <div className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="w-full h-12 bg-gray-200 rounded animate-pulse"></div>
+                        <div className="w-full h-12 bg-gray-200 rounded animate-pulse"></div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="w-full h-12 bg-gray-200 rounded animate-pulse"></div>
+                        <div className="w-full h-12 bg-gray-200 rounded animate-pulse"></div>
+                    </div>
+                    <div className="w-full h-12 bg-gray-200 rounded animate-pulse"></div>
+                    <div className="w-full h-24 bg-gray-200 rounded animate-pulse"></div>
+                    <div className="w-32 h-12 bg-gray-200 rounded animate-pulse"></div>
+                </div>
+            }>
+                <Formik<DetailsFormValues>
+                    initialValues={initialValues}
+                    validationSchema={DetailsformSchema}
+                    onSubmit={handleSubmit}
+                >
                 {({ isSubmitting }) => (
                     <Form className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -78,6 +96,7 @@ const DetailsForm = () => {
                     </Form>
                 )}
             </Formik>
+            </Suspense>
         </div>
     );
 };

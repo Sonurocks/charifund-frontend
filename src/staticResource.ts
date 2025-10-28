@@ -141,7 +141,7 @@ export const charityCards: CharityCard[] = [
     title: "Healthy Food",
     description: "Set Up A Secure And User-Friendly Online Donation Platform That Accepts Multiple",
     icon: "\e82a",
-    image: "/blue_bg.jpeg",
+    image: "/blue_bg.webp",
     color: "border-green-600",
     bgColor: "bg-gray-100"
 
@@ -151,7 +151,7 @@ export const charityCards: CharityCard[] = [
     title: "Medical Care",
     description: "Set Up A Secure And User-Friendly Online Donation Platform That Accepts Multiple",
     icon: "\e82b",
-    image: "/green_bg.jpeg",
+    image: "/green_bg.webp",
     color: "border-orange-500",
     bgColor: "bg-orange-50"
 
@@ -161,7 +161,7 @@ export const charityCards: CharityCard[] = [
     title: "Child Education",
     description: "Set Up A Secure And User-Friendly Online Donation Platform That Accepts Multiple",
     icon: "\e829",
-    image: "/yellow_bg.jpeg",
+    image: "/yellow_bg.webp",
     color: "border-yellow-500",
     bgColor: "bg-yellow-50"
   },
@@ -170,7 +170,7 @@ export const charityCards: CharityCard[] = [
     title: "Healthy Food",
     description: "Set Up A Secure And User-Friendly Online Donation Platform That Accepts Multiple",
     icon: "\e82a",
-    image: "/blue_bg.jpeg",
+    image: "/blue_bg.webp",
     color: "border-green-600",
     bgColor: "bg-gray-100"
   },
@@ -179,7 +179,7 @@ export const charityCards: CharityCard[] = [
     title: "Medical Care",
     description: "Set Up A Secure And User-Friendly Online Donation Platform That Accepts Multiple",
     icon: "\e82b",
-    image: "/green_bg.jpeg",
+    image: "/green_bg.webp",
     color: "border-orange-500",
     bgColor: "bg-orange-50"
 
@@ -189,7 +189,7 @@ export const charityCards: CharityCard[] = [
     title: "Child Education",
     description: "Set Up A Secure And User-Friendly Online Donation Platform That Accepts Multiple",
     icon: "\e829",
-    image: "/yellow_bg.jpeg",
+    image: "/yellow_bg.webp",
     color: "border-yellow-500",
     bgColor: "bg-yellow-50"
   },
@@ -223,7 +223,7 @@ export const donateDifferentWayExcellenceItems = [
 export const donationCards: DonationCardData[] = [
   {
     id: 1,
-    image: "/assets/helpforeducation.png",
+    image: "/assets/helpforeducation.webp",
     category: "Food",
     title: "Help For Education",
     description: "Lorem Ipsum Dolor Sit Amet, Consete Sadipscing Elitr, Sed Diam Nonum",
@@ -233,7 +233,7 @@ export const donationCards: DonationCardData[] = [
   },
   {
     id: 2,
-    image: "/assets/helpforfood.png",
+    image: "/assets/helpforfood.webp",
     category: "Health",
     title: "Help For Food",
     description: "Lorem Ipsum Dolor Sit Amet, Consete Sadipscing Elitr, Sed Diam Nonum",
@@ -243,7 +243,7 @@ export const donationCards: DonationCardData[] = [
   },
   {
     id: 3,
-    image: "/assets/givehealthsupport.png",
+    image: "/assets/givehealthsupport.webp",
     category: "Food",
     title: "Give Health Support",
     description: "Lorem Ipsum Dolor Sit Amet, Consete Sadipscing Elitr, Sed Diam Nonum",
@@ -253,7 +253,7 @@ export const donationCards: DonationCardData[] = [
   },
   {
     id: 4,
-    image: "/assets/childenweworkfor.png",
+    image: "/assets/childenweworkfor.webp",
     category: "Health",
     title: "Children We Work ",
     description: "Lorem Ipsum Dolor Sit Amet, Consete Sadipscing Elitr, Sed Diam Nonum",
@@ -265,7 +265,7 @@ export const donationCards: DonationCardData[] = [
 export const donationCardsBig: DonationCardData[] = [
   {
     id: 1,
-    image: "/assets/childenweworkfor.png",
+    image: "/assets/childenweworkfor.webp",
     category: "Health",
     title: "Children We Work ",
     description: "Lorem Ipsum Dolor Sit Amet, Consete Sadipscing Elitr, Sed Diam Nonum",
@@ -275,7 +275,7 @@ export const donationCardsBig: DonationCardData[] = [
   },
   {
     id: 2,
-    image: "/assets/helpforeducation.png",
+    image: "/assets/helpforeducation.webp",
     category: "Food",
     title: "Help For Education",
     description: "Lorem Ipsum Dolor Sit Amet, Consete Sadipscing Elitr, Sed Diam Nonum",
@@ -285,7 +285,7 @@ export const donationCardsBig: DonationCardData[] = [
   },
   {
     id: 3,
-    image: "/assets/helpforfood.png",
+    image: "/assets/helpforfood.webp",
     category: "Health",
     title: "Help For Food",
     description: "Lorem Ipsum Dolor Sit Amet, Consete Sadipscing Elitr, Sed Diam Nonum",
@@ -295,7 +295,7 @@ export const donationCardsBig: DonationCardData[] = [
   },
   {
     id: 4,
-    image: "/assets/givehealthsupport.png",
+    image: "/assets/givehealthsupport.webp",
     category: "Food",
     title: "Give Health Support",
     description: "Lorem Ipsum Dolor Sit Amet, Consete Sadipscing Elitr, Sed Diam Nonum",
@@ -305,7 +305,7 @@ export const donationCardsBig: DonationCardData[] = [
   },
   {
     id: 5,
-    image: "/assets/childenweworkfor.png",
+    image: "/assets/childenweworkfor.webp",
     category: "Health",
     title: "Children We Work ",
     description: "Lorem Ipsum Dolor Sit Amet, Consete Sadipscing Elitr, Sed Diam Nonum",
@@ -315,7 +315,7 @@ export const donationCardsBig: DonationCardData[] = [
   },
   {
     id: 6,
-    image: "/assets/helpforeducation.png",
+    image: "/assets/helpforeducation.webp",
     category: "Food",
     title: "Help For Education",
     description: "Lorem Ipsum Dolor Sit Amet, Consete Sadipscing Elitr, Sed Diam Nonum",
@@ -325,7 +325,7 @@ export const donationCardsBig: DonationCardData[] = [
   },
   {
     id: 7,
-    image: "/assets/helpforfood.png",
+    image: "/assets/helpforfood.webp",
     category: "Health",
     title: "Help For Food",
     description: "Lorem Ipsum Dolor Sit Amet, Consete Sadipscing Elitr, Sed Diam Nonum",
@@ -335,7 +335,7 @@ export const donationCardsBig: DonationCardData[] = [
   },
   {
     id: 8,
-    image: "/assets/givehealthsupport.png",
+    image: "/assets/givehealthsupport.webp",
     category: "Food",
     title: "Give Health Support",
     description: "Lorem Ipsum Dolor Sit Amet, Consete Sadipscing Elitr, Sed Diam Nonum",
@@ -394,7 +394,7 @@ export const defaultEventData = {
   title: 'Give African Childrens A Good Education',
   date: "02 Apr 2021",
   location: "684 West College St. Sun City, USA",
-  image: "/assets/poster 2.png",
+  image: "/assets/poster 2.webp",
   summary: "Charity And Donation Is A Categorys That Involves Giving Financial Category That Involves Giving Financial Or Material Support Various Causes Organizations. It Allows Individuals Towards The A Addressing Social Category That Involves Giving Financial Or Material Support Various Causes Of Organizations. It Allows Individuals Towards Addressing Social",
   keyPoints: [
     "Empower Through Charity",

@@ -88,7 +88,7 @@ export default function HelpingEachOther() {
           }}
         >
           <Image
-            src="/assets/hand (1) section2.png"
+            src="/assets/hand (1) section2.webp"
             alt="Hand outline"
             width={100}
             height={100}
@@ -118,7 +118,7 @@ export default function HelpingEachOther() {
               {/* Grid pattern - only show on xl+ */}
               <div className="hidden xl:block absolute  -left-3 lg:-left-6 xl:-left-11 top-95 -bottom-4 z-10">
                 <Image
-                  src="/assets/grid.png"
+                  src="/assets/grid.webp"
                   alt="Grid pattern"
                   width={120}
                   height={400}
@@ -137,7 +137,7 @@ export default function HelpingEachOther() {
                   style={{ animationDelay: "0.3s" }}
                 >
                   <Image
-                    src="/assets/line.png"
+                    src="/assets/line.webp"
                     alt="Decorative wavy line"
                     width={200}
                     height={40}
@@ -165,7 +165,7 @@ export default function HelpingEachOther() {
                     }}
                   >
                     <Image
-                      src="/assets/helpingecahother3.JPG"
+                      src="/assets/helpingecahother3.webp"
                       alt="Children in need"
                       fill
                       className="object-cover "
@@ -217,7 +217,7 @@ export default function HelpingEachOther() {
                   {/* Top left overlay image */}
                   <div className="absolute -top-14 -left-22 xl:-top-15 xl:-left-24 lg:w-60 lg:h-55 xl:w-60 xl:h-60 rounded-2xl overflow-hidden shadow-lg border-6 border-white bg-white">
                     <Image
-                      src="/assets/helpingeachother1.jpg"
+                      src="/assets/helpingeachother1.webp"
                       alt="Community meal"
                       fill
                       className="object-cover"
@@ -227,7 +227,7 @@ export default function HelpingEachOther() {
                   {/* Bottom right overlay image */}
                   <div className="absolute lg:-bottom-28 xl:-bottom-20 right-0 xl:right-0 w-60 h-60 rounded-2xl overflow-hidden shadow-lg border-6 border-white bg-white">
                     <Image
-                      src="/assets/helpingeachother2.jpg"
+                      src="/assets/helpingeachother2.webp"
                       alt="Smiling child"
                       fill
                       className="object-cover"
@@ -270,7 +270,7 @@ export default function HelpingEachOther() {
                 }}
               >
                 <Image
-                  src="/assets/parasuit.png"
+                  src="/assets/parasuit.webp"
                   alt="Hot air balloon"
                   width={100}
                   height={100}
@@ -303,7 +303,7 @@ export default function HelpingEachOther() {
                 }}
               >
                 <Image
-                  src="/assets/parasuit.png"
+                  src="/assets/parasuit.webp"
                   alt="Hot air balloon"
                   width={100}
                   height={100}
@@ -472,7 +472,7 @@ export default function HelpingEachOther() {
                 }}
               >
                 <Image
-                  src="/assets/spade.png"
+                  src="/assets/spade.webp"
                   alt="Heart Outline"
                   width={60}
                   height={60}

@@ -603,21 +603,21 @@ body {
 }
 
 .bg-image-1 {
-  background-image: url("/assets/charityYellowCard.png");
+  background-image: url("/assets/charityYellowCard.webp");
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
 }
 
 .bg-image-2 {
-  background-image: url("/assets/charityGreenCard.png");
+  background-image: url("/assets/charityGreenCard.webp");
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
 }
 
 .bg-image-3 {
-  background-image: url("/assets/charityDarkGreenCard.png");
+  background-image: url("/assets/charityDarkGreenCard.webp");
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;

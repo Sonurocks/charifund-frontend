@@ -62,7 +62,7 @@ const EventDetail = () => {
               {isLoading ? <CustomLoader /> : <>
                 <div className="relative w-full h-[220px] sm:h-[300px] lg:h-[450px] mb-6 rounded-lg overflow-hidden">
                   <Image
-                    src={event?.images?.[0] || "/default-image.jpg"}
+                    src={event?.images?.[0] || "/default-image.webp"}
                     alt={event?.title || "Event image"}
                     fill
                     priority

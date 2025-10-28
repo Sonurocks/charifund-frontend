@@ -211,7 +211,7 @@ const CustomFileInput: React.FC<AdminCustomFileInputProps> = ({
                 
                 <div className="relative w-10 h-10 rounded overflow-hidden">
                   <Image
-                    src={f.url || "/default-image.jpg"} // fallback image
+                    src={f.url || "/default-image.webp"} // fallback image
                     alt={f.file?.name || `file-${idx}`}
                     fill
                     className="object-cover rounded"

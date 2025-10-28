@@ -9,7 +9,7 @@ const Page = () => {
   const { id } = useParams();
   return (
     <div>
-      <PageBanner bgImage="/assets/banner-bg.png" title="Team Details" />
+      <PageBanner bgImage="/assets/banner-bg.webp" title="Team Details" />
       <TeamMemberDetails id={id as string}  />
     </div>
   );

@@ -56,7 +56,7 @@ const [rightButtonColor, setRightButtonColor] = useState<'yellow' | 'green'>('ye
           : 0;
         return {
           id: campaign.id?.toString() || Math.random().toString(),
-          image: campaign.images?.[0] || "/assets/helpforeducation.png",
+          image: campaign.images?.[0] || "/assets/helpforeducation.webp",
           category: campaign.category || "General",
           title: campaign.title || "Campaign Title",
           description: campaign.description || "No description available",
@@ -94,7 +94,7 @@ const [rightButtonColor, setRightButtonColor] = useState<'yellow' | 'green'>('ye
       {/* Background */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/assets/bgsection3.png')" }}
+        style={{ backgroundImage: "url('/assets/bgsection3.webp')" }}
       >
         <div className="absolute inset-0 bg-black/4" />
       </div>
@@ -170,7 +170,7 @@ const [rightButtonColor, setRightButtonColor] = useState<'yellow' | 'green'>('ye
           transition={{ duration: 1 }}
         >
           <Image
-            src="/assets/spade.png"
+            src="/assets/spade.webp"
             alt="Hand outline"
             width={60}
             height={60}

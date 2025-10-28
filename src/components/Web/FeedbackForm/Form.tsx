@@ -3,9 +3,8 @@
 
 'use client'
 
-import React from 'react'
+import React, { Suspense, lazy } from 'react'
 import { createPortal } from 'react-dom'
-import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import { Icon } from '@iconify/react'
 import Button from '../../UI/web/Buttons/Button'
@@ -15,6 +14,10 @@ import { useCreateFeedback, submitFeedbackForm } from '@/src/hooks/web/useFeedba
 import { useTranslation } from 'react-i18next';
 import { FeedbackFormValues, feedbackSchema } from '@/src/utils/validations/FormValidation';
 import Image from "next/image";
+
+// Dynamic imports for Formik components
+const Formik = lazy(() => import("formik").then(module => ({ default: module.Formik })));
+const Form = lazy(() => import("formik").then(module => ({ default: module.Form })));
 
 const initialValues: FeedbackFormValues = {
   name: '',
@@ -132,9 +135,36 @@ const FormComponent = ({ onClose }: { onClose: () => void }) => {
           </div>
 
           <FadeUpCard>
-            <Formik initialValues={initialValues} validationSchema={feedbackSchema} onSubmit={handleSubmit}>
-              {({ isSubmitting, setFieldValue, values, errors, touched }) => (
-                <Form className="space-y-4 sm:space-y-5 px-2 sm:px-3 py-2 sm:py-3">
+            <Suspense fallback={
+              <div className="space-y-4 sm:space-y-5 px-2 sm:px-3 py-2 sm:py-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                  <div className="w-full rounded-md flex border border-gray-green text-sm sm:text-base bg-foreground/18 h-[44px] sm:h-[48px] px-3 sm:px-4 py-2 sm:py-3 text-white animate-pulse">
+                    <div className="w-full bg-white/20 rounded h-6"></div>
+                  </div>
+                  <div className="w-full rounded-md flex border border-gray-green text-sm sm:text-base bg-foreground/18 h-[44px] sm:h-[48px] px-3 sm:px-4 py-2 sm:py-3 text-white animate-pulse">
+                    <div className="w-full bg-white/20 rounded h-6"></div>
+                  </div>
+                </div>
+                <div className="w-full rounded-md border border-gray-green h-[100px] sm:h-[96px] bg-foreground/18 px-3 sm:px-4 py-2 sm:py-3 animate-pulse">
+                  <div className="w-full bg-white/20 rounded h-6"></div>
+                </div>
+                <div className="w-full rounded-md border-2 border-dashed border-yellow bg-foreground/18 h-16 sm:h-20 md:h-24 animate-pulse">
+                  <div className="w-full bg-white/20 rounded h-6"></div>
+                </div>
+                <div className="py-2 sm:py-3 text-center">
+                  <div className="bg-yellow px-6 sm:px-10 py-3 sm:py-4 rounded animate-pulse">
+                    <div className="w-32 h-6 bg-white/20 rounded"></div>
+                  </div>
+                </div>
+              </div>
+            }>
+              <Formik
+                initialValues={initialValues}
+                validationSchema={feedbackSchema}
+                onSubmit={handleSubmit as any}
+              >
+                {({ isSubmitting, setFieldValue, values, errors, touched }) => (
+                  <Form className="space-y-4 sm:space-y-5 px-2 sm:px-3 py-2 sm:py-3">
                   {/* Name & Designation */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div className="relative">
@@ -184,7 +214,7 @@ const FormComponent = ({ onClose }: { onClose: () => void }) => {
                     </div>
                     {errors.rating && touched.rating && (
                       <div className="text-red-400 text-xs mt-1">
-                        {errors.rating}
+                        {String(errors.rating)}
                       </div>
                     )}
                   </div>
@@ -289,7 +319,7 @@ const FormComponent = ({ onClose }: { onClose: () => void }) => {
                       <div className="text-red-400 text-xs mt-1">{imageSizeError}</div>
                     )}
                     {errors.image && touched.image && (
-                      <div className="text-red-400 text-xs mt-1">{errors.image}</div>
+                      <div className="text-red-400 text-xs mt-1">{String(errors.image)}</div>
                     )}
                   </div>
 
@@ -315,6 +345,7 @@ const FormComponent = ({ onClose }: { onClose: () => void }) => {
                 </Form>
               )}
             </Formik>
+            </Suspense>
           </FadeUpCard>
         </div>
       </div>

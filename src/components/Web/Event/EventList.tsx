@@ -19,7 +19,7 @@ export default function EventList({ currentPage, onPageChange }: EventListProps)
         month: "long",
         day: "numeric",
       }),
-      image: event.images?.[0] || "/assets/events.jpg",
+      image: event.images?.[0] || "/assets/events.webp",
     }));
   }, [data]);
 

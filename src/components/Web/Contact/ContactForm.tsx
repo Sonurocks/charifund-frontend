@@ -1,7 +1,10 @@
 
 "use client";
 
-import { Formik, Form } from "formik";
+import React, { Suspense, lazy } from "react";
+// Dynamic imports for Formik components
+const Formik = lazy(() => import("formik").then(module => ({ default: module.Formik })));
+const Form = lazy(() => import("formik").then(module => ({ default: module.Form })));
 import * as Yup from "yup";
 import InputField from "../../UI/web/InputField";
 import Button from "../../UI/web/Buttons/Button";
@@ -51,11 +54,30 @@ const ContactForm = () => {
 
     return (
         <div className="w-full mx-auto bg-white ">
-            <Formik
-                initialValues={initialValues}
-                validationSchema={ContactFormSchema}
-                onSubmit={handleSubmit}
-            >
+            <Suspense fallback={
+                <div className="space-y-9">
+                    <div className="flex items-center bg-gray-200 rounded-lg mb-6 p-3 animate-pulse">
+                        <div className="w-full h-6 bg-white/20 rounded"></div>
+                    </div>
+                    <div className="flex items-center bg-gray-200 rounded-lg mb-6 p-3 animate-pulse">
+                        <div className="w-full h-6 bg-white/20 rounded"></div>
+                    </div>
+                    <div className="flex items-center bg-gray-200 rounded-lg mb-6 p-3 animate-pulse">
+                        <div className="w-full h-6 bg-white/20 rounded"></div>
+                    </div>
+                    <div className="flex items-start bg-gray-200 rounded-lg mb-6 p-3 animate-pulse">
+                        <div className="w-full h-16 bg-white/20 rounded"></div>
+                    </div>
+                    <div className="w-fit">
+                        <div className="w-32 h-12 bg-gray-200 rounded animate-pulse"></div>
+                    </div>
+                </div>
+            }>
+                <Formik<ContactFormValues>
+                    initialValues={initialValues}
+                    validationSchema={ContactFormSchema}
+                    onSubmit={handleSubmit}
+                >
                 {({isSubmitting}) => (
                     <Form className="space-y-9">
                         {/* Name */}
@@ -111,6 +133,7 @@ const ContactForm = () => {
                     </Form>
                 )}
             </Formik>
+            </Suspense>
         </div>
     );
 };

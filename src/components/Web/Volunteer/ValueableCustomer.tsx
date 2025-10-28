@@ -125,7 +125,7 @@ const ValueableCustomer = () => {
                 <div className="flex items-center mt-6 gap-4">
                   <div className="w-12 h-12 rounded-full overflow-hidden">
                     <Image
-                      src={item.image || item.avatar || "/assets/author.png"}
+                      src={item.image || item.avatar || "/assets/author.webp"}
                       alt={item.name}
                       width={48}
                       height={48}
