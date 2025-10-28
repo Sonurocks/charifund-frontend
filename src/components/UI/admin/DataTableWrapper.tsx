@@ -1,22 +1,32 @@
+
+
+
 "use client";
 
+import React from "react";
+import dynamic from "next/dynamic";
 import AnimatedReveal from "@/src/animations/AnimatedReveal";
 import { AdminDataTableWrapperProps } from "@/src/types/adminCommon";
-import React from "react";
-import DataTable from "react-data-table-component";
 
-
+const DataTable = dynamic(() => import("react-data-table-component"), {
+  ssr: false,
+  loading: () => <p className="p-4">Loading table...</p>,
+});
 
 const DataTableWrapper = <T,>({
   columns,
   data,
   loading = false,
 }: AdminDataTableWrapperProps<T>) => {
+  //  Defensive check
+  const safeColumns = Array.isArray(columns) ? columns : [];
+  const safeData = Array.isArray(data) ? data : [];
+
   return (
     <AnimatedReveal>
       <DataTable
-        columns={columns}
-        data={data}
+        columns={safeColumns}
+        data={safeData}
         progressPending={loading}
         progressComponent={<p className="p-4">Loading...</p>}
         highlightOnHover
@@ -48,3 +58,8 @@ const DataTableWrapper = <T,>({
 };
 
 export default DataTableWrapper;
+
+
+
+
+
