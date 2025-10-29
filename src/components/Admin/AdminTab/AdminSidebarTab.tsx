@@ -19,7 +19,7 @@ const AnimatePresence = dynamic(() =>
   { ssr: false }
 );
 
-// ✅ Dynamically import icons
+//  Dynamically import icons
 const MdArrowForwardIos = dynamic(() =>
   import("react-icons/md").then((mod) => mod.MdArrowForwardIos),
   { ssr: false }

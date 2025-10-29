@@ -68,13 +68,7 @@ const CommentTable = () => {
 
   const handleDelete = useCallback(
     (comment: Comment) => {
-      // if (
-      //   confirm(
-      //     `Are you sure you want to delete this comment by "${comment.name}"?`
-      //   )
-      // ) {
-      //   deleteComment(comment.id);
-      // }
+      
       setSelectedComment(comment);
       setIsOpen(true);
     },
