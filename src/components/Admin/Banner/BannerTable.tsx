@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import React, { useState, useMemo, useCallback, useRef } from "react";
@@ -47,7 +45,7 @@ const BannerTable = () => {
   const debounceValue = useDebounce(search, 1000);
   const queryClient = useQueryClient();
 
-  // ✅ Updated: Pass both field & search value
+  //  Updated: Pass both field & search value
   const { data: bannerData, isLoading } = useFetchAllBanners(
     currentPage,
     itemsPerPage,

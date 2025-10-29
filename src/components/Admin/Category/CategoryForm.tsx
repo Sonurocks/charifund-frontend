@@ -1,30 +1,55 @@
 
+
+
+
+
+
+
+
+
+
+
 "use client";
 
 import React from "react";
+import dynamic from "next/dynamic";
 import { Formik, Form } from "formik";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import CustomInput from "../../UI/admin/CustomInput";
 import { toast } from "react-hot-toast";
-import { CategoryFormValues, categorySchema } from "@/src/utils/validations/FormValidation";
-import LanguageToggle from "../../UI/admin/LanguageToggle";
+import {
+  CategoryFormValues,
+  categorySchema,
+} from "@/src/utils/validations/FormValidation";
 import { getInitialCategoryValues } from "../utils/categoryInitialValues";
 import { hasErrorsForLang } from "../../UI/admin/hasErrorsForLang";
 import { createCategory, updateCategory } from "@/src/services/admin/categoryApi";
-import CancelButton from "../../UI/web/Buttons/CancelButton";
-import ButtonLoader from "../../UI/web/Loader/ButtonLoader";
-import Button from "../../UI/web/Buttons/Button";
 import { CategoryFormProps } from "@/src/types/admin/campaign";
 import { useLanguageToggle } from "@/src/hooks/admin/useLanguageToggle";
+
+//  Dynamic Imports (for performance)
+const CustomInput = dynamic(() => import("../../UI/admin/CustomInput"), {
+  ssr: false,
+});
+const LanguageToggle = dynamic(() => import("../../UI/admin/LanguageToggle"), {
+  ssr: false,
+});
+const Button = dynamic(() => import("../../UI/web/Buttons/Button"), {
+  ssr: false,
+});
+const CancelButton = dynamic(() => import("../../UI/web/Buttons/CancelButton"), {
+  ssr: false,
+});
+const ButtonLoader = dynamic(() => import("../../UI/web/Loader/ButtonLoader"), {
+  ssr: false,
+});
 
 const CategoryForm = ({ initialData, onClose, mode }: CategoryFormProps) => {
   const isView = mode === "view";
   const isEdit = mode === "edit";
   const { language, toggleLanguage } = useLanguageToggle();
-  console.log(initialData)
   const queryClient = useQueryClient();
 
-  // ✅ Mutations
+  //  Mutations
   const createMutation = useMutation({
     mutationFn: (values: CategoryFormValues) => createCategory(values),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["categories"] }),
@@ -36,7 +61,6 @@ const CategoryForm = ({ initialData, onClose, mode }: CategoryFormProps) => {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["categories"] }),
   });
 
-  // ✅ Formik initial values
   const initialValues = getInitialCategoryValues(initialData);
 
   const handleSubmit = (
@@ -47,40 +71,23 @@ const CategoryForm = ({ initialData, onClose, mode }: CategoryFormProps) => {
     toast.dismiss();
     toast.loading(isEdit ? "Updating category..." : "Creating category...");
 
-    if (isEdit && initialData?.id) {
-      updateMutation.mutate(
-        { id: initialData.id, values },
-        {
-          onSuccess: () => {
-            toast.dismiss();
-            toast.success("Category updated");
-            resetForm();
-            setSubmitting(false);
-            onClose();
-          },
-          onError: (err: any) => {
-            toast.dismiss();
-            toast.error(err?.message || "Failed to update category");
-            setSubmitting(false);
-          },
-        }
-      );
-    } else {
-      createMutation.mutate(values, {
-        onSuccess: () => {
-          toast.dismiss();
-          toast.success("Category created");
-          resetForm();
-          setSubmitting(false);
-          onClose();
-        },
-        onError: (err: any) => {
-          toast.dismiss();
-          toast.error(err?.message || "Failed to create category");
-          setSubmitting(false);
-        },
+    const mutationFn = isEdit && initialData?.id
+      ? updateMutation.mutateAsync({ id: initialData.id, values })
+      : createMutation.mutateAsync(values);
+
+    mutationFn
+      .then(() => {
+        toast.dismiss();
+        toast.success(isEdit ? "Category updated" : "Category created");
+        resetForm();
+        setSubmitting(false);
+        onClose();
+      })
+      .catch((err: any) => {
+        toast.dismiss();
+        toast.error(err?.message || "Failed to process category");
+        setSubmitting(false);
       });
-    }
   };
 
   return (
@@ -96,60 +103,59 @@ const CategoryForm = ({ initialData, onClose, mode }: CategoryFormProps) => {
           handleSubmit(values, resetForm, setSubmitting)
         }
       >
-        {({ 
-          values, 
-          handleChange, 
-          setFieldValue, 
-          errors, 
-          touched, 
-          isSubmitting, 
-          validateForm, 
-          submitForm, 
-          setTouched 
+        {({
+          values,
+          setFieldValue,
+          errors,
+          touched,
+          isSubmitting,
+          validateForm,
+          submitForm,
+          setTouched,
         }) => {
           const lang = language;
 
           const handleSubmitClick = async () => {
-            const touchAllFields = (obj: any): any => {
-              if (typeof obj !== 'object' || obj === null) return true;
+            // Mark all fields as touched
+            const markAllTouched = (obj: any): any =>
+              typeof obj === "object" && obj !== null
+                ? Object.keys(obj).reduce((acc, key) => {
+                    acc[key] = markAllTouched(obj[key]);
+                    return acc;
+                  }, {} as any)
+                : true;
 
-              const touchedObj: any = {};
-              for (const key in obj) {
-                if (!obj.hasOwnProperty(key)) continue;
-
-                const value = obj[key];
-                if (typeof value === 'object' && value !== null) {
-                  touchedObj[key] = touchAllFields(value);
-                } else {
-                  touchedObj[key] = true;
-                }
-              }
-              return touchedObj;
-            };
-
-            setTouched(touchAllFields(values));
+            setTouched(markAllTouched(values));
 
             const formErrors = await validateForm();
-            console.log("Form Errors:", formErrors);
-
             for (const l of ["en", "hi"] as const) {
               if (hasErrorsForLang(formErrors, l)) {
-                toggleLanguage(l); 
-                return; 
+                toggleLanguage(l);
+                return;
               }
             }
 
             submitForm();
           };
-          
+
           return (
             <Form className="flex flex-col gap-3">
               <CustomInput
-                label={`${lang === "en" ? "Category Name" : "श्रेणी का नाम"}*`}
-                placeholder={lang === "en" ? "Enter category name" : "श्रेणी का नाम दर्ज करें"}
+                label={
+                  lang === "en"
+                    ? "Category Name*"
+                    : "श्रेणी का नाम*"
+                }
+                placeholder={
+                  lang === "en"
+                    ? "Enter category name"
+                    : "श्रेणी का नाम दर्ज करें"
+                }
                 value={values.name[lang]}
                 name={`name.${lang}`}
-                onChange={(e) => setFieldValue(`name.${lang}`, e.target.value)}
+                onChange={(e) =>
+                  setFieldValue(`name.${lang}`, e.target.value)
+                }
                 error={touched.name?.[lang] ? errors.name?.[lang] : ""}
                 disabled={isView}
               />
@@ -159,23 +165,30 @@ const CategoryForm = ({ initialData, onClose, mode }: CategoryFormProps) => {
                   <Button
                     type="button"
                     onClick={handleSubmitClick}
-                    disabled={isSubmitting || createMutation.isPending || updateMutation.isPending}
+                    disabled={
+                      isSubmitting ||
+                      createMutation.isPending ||
+                      updateMutation.isPending
+                    }
                     bgColor="bg-lime-green"
                     paddingx="px-4"
                     paddingy="py-2"
-                    rounded="rounded-[5px] "
+                    rounded="rounded-[5px]"
                   >
-                    {isSubmitting || createMutation.isPending || updateMutation.isPending ? (
+                    {isSubmitting ||
+                    createMutation.isPending ||
+                    updateMutation.isPending ? (
                       <ButtonLoader />
-                    ) : isEdit ? (<>{lang==='hi'?"अद्यतन":"Update"}</>
+                    ) : isEdit ? (
+                      <>{lang === "hi" ? "अद्यतन" : "Update"}</>
                     ) : (
-                      <>{lang==='hi'?"बनाएं":"Create"}</>
+                      <>{lang === "hi" ? "बनाएं" : "Create"}</>
                     )}
                   </Button>
-                   <CancelButton
-                      text={lang==='hi'?'रद्द करें':"Cancel"}
-                      onClose={onClose}
-                    />
+                  <CancelButton
+                    text={lang === "hi" ? "रद्द करें" : "Cancel"}
+                    onClose={onClose}
+                  />
                 </div>
               )}
             </Form>

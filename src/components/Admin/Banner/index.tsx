@@ -1,6 +1,17 @@
-import React from 'react'
-import Breadcrumb from '../Breadcrumb'
-import BannerTable from './BannerTable'
+
+'use client';
+
+import React from "react";
+import dynamic from "next/dynamic";
+
+//  Dynamically import components
+const Breadcrumb = dynamic(() => import("../Breadcrumb"), {
+  loading: () => <p>Loading breadcrumb...</p>,
+});
+
+const BannerTable = dynamic(() => import("./BannerTable"), {
+  loading: () => <p>Loading banner table...</p>,
+});
 
 const Banner = () => {
   return (
@@ -8,7 +19,7 @@ const Banner = () => {
       <Breadcrumb lable="Banner" />
       <BannerTable />
     </div>
-  )
-}
+  );
+};
 
-export default Banner
+export default Banner;

@@ -1,22 +1,44 @@
+
+
+
 "use client";
 
-import { Formik, Form, FieldArray } from "formik";
 import React from "react";
+import dynamic from "next/dynamic";
+import { Formik, Form } from "formik";
 import { useFetchCategory } from "@/src/hooks/admin/useCategory";
+import { useLanguageToggle } from "@/src/hooks/admin/useLanguageToggle";
 import { blogSchema } from "@/src/utils/validations/FormValidation";
 import { BlogFormProps } from "@/src/types/admin/blog";
-import CustomInput from "../../UI/admin/CustomInput";
-import CustomFileInput from "../../UI/admin/CustomFileInput";
-import Dropdown from "../../UI/admin/Dropdown";
-import MultiInputList from "../../UI/admin/MultiInputList";
+import { Category } from "@/src/types/admin/category";
 import { hasErrorsForLang } from "../../UI/admin/hasErrorsForLang";
 import { getInitialBlogValues } from "../utils/blogInitialValues";
-import LanguageToggle from "../../UI/admin/LanguageToggle";
-import CancelButton from "../../UI/web/Buttons/CancelButton";
-import ButtonLoader from "../../UI/web/Loader/ButtonLoader";
-import Button from "../../UI/web/Buttons/Button";
-import { useLanguageToggle } from "@/src/hooks/admin/useLanguageToggle";
-import { Category } from "@/src/types/admin/category";
+
+//  Dynamically imported heavy UI components
+const CustomInput = dynamic(() => import("../../UI/admin/CustomInput"), {
+  loading: () => <p>Loading input...</p>,
+});
+const CustomFileInput = dynamic(() => import("../../UI/admin/CustomFileInput"), {
+  loading: () => <p>Loading file input...</p>,
+});
+const Dropdown = dynamic(() => import("../../UI/admin/Dropdown"), {
+  loading: () => <p>Loading dropdown...</p>,
+});
+const MultiInputList = dynamic(() => import("../../UI/admin/MultiInputList"), {
+  loading: () => <p>Loading list...</p>,
+});
+const LanguageToggle = dynamic(() => import("../../UI/admin/LanguageToggle"), {
+  loading: () => <p>Loading language toggle...</p>,
+});
+const CancelButton = dynamic(() => import("../../UI/web/Buttons/CancelButton"), {
+  loading: () => <p>Loading cancel button...</p>,
+});
+const Button = dynamic(() => import("../../UI/web/Buttons/Button"), {
+  loading: () => <p>Loading button...</p>,
+});
+const ButtonLoader = dynamic(() => import("../../UI/web/Loader/ButtonLoader"), {
+  loading: () => <p>Loading loader...</p>,
+});
 
 const BlogForm = ({
   initialData,
@@ -26,13 +48,9 @@ const BlogForm = ({
   createMutation,
   updateMutation,
 }: BlogFormProps) => {
-
-  // Prepare initial values for the form
   const initialValues = getInitialBlogValues(initialData);
   const { language, toggleLanguage } = useLanguageToggle();
-
   const { data: categoryData } = useFetchCategory();
-  console.log(categoryData);
 
   const categoryOptions =
     categoryData?.category?.map((category: Category) => ({
@@ -40,17 +58,12 @@ const BlogForm = ({
       value: category.name?.[language] || category.name.en,
     })) ?? [];
 
-
-
-
   const isView = mode === "view";
   const isEdit = mode === "edit";
 
   return (
     <div className="w-full pb-10">
-
       {/* Language Toggle */}
-
       <LanguageToggle language={language} onChange={toggleLanguage} />
 
       <Formik
@@ -58,8 +71,6 @@ const BlogForm = ({
         initialValues={initialValues}
         validationSchema={blogSchema}
         onSubmit={(values) => {
-          console.log("Formatted Payload:", values);
-
           const payload = {
             creator: values.creator,
             title: values.title,
@@ -74,8 +85,6 @@ const BlogForm = ({
             images: values.images,
             existingImages: values.existingImages,
           };
-
-
           onPreview?.(payload);
         }}
       >
@@ -88,24 +97,21 @@ const BlogForm = ({
           isSubmitting,
           validateForm,
           submitForm,
-          setTouched
+          setTouched,
         }) => {
           const lang = language;
 
           const handlePreviewClick = async () => {
             const touchAllFields = (obj: any): any => {
-              if (typeof obj !== 'object' || obj === null) return true;
-
+              if (typeof obj !== "object" || obj === null) return true;
               const touchedObj: any = {};
               for (const key in obj) {
                 if (!obj.hasOwnProperty(key)) continue;
-
                 const value = obj[key];
-                if (typeof value === 'object' && value !== null) {
-                  touchedObj[key] = touchAllFields(value);
-                } else {
-                  touchedObj[key] = true;
-                }
+                touchedObj[key] =
+                  typeof value === "object" && value !== null
+                    ? touchAllFields(value)
+                    : true;
               }
               return touchedObj;
             };
@@ -113,7 +119,6 @@ const BlogForm = ({
             setTouched(touchAllFields(values));
 
             const formErrors = await validateForm();
-            console.log("Form Errors:", formErrors);
 
             for (const l of ["en", "hi"] as const) {
               if (hasErrorsForLang(formErrors, l)) {
@@ -128,7 +133,6 @@ const BlogForm = ({
 
             submitForm();
           };
-
 
           return (
             <Form className="flex flex-col gap-3">
@@ -168,7 +172,7 @@ const BlogForm = ({
 
               {/* Summary */}
               <CustomInput
-                label={`${lang === "en" ? "summary" : "सारांश"}*`}
+                label={`${lang === "en" ? "Summary" : "सारांश"}*`}
                 as="textarea"
                 placeholder={lang === "en" ? "Short summary" : "सारांश"}
                 value={values.summary[lang]}
@@ -180,7 +184,7 @@ const BlogForm = ({
 
               {/* Quote */}
               <CustomInput
-                label={`${lang === "en" ? "quote" : "उद्धरण"}*`}
+                label={`${lang === "en" ? "Quote" : "उद्धरण"}*`}
                 placeholder={lang === "en" ? "Inspiring quote" : "प्रेरणादायक उद्धरण"}
                 value={values.quote[lang]}
                 name={`quote.${lang}`}
@@ -200,74 +204,54 @@ const BlogForm = ({
                 disabled={isView}
               />
 
-              {/* Category Dropdown */}
+              {/* Category */}
               <Dropdown
                 label={`${lang === "en" ? "Category" : "श्रेणी"}*`}
-                options={
-                  categoryData?.category?.map((cat: Category) => ({
-                    label: cat.name[language] || cat.name.en,
-                    value: cat.name, // keep full multilingual object
-                    names: cat.name,
-                  })) || []
-                }
+                options={categoryOptions}
                 value={values.category || ""}
-                onChange={(val) => {
-                  const selected = categoryData?.category?.find(
-                    (cat: Category) => cat.name === val
-                  );
-                  if (selected) {
-                    setFieldValue("category", {
-                      id: val,
-                      en: selected.name.en,
-                      hi: selected.name.hi,
-                    });
-                  }
-                }}
+                onChange={(val) => setFieldValue("category", val)}
                 placeholder={lang === "en" ? "Select category" : "श्रेणी चुनें"}
                 width="w-full"
-                error={touched.category && (errors.category as any)?.id ? (errors.category as any).id : ""}
               />
 
-
-
-              {/* Tags (shared across languages) */}
+              {/* Tags */}
               <MultiInputList
                 label={`${lang === "en" ? "Tags" : "टैग"}`}
                 values={values.tags[lang]}
-                onChange={(newTags: string) => setFieldValue(`tags.${lang}`, newTags)}
+                onChange={(newTags: string) =>
+                  setFieldValue(`tags.${lang}`, newTags)
+                }
                 placeholder={lang === "en" ? "Add a tag" : "टैग जोड़ें"}
                 isView={isView}
-                error={touched.tags?.[lang] && errors.tags?.[lang] ? [String(errors.tags?.[lang])] : undefined}
               />
 
-
-              {/* Key Points (language-specific array of objects) */}
+              {/* Key Points */}
               <MultiInputList
                 label={`${lang === "en" ? "Key Points" : "मुख्य बिंदु"}`}
                 values={values.keyPoints[lang]}
-                onChange={(newKeyPoints: string) => setFieldValue(`keyPoints.${lang}`, newKeyPoints)}
+                onChange={(newKeyPoints: string) =>
+                  setFieldValue(`keyPoints.${lang}`, newKeyPoints)
+                }
                 placeholder={lang === "en" ? "Add a key point" : "मुख्य बिंदु जोड़ें"}
                 isView={isView}
-                error={touched.keyPoints?.[lang] && errors.keyPoints?.[lang] ? [String(errors.keyPoints?.[lang])] : undefined}
               />
 
-
-              {/* Location (shared field) */}
+              {/* Location */}
               <CustomInput
                 label={`${lang === "en" ? "Location" : "स्थान"}*`}
-                placeholder={lang === "en" ? "Location of the blog" : "ब्लॉग का स्थान"}
+                placeholder={
+                  lang === "en" ? "Location of the blog" : "ब्लॉग का स्थान"
+                }
                 value={values.location[lang]}
                 name={`location.${lang}`}
                 onChange={handleChange}
                 error={touched.location?.[lang] ? errors.location?.[lang] : ""}
               />
 
-
               {/* Images */}
               <CustomFileInput
                 label="Blog Images*"
                 name="images"
-                error={(touched.images && errors.images) || (touched as any).existingImages && (errors as any).existingImages ? (errors as any).images || (errors as any).existingImages : ""}
                 onChange={(files, existingUrls) => {
                   setFieldValue("images", files);
                   setFieldValue("existingImages", existingUrls);
@@ -275,45 +259,29 @@ const BlogForm = ({
                 uploadType="multiple"
                 disabled={isView}
                 mode={mode}
-                initialUrls={(() => {
-                  const urls: string[] = [];
-                  if (Array.isArray(values.existingImages)) {
-                    urls.push(
-                      ...values.existingImages.filter(
-                        (img: any): img is string => typeof img === "string" && !!img
-                      )
-                    );
-                  } else if (Array.isArray(initialData?.existingImages)) {
-                    urls.push(
-                      ...initialData.existingImages.filter(
-                        (img: any): img is string => typeof img === "string" && !!img
-                      )
-                    );
-                  }
-                  return urls;
-                })()}
-                initialFiles={Array.isArray(values.images) ? values.images.filter((f: any) => f instanceof File) as File[] : []}
               />
 
-              {/* Action Buttons */}
+              {/* Buttons */}
               {!isView && (
                 <div className="flex gap-2 mt-4 w-fit">
                   <Button
                     type="button"
                     onClick={handlePreviewClick}
                     disabled={
-                      isSubmitting || createMutation.isPending || updateMutation.isPending
+                      isSubmitting ||
+                      createMutation.isPending ||
+                      updateMutation.isPending
                     }
                     bgColor="bg-lime-green"
                     paddingx="px-4"
                     paddingy="py-2"
                     rounded="rounded-[5px]"
                     text={lang === "en" ? "Preview" : "पूर्वावलोकन"}
-                  >  
-
-                  </Button>
-
-                  <CancelButton text={lang==='hi'?'रद्द करें':"Cancel"} onClose={onClose} />
+                  />
+                  <CancelButton
+                    text={lang === "hi" ? "रद्द करें" : "Cancel"}
+                    onClose={onClose}
+                  />
                 </div>
               )}
             </Form>
@@ -325,5 +293,3 @@ const BlogForm = ({
 };
 
 export default BlogForm;
-
-

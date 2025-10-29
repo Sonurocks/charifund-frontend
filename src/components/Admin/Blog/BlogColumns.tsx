@@ -1,7 +1,18 @@
+'use client';
+
 import React from "react";
+import dynamic from "next/dynamic";
 import { Blog, BlogColumnCallbacks } from "@/src/types/admin/blog";
-import { FaEdit, FaEye, FaTrash } from "react-icons/fa";
-import TableRowActions from "../Campaign/CampaignActions";
+
+//  Dynamically import TableRowActions
+const TableRowActions = dynamic(() => import("../Campaign/CampaignActions"), {
+  loading: () => <span>Loading actions...</span>,
+});
+
+//  Dynamically import icons
+const FaEye = dynamic(() => import("react-icons/fa").then((mod) => mod.FaEye));
+const FaEdit = dynamic(() => import("react-icons/fa").then((mod) => mod.FaEdit));
+const FaTrash = dynamic(() => import("react-icons/fa").then((mod) => mod.FaTrash));
 
 export const getBlogColumns = ({
   onEdit,
@@ -12,7 +23,7 @@ export const getBlogColumns = ({
   { name: "Creator", selector: (row: Blog) => row.creator },
   { name: "Title", selector: (row: Blog) => row.title },
   { name: "Category", selector: (row: Blog) => row.category },
-  { name: "Location", selector: (row: Blog) => row.location },  
+  { name: "Location", selector: (row: Blog) => row.location },
   {
     name: "Created",
     selector: (row: Blog) =>
@@ -21,7 +32,7 @@ export const getBlogColumns = ({
   {
     name: "Updated",
     selector: (row: Blog) =>
-      row.updatedAt ? new Date(row.createdAt).toLocaleDateString() : "-",
+      row.updatedAt ? new Date(row.updatedAt).toLocaleDateString() : "-",
   },
   {
     name: "Actions",
@@ -52,3 +63,5 @@ export const getBlogColumns = ({
     ),
   },
 ];
+
+
