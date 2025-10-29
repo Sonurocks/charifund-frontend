@@ -150,7 +150,7 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ initialData, onClose, mode 
 
             <div className="relative w-[200px] h-[200px] rounded-lg overflow-hidden">
               <Image
-                src={values.image || "/default-avatar.jpg"} // fallback agar image missing ho
+                src={values.image || "/default-avatar.webp"} // fallback agar image missing ho
                 alt="Feedback user"
                 fill
                 className="object-cover object-center rounded-lg"

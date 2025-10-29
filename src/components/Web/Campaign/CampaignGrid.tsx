@@ -22,7 +22,7 @@ const CampaignGrid = () => {
         if (!(data as any)?.campaigns) return [];
         return (data as any).campaigns.map((campaign: any) => ({
             id: campaign._id || campaign.id,
-            image: campaign.images?.[0] || "/default-image.jpg",
+            image: campaign.images?.[0] || "/default-image.webp",
             category: campaign.category,
             title: campaign.title,
             description: campaign.description,

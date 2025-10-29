@@ -26,7 +26,7 @@ const Ourteams = () => {
   }
 
   return (
-    <section className="relative bg-cover py-16 bg-center w-full bg-[url('/assets/bg-one-volunteer.png')] ">
+    <section className="relative bg-cover py-16 bg-center w-full bg-[url('/assets/bg-one-volunteer.webp')] ">
       <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 text-center">
          <div className="flex items-center text-green justify-center gap-3 mb-2">
           <i className="text-lg lg:text-2xl hand-icon"></i>
@@ -65,7 +65,7 @@ const Ourteams = () => {
 
       <div className="top absolute hidden xl:block top-[10%] right-[6%] z-[-1] font-bold">
         <Image
-          src="/assets/greenspade.png"
+          src="/assets/greenspade.webp"
           alt="green spade"
           width={70}
           height={70}

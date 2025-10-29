@@ -61,7 +61,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ card }) => {
       {/* Image */}
       <div className="relative mb-4 rounded-xl overflow-hidden w-full h-[230px] md:h-[400px] lg:h-[250px] xl:h-[260px]">
         <motion.img
-          src={images?.[0] || "/default-image.jpg"}
+          src={images?.[0] || "/default-image.webp"}
           alt={title || "Blog Image"}
           className="absolute top-0 left-0 w-full h-full object-cover"
          variants={{
@@ -115,7 +115,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ card }) => {
           initial="idle"
           animate={heartControls}
         >
-          <img src="/assets/heart.png" alt="heart" className="w-17 h-10" />
+          <img src="/assets/heart.webp" alt="heart" className="w-17 h-10" />
         </motion.div>
       </div>
     </motion.div>

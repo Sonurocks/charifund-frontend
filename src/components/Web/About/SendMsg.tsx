@@ -2,12 +2,11 @@
 import { motion } from "framer-motion";
 import { Send } from "lucide-react";
 import Image from "next/image";
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import Button from "../../UI/web/Buttons/Button";
 import { useInView } from "react-intersection-observer";
 import FadeInUp from "@/src/animations/FadeInUp";
 import { sendmessagefordonation, shapeleft } from "@/public/assets";
-import { Form, Formik } from "formik";
 import { Trans, useTranslation } from "react-i18next";
 import { SendMsgformSchema, SendMsgFormValues } from "@/src/utils/validations/FormValidation";
 import InputField from "../../UI/web/InputField";
@@ -17,6 +16,10 @@ import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import ButtonLoader from "../../UI/web/Loader/ButtonLoader";
 import { SendMsgInformationForm } from "@/src/services/web";
+
+// Dynamic imports for Formik components
+const Formik = lazy(() => import("formik").then(module => ({ default: module.Formik })));
+const Form = lazy(() => import("formik").then(module => ({ default: module.Form })));
 
 const initialValues: SendMsgFormValues = {
   email: "",
@@ -114,79 +117,103 @@ const SendMsg: React.FC = () => {
         </motion.div>
 
         <FadeUpCard>
-          <Formik
-            initialValues={initialValues}
-            validationSchema={SendMsgformSchema}
-            onSubmit={handleSubmit}
-          >
-            {({ isSubmitting }) => (
-              <Form className="space-y-10 px-6 xs:px-0 xs:py-2 xl:px-6 xl:py-2 xl:mt-13">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 xs:gap-8 lg:gap-4">
+          <Suspense fallback={
+            <div className="space-y-10 px-6 xs:px-0 xs:py-2 xl:px-6 xl:py-2 xl:mt-13">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 xs:gap-8 lg:gap-4">
+                <div className="w-full rounded-md flex border-2 border-white/20 text-lg bg-foreground/18 xs:h-[50px] xl:h-[60px] px-4 py-4 text-white animate-pulse">
+                  <div className="w-full bg-white/20 rounded h-6"></div>
+                </div>
+                <div className="w-full rounded-md flex border-2 border-white/20 text-lg bg-foreground/18 xs:h-[50px] xl:h-[60px] px-4 py-4 text-white animate-pulse">
+                  <div className="w-full bg-white/20 rounded h-6"></div>
+                </div>
+              </div>
+              <div className="w-full rounded-md border-2 border-white/20 flex xs:h-[50px] xl:h-[60px] bg-foreground/18 px-4 py-4 text-white animate-pulse">
+                <div className="w-full bg-white/20 rounded h-6"></div>
+              </div>
+              <div className="w-full rounded-md border-2 border-white/20 flex xs:h-[150px] xl:h-[160px] bg-foreground/18 px-4 py-4 animate-pulse">
+                <div className="w-full bg-white/20 rounded h-6"></div>
+              </div>
+              <div className="w-fit">
+                <div className="bg-yellow px-10 xl:px-12 py-4 xl:py-5 rounded animate-pulse">
+                  <div className="w-24 h-6 bg-white/20 rounded"></div>
+                </div>
+              </div>
+            </div>
+          }>
+            <Formik
+              initialValues={initialValues}
+              validationSchema={SendMsgformSchema}
+              onSubmit={handleSubmit as any}
+            >
+              {({ isSubmitting }) => (
+                <Form className="space-y-10 px-6 xs:px-0 xs:py-2 xl:px-6 xl:py-2 xl:mt-13">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 xs:gap-8 lg:gap-4">
+                    <InputField
+                      name="email"
+                      placeholder={t("your email...")}
+                      icon={"mdi:send"}
+                      placeholderClassName="xl:placeholder:text-lg"
+                      textSize="text-lg"
+                      errorTextSize="text-lg"
+                      iconClassName="text-yellow text-lg font-bold size-5 xl:size-7 mt-[2px]"
+                      className="w-full  rounded-md flex border-2 border-white/20 text-lg  bg-foreground/18 xs:h-[50px] xl:h-[60px] px-4 py-4 text-white "
+                    />
+                    <InputField
+                      name="phone"
+                      textSize="text-lg"
+                      errorTextSize="text-lg"
+                      placeholder={t("your phone...")}
+                      icon="mdi:phone"
+                      placeholderClassName="xl:placeholder:text-lg"
+                      iconClassName="text-yellow text-lg font-bold size-5 xl:size-7 mt-[2px]"
+                      className="w-full rounded-md  flex border-2 border-white/20 xs:h-[50px] xl:h-[60px] bg-foreground/18 px-4 py-4 text-white  focus:outline-none"
+                    />
+                  </div>
+
                   <InputField
-                    name="email"
-                    placeholder={t("your email...")}
-                    icon={"mdi:send"}
-                    placeholderClassName="xl:placeholder:text-lg"
+                    name="address"
                     textSize="text-lg"
                     errorTextSize="text-lg"
-                    iconClassName="text-yellow text-lg font-bold size-5 xl:size-7 mt-[2px]"
-                    className="w-full  rounded-md flex border-2 border-white/20 text-lg  bg-foreground/18 xs:h-[50px] xl:h-[60px] px-4 py-4 text-white "
-                  />
-                  <InputField
-                    name="phone"
-                    textSize="text-lg"
-                    errorTextSize="text-lg"
-                    placeholder={t("your phone...")}
-                    icon="mdi:phone"
+                    placeholder={t("your address...")}
+                    icon={"mdi:location"}
                     placeholderClassName="xl:placeholder:text-lg"
                     iconClassName="text-yellow text-lg font-bold size-5 xl:size-7 mt-[2px]"
-                    className="w-full rounded-md  flex border-2 border-white/20 xs:h-[50px] xl:h-[60px] bg-foreground/18 px-4 py-4 text-white  focus:outline-none"
+                    className="w-full rounded-md border-2 border-white/20 flex xs:h-[50px] xl:h-[60px] bg-foreground/18 px-4 py-4 text-white  focus:outline-none"
                   />
-                </div>
 
-                <InputField
-                  name="address"
-                  textSize="text-lg"
-                  errorTextSize="text-lg"
-                  placeholder={t("your address...")}
-                  icon={"mdi:location"}
-                  placeholderClassName="xl:placeholder:text-lg"
-                  iconClassName="text-yellow text-lg font-bold size-5 xl:size-7 mt-[2px]"
-                  className="w-full rounded-md border-2 border-white/20 flex xs:h-[50px] xl:h-[60px] bg-foreground/18 px-4 py-4 text-white  focus:outline-none"
-                />
+                  <InputField
+                    as="textarea"
+                    name="message"
+                    textSize="text-lg"
+                    errorTextSize="text-lg"
+                    placeholderClassName="xl:placeholder:text-lg"
+                    placeholder={t("your message...")}
+                    icon={"mdi:envelope"}
+                    iconClassName="text-yellow text-lg font-bold size-5 xl:size-7 mt-[2px]"
+                    className="w-full rounded-md border-2 border-white/20 flex xs:h-[150px] xl:h-[160px] bg-foreground/18 px-4 py-4  focus:outline-none resize-none text-white"
+                  />
 
-                <InputField
-                  as="textarea"
-                  name="message"
-                  textSize="text-lg"
-                  errorTextSize="text-lg"
-                  placeholderClassName="xl:placeholder:text-lg"
-                  placeholder={t("your message...")}
-                  icon={"mdi:envelope"}
-                  iconClassName="text-yellow text-lg font-bold size-5 xl:size-7 mt-[2px]"
-                  className="w-full rounded-md border-2 border-white/20 flex xs:h-[150px] xl:h-[160px] bg-foreground/18 px-4 py-4  focus:outline-none resize-none text-white"
-                />
-
-                <div className="w-fit">
-                  <Button
-                    type="submit"
-                    bgColor="bg-yellow"
-                    textColor="text-black"
-                    hoverTextColor="group-hover:text-white"
-                    hoverBg="before:bg-foreground"
-                    paddingx="px-10 xl:px-12"
-                    paddingy="py-4 xl:py-5"
-                  >
-                    {isSubmitting || mutation.isPending ? (
-                      <ButtonLoader />
-                    ) : (
-                      t("Get A Quote")
-                    )}
-                  </Button>
-                </div>
-              </Form>
-            )}
-          </Formik>
+                  <div className="w-fit">
+                    <Button
+                      type="submit"
+                      bgColor="bg-yellow"
+                      textColor="text-black"
+                      hoverTextColor="group-hover:text-white"
+                      hoverBg="before:bg-foreground"
+                      paddingx="px-10 xl:px-12"
+                      paddingy="py-4 xl:py-5"
+                    >
+                      {isSubmitting || mutation.isPending ? (
+                        <ButtonLoader />
+                      ) : (
+                        t("Get A Quote")
+                      )}
+                    </Button>
+                  </div>
+                </Form>
+              )}
+            </Formik>
+          </Suspense>
         </FadeUpCard>
       </div>
     </section>

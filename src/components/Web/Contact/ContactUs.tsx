@@ -107,7 +107,7 @@ const ContactUs = () => {
                             src={
                               item.image && typeof item.image === "string"
                                 ? item.image
-                                : "/assets/author.png"
+                                : "/assets/author.webp"
                             }
                             alt={item.name}
                             width={48}
@@ -167,7 +167,7 @@ const ContactUs = () => {
           {/* Contact Image */}
           <div className="w-full text-center mt-6">
             <Image
-              src="/assets/conatctusimage.jpg"
+              src="/assets/conatctusimage.webp"
               alt="Contact Illustration"
               height={260}
               width={516}

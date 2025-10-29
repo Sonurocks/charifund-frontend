@@ -19,7 +19,7 @@ const FeedbackForm = () => {
     <div 
       className="w-full min-h-[400px] sm:min-h-[500px] relative bg-cover bg-center bg-no-repeat"
       style={{
-        backgroundImage: 'url(/assets/feedbackformhome.jpg)'
+        backgroundImage: 'url(/assets/feedbackformhome.webp)'
       }}
     >
       {/* Green gradient overlay */}
@@ -72,7 +72,7 @@ const FeedbackForm = () => {
         }}
       >
         <img 
-          src="/assets/verticle-yellow-shape.png" 
+          src="/assets/verticle-yellow-shape.webp" 
           alt="Decorative shape"
           className="w-full h-full object-cover block"
         />

@@ -4,7 +4,10 @@
 
 import Button from "../../UI/web/Buttons/Button";
 import toast from "react-hot-toast";
-import { Form, Formik } from "formik";
+import React, { Suspense, lazy } from "react";
+// Dynamic imports for Formik components
+const Formik = lazy(() => import("formik").then(module => ({ default: module.Formik })));
+const Form = lazy(() => import("formik").then(module => ({ default: module.Form })));
 import { CommentReplyFormValues, CommentReplySchema } from "@/src/utils/validations/FormValidation";
 import InputField from "../../UI/web/InputField";
 import { FaX } from "react-icons/fa6";
@@ -79,11 +82,40 @@ const handleSubmit = (values: CommentReplyFormValues, { resetForm }: { resetForm
         </h2>
         <FaX onClick={() => handleReplyModel(false)} className="cursor-pointer text-foreground mb-1" size={20} />
       </div>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={CommentReplySchema}
-        onSubmit={handleSubmit}
-      >
+      <Suspense fallback={
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:flex gap-4 lg:flex lg:gap-5">
+            <div className="flex-1">
+              <div className="flex items-center bg-gray-light rounded-md px-4 py-2 w-full animate-pulse">
+                <div className="w-full h-6 bg-white/20 rounded"></div>
+              </div>
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center bg-gray-light rounded-md px-4 py-2 w-full animate-pulse">
+                <div className="w-full h-6 bg-white/20 rounded"></div>
+              </div>
+            </div>
+          </div>
+          <div className="flex-1">
+            <div className="w-full items-start flex bg-gray-light rounded-md px-4 py-2 animate-pulse">
+              <div className="w-full h-16 bg-white/20 rounded"></div>
+            </div>
+          </div>
+          <div className="flex justify-start space-x-3 mt-8">
+            <div className="w-fit">
+              <div className="w-24 h-12 bg-green rounded-full animate-pulse"></div>
+            </div>
+            <div className="w-fit">
+              <div className="w-20 h-12 bg-gray-200 rounded-full animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+      }>
+        <Formik<CommentReplyFormValues>
+          initialValues={initialValues}
+          validationSchema={CommentReplySchema}
+          onSubmit={handleSubmit}
+        >
         {() => (
           <Form className="space-y-4">
             <div className="grid grid-cols-1 md:flex gap-4 lg:flex lg:gap-5">
@@ -149,6 +181,7 @@ const handleSubmit = (values: CommentReplyFormValues, { resetForm }: { resetForm
           </Form>
         )}
       </Formik>
+      </Suspense>
     </div>
   );
 }

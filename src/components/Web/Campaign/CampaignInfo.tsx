@@ -33,7 +33,7 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({ data, formattedDate }) => {
       <div className="w-full "> 
         <div className="relative w-full h-[250px] sm:h-[300px] md:h-[400px] lg:h-[450px] mb-4 sm:mb-6 rounded-3xl overflow-hidden shadow-md">
           <Image
-            src={data?.images?.[0] || "/default-image.jpg"}
+            src={data?.images?.[0] || "/default-image.webp"}
             alt={data?.title || "Campaign"}
             fill
             priority

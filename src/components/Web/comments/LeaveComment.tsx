@@ -9,7 +9,11 @@ import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import Button from "../../UI/web/Buttons/Button";
 import { useCreateComment } from "@/src/hooks/web/useComments";
-import { Form, Formik, FormikHelpers } from "formik";
+import React, { Suspense, lazy } from "react";
+// Dynamic imports for Formik components
+const Formik = lazy(() => import("formik").then(module => ({ default: module.Formik })));
+const Form = lazy(() => import("formik").then(module => ({ default: module.Form })));
+import { FormikHelpers } from "formik";
 import { LeaveCommentFormValues, LeaveCommentSchema } from "@/src/utils/validations/FormValidation";
 import InputField from "../../UI/web/InputField";
 import ButtonLoader from "../../UI/web/Loader/ButtonLoader";
@@ -48,11 +52,31 @@ export default function LeaveComment({ blogId }: { blogId: string }) {
       <h2 className="text-xl sm:text-2xl font-nunito font-extrabold text-black mb-6">
         {t("Leave A Comment")}
       </h2>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={LeaveCommentSchema}
-        onSubmit={handleSubmit}
-      >
+      <Suspense fallback={
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:flex gap-4 lg:flex lg:gap-5">
+            <div className="flex items-center bg-gray-light rounded-md w-full animate-pulse">
+              <div className="w-full h-6 bg-white/20 rounded"></div>
+            </div>
+            <div className="flex items-center bg-gray-light rounded-md w-full animate-pulse">
+              <div className="w-full h-6 bg-white/20 rounded"></div>
+            </div>
+          </div>
+          <div className="w-full items-start flex bg-gray-light rounded-md px-4 py-2 animate-pulse">
+            <div className="w-full h-16 bg-white/20 rounded"></div>
+          </div>
+          <div className="flex justify-start mt-8">
+            <div className="w-fit">
+              <div className="w-32 h-12 bg-dark-green rounded-full animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+      }>
+        <Formik<LeaveCommentFormValues>
+          initialValues={initialValues}
+          validationSchema={LeaveCommentSchema}
+          onSubmit={handleSubmit}
+        >
         {() => (
           <Form className="space-y-4">
             <div className="grid grid-cols-1 md:flex gap-4 lg:flex lg:gap-5">
@@ -105,6 +129,7 @@ export default function LeaveComment({ blogId }: { blogId: string }) {
           </Form>
         )}
       </Formik>
+      </Suspense>
     </div>
   );
 }

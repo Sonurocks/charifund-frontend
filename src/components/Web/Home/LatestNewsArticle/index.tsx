@@ -29,7 +29,7 @@ const LatestNewsArticle: React.FC = () => {
       className={`w-full py-20 px-3 mt-15 relative `}
     >
       <div className="absolute inset-0">
-        <div className="h-1/2 w-full bg-[url('/assets/latestNewsArticalbg.png')] bg-cover bg-center bg-no-repeat" />
+        <div className="h-1/2 w-full bg-[url('/assets/latestNewsArticalbg.webp')] bg-cover bg-center bg-no-repeat" />
         <div className="h-1/2 w-full bg-white" />
       </div>
 
@@ -65,7 +65,7 @@ const LatestNewsArticle: React.FC = () => {
             }}
           >
             <Image
-              src="/assets/yellowspade.png"
+              src="/assets/yellowspade.webp"
               alt="heart"
               width={120}
               height={120}

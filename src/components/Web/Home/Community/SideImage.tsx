@@ -9,11 +9,11 @@ export default function SideImage() {
                 <div
                     className={`
       relative w-full h-full
-      [mask-image:url('/assets/mask.png')]
+      [mask-image:url('/assets/mask.webp')]
       [mask-repeat:no-repeat]
       [mask-position:left]
       [mask-size:contain]
-      [-webkit-mask-image:url('/assets/mask.png')]
+      [-webkit-mask-image:url('/assets/mask.webp')]
       [-webkit-mask-repeat:no-repeat]
       [-webkit-mask-position:left]
       [-webkit-mask-size:cover]

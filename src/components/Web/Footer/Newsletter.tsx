@@ -6,7 +6,10 @@ import { Icon } from "@iconify/react";
 import Button from "../../UI/web/Buttons/Button";
 import SlideinFromLeft from "@/src/animations/SlideInFromLeft";
 import { useTranslation } from "react-i18next";
-import { Form, Formik } from "formik";
+import React, { Suspense, lazy } from "react";
+// Dynamic imports for Formik components
+const Formik = lazy(() => import("formik").then(module => ({ default: module.Formik })));
+const Form = lazy(() => import("formik").then(module => ({ default: module.Form })));
 import InputField from "../../UI/web/InputField";
 import { useMutation } from "@tanstack/react-query";
 import {
@@ -57,11 +60,21 @@ const Newsletter = () => {
         </SlideinFromLeft>
 
         {/* Newsletter Form */}
-        <Formik
-          initialValues={{ email: "" }}
-          validationSchema={NewsletterEmailSchema}
-          onSubmit={handleSubmit}
-        >
+        <Suspense fallback={
+          <div className="flex items-center gap-3 md:gap-4 lg:gap-5 w-fit lg:w-2/5 lg:ml-auto">
+            <div className="flex-1 px-5 py-3 xl:px-6 xl:py-5 rounded md:rounded-full bg-white animate-pulse">
+              <div className="w-full h-6 bg-gray-200 rounded"></div>
+            </div>
+            <div className="w-fit">
+              <div className="w-12 h-12 bg-gray-200 rounded-[10px] md:rounded-full animate-pulse"></div>
+            </div>
+          </div>
+        }>
+          <Formik<NewsletterEmailValues>
+            initialValues={{ email: "" }}
+            validationSchema={NewsletterEmailSchema}
+            onSubmit={handleSubmit}
+          >
           {({ isSubmitting }) => (
             <Form className="flex items-center gap-3 md:gap-4 lg:gap-5 w-fit lg:w-2/5 lg:ml-auto">
               <InputField
@@ -95,6 +108,7 @@ const Newsletter = () => {
             </Form>
           )}
         </Formik>
+        </Suspense>
       </div>
     </section>
   );
