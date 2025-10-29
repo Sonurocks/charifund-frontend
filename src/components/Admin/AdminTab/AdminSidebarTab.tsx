@@ -52,7 +52,7 @@ const AdminSideBarTab = ({
       {/* Mobile Header */}
       {isMobile && (
         <div className="flex justify-between items-center px-4 py-3 bg-white shadow-md md:hidden z-50">
-          <Image src={logo.src} alt="logo" width={120} height={40} />
+          <Image src={logo.src} alt="logo" width={120} height={40} priority />
           <button onClick={() => setMobileDrawerOpen(true)} className="text-2xl">
             <MdMenu />
           </button>
@@ -134,6 +134,7 @@ const AdminSideBarTab = ({
                 width={180}
                 height={80}
                 className="mb-6 h-15 w-auto"
+                priority
               />
             ) : (
               <div className="h-10" />
