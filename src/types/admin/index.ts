@@ -233,3 +233,10 @@ export interface AdminDataTableWrapperProps<T> {
   data: T[];
   loading?: boolean;
 }
+
+export interface DashboardData {
+  activeCampaign: number;
+  totalMembers: number;
+  totalFunds: number;
+  pendingRequest: number;
+}

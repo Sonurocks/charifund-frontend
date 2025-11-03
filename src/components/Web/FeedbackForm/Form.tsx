@@ -6,7 +6,8 @@
 import React, { Suspense, lazy } from 'react'
 import { createPortal } from 'react-dom'
 import * as Yup from 'yup'
-import { Icon } from '@iconify/react'
+import dynamic from 'next/dynamic'
+const Icon = dynamic(() => import('@iconify/react').then(m => m.Icon), { ssr: false })
 import Button from '../../UI/web/Buttons/Button'
 import InputField from "../../UI/web/InputField";
 import FadeUpCard from "@/src/animations/FadeButtomUp";

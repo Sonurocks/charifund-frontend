@@ -1,8 +1,8 @@
 "use client";
-import { motion } from "framer-motion";
-import { Send } from "lucide-react";
+import dynamic from "next/dynamic";
+
 import Image from "next/image";
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy, useMemo } from "react";
 import Button from "../../UI/web/Buttons/Button";
 import { useInView } from "react-intersection-observer";
 import FadeInUp from "@/src/animations/FadeInUp";
@@ -10,16 +10,18 @@ import { sendmessagefordonation, shapeleft } from "@/public/assets";
 import { Trans, useTranslation } from "react-i18next";
 import { SendMsgformSchema, SendMsgFormValues } from "@/src/utils/validations/FormValidation";
 import InputField from "../../UI/web/InputField";
-import { Icon } from "@iconify/react";
 import FadeUpCard from "@/src/animations/FadeButtomUp";
 import { useMutation } from "@tanstack/react-query";
-import toast from "react-hot-toast";
 import ButtonLoader from "../../UI/web/Loader/ButtonLoader";
 import { SendMsgInformationForm } from "@/src/services/web";
 
 // Dynamic imports for Formik components
 const Formik = lazy(() => import("formik").then(module => ({ default: module.Formik })));
 const Form = lazy(() => import("formik").then(module => ({ default: module.Form })));
+
+// Defer Icon and framer-motion to reduce initial JS
+const Icon = dynamic(() => import("@iconify/react").then(m => m.Icon), { ssr: false });
+const MotionDiv = lazy(() => import("framer-motion").then(m => ({ default: m.motion.div })));
 
 const initialValues: SendMsgFormValues = {
   email: "",
@@ -34,11 +36,13 @@ const SendMsg: React.FC = () => {
 
   const mutation = useMutation({
     mutationFn: SendMsgInformationForm,
-    onSuccess: () => {
-      toast.success("Message sent successfully!");
+    onSuccess: async () => {
+      const toastModule = await import("react-hot-toast");
+      toastModule.default.success("Message sent successfully!");
     },
-    onError: (error: any) => {
-      toast.error("Something went wrong. Try again.");
+    onError: async (error: any) => {
+      const toastModule = await import("react-hot-toast");
+      toastModule.default.error("Something went wrong. Try again.");
       console.error("Submission error:", error);
     },
   });
@@ -57,8 +61,7 @@ const SendMsg: React.FC = () => {
   return (
     <section className="relative flex items-center justify-center  w-full overflow-hidden">
       <div
-        className="absolute inset-0 bg-center bg-cover bg-no-repeat 
-                   transform scale-[1.6] origin-bottom transition-transform duration-500 ease-in-out"
+        className="absolute inset-0 bg-center bg-cover bg-no-repeat"
         style={{ backgroundImage: `url(${sendmessagefordonation.src})` }}
       ></div>
       <div className="absolute inset-0  bg-gradient-to-r from-dark-green via-foreground/2 to-foreground/5"></div>
@@ -68,7 +71,8 @@ const SendMsg: React.FC = () => {
         delay={0.2}
         className="absolute top-[-40] md:top-[-90] left-0 w-1/4 md:w-2/5 lg:w-2/7 h-1/2 md:h-2/3 overflow-hidden z-20"
       >
-        <motion.div
+        <Suspense fallback={<div className="h-full w-full" />}> 
+        <MotionDiv
           className="h-full w-full relative"
           animate={{ y: [0, -20, 0] }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
@@ -77,15 +81,16 @@ const SendMsg: React.FC = () => {
             src={shapeleft}
             alt="Decorative shape"
             fill
-            priority
+            sizes="(min-width: 1280px) 28vw, (min-width: 768px) 40vw, 50vw"
             className="object-cover"
-             loading="lazy"
           />
-        </motion.div>
+        </MotionDiv>
+        </Suspense>
       </FadeInUp>
 
       <div className="relative ml-[0%] md:ml-[25%] xl:ml-[35%] md:mr-[10%] xl:mr-[0%] z-10 w-[50%] min-w-[400px] xs:w-[450px] md:w-[550px] lg:w-[650%] xl:w-[50%] font-nunito bg-green p-8 xs:p-4 sm:p-8 md:p-8 xl:p-15 shadow-lg  overflow-y-auto py-8 ">
-        <motion.div
+        <Suspense fallback={<div className="mb-6 sm:mt-6 md:mt-0 lg:md-8 xl:md-10 text-start px-6" />}> 
+        <MotionDiv
           ref={ref}
           initial={{ opacity: 0, y: 50 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -114,7 +119,8 @@ const SendMsg: React.FC = () => {
               />
             </h2>
           </FadeUpCard>
-        </motion.div>
+        </MotionDiv>
+        </Suspense>
 
         <FadeUpCard>
           <Suspense fallback={

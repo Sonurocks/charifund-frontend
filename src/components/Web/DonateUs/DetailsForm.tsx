@@ -1,8 +1,5 @@
- "use client";
+"use client";
 import React, { Suspense, lazy } from "react";
-// Dynamic imports for Formik components
-const Formik = lazy(() => import("formik").then(module => ({ default: module.Formik })));
-const Form = lazy(() => import("formik").then(module => ({ default: module.Form })));
 import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
@@ -12,7 +9,9 @@ import { useTranslation } from "react-i18next";
 
 import { DetailsformSchema, DetailsFormValues } from "@/src/utils/validations/FormValidation";
 import { DetailsInformationForm } from "@/src/services/web";
-import toast from "react-hot-toast";
+// Lazy-load Formik to defer form code until needed
+const Formik = lazy(() => import("formik").then((m) => ({ default: m.Formik })));
+const Form = lazy(() => import("formik").then((m) => ({ default: m.Form })));
 import InputField from "../../UI/web/InputField";
 import Button from "../../UI/web/Buttons/Button";
 import ButtonLoader from "../../UI/web/Loader/ButtonLoader";
@@ -28,16 +27,18 @@ const DetailsForm = () => {
     const { t } = useTranslation();
     const mutation = useMutation({
         mutationFn: DetailsInformationForm,
-        onSuccess: () => {
-            toast.success(t("Form submitted successfully!"));
+        onSuccess: async () => {
+            const toastModule = await import("react-hot-toast");
+            toastModule.default.success(t("Form submitted successfully!"));
         },
-        onError: (error: any) => {
-            toast.error(t("Something went wrong. Try again."));
+        onError: async (error: any) => {
+            const toastModule = await import("react-hot-toast");
+            toastModule.default.error(t("Something went wrong. Try again."));
             console.error("Submission error:", error);
         },
     });
     const handleSubmit = (
-        values: DetailsFormValues,
+        values: any,
         { resetForm }: { resetForm: () => void }
     ) => {
         mutation.mutate(values, {
@@ -49,25 +50,23 @@ const DetailsForm = () => {
     return (
         <div className="w-full mx-auto bg-white">
             <h2 className="text-2xl font-bold mb-6">{t("Details Information")}</h2>
-            <Suspense fallback={
-                <div className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="w-full h-12 bg-gray-200 rounded animate-pulse"></div>
-                        <div className="w-full h-12 bg-gray-200 rounded animate-pulse"></div>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="w-full h-12 bg-gray-200 rounded animate-pulse"></div>
-                        <div className="w-full h-12 bg-gray-200 rounded animate-pulse"></div>
-                    </div>
-                    <div className="w-full h-12 bg-gray-200 rounded animate-pulse"></div>
-                    <div className="w-full h-24 bg-gray-200 rounded animate-pulse"></div>
-                    <div className="w-32 h-12 bg-gray-200 rounded animate-pulse"></div>
-                </div>
-            }>
-                <Formik<DetailsFormValues>
+                <Suspense fallback={<div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="w-full rounded-md border-2 border-gray-200/40 h-[50px] animate-pulse"/>
+                    <div className="w-full rounded-md border-2 border-gray-200/40 h-[50px] animate-pulse"/>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="w-full rounded-md border-2 border-gray-200/40 h-[50px] animate-pulse"/>
+                    <div className="w-full rounded-md border-2 border-gray-200/40 h-[50px] animate-pulse"/>
+                  </div>
+                  <div className="w-full rounded-md border-2 border-gray-200/40 h-[50px] animate-pulse"/>
+                  <div className="w-full rounded-md border-2 border-gray-200/40 h-[150px] animate-pulse"/>
+                  <div className="w-28 h-10 bg-gray-200 rounded animate-pulse"/>
+                </div>}>
+                <Formik
                     initialValues={initialValues}
                     validationSchema={DetailsformSchema}
-                    onSubmit={handleSubmit}
+                    onSubmit={handleSubmit as any}
                 >
                 {({ isSubmitting }) => (
                     <Form className="space-y-6">

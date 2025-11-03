@@ -5,15 +5,23 @@ import CustomLoader from "../../UI/web/Loader/CustomLoader";
 import { EventListProps } from "@/src/types";
 import { useFetchAllEvent } from "@/src/hooks/web/useEvent";
 import EventCard from "./EventCard";
+import { ApiEvent } from "@/src/types/web/event";
+
+type FormattedEvent = Pick<ApiEvent, "id" | "title" | "location"> & {
+  date: string;
+  image: string;
+};
 
 export default function EventList({ currentPage, onPageChange }: EventListProps) {
   const itemsPerPage = 3;
   const { data, isLoading, isError } = useFetchAllEvent(currentPage, itemsPerPage);
 
-  const events = useMemo(() => {
+  const events = useMemo<FormattedEvent[]>(() => {
     if (!data?.events) return [];
-    return data.events.map((event: any) => ({
-      ...event,
+    return data.events.map((event: ApiEvent) => ({
+      id: event.id,
+      title: event.title,
+      location: event.location,
       date: new Date(event.startTime).toLocaleDateString("en-US", {
         year: "numeric",
         month: "long",
@@ -48,7 +56,7 @@ return (
       <EventCard event={events[0]} large />
     ) : events.length === 2 ? (
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
-        {events.map((event) => (
+        {events.map((event: FormattedEvent) => (
           <EventCard key={event.id} event={event} large />
         ))}
       </div>
@@ -60,7 +68,7 @@ return (
           </div>
         )}
         <div className="col-span-2 flex flex-col gap-6 w-full h-full">
-          {events.slice(1).map((event, index) => (
+          {events.slice(1).map((event: FormattedEvent, index: number) => (
             <EventCard key={event.id} event={event} index={index} />
           ))}
         </div>
