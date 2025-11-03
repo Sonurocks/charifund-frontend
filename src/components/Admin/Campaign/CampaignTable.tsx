@@ -121,7 +121,7 @@ const CampaignTable = () => {
     };
   };
 
-  // 🔧 Handlers
+  //  Handlers
   const handleEdit = useCallback((c: Campaign) => {
     setEditCampaign(c.id.toString());
     setMode("edit");
@@ -202,7 +202,7 @@ const CampaignTable = () => {
 
   return (
     <div>
-      {/* 🔍 Search & Filter */}
+      {/* Search & Filter */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
         <AnimatedReveal direction="left" delay={0.1}>
           <div className="flex flex-row gap-2">

@@ -40,7 +40,7 @@ const BannerForm: React.FC<BannerFormProps> = ({
   const { language, toggleLanguage } = useLanguageToggle();
   const isView = mode === "view";
 
-  // ✅ Typed initial values
+  //Typed initial values
   const initialValues: BannerFormValues & { existingImage?: string } = {
     title: {
       en: initialData?.title?.en ?? "",
@@ -56,7 +56,7 @@ const BannerForm: React.FC<BannerFormProps> = ({
     priority: initialData?.priority ?? 0,
   };
 
-  // ✅ Typed handleSubmit
+  // Typed handleSubmit
   const handleSubmit = (
     values: BannerFormValues,
     formikHelpers: FormikHelpers<BannerFormValues>

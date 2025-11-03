@@ -22,10 +22,10 @@ const AdminTab = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [activeTab, setActiveTab] = useState<string>("dashboard");
 
-  // ✅ Define your tab map
+  // Define your tab map
   const Tab: { [key: string]: JSX.Element } = {
     dashboard: <Dashboard />,
-    // notifications: <Notifications />,
+    
     members: <Members />,
     settings: <Settings />,
     campaign: <Campaign />,
