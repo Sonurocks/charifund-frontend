@@ -107,7 +107,6 @@ import termsAndConditions from "./terms&Condtions.webp";
 
 export {
   logo,
-
   heartLogoIcon,
   homeOne,
   homeTwo,

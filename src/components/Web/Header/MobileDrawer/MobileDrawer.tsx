@@ -1,7 +1,7 @@
 'use client';
 import { motion } from "framer-motion";
 import { Icon } from "@iconify/react";
-import { socialIcons } from "@/src/staticResource";
+import { socialIcons } from "@/src/static-resource/web";
 import MobileDropdownItem from "./MobileDropdownItem";
 import { logo } from "@/public/assets";
 import { MobileDrawerProps } from "@/src/types/web/navbar";

@@ -7,7 +7,7 @@ import React, { useRef } from "react";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import ArrowButton from "../../Button";
+import ArrowButton from "../../UI/web/Buttons/ArrowButton";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";

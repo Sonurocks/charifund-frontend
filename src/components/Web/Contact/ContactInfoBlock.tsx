@@ -1,6 +1,6 @@
 'use client';
 
-import { ContactUsSocialMedia } from "@/src/staticResource";
+import { SocialMedia } from "@/src/static-resource/web";
 import { InfoItem } from "@/src/types";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -22,7 +22,7 @@ const ContactInfoBlock: React.FC<InfoItem> = ({
 
         {isSocial ? (
           <div className="flex gap-2 mt-2">
-            {ContactUsSocialMedia.map((item, index) => {
+            {SocialMedia.map((item, index) => {
               const SocialIcon = item.icon;
               return (
                 <a

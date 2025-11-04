@@ -7,7 +7,7 @@ import Notice from "../../../UI/web/Notice";
 import DonationInput from "../../DonateUs/DonationInput";
 import RadioGroup from "../../../UI/web/RadioGroup";
 import Button from "../../../UI/web/Buttons/Button";
-import { Donationmethods } from "@/src/staticResource";
+import { Donationmethods } from "@/src/static-resource/web";
 import { community2, yellowspade } from "@/public/assets";
 import { motion } from 'framer-motion'
 import SideImage from "./SideImage";

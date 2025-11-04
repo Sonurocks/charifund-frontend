@@ -6,34 +6,29 @@ import {
   IoLocationSharp,
   IoCalendarSharp,
 } from "react-icons/io5";
-import {
-  FaRegCheckCircle,
-  FaFacebookF,
-  FaTwitter,
-  FaLinkedinIn,
-} from "react-icons/fa";
-import { FaVimeoV } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import FadeUpCard from "@/src/animations/FadeButtomUp";
 import LeaveComment from "../comments/LeaveComment";
 import { capitalizeWords } from "../../../helper/CapitalizeWords";
 import Comments from "../comments/Comments";
+import { SocialMedia } from "@/src/static-resource/web";
+import { FaRegCheckCircle } from "react-icons/fa";
 
-interface props{
-  data?:any
-  id:string
+interface props {
+  data?: any
+  id: string
 }
-const SingleBlogDetails = ({data,id}:props)=> {
+const SingleBlogDetails = ({ data, id }: props) => {
   const { t } = useTranslation();
   const { title, description, createdAt, quote, quoteAuthor, location, summary, keyPoints, tags, images, } = data || {};
 
   const formattedDate = useMemo(() => {
     return createdAt
       ? new Intl.DateTimeFormat("en-US", {
-          day: "numeric",
-          month: "short",
-          year: "numeric",
-        }).format(new Date(createdAt))
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      }).format(new Date(createdAt))
       : "";
   }, [createdAt]);
 
@@ -54,7 +49,7 @@ const SingleBlogDetails = ({data,id}:props)=> {
                 fill
                 priority
                 className="object-cover object-center"
-               
+
               />
             </div>
           )}
@@ -143,22 +138,36 @@ const SingleBlogDetails = ({data,id}:props)=> {
             )}
 
             {/* Share */}
-            <div className="flex items-center gap-3">
-              <span className="font-medium text-lg lg:text-xl text-dark-green">
-                {t("Share")}
-              </span>
-              <div className="flex space-x-2 gap-4">
-                {[FaFacebookF, FaVimeoV, FaTwitter, FaLinkedinIn].map((IconComp, index) => (
-                  <a
+            <div className="flex space-x-2 gap-4">
+              {SocialMedia.map((sm, index) => {
+                const IconComp = sm.icon;
+                const blogUrl = typeof window !== "undefined" ? window.location.href : "";
+                const blogTitle = title || "";
+
+                const handleShare = () => {
+                  if (sm.getShareUrl) {
+                    const shareLink = sm.getShareUrl(blogUrl, blogTitle);
+                    window.open(shareLink, "_blank", "width=600,height=400");
+                  } else if (sm.href) {
+                    window.open(sm.href, "_blank", "noopener,noreferrer");
+                  }
+                };
+
+                return (
+                  <button
                     key={index}
-                    href="#"
-                    className="p-2 bg-gray-200 hover:bg-yellow rounded"
+                    onClick={handleShare}
+                    title={sm.label}
+                    className="p-2 bg-gray-200 hover:bg-yellow rounded flex items-center justify-center"
                   >
-                    <IconComp className="text-dark-green" />
-                  </a>
-                ))}
-              </div>
+                    <IconComp className="text-dark-green" size={20} />
+                  </button>
+                );
+              })}
             </div>
+
+
+
           </div>
         </FadeUpCard>
 

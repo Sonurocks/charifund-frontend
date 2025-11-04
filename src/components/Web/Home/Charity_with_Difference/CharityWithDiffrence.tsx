@@ -12,12 +12,12 @@ import 'swiper/css/pagination';
 import CharityCard from './CharityCard';
 import { hand } from '@/public/assets';
 
-import ArrowButton from '@/src/components/Button';
+import ArrowButton from '@/src/components/UI/web/Buttons/ArrowButton';
 
 import FadeUpCard from '@/src/animations/FadeButtomUp';
 import SlideinFromLeft from '@/src/animations/SlideInFromLeft';
 import { useTranslation } from 'react-i18next';
-import { charityCards } from '@/src/staticResource';
+import { charityCards } from '@/src/static-resource/web';
 import ComponentLabel from '@/src/components/UI/web/ComponentLabel';
 import ComponentTitle from '@/src/components/UI/web/ComponentTitle';
 

@@ -1,4 +1,4 @@
-import { faqData } from "@/src/staticResource";
+import { faqData } from "@/src/static-resource/web";
 import FAQAccordion from "../../UI/web/Accordians/FAQAccordion";
 
 const FAQList = ({

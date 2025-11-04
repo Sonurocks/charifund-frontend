@@ -8,7 +8,7 @@ import CustomFileInput from "../../UI/admin/CustomFileInput";
 import LanguageToggle from "../../UI/admin/LanguageToggle";
 import MultiInputList from "../../UI/admin/MultiInputList";
 import { hasErrorsForLang } from "../../UI/admin/hasErrorsForLang";
-import { getInitialEventValues } from "../utils/eventInitialValues";
+import { getInitialEventValues } from "../InitialValues/eventInitialValues";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import LocationPicker from "../../UI/admin/LocationPicker";

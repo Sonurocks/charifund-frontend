@@ -6,7 +6,7 @@ import { motion, useInView } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { gridDot, donatediffway } from '@/public/assets';
 import AnimatedCircle from './AnimatedCircle';
-import { donateDifferentWayMissionItems, donateDifferentWayTabs } from '@/src/staticResource';
+import { donateDifferentWayMissionItems, donateDifferentWayTabs } from '@/src/static-resource/web';
 import ComponentTitle from '@/src/components/UI/web/ComponentTitle';
 
 import { FaHandHoldingHeart } from 'react-icons/fa';

@@ -1,7 +1,7 @@
 "use client";
 
 import FadeInUp from "@/src/animations/FadeInUp";
-import { GalleryImage } from "@/src/staticResource";
+import { GalleryImage } from "@/src/static-resource/web";
 
 import Image from "next/image";
 import { useRef } from "react";

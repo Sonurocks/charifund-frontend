@@ -12,7 +12,7 @@ import { blogSchema } from "@/src/utils/validations/FormValidation";
 import { BlogFormProps } from "@/src/types/admin/blog";
 import { Category } from "@/src/types/admin/category";
 import { hasErrorsForLang } from "../../UI/admin/hasErrorsForLang";
-import { getInitialBlogValues } from "../utils/blogInitialValues";
+import { getInitialBlogValues } from "../InitialValues/blogInitialValues";
 
 //  Dynamically imported heavy UI components
 const CustomInput = dynamic(() => import("../../UI/admin/CustomInput"), {

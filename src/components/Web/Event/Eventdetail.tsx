@@ -17,7 +17,7 @@ import {
 } from "@/public/assets";
 
 import Comments from "../comments/Comments";
-import { socialMediaButtons } from "@/src/staticResource";
+import { socialMediaButtons } from "@/src/static-resource/web";
 import LeaveComment from "../comments/LeaveComment";
 import { useFetchSingleEvent } from "@/src/hooks/web/useEvent";
 import { useParams } from "next/navigation";

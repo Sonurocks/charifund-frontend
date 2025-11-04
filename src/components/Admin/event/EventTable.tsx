@@ -16,7 +16,7 @@ import ConfirmModal from "../../UI/admin/ConfirmModal";
 import { createEvent, updateEvent } from "@/src/services/admin/eventApi";
 import { Event, EventsValue } from "@/src/types/admin/event";
 import { EventFormValues } from "@/src/utils/validations/FormValidation";
-import { EventSearchOptions } from "../Data/staticData";
+import { EventSearchOptions } from "../../../static-resource/admin";
 import useDebounce from "@/src/hooks/web/useDebounce";
 import DatePicker from "react-datepicker";
 import { format } from "date-fns";

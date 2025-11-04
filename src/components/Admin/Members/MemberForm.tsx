@@ -9,7 +9,7 @@ import CustomFileInput from "../../UI/admin/CustomFileInput";
 import MultiInputList from "../../UI/admin/MultiInputList";
 import LanguageToggle from "../../UI/admin/LanguageToggle";
 import { hasErrorsForLang } from "../../UI/admin/hasErrorsForLang";
-import { getInitialMemberValues } from "../utils/memberInitialValues";
+import { getInitialMemberValues } from "../InitialValues/memberInitialValues";
 import Button from "../../UI/web/Buttons/Button";
 import CancelButton from "../../UI/web/Buttons/CancelButton";
 import { useLanguageToggle } from "@/src/hooks/admin/useLanguageToggle";

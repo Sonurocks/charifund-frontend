@@ -12,11 +12,11 @@ import "swiper/css/navigation";
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { motion, useInView } from 'framer-motion';
-import ArrowButton from '@/src/components/Button';
+import ArrowButton from '@/src/components/UI/web/Buttons/ArrowButton';
 import { useTranslation } from "react-i18next";
 
 import { useFetchAllCampaigns } from '@/src/hooks/web/useCampaigns';
-import { allDonationCards } from '@/src/staticResource';
+import { allDonationCards } from '@/src/static-resource/web';
 
 import CarouselIndicators from './CarouselIndicators';
 import CampaignCard from '../../Campaign/CampaignCard';
