@@ -65,7 +65,6 @@ const EventDetail = () => {
                     src={event?.images?.[0] || "/default-image.webp"}
                     alt={event?.title || "Event image"}
                     fill
-                    priority
                     className="object-cover object-center"
                      loading="lazy"
                   />
@@ -117,7 +116,7 @@ const EventDetail = () => {
 
                 {/* Social Media Grid */}
                 <div className="flex flex-col gap-6 items-center justify-between mb-8">
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 lg:grid-cols-5 gap-4 w-full">
+                  {/* <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 lg:grid-cols-5 gap-4 w-full">
                     {socialIcons.map((s, i) => (
                       <a
                         key={i}
@@ -130,7 +129,7 @@ const EventDetail = () => {
                         <span className="text-xs sm:text-sm lg:text-lg font-medium">{s.label}</span>
                       </a>
                     ))}
-                  </div>
+                  </div> */}
 
                   {/* Google Maps */}
                   <div className="relative w-full h-[250px] sm:h-[350px] lg:h-[450px] rounded-lg overflow-hidden">

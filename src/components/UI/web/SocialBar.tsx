@@ -19,6 +19,7 @@ export const SocialBar = ({ member }: { member: TeamMember }) => {
             href={social.url!}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
             className="w-12 h-12 flex items-center justify-center rounded-full shadow-md text-black bg-white hover:bg-yellow-400 transition-all duration-300 z-50"
           >
             {social.icon}

@@ -33,7 +33,7 @@ const HelpAndDonate: React.FC = () => {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
   const [leftButtonColor, setLeftButtonColor] = useState<'yellow' | 'green'>('green');
-const [rightButtonColor, setRightButtonColor] = useState<'yellow' | 'green'>('yellow');
+  const [rightButtonColor, setRightButtonColor] = useState<'yellow' | 'green'>('yellow');
 
 
   const swiperRef = useRef<SwiperType | null>(null);
@@ -115,49 +115,28 @@ const [rightButtonColor, setRightButtonColor] = useState<'yellow' | 'green'>('ye
             />
           </div>
 
-          {/* Navigation buttons if enough campaigns */}
-         {/* {campaignsToDisplay.length > 4 && (
+          {campaignsToDisplay.length > 4 && (
             <div className="flex items-center gap-3 md:gap-4 mt-0 md:mt-0 ml-auto md:ml-6">
               <ArrowButton
                 direction="left"
                 onClick={handlePrev}
-                size={60}
+                size={55}
+                className={`shadow-md hover:scale-105 transition-transform ${leftButtonColor === "green"
+                    ? "bg-dark-green text-white hover:bg-yellow hover:text-black"
+                    : "bg-yellow text-black hover:bg-dark-green hover:text-white"
+                  }`}
               />
               <ArrowButton
                 direction="right"
                 onClick={handleNext}
-                onMouseEnter={onRightButtonMouseEnter}
-                onMouseLeave={onRightButtonMouseLeave}
-                color={rightButtonColor}
-                ariaLabel="Next"
+                size={55}
+                className={`shadow-md hover:scale-105 transition-transform ${rightButtonColor === "yellow"
+                    ? "bg-yellow text-black hover:bg-dark-green hover:text-white"
+                    : "bg-dark-green text-white hover:bg-yellow hover:text-black"
+                  }`}
               />
             </div>
-          )}*/}
-
-          {campaignsToDisplay.length > 4 && (
-  <div className="flex items-center gap-3 md:gap-4 mt-0 md:mt-0 ml-auto md:ml-6">
-    <ArrowButton
-      direction="left"
-      onClick={handlePrev}
-      size={55}
-      className={`shadow-md hover:scale-105 transition-transform ${
-        leftButtonColor === "green"
-          ? "bg-[#122F2A] text-white hover:bg-[#FFC107] hover:text-black"
-          : "bg-[#FFC107] text-black hover:bg-[#122F2A] hover:text-white"
-      }`}
-    />
-    <ArrowButton
-      direction="right"
-      onClick={handleNext}
-      size={55}
-      className={`shadow-md hover:scale-105 transition-transform ${
-        rightButtonColor === "yellow"
-          ? "bg-[#FFC107] text-black hover:bg-[#122F2A] hover:text-white"
-          : "bg-[#122F2A] text-white hover:bg-[#FFC107] hover:text-black"
-      }`}
-    />
-  </div>
-)}
+          )}
 
         </div>
 

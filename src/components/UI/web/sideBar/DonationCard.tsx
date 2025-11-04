@@ -4,6 +4,7 @@ import Image from "next/image";
 import { DonationCardProps } from "@/src/types/web/donateUs";
 import FadeInUp from "@/src/animations/FadeInUp";
 import Button from "../Buttons/Button";
+import { useRouter } from "next/navigation";
 
 const DonationCard: React.FC<DonationCardProps> = ({
   icon,
@@ -13,6 +14,11 @@ const DonationCard: React.FC<DonationCardProps> = ({
   onButtonClick,
   backgroundImage,
 }) => {
+
+  const router = useRouter();
+  const handleCardClick = () => {
+  router.push('/contact');
+  }
   return (
     <FadeInUp className="relative h-[500px] rounded-2xl overflow-hidden shadow-lg flex items-center justify-center text-center">
         <Image
@@ -42,7 +48,7 @@ const DonationCard: React.FC<DonationCardProps> = ({
 
         {/* Button */}
         <div className="w-fit">
-          <Button text={buttonText} onClick={onButtonClick} />
+          <Button text={buttonText} onClick={handleCardClick} />
         </div>
       </div>
     </FadeInUp>

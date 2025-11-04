@@ -16,7 +16,7 @@ const Comments = dynamic(() => import("../comments"), { ssr: false });
 const Banner = dynamic(() => import("../Banner"), { ssr: false });
 const Queries = dynamic(() => import("../Queries"), { ssr: false });
 const Feedback = dynamic(() => import("../Feedback"), { ssr: false });
-const Event = dynamic(() => import("../event"), { ssr: false });
+const Event = dynamic(() => import("../Event"), { ssr: false });
 
 const AdminTab = () => {
   const [isOpen, setIsOpen] = useState(true);

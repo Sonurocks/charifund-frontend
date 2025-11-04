@@ -7,7 +7,7 @@ export interface Cause {
 }
 
 export interface DonationCardProps {
-  icon?: string; // Replaces icon
+  icon?: string; 
   subtitle: string;
   title: string;
   buttonText: string;

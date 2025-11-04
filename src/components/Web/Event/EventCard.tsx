@@ -51,7 +51,7 @@ export default function EventCard({ event, large = false, index = 0 }: EventCard
             large ? "text-lg sm:text-2xl lg:text-5xl" : "text-lg sm:text-2xl lg:text-[34px]"
           }`}
         >
-          <Link href={`/events/${event.id}`}>{event.title}</Link>
+          <Link href={`/events/${event.id}`}>{event?.title}</Link>
         </h3>
         <p
           className={`flex items-center justify-${large ? "center" : "start"} gap-2 ${

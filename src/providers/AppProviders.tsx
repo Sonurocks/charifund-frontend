@@ -4,7 +4,6 @@
 import { Provider } from 'react-redux';
 import { store } from '@/src/store';
 
-import ThemeApplier from '@/src/helper/ThemeApplier';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactNode, useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
@@ -75,7 +74,6 @@ export default function AppProviders({ children }: { children: ReactNode }) {
           <LanguageProvider>
             <Provider store={store}>
               <QueryClientProvider client={queryClient}>
-                <ThemeApplier />
                 {loading ? (
                   <Loader />
                 ) : showLayout ? (

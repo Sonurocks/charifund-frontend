@@ -2,12 +2,9 @@ import { askedquestion, askedquestion1 , verticalShape } from "@/public/assets";
 
 import FadeInUp from "@/src/animations/FadeInUp";
 import SlideInRight from "@/src/animations/SlideInRight";
-import { RootState } from "@/src/store";
 import Image from "next/image";
-import { useSelector } from "react-redux";
 
 const FAQSideImages = () => {
-  const { primaryColor } = useSelector((state: RootState) => state.theme);
 
   return (
     <div className="hidden lg:flex lg:w-1/2  xl:mt-0 h-full  relative pl-4 items-center bg-green overflow-hidden">

@@ -7,6 +7,7 @@ import AnimatedProgressBar from "../../UI/web/AnimatedProgressBar";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { CampaignCardProps } from "@/src/types/web/campaign";
+import Button from "../../UI/web/Buttons/Button";
 
 const CampaignCard: React.FC<CampaignCardProps> = ({
   card,
@@ -102,7 +103,7 @@ const CampaignCard: React.FC<CampaignCardProps> = ({
               <span className="text-dark-green font-nunito font-bold">Raised: {card.raised || "0"}</span>
               <span className="text-dark-green font-nunito font-bold">Goal: <span className="text-olive-brown font-bold">{card.goal || "0"}</span></span>
             </div>
-          <div className={`transition-all duration-300 mt-4 ${hoveredCard === card.id ? 'group' : ''}`}>
+          <div className={`w-fit transition-all duration-300 mt-4 ${hoveredCard === card.id ? 'group' : ''}`}>
             <button
               className={`w-fit relative cursor-pointer font-semibold font-nunito
                 bg-white border-2 border-dark-green rounded-full px-6  py-2.5 lg:py-3 
@@ -118,6 +119,7 @@ const CampaignCard: React.FC<CampaignCardProps> = ({
                 <span className="leading-none text-sm">{t("Donate Now")}</span>
               </div>
             </button>
+
           </div>
         </div>
     </div>

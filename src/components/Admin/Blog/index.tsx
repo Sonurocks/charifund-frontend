@@ -8,12 +8,12 @@ import Breadcrumb from "../Breadcrumb";
 //  Dynamically import BlogTable with a fallback loader
 const BlogTable = dynamic(() => import("./BlogTable"), {
   loading: () => <p className="text-center py-10">Loading Blog Table...</p>,
-  ssr: false, // optional: disables server-side rendering for this component
+  ssr: false, 
 });
 
 const BlogPage = () => {
   return (
-    <div className="px-4 md:px-8">
+    <div>
       <Breadcrumb lable="Blog" />
       <section className="mt-5">
         <BlogTable />

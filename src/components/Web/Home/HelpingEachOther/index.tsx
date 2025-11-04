@@ -433,15 +433,15 @@ export default function HelpingEachOther() {
                     bgColor="bg-yellow"
                     textColor="text-foreground text-sm  lg:text-sm xl:text-[16px] font-extrabold"
                     fontWeight=""
+                    icon=""
                     hoverTextColor="group-hover:text-white"
                     hoverBg="before:bg-green"
-                    paddingx=" px-8 xs:px-7 md:px-6 lg:px-6 xl:px-8"
                     paddingy="py-6 xs:py-6 md:py-6 lg:py-6 xl:py-7"
                     onClick={handleMoreAboutUs}
                   />
                 </div>
 
-                <div className="flex items-center justify-center gap-3 lg:gap-5  sm:ml-6 lg:ml-4 hover:scale-105 transition-transform duration-300">
+                <div className="flex items-center justify-center cursor-pointer  gap-3 lg:gap-5  sm:ml-6 lg:ml-4 hover:scale-105 transition-transform duration-400">
                   <FiPhoneCall className="w-7 h-7 sm:w-7 sm:h-7 font-light text-dark-green" />
                   <div>
                     <p className="text-gray-green text-[12px] xs:text-sm font-bold lg:font-semibold sm:text-[14px] font-nunito leading-none ">

@@ -1,6 +1,6 @@
 'use client';
 
-import {  useRef } from 'react';
+import { useRef } from 'react';
 import Image from 'next/image';
 import { motion, useInView } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -34,7 +34,7 @@ export default function CharityWithDifference() {
         {/* Header Section */}
         <FadeUpCard delay={0.3}>
           <div ref={headerRef} className="md:text-center mb-4 lg:mb-6 relative z-10">
-           
+
             <ComponentLabel
               text="Start Donating Poor People"
               isVisible={isHeaderInView}
@@ -179,36 +179,15 @@ export default function CharityWithDifference() {
               ))}
             </Swiper>
           </div>
-          {/* Custom Navigation Buttons */}
-         {/* <div className="flex justify-center items-center mt-6 lg:mt-10 space-x-4">
-            <button
-              className="swiper-button-prev-custom group bg-dark-green rounded-full w-14 h-14  flex items-center justify-center hover:bg-yellow transition-all duration-300"
-              onMouseEnter={() => swiperRef.current?.autoplay?.start()}
-              onMouseLeave={() => swiperRef.current?.autoplay?.stop()}
-            >
 
-              <FaArrowLeft className="text-white cursor-pointer group-hover:text-black transition-colors duration-300" />
-            </button>
-            <button
-              className="swiper-button-next-custom group bg-yellow rounded-full w-14 h-14  flex items-center justify-center hover:bg-dark-green transition-all duration-300"
-              onMouseEnter={() => swiperRef.current?.autoplay?.start()}
-              onMouseLeave={() => swiperRef.current?.autoplay?.stop()}
-            >
-
-              <FaArrowRight className="text-black cursor-pointer group-hover:text-white transition-colors duration-300" />
-
-            </button>
-          </div>*/}
-         
-         <div className="flex justify-center items-center mt-6 lg:mt-10 space-x-4">
-  <div className="swiper-button-prev-custom">
-    <ArrowButton direction="left" size={60} />
-  </div>
-  <div className="swiper-button-next-custom">
-    <ArrowButton direction="right" size={60} />
-  </div>
-</div>
-
+          <div className="flex justify-center items-center mt-6 lg:mt-10 space-x-4">
+            <div className="swiper-button-prev-custom">
+              <ArrowButton direction="left" size={60} />
+            </div>
+            <div className="swiper-button-next-custom">
+              <ArrowButton direction="right" size={60} />
+            </div>
+          </div>
 
         </div>
       </div>
