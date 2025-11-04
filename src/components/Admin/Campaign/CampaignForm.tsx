@@ -38,6 +38,8 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
   const [categories, setCategories] = useState<{ en?: any[]; hi?: any[] }>({});
   const { data: categoryData } = useFetchCategory();
 
+  console.log("inital data", initialData)
+
   useEffect(() => {
     if (categoryData?.category) {
       setCategories((prev) => ({
@@ -153,10 +155,13 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
                 placeholder={lang === "en" ? "Select category" : "श्रेणी चुनें"}
                 width="w-full"
                 error={
-                  touched.category && (errors.category as any)?.id
-                    ? (errors.category as any).id
+                  (touched.category?.en && errors.category?.en) ||
+                    (touched.category?.hi && errors.category?.hi)
+                    ? errors.category?.en || errors.category?.hi
                     : ""
                 }
+
+
               />
 
               {/* Location */}
@@ -215,13 +220,23 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
                 }
                 placeholder={lang === "en" ? "Add a key point" : "मुख्य बिंदु जोड़ें"}
                 isView={isView}
+                error={
+                  touched.keyPoints?.[lang] && errors.keyPoints?.[lang]
+                    ? errors.keyPoints[lang]
+                    : ""
+                }
+
               />
 
               {/* Images */}
               <CustomFileInput
                 label={lang === "en" ? "Campaign Images" : "अभियान की छवियाँ"}
                 name="images"
-                error={(errors as any)?.images || (errors as any)?.existingImages}
+                error={
+                  (errors as any)?.images ||
+                  (errors as any)?.existingImages ||
+                  (errors as any)?._combinedImagesGuard
+                }
                 onChange={(files: File[], existingUrls: string[]) => {
                   setFieldValue("images", files);
                   setFieldValue("existingImages", existingUrls);

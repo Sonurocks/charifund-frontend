@@ -256,16 +256,10 @@ export const blogSchema = Yup.object({
     en: Yup.string().required("Category is required in English"),
     hi: Yup.string().required("Category is required in Hindi"),
   }).required("Category is required"),
-
-  // images: Yup.array()
-  //   .of(Yup.mixed().required("Image is required"))
-  //   .min(1, "At least one image is required"),
-  // existingImages: Yup.array().of(Yup.string().nullable()),
   images: Yup.array()
     .of(Yup.mixed())
     .default([]),
   existingImages: Yup.array().of(Yup.string().nullable()).default([]),
-  // Require at least one across images (Files) or existingImages (URLs)
   _combinedImagesGuard: Yup.mixed().test(
     "at-least-one-image",
     "At least one image is required",
@@ -327,49 +321,64 @@ export type BannerFormValues = Yup.InferType<typeof bannerSchema>;
 export const memberSchema = Yup.object({
   name: Yup.object({
     en: Yup.string().required("Name is required in English"),
-    hi: Yup.string().required("Name is required in Hindi"),
+    hi: Yup.string().required("नाम हिंदी में आवश्यक है"),
   }),
   position: Yup.object({
     en: Yup.string().required("Position is required in English"),
-    hi: Yup.string().required("Position is required in Hindi"),
+    hi: Yup.string().required("पद हिंदी में आवश्यक है"),
   }),
   title: Yup.object({
-    en: Yup.string().optional(),
-    hi: Yup.string().optional(),
+    en: Yup.string().required("Title is required in English"),
+    hi: Yup.string().required("शीर्षक हिंदी में आवश्यक है"),
   }),
   description: Yup.object({
     en: Yup.string().required("Description is required in English"),
-    hi: Yup.string().required("Description is required in Hindi"),
+    hi: Yup.string().required("विवरण हिंदी में आवश्यक है"),
   }),
   about: Yup.object({
-    en: Yup.string().optional(),
-    hi: Yup.string().optional(),
+    en: Yup.string().required("About is required in English"),
+    hi: Yup.string().required("के बारे में जानकारी हिंदी में आवश्यक है"),
   }),
   keyPoints: Yup.object({
     en: Yup.array()
-      .of(Yup.string().required("Key point in English is required"))
-      .optional(),
+        .of(Yup.string().required("Key point in English is required"))
+        .min(1, "At least one key point is required in English")
+        .required("Key points in English are required"),
     hi: Yup.array()
-      .of(Yup.string().required("Key point in Hindi is required"))
-      .optional(),
-  }),
+        .of(Yup.string().required("मुख्य बिंदु हिंदी में आवश्यक है"))
+        .min(1, "कम से कम एक मुख्य बिंदु हिंदी में आवश्यक है")
+        .required("मुख्य बिंदु हिंदी में आवश्यक हैं"),
+}),
   image: Yup.mixed()
     .test(
       "fileOrString",
-      "Image is required",
+      "Image is required / छवि आवश्यक है",
       (value) => {
         if (typeof value === "string" && value.trim() !== "") return true;
         if (value instanceof File) return true;
         return false;
       }
     )
-    .required("Image is required"),
-  facebookUrl: Yup.string().url("Must be a valid URL").optional().nullable(),
-  twitterUrl: Yup.string().url("Must be a valid URL").optional().nullable(),
-  instagramUrl: Yup.string().url("Must be a valid URL").optional().nullable(),
-  linkedInUrl: Yup.string().url("Must be a valid URL").optional().nullable(),
+    .required("Image is required / छवि आवश्यक है"),
+  facebookUrl: Yup.string()
+    .url("Must be a valid URL / मान्य URL होना चाहिए")
+    .optional()
+    .nullable(),
+  twitterUrl: Yup.string()
+    .url("Must be a valid URL / मान्य URL होना चाहिए")
+    .optional()
+    .nullable(),
+  instagramUrl: Yup.string()
+    .url("Must be a valid URL / मान्य URL होना चाहिए")
+    .optional()
+    .nullable(),
+  linkedInUrl: Yup.string()
+    .url("Must be a valid URL / मान्य URL होना चाहिए")
+    .optional()
+    .nullable(),
   existingImages: Yup.array().of(Yup.string()),
 });
+
 
 export type MemberFormValues = Yup.InferType<typeof memberSchema>;
 

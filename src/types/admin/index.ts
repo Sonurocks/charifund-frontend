@@ -19,15 +19,15 @@ export interface BannerPreviewProps {
   mode?: "add" | "edit" | "view" | "preview-edit";
   showButtons?: boolean
   createMutation?: UseMutationResult<any, Error, BannerFormValues>;
-  updateMutation?: UseMutationResult<any, Error, { id: string; values:BannerFormValues }>;
+  updateMutation?: UseMutationResult<any, Error, { id: string; values: BannerFormValues }>;
 }
 
 export interface EventPreviewProps {
   data: EventFormValues & { createdAt?: string; existingImages?: string[], organizer?: string, raisedAmount?: number };
   onSubmit: () => void;
   onBack: () => void;
-  mode?: "add" | "edit" | "view"|"preview-edit";
-  showButton?:boolean;
+  mode?: "add" | "edit" | "view" | "preview-edit";
+  showButton?: boolean;
   createMutation?: UseMutationResult<any, Error, EventFormValues>;
   updateMutation?: UseMutationResult<any, Error, { id: string; values: EventFormValues }>;
 }
@@ -35,10 +35,10 @@ export interface MemberPreviewProps {
   data: MemberFormValues & { createdAt?: string };
   onSubmit: () => void;
   onBack: () => void;
-  mode?: "add" | "edit" | "view"|"preview-edit";
-  showButton?:boolean;
+  mode?: "add" | "edit" | "view" | "preview-edit";
+  showButton?: boolean;
   createMutation?: UseMutationResult<any, Error, MemberFormValues>;
-  updateMutation?: UseMutationResult<any, Error, { id: string; values:MemberFormValues }>;
+  updateMutation?: UseMutationResult<any, Error, { id: string; values: MemberFormValues }>;
 }
 
 export interface BannerColumnCallbacks {
@@ -65,19 +65,20 @@ export interface BlogPreviewProps {
   onSubmit: () => void;
   onBack: () => void;
   mode: string;
-  showButton?:boolean
+  showButton?: boolean
   createMutation?: UseMutationResult<any, Error, FormData>;
-  updateMutation?: UseMutationResult<any, Error, { id: string; values:FormData }>;
+  updateMutation?: UseMutationResult<any, Error, { id: string; values: FormData }>;
 }
 
- export interface CampaignPreviewProps {
+export interface CampaignPreviewProps {
   data: CampaignFormValues & { createdAt?: string; existingImages?: string[], organizer?: string, raisedAmount?: number };
   onSubmit: () => void;
   onBack: () => void;
-  mode?: "add" | "edit" | "view"|"preview-edit";
-  showButton?:boolean
- createMutation?: UseMutationResult<any, Error, CampaignFormValues>;
-  updateMutation?: UseMutationResult<any, Error, { id: string; values: CampaignFormValues }>;
+  mode?: "add" | "edit" | "view" | "preview-edit";
+  showButton?: boolean
+  createMutation?: UseMutationResult<any, Error, FormData>;
+updateMutation?: UseMutationResult<any, Error, { id: string; values: FormData }>;
+
 }
 
 export interface CommentFormProps {
@@ -105,7 +106,7 @@ export interface ConfirmModalProps {
   onConfirm: () => void;
   onCancel: () => void;
   buttonText: string;
-  loading?:boolean
+  loading?: boolean
 }
 
 export interface LanguageToggleProps {
@@ -158,7 +159,7 @@ export interface DropdownOption<T> {
 }
 
 
-export interface    AdminDropdownProps<T> {
+export interface AdminDropdownProps<T> {
   options: readonly DropdownOption<T>[];
   value: T;
   onChange: (value: T) => void;
@@ -185,8 +186,8 @@ export interface AdminCustomInputProps {
   onKeyDown?: (e: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   className?: string,
   disabled?: boolean;
-  readOnly?: boolean; 
-  ref?:RefObject<HTMLInputElement | null>
+  readOnly?: boolean;
+  ref?: RefObject<HTMLInputElement | null>
 }
 
 export interface AdminFileItem {
@@ -202,7 +203,7 @@ export interface AdminCustomFileInputProps {
   onChange: (files: File[], updatedImageUrls?: string[]) => void;
   error?: string;
   disabled?: boolean;
-  mode?: "add" | "edit" | "view"|"preview-edit";
+  mode?: "add" | "edit" | "view" | "preview-edit";
   initialUrls?: string[];
   initialFiles?: File[];
   uploadType?: "single" | "multiple";
@@ -222,9 +223,9 @@ export interface AdminDrawerProps {
   onClose: () => void;
   children: ReactNode;
   title?: string;
-  width?: string; 
+  width?: string;
   className?: string;
-  mobileFullScreen?: boolean; 
+  mobileFullScreen?: boolean;
   mode?: string
 }
 

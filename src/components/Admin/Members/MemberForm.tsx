@@ -23,14 +23,14 @@ const MemberForm = ({
     updateMutation,
 }: MemberFormProps) => {
     console.log("initial value", initialData)
-    
+
     // Prepare initial values for the form - use useMemo to recalculate when initialData changes
     const initialValues = React.useMemo(() => {
         const values = getInitialMemberValues(initialData);
         return values;
     }, [initialData]);
 
-    const [keyPointsList, setKeyPointsList] = useState<{en: string[], hi: string[]}>({
+    const [keyPointsList, setKeyPointsList] = useState<{ en: string[], hi: string[] }>({
         en: initialData?.keyPoints?.en ?? [],
         hi: initialData?.keyPoints?.hi ?? [],
     });
@@ -114,8 +114,8 @@ const MemberForm = ({
 
                         for (const l of ["en", "hi"] as const) {
                             if (hasErrorsForLang(formErrors, l)) {
-                                toggleLanguage(l); 
-                                return; 
+                                toggleLanguage(l);
+                                return;
                             }
                         }
 
@@ -154,7 +154,7 @@ const MemberForm = ({
                                 name={`title.${lang}`}
                                 value={values.title[lang]}
                                 onChange={handleChange}
-                                placeholder={lang === "en" ? "Optional title" : "वैकल्पिक शीर्षक"}
+                                placeholder={lang === "en" ? "title" : "शीर्षक"}
                                 error={touched.title?.[lang] ? errors.title?.[lang] : ""}
                             />
 
@@ -184,8 +184,9 @@ const MemberForm = ({
                             <MultiInputList
                                 label={`${lang === "en" ? "Key Points" : "मुख्य बिंदु"}`}
                                 values={keyPointsList[lang]}
-                                onChange={(newValues) => setKeyPointsList(prev => ({...prev, [lang]: newValues}))}
+                                onChange={(newValues) => setKeyPointsList(prev => ({ ...prev, [lang]: newValues }))}
                                 placeholder={lang === "en" ? "Add a key point" : "मुख्य बिंदु जोड़ें"}
+                                error={touched.keyPoints?.[lang] && errors.keyPoints?.[lang] ? "At least one key point is required" : ""}
                             />
 
                             {/* Image Upload */}
@@ -198,29 +199,29 @@ const MemberForm = ({
                                 //     setFieldValue("existingImage", existingUrl);
                                 // }}
                                 mode={mode}
-                               initialUrls={
-  initialData?.image
-  ? Array.isArray(initialData.image)
-    ? initialData.image.map(img => 
-        typeof img === "string" ? img : URL.createObjectURL(img)
-      )
-    : [
-        typeof initialData.image === "string"
-          ? initialData.image
-          : URL.createObjectURL(initialData.image)
-      ]
-  : []
-}
-            //   error={touched.image && typeof errors.image === "string" ? errors.image : ""}
-              onChange={(files, existingUrls) => {
-                if (files.length > 0) {
-                  setFieldValue("image", files[0]);
-                } else if (existingUrls && existingUrls.length > 0) {
-                  setFieldValue("image", existingUrls[0]);
-                } else {
-                  setFieldValue("image", "");
-                }
-              }}
+                                initialUrls={
+                                    initialData?.image
+                                        ? Array.isArray(initialData.image)
+                                            ? initialData.image.map(img =>
+                                                typeof img === "string" ? img : URL.createObjectURL(img)
+                                            )
+                                            : [
+                                                typeof initialData.image === "string"
+                                                    ? initialData.image
+                                                    : URL.createObjectURL(initialData.image)
+                                            ]
+                                        : []
+                                }
+                                //   error={touched.image && typeof errors.image === "string" ? errors.image : ""}
+                                onChange={(files, existingUrls) => {
+                                    if (files.length > 0) {
+                                        setFieldValue("image", files[0]);
+                                    } else if (existingUrls && existingUrls.length > 0) {
+                                        setFieldValue("image", existingUrls[0]);
+                                    } else {
+                                        setFieldValue("image", "");
+                                    }
+                                }}
                             />
 
                             {/* Social Links */}

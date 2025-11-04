@@ -38,8 +38,8 @@ const FeedbackTable = () => {
   const [selectedFeedBack, setSelectedFeedBack] = useState<Feedback | null>(
     null
   );
-  const searchedData = useDebounce(search, 1000);
-  const[deleteLoading,setDeleteLoading]=useState<boolean>(false);
+  const searchedData = useDebounce(searchField === 'status' ? statusField : search, 1000);
+  const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
 
   // Fetch feedback data with filters
   const { data: feedbackData, isLoading } = useFetchFeedbacks(
@@ -47,7 +47,7 @@ const FeedbackTable = () => {
     itemsPerPage,
     searchedData,
     searchField
-  ) as { data: FeedbackApiResponse; isLoading: boolean , };
+  ) as { data: FeedbackApiResponse; isLoading: boolean, };
 
   const deleteFeedback = useDeleteFeedback();
 
@@ -83,13 +83,6 @@ const FeedbackTable = () => {
 
   const handleDelete = useCallback(
     (feedback: Feedback) => {
-      // if (
-      //   confirm(
-      //     `Are you sure you want to delete this feedback by "${feedback.name}"?`
-      //   )
-      // ) {
-      //   deleteFeedback(feedback.id);
-      // }
       setSelectedFeedBack(feedback);
       setIsOpen(true);
     },
@@ -101,16 +94,16 @@ const FeedbackTable = () => {
       toast.dismiss();
       toast.loading("Deleting Feedback....")
       deleteFeedback.mutate(selectedFeedBack.id.toString(), {
-      onSuccess: () => {
-        setDeleteLoading(false)
-        setIsOpen(false);
-      setSelectedFeedBack(null);
-      },
-      onError: () => {
-        setDeleteLoading(false)
-        setIsOpen(false); 
-      },
-    });      
+        onSuccess: () => {
+          setDeleteLoading(false)
+          setIsOpen(false);
+          setSelectedFeedBack(null);
+        },
+        onError: () => {
+          setDeleteLoading(false)
+          setIsOpen(false);
+        },
+      });
     }
   }, [selectedFeedBack, deleteFeedback]);
 
@@ -135,25 +128,20 @@ const FeedbackTable = () => {
           value={searchField}
           onChange={(value) => {
             setSearchField(value);
-            setSearch('')
-            setCurrentPage(1)
-            if (value !== "status") {
-              setStatusField("");
-            }
-            setTimeout(() => {
-              searchInputRef.current?.focus();
-            }, 0);
+            setSearch('');
+            setStatusField(''); // reset status
+            setCurrentPage(1);
+            setTimeout(() => searchInputRef.current?.focus(), 0);
           }}
-        />{(searchField === 'status') ? (<>
+        />
+
+        {searchField === 'status' ? (
           <Dropdown
             options={FeedbackStatusField}
             value={statusField}
-            onChange={(value) => {
-              setStatusField(value)
-            }}
-
+            onChange={(value) => setStatusField(value)}
           />
-        </>) : (
+        ) : (
           <CustomInput
             ref={searchInputRef}
             placeholder={`Search by ${searchField}...`}
@@ -162,6 +150,7 @@ const FeedbackTable = () => {
           />
         )}
       </div>
+
 
       {/* Table */}
       {isLoading ? (

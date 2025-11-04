@@ -68,7 +68,7 @@ const BlogTable = () => {
   const [mode, setMode] = useState<"add" | "edit" | "view" | "preview-edit">("add");
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [showPreview, setShowPreview] = useState(false);
-  const [previewData, setPreviewData] = useState<BlogFormValues | null>(null);
+  const [previewData, setPreviewData] = useState<BlogFormValues  | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -88,6 +88,7 @@ const BlogTable = () => {
     blogId || undefined
   );
   const { data: categoryData } = useFetchCategory();
+  
 
   const categoryOptions =
     categoryData?.category?.map((category: Category) => ({

@@ -331,7 +331,7 @@ const BlogForm = ({
                       updateMutation.isPending
                     }
                     bgColor="bg-lime-green"
-                    paddingx="px-4"
+                    paddingx={lang === "en" ? "px-4" : "px-6"}
                     paddingy="py-2"
                     rounded="rounded-[5px]"
                     text={lang === "en" ? "Preview" : "पूर्वावलोकन"}
