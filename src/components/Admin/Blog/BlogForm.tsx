@@ -56,6 +56,7 @@ const BlogForm = ({
     categoryData?.category?.map((category: Category) => ({
       label: category.name?.[language] || category.name.en,
       value: category.name?.[language] || category.name.en,
+      names: category.name,
     })) ?? [];
 
   const isView = mode === "view";
@@ -116,22 +117,48 @@ const BlogForm = ({
               return touchedObj;
             };
 
-            setTouched(touchAllFields(values));
+            const touchedFields = touchAllFields(values);
+            touchedFields._combinedImagesGuard = true;
+            setTouched(touchedFields);
 
             const formErrors = await validateForm();
 
-            for (const l of ["en", "hi"] as const) {
-              if (hasErrorsForLang(formErrors, l)) {
-                toggleLanguage(l);
+            // If currently on English, check English fields first
+            if (language === "en") {
+              // Check for English errors
+              if (hasErrorsForLang(formErrors, "en")) {
+                // Stay on English and show errors
                 return;
               }
-            }
 
-            if (formErrors.images) {
+              // Check image validation error
+              if (formErrors._combinedImagesGuard) {
+                return;
+              }
+
+              // English is complete, switch to Hindi
+              toggleLanguage("hi");
               return;
             }
 
-            submitForm();
+            // If currently on Hindi, check both languages
+            if (language === "hi") {
+              // Check for errors in both languages
+              for (const l of ["en", "hi"] as const) {
+                if (hasErrorsForLang(formErrors, l)) {
+                  toggleLanguage(l);
+                  return;
+                }
+              }
+
+              // Check image validation error
+              if (formErrors._combinedImagesGuard) {
+                return;
+              }
+
+              // All fields are complete, submit preview
+              submitForm();
+            }
           };
 
           return (
@@ -208,8 +235,16 @@ const BlogForm = ({
               <Dropdown
                 label={`${lang === "en" ? "Category" : "श्रेणी"}*`}
                 options={categoryOptions}
-                value={values.category || ""}
-                onChange={(val) => setFieldValue("category", val)}
+                value={values.category?.[lang] || ""}
+                onChange={(val) => {
+                  const selected = categoryOptions.find((opt: any) => opt.value === val);
+                  if (selected) {
+                    setFieldValue("category", {
+                      en: selected.names.en,
+                      hi: selected.names.hi,
+                    });
+                  }
+                }}
                 placeholder={lang === "en" ? "Select category" : "श्रेणी चुनें"}
                 width="w-full"
               />
@@ -223,6 +258,15 @@ const BlogForm = ({
                 }
                 placeholder={lang === "en" ? "Add a tag" : "टैग जोड़ें"}
                 isView={isView}
+                error={
+                  touched.tags?.[lang] && errors.tags?.[lang]
+                    ? typeof errors.tags[lang] === "string"
+                      ? errors.tags[lang]
+                      : Array.isArray(errors.tags[lang])
+                      ? errors.tags[lang].filter(Boolean).join(", ")
+                      : ""
+                    : undefined
+                }
               />
 
               {/* Key Points */}
@@ -234,6 +278,15 @@ const BlogForm = ({
                 }
                 placeholder={lang === "en" ? "Add a key point" : "मुख्य बिंदु जोड़ें"}
                 isView={isView}
+                error={
+                  touched.keyPoints?.[lang] && errors.keyPoints?.[lang]
+                    ? typeof errors.keyPoints[lang] === "string"
+                      ? errors.keyPoints[lang]
+                      : Array.isArray(errors.keyPoints[lang])
+                      ? errors.keyPoints[lang].filter(Boolean).join(", ")
+                      : ""
+                    : undefined
+                }
               />
 
               {/* Location */}
@@ -259,6 +312,11 @@ const BlogForm = ({
                 uploadType="multiple"
                 disabled={isView}
                 mode={mode}
+                error={
+                  touched._combinedImagesGuard && errors._combinedImagesGuard
+                    ? String(errors._combinedImagesGuard)
+                    : ""
+                }
               />
 
               {/* Buttons */}
