@@ -1,6 +1,6 @@
 
 import { useLanguageAwareQuery } from "@/src/hooks/web/useLanguageAwareQuery";
-import { fetchAllEvents, fetchEventById } from "@/src/services/web";
+import { fetchAllEvents, fetchEventById } from "@/src/services/web/client/clientServices";
 
 export const useFetchAllEvent = (page: number, limit: number = 10,search?:string) => {
   return useLanguageAwareQuery(

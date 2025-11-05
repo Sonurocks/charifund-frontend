@@ -102,7 +102,7 @@ import charityGreenCard from "./charityGreenCard.webp";
 import charityDarkGreenCard from "./charityDarkGreenCard.webp";
 import charityYellowCard from "./charityYellowCard.webp";
 import termsAndConditions from "./terms&Condtions.webp";
-
+import upcomingEvents from './upcomingEvents.webp'
 
 
 export {
@@ -207,5 +207,6 @@ export {
   charityGreenCard,
   charityDarkGreenCard,
   charityYellowCard,
-  termsAndConditions
+  termsAndConditions,
+  upcomingEvents
 };

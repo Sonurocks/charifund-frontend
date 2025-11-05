@@ -13,7 +13,7 @@ import { volunteerSchema, VolunteerValues } from "@/src/utils/validations/FormVa
 import InputField from "../../UI/web/InputField";
 import Button from "../../UI/web/Buttons/Button";
 import ButtonLoader from "../../UI/web/Loader/ButtonLoader";
-import { VolunteerInformationForm } from "@/src/services/web";
+import { VolunteerInformationForm } from "@/src/services/web/client/clientServices";
 
 // Dynamic imports for Formik components
 const Formik = lazy(() => import("formik").then(module => ({ default: module.Formik })));

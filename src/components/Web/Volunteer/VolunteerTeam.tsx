@@ -33,7 +33,6 @@ const VolunteerTeam = ({ bg = '' }: { bg?: string }) => {
     1,
     itemsPerPage
   );
-  console.log("member form bolunteer team", data)
 
   const members = data?.members || [];
 

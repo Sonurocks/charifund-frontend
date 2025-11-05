@@ -129,7 +129,7 @@ const SingleBlogDetails = ({ data, id }: props) => {
                 {tags.map((tag: string, index: number) => (
                   <button
                     key={index}
-                    className="border px-3 py-1 text-xs hover:border-none hover:bg-yellow transition-all duration-100"
+                    className="outline px-3 py-1 text-xs hover:outline-yellow hover:bg-yellow transition-all duration-100"
                   >
                     {tag}
                   </button>
@@ -158,7 +158,7 @@ const SingleBlogDetails = ({ data, id }: props) => {
                     key={index}
                     onClick={handleShare}
                     title={sm.label}
-                    className="p-2 bg-gray-200 hover:bg-yellow rounded flex items-center justify-center"
+                    className="p-2 bg-gray-200 cursor-pointer hover:bg-yellow rounded flex items-center justify-center transition duration-300"
                   >
                     <IconComp className="text-dark-green" size={20} />
                   </button>

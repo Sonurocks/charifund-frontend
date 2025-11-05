@@ -2,7 +2,7 @@
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery, QueryFunctionContext } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { addReplyprops, RepliesResponse } from "../../types/web/comments";
-import { addReply, createComment, deleteComment, fetchComments, fetchCommentsById, fetchgetcomments, getRepliesByCommentId, updateComment } from "@/src/services/web";
+import { addReply, createComment, deleteComment, fetchComments, fetchCommentsById, fetchgetcomments, getRepliesByCommentId, updateComment } from "@/src/services/web/client/clientServices";
 
 const Replylimit=3;
 

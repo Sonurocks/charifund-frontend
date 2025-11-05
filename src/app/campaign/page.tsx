@@ -1,5 +1,9 @@
 import Campaign from '@/src/components/Web/Campaign'
-import React from 'react'
+import React from 'react';
+
+export const metadata = {
+  title:"charifund | Campaigns"
+}
 
 const page = () => {
   return (

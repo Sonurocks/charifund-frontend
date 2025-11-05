@@ -1,4 +1,4 @@
-import { fetchCategory, fetchCategoryById } from "@/src/services/web";
+import { fetchCategory, fetchCategoryById } from "@/src/services/web/client/clientServices";
 import { useQuery } from "@tanstack/react-query";
 
 

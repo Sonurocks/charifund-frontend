@@ -13,7 +13,7 @@ import InputField from "../../UI/web/InputField";
 import FadeUpCard from "@/src/animations/FadeButtomUp";
 import { useMutation } from "@tanstack/react-query";
 import ButtonLoader from "../../UI/web/Loader/ButtonLoader";
-import { SendMsgInformationForm } from "@/src/services/web";
+import { SendMsgInformationForm } from "@/src/services/web/client/clientServices";
 
 // Dynamic imports for Formik components
 const Formik = lazy(() => import("formik").then(module => ({ default: module.Formik })));
