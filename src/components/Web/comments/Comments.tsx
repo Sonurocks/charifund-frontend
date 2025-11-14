@@ -6,7 +6,7 @@ import { CommentType } from "@/src/types/web/comments";
 import ReplyComment from "./Reply";
 import FadeUpCard from "@/src/animations/FadeButtomUp";
 import ShowReply from "./ShowReplies";
-import { fetchgetcomments, likeComment } from "@/src/services/web";
+import { fetchgetcomments, likeComment } from "@/src/services/web/client/clientServices";
 import { Comment, CommentsProps } from "@/src/types/web/comments";
 
 // Dynamic icon loading system for optimization

@@ -3,7 +3,7 @@
 import React from 'react';
 import Head from 'next/head';
 import { useTranslation } from 'react-i18next'
-import { privacyPolicySections } from '@/src/staticResource';
+import { privacyPolicySections } from '@/src/static-resource/web';
 
 export default function PrivacyPolicyPage() {
   const{t}=useTranslation();

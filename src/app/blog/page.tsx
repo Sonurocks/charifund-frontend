@@ -1,5 +1,9 @@
 import Blog from '@/src/components/Web/Blog'
-import React from 'react'
+import React from 'react';
+
+export const metadata = {
+  title:"charifund | Blogs"
+}
 
 const page = () => {
   return (

@@ -4,7 +4,6 @@
 import React from "react";
 import dynamic from "next/dynamic";
 
-//  Dynamically import components
 const Breadcrumb = dynamic(() => import("../Breadcrumb"), {
   loading: () => <p>Loading breadcrumb...</p>,
 });
@@ -15,7 +14,7 @@ const BannerTable = dynamic(() => import("./BannerTable"), {
 
 const Banner = () => {
   return (
-    <div>
+    <div>d:\Projects\deployed Cherifund\cherifund\src\components\Admin\Event
       <Breadcrumb lable="Banner" />
       <BannerTable />
     </div>

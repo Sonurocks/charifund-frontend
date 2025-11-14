@@ -1,9 +1,13 @@
-import Home from "@/src/components/Web/Home";
+import Homepage from "./home/page";
+
+export const metadata = {
+  title:"charifund | Home"
+}
 
 export default function Page() {
   return (
-    <div>
-      <Home />
-    </div>
+    <>
+      <Homepage />
+    </>
   );
 }

@@ -1,4 +1,4 @@
-import { fetchAllBlogs, fetchBlogById } from "@/src/services/web";
+import { fetchAllBlogs, fetchBlogById } from "@/src/services/web/client/clientServices";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 
 // Fetch blogs with pagination

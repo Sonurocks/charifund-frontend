@@ -4,7 +4,7 @@ import "swiper/css";
 import "swiper/css/autoplay";
 import { Autoplay } from "swiper/modules";
 import Image from "next/image";
-import { PartnersCompaniesData } from "@/src/staticResource";
+import { PartnersCompaniesData } from "@/src/static-resource/web";
 
 const PartnersCompanies = () => {
   return (

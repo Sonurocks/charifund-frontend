@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { Icon } from "@iconify/react";
-import { socialIcons } from "@/src/staticResource";
+import { socialIcons } from "@/src/static-resource/web";
 import LanguageSwitcher from "../../UI/web/LanguageSwitcher";
 
 const InfoBar = () => {
@@ -18,15 +18,34 @@ const InfoBar = () => {
 
         {/* Left: Email & Phone */}
         <div className="flex items-center space-x-6">
-          <motion.div whileHover={{ cursor: 'pointer' }} className={`flex items-center space-x-2 transition duration-111  hover:text-yellow`}>
-            <Icon icon="mdi:email-outline" className={` w-5 h-5  text-yellow `} />
-            <span className="">support@example.com</span>
+          <motion.div
+            whileHover={{ cursor: "pointer" }}
+            className="flex items-center space-x-2 transition duration-150 hover:text-yellow"
+          >
+            <a
+              href="mailto:support@example.com"
+              className="flex items-center space-x-2"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Icon icon="mdi:email-outline" className="w-5 h-5 text-yellow" />
+              <span>support@example.com</span>
+            </a>
           </motion.div>
-          <motion.div whileHover={{ cursor: 'pointer' }}
-            className={`flex items-center space-x-2 hover:text-yellow`}>
-            <Icon icon="mdi:phone" className={` w-5 h-5  text-yellow`} />
-            <span className="">+2(305) 587-3407</span>
+
+          <motion.div
+            whileHover={{ cursor: "pointer" }}
+            className="flex items-center space-x-2 transition duration-150 hover:text-yellow"
+          >
+            <a
+              href="tel:+23055873407"
+              className="flex items-center space-x-2"
+            >
+              <Icon icon="mdi:phone" className="w-5 h-5 text-yellow" />
+              <span>+2 (305) 587-3407</span>
+            </a>
           </motion.div>
+
         </div>
         {/* Right: Dropdowns & Social Icons */}
         <div className="flex items-center space-x-6 font-nunito">

@@ -6,6 +6,10 @@ interface Props {
   }>;
 }
 
+export const metadata = {
+  title:"charifund | Doante us"
+}
+
 const page = async({params}:Props) => {
   const { id } = await params;
     return (

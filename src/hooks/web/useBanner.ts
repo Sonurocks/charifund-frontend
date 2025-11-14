@@ -1,5 +1,5 @@
 // src/hooks/useBanners.ts
-import { fetchAllBanners } from "@/src/services/web";
+import { fetchAllBanners } from "@/src/services/web/client/clientServices";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 
 //  Fetch banners with pagination

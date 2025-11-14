@@ -3,7 +3,7 @@
 
 import React from "react";
 import dynamic from "next/dynamic";
-import { Campaign } from "../Data/staticData";
+import { Campaign } from "../../../static-resource/admin";
 import { CampaignColumnCallbacks } from "@/src/types/admin/campaign";
 
 //  Dynamically import TableRowActions

@@ -5,7 +5,7 @@
 "use client";
 import React, { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import dynamic from "next/dynamic";
-import { CategorySearchOptions } from "../Data/staticData";
+import { CategorySearchOptions } from "../../../static-resource/admin";
 import { useFetchCategory, useDeleteCategory, useFetchCategoryById } from "@/src/hooks/admin/useCategory";
 import { Category } from "@/src/types/admin/category";
 import toast from "react-hot-toast";

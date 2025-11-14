@@ -1,4 +1,3 @@
-import api from "./api";
 
 import { DetailsFormValues, SendMsgFormValues, VolunteerValues } from "@/src/utils/validations/FormValidation";
 
@@ -58,6 +57,7 @@ export const fetchEventById = async (id: string) => {
 // src/services/commentApi.ts
 import { RepliesResponse } from "@/src/types/web/comments";
 import { ContactFormValues } from "@/src/types";
+import api from "./api";
 
 // ✅ Fetch all comments
 export const fetchComments = async (page: number, limit: number, status: string | null) => {
@@ -175,7 +175,6 @@ export const fetchCategoryById = async (id:string) => {
 
 export const fetchAllCampaigns = async (page: number = 1, limit: number = 2,searchText = "All") => {
   const { data } = await api.get(`/web/campaign/getAllCampaigns?page=${page}&limit=${limit}&search=${searchText}`);
-  console.log("Campaign data check", data)
   return data;
 };
 

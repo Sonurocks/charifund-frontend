@@ -14,8 +14,8 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { useFetchApprovedFeedbacks } from "@/src/hooks/web/useFeedback";
 import StarRating from "../../UI/web/StarRating";
-import { contactInfo } from "@/src/staticResource";
-import ArrowButton from "@/src/components/Button"; // ✅ Using your custom button
+import { contactInfo } from "@/src/static-resource/web";
+import ArrowButton from "@/src/components/UI/web/Buttons/ArrowButton"; 
 
 const ContactUs = () => {
   const { t } = useTranslation();

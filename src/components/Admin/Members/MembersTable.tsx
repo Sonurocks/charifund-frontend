@@ -18,7 +18,7 @@ import {
   useFetchSingleMember,
 } from "@/src/hooks/admin/useMembers";
 import { createMember, updateMember } from "@/src/services/admin/memberApi";
-import { memberSearchOptions } from "../Data/staticData";
+import { memberSearchOptions } from "../../../static-resource/admin";
 import MemberPreview from "./MemberPreview";
 import AdminCustomPagination from "../../UI/admin/CustomePagination";
 import ConfirmModal from "../../UI/admin/ConfirmModal";

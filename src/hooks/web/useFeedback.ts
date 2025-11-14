@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { createFeedback, fetchApprovedFeedbacks } from "@/src/services/web";
+import { createFeedback, fetchApprovedFeedbacks } from "@/src/services/web/client/clientServices";
 import { useLanguageAwareQuery } from "./useLanguageAwareQuery";
 import { FeedbackFormValues } from "@/src/utils/validations/FormValidation";
 

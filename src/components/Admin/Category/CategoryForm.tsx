@@ -20,7 +20,7 @@ import {
   CategoryFormValues,
   categorySchema,
 } from "@/src/utils/validations/FormValidation";
-import { getInitialCategoryValues } from "../utils/categoryInitialValues";
+import { getInitialCategoryValues } from "../InitialValues/categoryInitialValues";
 import { hasErrorsForLang } from "../../UI/admin/hasErrorsForLang";
 import { createCategory, updateCategory } from "@/src/services/admin/categoryApi";
 import { CategoryFormProps } from "@/src/types/admin/campaign";

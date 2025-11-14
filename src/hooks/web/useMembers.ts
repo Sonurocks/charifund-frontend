@@ -1,6 +1,6 @@
 // src/hooks/useMembers.ts
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import { fetchAllMembers, fetchMemberById } from "@/src/services/web";
+import { fetchAllMembers, fetchMemberById } from "@/src/services/web/client/clientServices";
 
 
 // Fetch members with pagination

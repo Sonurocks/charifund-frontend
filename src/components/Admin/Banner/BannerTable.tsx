@@ -17,7 +17,7 @@ import {
   useFetchAllBanners,
   useFetchSingleBanner,
 } from "@/src/hooks/admin/useBanner";
-import { BannerSearchOptions } from "../Data/staticData";
+import { BannerSearchOptions } from "../../../static-resource/admin";
 import BannerPreview from "./BannerPreview";
 import AdminCustomPagination from "../../UI/admin/CustomePagination";
 import ConfirmModal from "../../UI/admin/ConfirmModal";

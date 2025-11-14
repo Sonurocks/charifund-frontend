@@ -33,7 +33,7 @@ const LoginForm = () => {
             Cookies.set("token", data.token, { expires: 7, path: "/" });
             toast.success("Login successful 🎉");
             setSubmitting(false); 
-            window.location.href = "/dashboard";
+            window.location.href = "/admin";
           },
           onError: (err: any) => {
             toast.dismiss();

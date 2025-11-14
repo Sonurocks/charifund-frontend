@@ -2,7 +2,7 @@
 import RadioGroup from "../../UI/web/RadioGroup";
 import Button from "../../UI/web/Buttons/Button";
 import DetailsForm from "./DetailsForm";
-import { Donationmethods } from "@/src/staticResource";
+import { Donationmethods } from "@/src/static-resource/web";
 import Notice from "../../UI/web/Notice";
 import DonationInput from "./DonationInput";
 import { useDispatch, useSelector } from "react-redux";

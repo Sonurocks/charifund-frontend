@@ -24,15 +24,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-      <section
-        className={`${caveat.variable} ${nunito.variable} antialiased min-h-screen flex flex-col`}
-      >
-        {/* for route */}
-        {/* <div className="relative flex gap-2 h-screen">
-          <AdminSideBar/>
-           <main className="pt-12 px-5">{children}</main> 
-        </div> */}
-        <main>{children}</main>
-      </section >
+    <section
+      className={`${caveat.variable} ${nunito.variable} antialiased min-h-screen flex flex-col`}
+    >
+      <main>{children}</main>
+    </section >
   );
 }

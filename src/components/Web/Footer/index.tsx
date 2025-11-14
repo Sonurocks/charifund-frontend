@@ -4,20 +4,19 @@ import { Icon } from "@iconify/react";
 import Newsletter from "./Newsletter";
 import Image from "next/image";
 import { motion, useInView } from "framer-motion";
-import { useRef, useState } from "react";
-import { footerData } from "@/src/staticResource";
+import { useRef } from "react";
+import { footerData } from "@/src/static-resource/web";
 import { logo, spade2, spreadLight } from "@/public/assets";
 import Divider from "../../UI/web/HorizontalDevider";
 import { useTranslation } from "react-i18next";
 
 import CookieSettingsModal from "../../UI/web/CookieSettingsModal";
+import Link from "next/link";
 
 const Footer = () => {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, amount: 0.2 });
   const { t } = useTranslation();
-  const [isCookieModalOpen, setIsCookieModalOpen] = useState(false);
-
 
   const container = {
     hidden: {},
@@ -81,12 +80,13 @@ const Footer = () => {
             <p className="mt-6 text-white/50 text-sm xl:text-base leading-7 w-full">
               {t(footerData.brand.description)}
             </p>
-            <div className="flex gap-3 mt-6">
+            <div className="flex gap-3 mt-6 ">
               {footerData.brand.socials.map((s, i) => (
                 <a
                   key={i}
-                  href={s.href}
-                  className="w-10 h-10 flex items-center justify-center border border-white/10 rounded-full hover:bg-yellow hover:text-green transition duration-200"
+                  href={s.link}
+                  target="_blank"
+                  className="w-10 h-10 cursor-pointer flex items-center justify-center border border-white/10 rounded-full hover:bg-yellow hover:text-green transition duration-200"
                 >
                   <Icon icon={s.icon} className="h-4 w-4" />
                 </a>
@@ -219,27 +219,18 @@ const Footer = () => {
           </p>
           <div className="flex flex-col md:flex-row justify-baseline items-baseline lg:glex-row gap-5 md:justify-center text-white">
             {footerData.bottomLinks.map((link, i) => (
-              <a
+              <Link
                 key={i}
                 href={link.href}
-                onClick={(e) => {
-                  if (link.label === "Cookie Settings") {
-                    e.preventDefault();
-                    setIsCookieModalOpen(true);
-                  }
-                }}
                 className="relative inline-flex items-center gap-2 hover:text-yellow before:content-[''] before:absolute before:left-0 before:bottom-0 before:h-[1px] before:w-full before:bg-yellow before:scale-x-0 hover:before:scale-x-100 before:transition-transform before:duration-300"
               >
                 {t(link.label)}
-              </a>
+              </Link>
             ))}
           </div>
         </div>
       </motion.div>
-      <CookieSettingsModal
-        isOpen={isCookieModalOpen}
-        onClose={() => setIsCookieModalOpen(false)}
-      />
+      <CookieSettingsModal />
 
     </footer>
   );

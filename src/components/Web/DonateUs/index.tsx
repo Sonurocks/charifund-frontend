@@ -1,6 +1,6 @@
 "use client";
 import { donateusbanner, heartLogoIcon, overView } from "@/public/assets";
-import { faqData } from "@/src/staticResource";
+import { faqData } from "@/src/static-resource/web";
 import { useState } from "react";
 import Gallery from "./Gallery";
 import FadeInUp from "@/src/animations/FadeInUp";

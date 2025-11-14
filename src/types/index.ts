@@ -1,6 +1,16 @@
 import { MotionProps } from "framer-motion";
 import { Dispatch, ReactNode, SetStateAction } from "react";
 
+export interface MetadataData {
+  id: string;                     
+  title: string;                  
+  description?: string;         
+  summary?: string;               
+  images?: string[];            
+  path?: string;                  
+}
+
+
 export interface EventInterface {
     id: string;
     title: string;
@@ -240,6 +250,7 @@ export interface DonationSectionProps{
 export interface EventListProps {
   currentPage: number;
   onPageChange?: (page: number) => void;
+  onEmptyChange?: (isEmpty: boolean) => void;
 }
 
 export interface CharityCardProps {
