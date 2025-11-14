@@ -1,15 +1,15 @@
 import { FaEnvelope, FaFacebookF, FaLinkedinIn, FaMapMarkerAlt, FaPhoneAlt, FaShareAlt, FaTwitter, FaVimeoV } from "react-icons/fa";
-import {charityLife,  heartCare, loremIpsum, theBird, treeLife,  photo1, photo2, photo3, photo4 } from "../public/assets";
-import { CharityCard, DonationCardData, InfoItem, SocialMediaButton } from "./types";
-import { FAQItem } from "./types/web/faq";
+import {charityLife,  heartCare, loremIpsum, theBird, treeLife,  photo1, photo2, photo3, photo4 } from "../../public/assets";
+import { CharityCard, DonationCardData, InfoItem, SocialMediaButton } from "../types";
+import { FAQItem } from "../types/web/faq";
 
 
 
 export const socialIcons = [
-  { icon: "fa6-brands:facebook-f", label: "Facebook", link: "#" },
-  { icon: "simple-icons:vimeo", label: "Vimeo", link: "#" },
-  { icon: "fa6-brands:twitter", label: "Twitter", link: "#" },
-  { icon: "fa6-brands:linkedin-in", label: "LinkedIn", link: "#" },
+  { icon: "fa6-brands:facebook-f", label: "Facebook", link: "https://www.facebook.com/" },
+  { icon: "simple-icons:vimeo", label: "Vimeo", link: "https://www.vimeo.com/" },
+  { icon: "fa6-brands:twitter", label: "Twitter", link: "https://twitter.com/" },
+  { icon: "fa6-brands:linkedin-in", label: "LinkedIn", link: "https://www.linkedin.com/" },
 ];
 
 export const footerData = {
@@ -17,12 +17,7 @@ export const footerData = {
     name: "Charifund",
     description:
       "Our Secure Online Donation Platform Allows You To Make Contributions Quickly And Safely. Choose From Various.",
-    socials: [
-      { icon: "line-md:facebook", href: "#" },
-      { icon: "mdi:vimeo", href: "#" },
-      { icon: "mdi:twitter", href: "#" },
-      { icon: "fontisto:linkedin", href: "#" },
-    ],
+    socials: socialIcons,
   },
   quickLinks: [
     { label: "About Us", href: "/about" },
@@ -44,7 +39,7 @@ export const footerData = {
   bottomLinks: [
     { label: "Terms & Conditions", href: "/term-and-conditions" },
     { label: "Privacy Policy", href: "/privacy-policy" },
-    { label: "Cookie Settings", href: "#" },
+    { label: "Cookie Settings", href: "/cookie-policy" },
   ],
 };
 
@@ -408,24 +403,38 @@ export const defaultEventData = {
 
 export const googleMapsEmbedUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d193595.15830869428!2d-74.11976378252907!3d40.69766374874312!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c2588f046ee661%3A0xa0b3281fcecc08c!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2sin!4v1716298418080!5m2!1sen!2sin";
 
-export const ContactUsSocialMedia = [
+
+
+export const SocialMedia = [
   {
+    label: "Facebook",
     icon: FaFacebookF,
     href: "https://www.facebook.com/",
+    getShareUrl: (url: string, title?: string) =>
+      `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(title || "")}`,
   },
   {
-    icon: FaVimeoV,
-    href: "https://vimeo.com/",
-  },
-  {
+    label: "Twitter",
     icon: FaTwitter,
     href: "https://twitter.com/",
+    getShareUrl: (url: string, title?: string) =>
+      `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title || "")}`,
   },
   {
+    label: "LinkedIn",
     icon: FaLinkedinIn,
     href: "https://www.linkedin.com/",
+    getShareUrl: (url: string, title?: string) =>
+      `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
+  },
+  {
+    label: "Vimeo",
+    icon: FaVimeoV,
+    href: "https://vimeo.com/", // Vimeo does not have a direct share URL for blogs
   },
 ];
+
+
 
 export const contactInfo: InfoItem[] = [
   {

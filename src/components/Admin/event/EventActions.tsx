@@ -1,7 +1,7 @@
 
 "use client";
 
-import { TableRowActionsProps } from "@/src/types/campaign";
+import { TableRowActionsProps } from "@/src/types/admin/campaign";
 import { Tooltip } from "@mui/material";
 import React from "react";
 

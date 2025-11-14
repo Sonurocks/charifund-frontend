@@ -12,7 +12,7 @@ import {
   CampaignFormValues,
   campaignSchema,
 } from "@/src/utils/validations/FormValidation";
-import { getInitialCanpaignValues } from "../utils/campaignIntialValues";
+import { getInitialCanpaignValues } from "../InitialValues/campaignIntialValues";
 import { hasErrorsForLang } from "../../UI/admin/hasErrorsForLang";
 import { CampaignFormProps } from "@/src/types/admin/campaign";
 import { useLanguageToggle } from "@/src/hooks/admin/useLanguageToggle";

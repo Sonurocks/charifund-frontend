@@ -18,7 +18,7 @@ import {
 } from "@/src/utils/validations/FormValidation";
 import toast from "react-hot-toast";
 import ButtonLoader from "../../UI/web/Loader/ButtonLoader";
-import { NewsletterEmailForm } from "@/src/services/web";
+import { NewsletterEmailForm } from "@/src/services/web/client/clientServices";
 
 const Newsletter = () => {
   const { t, i18n } = useTranslation();

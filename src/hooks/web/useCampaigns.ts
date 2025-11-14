@@ -1,6 +1,6 @@
 
 import { useLanguageAwareQuery } from "@/src/hooks/web/useLanguageAwareQuery";
-import { fetchAllCampaigns, fetchCampaignById } from "@/src/services/web";
+import { fetchAllCampaigns, fetchCampaignById } from "@/src/services/web/client/clientServices";
 
 
 export const useFetchAllCampaigns = (page: number, limit: number = 10,search?:string) => {

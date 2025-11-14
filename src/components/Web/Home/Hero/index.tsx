@@ -18,7 +18,7 @@ import Link from "next/link";
 import { useFetchAllBanners } from "@/src/hooks/web/useBanner";
 import { pageBannerBackgourndColor } from "@/src/helper/PageBanner";
 import { Banner } from "@/src/types/web/banner";
-import ArrowButton from "@/src/components/Button";
+import ArrowButton from "@/src/components/UI/web/Buttons/ArrowButton";
 
 // Static fallback images
 const staticImages = [bannerOne.src, bannerTwo.src];

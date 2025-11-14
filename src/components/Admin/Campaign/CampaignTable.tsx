@@ -22,7 +22,7 @@ const ConfirmModal = dynamic(() => import("../../UI/admin/ConfirmModal"), { ssr:
 const CustomLoader = dynamic(() => import("../../UI/web/Loader/CustomLoader"), { ssr: false });
 
 //  Hooks & Utilities (keep static)
-import { CampaignSearchOptions } from "../Data/staticData";
+import { CampaignSearchOptions } from "../../../static-resource/admin";
 import { getCampaignColumns } from "./campaignColumns";
 import {
   useDeleteSignleCampaign,

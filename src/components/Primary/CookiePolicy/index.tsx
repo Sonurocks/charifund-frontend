@@ -1,16 +1,34 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { Trans, useTranslation } from "react-i18next";
 
 const CookiePolicy = () => {
   const router = useRouter();
-  const { t, i18n } = useTranslation(); // <-- useTranslation hook ensures re-render on language change
+  const { t, i18n } = useTranslation();
+  const COOKIE_KEY = "charifund_cookie_consent";
+
+  const [alreadyAccepted, setAlreadyAccepted] = useState(false);
+
+  // ✅ Check if user already accepted cookies
+  useEffect(() => {
+    const consent = localStorage.getItem(COOKIE_KEY);
+    if (consent) {
+      try {
+        const parsed = JSON.parse(consent);
+        if (parsed?.necessary && parsed?.analytics) {
+          setAlreadyAccepted(true);
+        }
+      } catch {
+        setAlreadyAccepted(false);
+      }
+    }
+  }, []);
 
   const handleAcceptPolicy = () => {
     localStorage.setItem(
-      "cookie_consent",
+      COOKIE_KEY,
       JSON.stringify({
         necessary: true,
         analytics: true,
@@ -19,11 +37,12 @@ const CookiePolicy = () => {
         timestamp: new Date().toISOString(),
       })
     );
+    setAlreadyAccepted(true);
     router.push("/");
   };
 
-  // Optional: force re-render on language change (not needed usually if useTranslation is used properly)
-  React.useEffect(() => {
+  // ✅ Keep i18n listener for reactivity
+  useEffect(() => {
     const handleLanguageChange = () => {};
     i18n.on("languageChanged", handleLanguageChange);
     return () => i18n.off("languageChanged", handleLanguageChange);
@@ -37,8 +56,10 @@ const CookiePolicy = () => {
         transition={{ duration: 0.6 }}
         className="max-w-4xl mx-auto"
       >
+        {/* Page Title */}
         <h1 className="text-4xl font-bold mb-6">{t("Cookie Policy")}</h1>
 
+        {/* Intro Paragraph */}
         <p className="text-base leading-7 mb-6 text-gray-700">
           <Trans
             i18nKey="This Cookie Policy explains how <1>Charifund</1> uses cookies and similar technologies on our website. By using our site, you consent to the use of cookies as described in this policy."
@@ -46,6 +67,7 @@ const CookiePolicy = () => {
           />
         </p>
 
+        {/* What Are Cookies */}
         <h2 className="text-2xl font-semibold mb-3">{t("What Are Cookies?")}</h2>
         <p className="text-base mb-6 text-gray-700">
           {t(
@@ -53,8 +75,8 @@ const CookiePolicy = () => {
           )}
         </p>
 
+        {/* Types of Cookies */}
         <h2 className="text-2xl font-semibold mb-3">{t("Types of Cookies We Use")}</h2>
-
         <div className="space-y-5 mb-8">
           <div>
             <h3 className="text-xl font-semibold">{t("1. Necessary Cookies")}</h3>
@@ -73,16 +95,27 @@ const CookiePolicy = () => {
               )}
             </p>
           </div>
+
+          <div>
+            <h3 className="text-xl font-semibold">{t("3. Analytics & Marketing Cookies")}</h3>
+            <p className="text-gray-700">
+              {t(
+                "These cookies help us understand user behavior, measure website performance, and deliver relevant marketing campaigns. You can manage these cookies in your browser or via the cookie settings."
+              )}
+            </p>
+          </div>
         </div>
 
+        {/* Managing Cookies */}
         <h2 className="text-2xl font-semibold mb-3">{t("Managing Cookies")}</h2>
         <p className="text-base mb-6 text-gray-700">
           <Trans
             i18nKey="You can manage or disable cookies through your browser settings. However, disabling certain cookies may affect your experience on our website. You can also update your preferences at any time using the <1>Cookie Settings</1> link in the footer."
-            components={{ 1: <a href="#" className="font-semibold hover:underline" /> }}
+            components={{ 1: <span className="font-semibold hover:underline" /> }}
           />
         </p>
 
+        {/* Updates Section */}
         <h2 className="text-2xl font-semibold mb-3">{t("Updates to This Policy")}</h2>
         <p className="text-base mb-6 text-gray-700">
           {t(
@@ -90,20 +123,36 @@ const CookiePolicy = () => {
           )}
         </p>
 
+        {/* Last Updated */}
         <p className="text-base text-gray-600 mb-10">
-          <Trans
-            i18nKey="Last Updated: <1>October 2025</1>"
-            components={{ 1: <strong /> }}
-          />
+          <strong>{t("Last Updated: October 2025")}</strong>
         </p>
 
-        <div className="text-center">
-          <button
-            onClick={handleAcceptPolicy}
-            className="px-6 py-3 cursor-pointer bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-all"
-          >
-            {t("Accept Cookie Policy")}
-          </button>
+        {/* Accept Button */}
+        {!alreadyAccepted && (
+          <div className="text-center mb-10">
+            <button
+              onClick={handleAcceptPolicy}
+              className="px-6 py-3 cursor-pointer bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-all"
+            >
+              {t("Accept Cookie Policy")}
+            </button>
+          </div>
+        )}
+
+        {/* Footer CTA */}
+        <div className="text-center border-t border-gray-200 pt-10 mt-10">
+          <h3 className="text-xl font-medium text-gray-800 mb-2">{t("Still have questions?")}</h3>
+          <p className="text-gray-600">
+            {t("Contact our support team at")}{" "}
+            <a
+              href="mailto:support@charifund.org"
+              className="text-green-700 font-medium hover:underline"
+            >
+              support@charifund.org
+            </a>{" "}
+            {t("and we’ll be happy to help.")}
+          </p>
         </div>
       </motion.div>
     </section>

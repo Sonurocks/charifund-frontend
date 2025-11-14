@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import ButtonLoader from "../../UI/web/Loader/ButtonLoader";
-import { ContactUsForm } from "@/src/services/web";
+import { ContactUsForm } from "@/src/services/web/client/clientServices";
 import { ContactFormValues } from "@/src/types";
 
 

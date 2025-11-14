@@ -1,5 +1,5 @@
 // src/services/authApi.ts
-import api from "./api";
+import api from "./client/api";
 
 export const loginUser = async (credentials: { email: string; password: string }) => {
   const { data } = await api.post("/web/user/login", credentials);

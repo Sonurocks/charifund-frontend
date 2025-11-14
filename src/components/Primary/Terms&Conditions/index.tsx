@@ -1,42 +1,44 @@
-// pages/terms-and-conditions.tsx
 'use client'
 import React from 'react';
-import Head from 'next/head';
+import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import PageBanner from '@/src/helper/PageBanner';
 import { termsAndConditions } from '@/public/assets';
-import { useTranslation } from 'react-i18next';
-import { termsSections} from '@/src/staticResource';
+import { termsSections } from '@/src/static-resource/web';
 
 export default function TermsAndConditionsPage() {
-  const{t}=useTranslation();
+  const { t } = useTranslation();
   return (
     <>
-        <PageBanner title={t('Terms & Condtions')} bgImage={termsAndConditions} />
+      {/* Page Banner */}
+      <PageBanner title={t('Terms & Conditions')} bgImage={termsAndConditions} />
 
       {/* Main Content */}
-      <section className="bg-gray-50 py-5 lg:py-16 lg:px-4">
-        <div className="max-w-5xl mx-auto space-y-2 lg:space-y-12">
+      <section className="min-h-screen bg-white text-gray-800 px-4 sm:px-10 md:px-20 lg:px-32 py-16">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="max-w-4xl mx-auto space-y-10"
+        >
           {termsSections.map((section) => (
-            <div
-              key={section.id}
-              className="bg-white lg:shadow-lg rounded-xl px-4 py-4 md:px-8 md:py-8 transition-transform duration-300 hover:scale-[1.02]"
-            >
-              <h2 className="text-xl lg:text-2xl font-semibold text-gray-800 mb-4">
+            <div key={section.id} className="bg-gray-50 rounded-xl ">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4">
                 {`${section.id}. `}{t(section.title)}
               </h2>
               <p className="text-gray-700 leading-relaxed">{t(section.content)}</p>
             </div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* Footer CTA */}
-      <section className="bg-white border-t border-gray-200 py-12 lg:mt-10">
+      <section className="bg-white border-t border-gray-200 py-12 mt-8">
         <div className="max-w-4xl mx-auto text-center px-4">
-          <h3 className="text-xl font-medium text-gray-800">{t("Questions about our terms?")}</h3>
-          <p className="text-gray-600 mt-2">
+          <h3 className="text-xl font-medium text-gray-800 mb-2">{t("Questions about our terms?")}</h3>
+          <p className="text-gray-600">
             {t("Contact us at")}{" "}
-            <a href="mailto:support@example.com" className="text-blue-600 underline">
+            <a href="mailto:support@example.com" className="text-green-700 font-medium hover:underline">
               support@example.com
             </a>{" "}
             {t("and we’ll get back to you shortly.")}

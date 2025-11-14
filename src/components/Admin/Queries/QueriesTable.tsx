@@ -18,7 +18,7 @@ import {
   filterFields,
   formTypeOptions,
   isViewedOptions,
-} from "@/src/staticResource";
+} from "@/src/static-resource/web";
 import AnimatedReveal from "@/src/animations/AnimatedReveal";
 import ConfirmModal from "../../UI/admin/ConfirmModal";
 import toast from "react-hot-toast";

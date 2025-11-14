@@ -15,8 +15,19 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "charifund-frontend",
+  title: "charifund",
   description: "development environment for charifund",
+  icons: {
+    icon: [
+      { url: "/favicon-512x512.ico", sizes: "512x512", type: "image/x-icon" },
+      { url: "/favicon-192x192.ico", sizes: "192x192", type: "image/x-icon" },
+      // { url: "/favicon-180x180.ico", sizes: "180x180", type: "image/x-icon" },
+      // { url: "/favicon-64x64.ico", sizes: "64x64", type: "image/x-icon" },
+      // { url: "/favicon-48x48.ico", sizes: "48x48", type: "image/x-icon" },
+      // { url: "/favicon-32x32.ico", sizes: "32x32", type: "image/x-icon" },
+      // { url: "/favicon-16x16.ico", sizes: "16x16", type: "image/x-icon" },
+    ],          
+  },
 };
 
 export default function RootLayout({

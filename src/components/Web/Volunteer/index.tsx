@@ -6,7 +6,7 @@ import VolunteerForm from './VolunteerForm'
 
 import { Icon } from "@iconify/react";
 import Notice from "../../UI/web/Notice";
-import { VolunteerFeatures, VolunteerNotice, VolunteerPage, VolunteerProgress } from "@/src/staticResource";
+import { VolunteerFeatures, VolunteerNotice, VolunteerPage, VolunteerProgress } from "@/src/static-resource/web";
 import { useTranslation } from 'react-i18next'
 import PageBanner from '@/src/helper/PageBanner'
 

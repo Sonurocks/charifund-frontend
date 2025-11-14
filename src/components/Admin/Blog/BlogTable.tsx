@@ -6,7 +6,7 @@
 
 import React, { useState, useMemo, useCallback, useRef } from "react";
 import dynamic from "next/dynamic";
-import { BlogSearchOptions } from "../Data/staticData";
+import { BlogSearchOptions } from "../../../static-resource/admin";
 import CustomInput from "../../UI/admin/CustomInput";
 import Dropdown from "../../UI/admin/Dropdown";
 import AnimatedReveal from "@/src/animations/AnimatedReveal";

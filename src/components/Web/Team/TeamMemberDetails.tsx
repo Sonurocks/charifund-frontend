@@ -2,13 +2,14 @@
 
 import React, { useRef, useEffect, } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { motion, useAnimation, useInView, Variants } from "framer-motion";
 import { FaFacebookF, FaVimeoV, FaTwitter, FaLinkedinIn } from "react-icons/fa";
 import { CircleCheckBig } from "lucide-react";
 import Button from "../../UI/web/Buttons/Button";
 import { useTranslation } from "react-i18next";
 import { useFetchSingleMember } from "@/src/hooks/web/useMembers";
+import PageBanner from "@/src/helper/PageBanner";
 
 export const SocialIcon = ({ url, Icon }: { url: string; Icon: any }) => (
   <motion.a
@@ -22,8 +23,9 @@ export const SocialIcon = ({ url, Icon }: { url: string; Icon: any }) => (
 );
 
 
-const TeamMemberDetails: React.FC<{ id: string }> = ({ id }) => {
+const TeamMemberDetails: React.FC = () => {
   const { t } = useTranslation();
+    const { id } = useParams();
   const router = useRouter();
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, amount: 0.3 });
@@ -67,6 +69,9 @@ const TeamMemberDetails: React.FC<{ id: string }> = ({ id }) => {
   };
 
   return (
+    <section>
+      <PageBanner bgImage="/assets/banner-bg.webp" title="Team Details" />
+
     <motion.section
       ref={ref}
       className="w-full flex justify-center items-center py-6 sm:py-8 md:py-12 px-3 sm:px-4 md:px-6 lg:px-8"
@@ -182,6 +187,7 @@ const TeamMemberDetails: React.FC<{ id: string }> = ({ id }) => {
         )}
       </div>
     </motion.section>
+    </section>
   );
 };
 
