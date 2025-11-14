@@ -1,26 +1,1014 @@
 @import "tailwindcss";
 
+/* Font imports */
+@font-face {
+  font-family: "Charifund";
+  src: url("/fonts/charifund.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "FontAwesome";
+  src: url("/fonts/fa-solid-900.woff2") format("woff2");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "FontAwesome";
+  src: url("/fonts/fa-regular-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "FontAwesome";
+  src: url("/fonts/fa-brands-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Slick";
+  src: url("/fonts/slick.653a4cbb.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --white: #ffffff;
+  --foreground: rgb(23, 23, 23);
+  --green: #046b59;
+  --lime-green:#4ade80;
+  --dark-green: #122f2a;
+  --gray-green: #667471;
+  --primaryColor: #ffc107;
+  --yellow: #ffc107;
+  --yellow-50: hsl(55, 90%, 52%);
+  --orange: #ff5528;
+  --blue: #3b82f6;
+  --purple: #8b5cf6;
+  --red: #ef4444;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --orange-50: #f16108;
+  --blue-50: #0b2b55;
+  --purple-50: #4c3167;
+  --red: #ef4444;
+  --red-50: #c12d2d;
+  --brown: #6b5103;
+  --light-gray:#EBEBEB;
+  --dusty-rose:#e9d1d1;
+  --gray-light:#f2f2f2;
+  --olive-brown:#6b5103;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@theme {
+  --color-primaryColor: #FFC107;
+  --color-secondaryColor: #00715D;
+  --color-inputColor: #f8e4aa;
+  --color-white: #ffffff;
+  --color-foreground: rgb(23, 23, 23);
+  --color-green: rgb(4, 107, 89);
+  --color-dark-green: #122f2a;
+  --color-gray-green: #667471;
+  --color-lime-green:#4ade80;
+  --color-orange: #ff5528;
+  --color-orange-50: #f16108;
+  --color-yellow: #ffc107;
+  --color-yellow-50: hsl(55, 90%, 52%);
+  --color-purple: #8b5cf6;
+  --color-red: #ef4444;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-300: #d1d5dc; 
+  --color-muted-gray: #667471;
+  --color-blue: #3b82f6;
+  --color-blue-50: #0b2b55;
+  --color-purple-50: #4c3167;
+  --color-red: #ef4444;
+  --color-red-50: #c12d2d;
+  --color-brown: #6b5103;
+  --color-light-gray:#EBEBEB;
+  --color-dusty-rose:#e9d1d1;
+  --color-gray-light:#f2f2f2;
+  --color-olive-brown:#6b5103;
+  --color-gray-secondary:#838383;
+
+}
+@theme{
+  --breakpoint-xs: 25rem;
+  
+}
+body {
+  font-family: "Charifund", Arial, Helvetica, sans-serif;
+  background-color: var(--color-white);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+.recharts-sector:focus {
+  outline: none !important;
+}
+
+
+/* Custom cursor styles */
+.custom-cursor {
+  z-index: 100;
+  position: fixed;
+  transition: opacity 0.1s ease;
+}
+@layer components {
+  .swiper-wrapper {
+    transition-timing-function: ease-in-out !important;
+  }
+  .scrollbar-custom{
+    @apply [&::-webkit-scrollbar]:w-[5px];
+     @apply [&::-webkit-scrollbar-button]:bg-dark-green; 
+    @apply [&::-webkit-scrollbar-corner]:bg-dark-green;
+
+    @apply [&::-webkit-scrollbar-track]:bg-blue-200/80;
+    @apply [&::-webkit-scrollbar-thumb]:min-h-[50px]; 
+    @apply [&::-webkit-scrollbar-thumb]:rounded-full;
+    @apply [&::-webkit-scrollbar-thumb]:bg-green;
+    @apply dark:[&::-webkit-scrollbar-track]:bg-blue-200/80;
+    @apply dark:[&::-webkit-scrollbar-thumb]:bg-green;
+    @apply dark:[&::-webkit-scrollbar-thumb]:min-h-[50px];
+    @apply dark:[&::-webkit-scrollbar-thumb]:rounded-full;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollbar-hide {
+  -ms-overflow-style: none;  
+  scrollbar-width: none;     
+}
+
+/* Custom styles for charity component */
+.font-cursive {
+  font-family: "Brush Script MT", cursive;
+}
+
+/* Font utility classes */
+.font-charifund {
+  font-family: "Charifund", Arial, Helvetica, sans-serif;
+}
+
+.font-slick {
+  font-family: "Slick", Arial, Helvetica, sans-serif;
+}
+
+.font-awesome {
+  font-family: "FontAwesome", Arial, Helvetica, sans-serif;
+}
+
+.font-caveat {
+  font-family: "Caveat", cursive;
+}
+
+.font-nunito {
+  font-family: var(--font-nunito), "Nunito", sans-serif;
+}
+
+/* Smooth transitions for carousel */
+.carousel-transition {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Custom card hover effects */
+.charity-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+}
+
+.charity-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+
+
+/* Cloud-like card shape */
+.charity-card::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.1) 50%,
+      transparent 70%);
+  border-radius: 32px;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.charity-card:hover::before {
+  opacity: 1;
+}
+
+/* Gradient overlays for cards */
+.card-overlay {
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.9) 0%,
+      rgba(255, 255, 255, 0.7) 100%);
+}
+
+/* Custom button styles */
+.nav-button {
+  transition: all 0.2s ease;
+}
+
+.nav-button:hover {
+  transform: scale(1.1);
+}
+
+/* Cloud-like border effect */
+.cloud-border {
+  position: relative;
+}
+
+.cloud-border::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  background: linear-gradient(45deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.1) 25%,
+      transparent 50%,
+      rgba(255, 255, 255, 0.1) 75%,
+      transparent 100%);
+  border-radius: 34px;
+  z-index: -1;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+
+  0%,
+  100% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Wavy border effect */
+.wavy-border {
+  position: relative;
+}
+
+.wavy-border::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: radial-gradient(circle at 20% 20%,
+      currentColor 2px,
+      transparent 2px),
+    radial-gradient(circle at 80% 20%, currentColor 2px, transparent 2px),
+    radial-gradient(circle at 40% 80%, currentColor 2px, transparent 2px),
+    radial-gradient(circle at 80% 80%, currentColor 2px, transparent 2px);
+  border-radius: 32px;
+  z-index: -1;
+  opacity: 0.3;
+}
+
+/* Custom animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/*custom animation */
+@keyframes fade-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-down {
+  animation: fade-in-down 0.3s ease-out forwards;
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-up-delay {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  50% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes moveUpDown {
+  0% {
+    transform: translateY(0px);
+  }
+  100% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes float-delay {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes icon-bounce {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes dip-dop {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+    filter: brightness(1) contrast(1);
+  }
+
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+    filter: brightness(0.9) contrast(1.3);
+  }
+}
+
+/* Animation classes */
+.animate-fade-in {
+  animation: fade-in 1s ease-out;
+}
+
+.animate-slide-up {
+  animation: slide-up 1s ease-out;
+}
+
+.animate-slide-up-delay {
+  animation: slide-up-delay 1.5s ease-out;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-float-delay {
+  animation: float-delay 3s ease-in-out infinite 1.5s;
+}
+
+.animate-icon-bounce {
+  animation: icon-bounce 2s ease-in-out infinite;
+}
+
+.animate-slide-in-left {
+  animation: slide-in-left 0.5s ease-out;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.5s ease-out;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.5s ease-out;
+}
+
+.animate-dip-dop {
+  animation: dip-dop 1.5s infinite ease-in-out;
+}
+
+/* Carousel transition effects */
+.carousel-slide-enter {
+  opacity: 0;
+  transform: translateX(100px);
+}
+
+.carousel-slide-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 0.5s ease-out;
+}
+
+.carousel-slide-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.carousel-slide-exit-active {
+  opacity: 0;
+  transform: translateX(-100px);
+  transition: all 0.5s ease-out;
+}
+
+/* Staggered animation for cards */
+.card-stagger-1 {
+  animation-delay: 0.1s;
+}
+
+.card-stagger-2 {
+  animation-delay: 0.2s;
+}
+
+.card-stagger-3 {
+  animation-delay: 0.3s;
+}
+
+/* Smooth carousel container */
+.carousel-container {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced hover effects */
+.charity-card:hover .animate-icon-bounce {
+  animation-duration: 1s;
+}
+
+.charity-card:hover .animate-float {
+  animation-duration: 2s;
+}
+
+
+.hand-icon::before {
+  content: "\e821";
+  
+}
+
+/* Font Awesome Icon Classes for Charity Cards */
+.icon-healthy-food::before {
+  content: "\f2e7";
+  font-family: "FontAwesome";
+  font-weight: 900;
+  display: inline-block;
+  transform: none !important;
+}
+
+.icon-medical-care::before {
+  content: "\f0f8";
+  font-family: "FontAwesome";
+  font-weight: 900;
+  display: inline-block;
+  transform: none !important;
+  position: relative;
+  z-index: 30;
+}
+
+.icon-education::before {
+  content: "\f19d";
+  font-family: "FontAwesome";
+  font-weight: 900;
+  display: inline-block;
+  transform: none !important;
+  position: relative;
+  z-index: 30;
+}
+
+.icon-clean-water::before {
+  content: "\f773";
+  font-family: "FontAwesome";
+  font-weight: 900;
+  display: inline-block;
+  transform: none !important;
+}
+
+.icon-shelter::before {
+  content: "\f015";
+  font-family: "FontAwesome";
+  font-weight: 900;
+  display: inline-block;
+  transform: none !important;
+}
+
+.icon-emergency::before {
+  content: "\f0f9";
+  font-family: "FontAwesome";
+  font-weight: 900;
+  display: inline-block;
+  transform: none !important;
+}
+
+.bg-image-1 {
+  background-image: url("/assets/charityYellowCard.webp");
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.bg-image-2 {
+  background-image: url("/assets/charityGreenCard.webp");
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.bg-image-3 {
+  background-image: url("/assets/charityDarkGreenCard.webp");
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Missing animation classes for HelpingEachOther component */
+@keyframes fade-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fade-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes draw-line {
+  from {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+  }
+
+  to {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 0;
+  }
+}
+
+.anim-fade-in-left {
+  animation: fade-in-left 1s ease-out forwards;
+}
+
+.anim-fade-in-right {
+  animation: fade-in-right 1s ease-out forwards;
+}
+
+.anim-fade-in-up {
+  animation: fade-in-up 1s ease-out forwards;
+}
+
+.anim-slide-in-right {
+  animation: slide-in-right 1s ease-out forwards;
+}
+
+.anim-draw-2s {
+  animation: draw-line 2s ease-out forwards;
+}
+
+.anim-draw-2s-delay-600 {
+  animation: draw-line 2s ease-out 0.6s forwards;
+}
+
+/* Wave animation for the wavy line */
+@keyframes wave {
+  0% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(10px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.animate-wave {
+  animation: wave 3s linear infinite;
+}
+
+/* Grid line animation */
+@keyframes moveTopBottom {
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.grid-line {
+  animation: moveTopBottom 4s ease-in-out infinite;
+}
+
+/* HelpAndDonate Component Styles */
+.help-donate-swiper .swiper-slide {
+  height: auto;
+}
+
+.help-donate-swiper .swiper-button-next,
+.help-donate-swiper .swiper-button-prev {
+  display: none;
+}
+
+/* Custom styles for donation cards */
+.donation-card {
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.donation-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+}
+
+.donation-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent);
+  transition: left 0.5s ease;
+}
+
+.donation-card:hover::before {
+  left: 100%;
+}
+
+/* Progress bar animation */
+.progress-bar-fill {
+  transition: width 1s ease-in-out;
+}
+
+/* Category tag styles */
+.category-tag {
+  background: linear-gradient(135deg, #ffc107 0%, #ffd54f 100%);
+  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
+}
+
+/* Navigation button hover effects */
+.nav-btn-prev:hover,
+.nav-btn-next:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Carousel indicator styles */
+.carousel-indicator {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.carousel-indicator:hover {
+  transform: scale(1.2);
+}
+
+.carousel-indicator.active {
+  background: linear-gradient(135deg, #046b59 0%, #122f2a 100%);
+  box-shadow: 0 2px 8px rgba(4, 107, 89, 0.3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .help-donate-swiper .swiper-slide {
+    margin: 0 10px;
+  }
+}
+
+@media (max-width: 640px) {
+  .help-donate-swiper .swiper-slide {
+    margin: 0 5px;
+  }
+}
+
+
+
+
+@keyframes ripple {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.4;
+  }
+  70% {
+    transform: scale(1.5);
+    opacity: 0.1;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+.animate-ripple {
+  animation: ripple 2s infinite;
+}
+
+
+
+.icon-user::before {
+  content: "\f007"; /* fa-user ka unicode */
+  font-family: "FontAwesome";
+  font-weight: 900; /* solid style */
+  display: inline-block;
+}
+
+.volunteer-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 6rem;
+  position:relative;
+
+}
+
+/* 2 cards per row above 768px */
+@media screen and (min-width: 768px) {
+  .volunteer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* 2 cards at 1182px specifically */
+@media screen and (min-width: 1182px) and (max-width: 1279px) {
+  .volunteer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* 4 cards per row above 1280px */
+@media screen and (min-width: 1200px) {
+  .volunteer-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+
+/* ===============================
+   VolunteerProfile Global Styles
+   =============================== */
+
+.volunteer-image {
+   position: relative;
+  width: 516px;
+  height: 604px;
+}
+
+@media (min-width: 977px) {
+  .volunteer-image {
+    width: 696px;
+    height: 815px;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1190px) {
+  .volunteer-image {
+    width: 456px;
+    height: 534px;
+  }
+}
+
+@media (min-width: 1198px) {
+  .volunteer-image {
+    width: 456px;
+    height: 534px;
+  }
+}
+
+@media (min-width: 1398px) {
+  .volunteer-image {
+    width: 451px;
+    height: 528px;
+  }
+}
+
+@media (min-width: 1400px) {
+  .volunteer-image {
+    width: 526px;
+    height: 616px;
+  }
+}
+
+/* --- Text & About Section --- */
+@media (max-width: 1023px) {
+  .volunteer-text,
+  .volunteer-about {
+    max-width: 516px;
+    margin-left: 2rem;
+    margin-right: auto;
+    text-align: left;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .volunteer-about {
+    max-width: 100%;
+    margin-left: 0;
+    text-align: left;
+  }
+}
+
+@media (max-width: 768px) {
+  .volunteer-text,
+  .volunteer-about {
+    max-width: 90%;
+  }
+}
+
+/* Responsive Charity Cards */
+.charity-card-responsive {
+  width: 100%;
+  height: clamp(400px, 50vw, 520px);
+  min-width: 280px;
+  max-width: 100%;
+  padding: clamp(1rem, 3vw, 2.5rem);
+  transition: all 0.3s ease;
+}
+
+.charity-card-responsive .card-icon {
+  width: clamp(3.5rem, 8vw, 5rem);
+  height: clamp(3.5rem, 8vw, 5rem);
+  margin-bottom: clamp(1rem, 3vw, 2rem);
+}
+
+.charity-card-responsive .card-title {
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  margin-bottom: clamp(0.75rem, 2vw, 1.5rem);
+  line-height: 1.2;
+}
+
+.charity-card-responsive .card-description {
+  font-size: clamp(0.875rem, 2.5vw, 1rem);
+  line-height: clamp(1.4, 2vw, 1.6);
+  max-width: clamp(200px, 80%, 320px);
+}
+
+/* Mobile-first responsive behavior for 300px-700px */
+@media (min-width: 300px) and (max-width: 700px) {
+  .charity-card-responsive {
+    height: clamp(380px, 60vw, 450px);
+    padding: clamp(1.2rem, 4vw, 2rem);
+  }
+  
+  .charity-card-responsive .card-icon {
+    width: clamp(4rem, 10vw, 5.5rem);
+    height: clamp(4rem, 10vw, 5.5rem);
+  }
+  
+  .charity-card-responsive .card-title {
+    font-size: clamp(1.1rem, 4vw, 1.4rem);
+  }
+  
+  .charity-card-responsive .card-description {
+    font-size: clamp(0.9rem, 3vw, 1.1rem);
+    max-width: clamp(220px, 85%, 300px);
+  }
+}
+
+
+
+
+
+
+

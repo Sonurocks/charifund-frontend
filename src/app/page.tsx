@@ -1,10 +1,9 @@
-import Image from "next/image";
+import Home from "@/src/components/Web/Home";
 
-export default function Home() {
+export default function Page() {
   return (
     <div>
-        <h2>Welcome to Charifund</h2>
-        <p>Your development environment for Charifund.</p>
+      <Home />
     </div>
   );
 }
