@@ -1,8 +1,7 @@
 import React from "react";
-import { Event, EventColumnCallbacks } from "../types/event";
-import { CampaignColumnCallbacks } from "@/src/types/campaign";
 import TableRowActions from "./EventActions";
 import { FaEdit, FaEye, FaTrash } from "react-icons/fa";
+import { Event, EventColumnCallbacks } from "@/src/types/admin/event";
 
 
 
