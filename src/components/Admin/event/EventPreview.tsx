@@ -81,6 +81,7 @@ const formatTime = (dateStr?: Date|null) => {
       )}
 
       {/* Date & Location */}
+      
       <div className="flex flex-row justify-baseline gap-x-10 mb-6 text-foreground font-medium">
         {data.createdAt && (
           <p className="flex items-center text-[16px] gap-2">
