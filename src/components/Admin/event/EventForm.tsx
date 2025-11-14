@@ -75,7 +75,6 @@ const EventForm = ({ initialData, onClose, mode, onPreview }: EventFormProps) =>
                       setTouched(touchAllFields(values));
           
                       const formErrors = await validateForm();
-                      console.log("Form Errors:", formErrors);
           
                       for (const l of ["en", "hi"] as const) {
                         if (hasErrorsForLang(formErrors, l)) {
