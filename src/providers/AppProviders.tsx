@@ -66,7 +66,6 @@ export default function AppProviders({ children }: { children: ReactNode }) {
                 ) : (
                   loading ? <Loader /> : children
                 )}
-
                 <CustomCursor />
                 <Toaster
                   position="top-center"

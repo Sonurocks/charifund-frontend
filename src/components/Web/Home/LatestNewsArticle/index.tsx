@@ -5,7 +5,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion, useInView } from 'framer-motion';
 import Button from '../../../UI/web/Buttons/Button';
-import { useTranslation } from 'react-i18next';
 import FadeUpCard from '@/src/animations/FadeButtomUp';
 import CustomLoader from '../../../UI/web/Loader/CustomLoader';
 import BlogCard from '../../Blog/BlogCard';
@@ -14,13 +13,14 @@ import ComponentLabel from '@/src/components/UI/web/ComponentLabel';
 import ComponentTitle from '@/src/components/UI/web/ComponentTitle';
 
 const LatestNewsArticle: React.FC = () => {
-  const { t } = useTranslation();
   const { data, isLoading, isError } = useFetchAllBlogs(1, 3, 'All');
 
   const headerRef = useRef(null);
   const isHeaderInView = useInView(headerRef, { once: true });
 
-  if (!isLoading && (!data?.blogs || data.blogs.length === 0)) {
+  const blogs = data?.blogs ?? [];
+
+  if (!isLoading && blogs.length === 0) {
     return null;
   }
 
@@ -50,7 +50,6 @@ const LatestNewsArticle: React.FC = () => {
             />
           </div>
 
-
           {/* Animated Heart */}
           <motion.div
             className="absolute  hidden md:block top-14 md:top-90 lg:top-38 xl:top-13 xl:left-[-90] lg:left-[-25] left-[-30] z-[-1]"
@@ -73,20 +72,26 @@ const LatestNewsArticle: React.FC = () => {
             />
           </motion.div>
         </div>
+
         {/* News Cards Grid */}
-        {isLoading ? <div className="flex items-center justify-center text-center"><CustomLoader /></div> : isError ? <div className="text-center flex items-center justify-center text-red">Failed to fetch blogs.</div> :
+        {isLoading ? (
+          <div className="flex items-center justify-center text-center"><CustomLoader /></div>
+        ) : isError ? (
+          <div className="text-center flex items-center justify-center text-red">Failed to fetch blogs.</div>
+        ) : (
           <div className='grid grid-cols-1 md:grid-cols-1 md:px-14 lg:px-18 lg:grid-cols-2 xl:px-0 xl:grid-cols-3 gap-8 lg:gap-5' >
             <Suspense fallback={<CustomLoader />}>
-              {data?.blogs?.map((card: any, i: number) => {
+              {blogs.map((card: any, i: number) => {
                 return (
                   <FadeUpCard key={i} delay={i * 0.2}>
                     <BlogCard key={i} card={card} />
                   </FadeUpCard>
                 )
               })}
+
             </Suspense>
           </div>
-        }
+        )}
 
         {/* View All Button */}
         <motion.div
@@ -107,7 +112,6 @@ const LatestNewsArticle: React.FC = () => {
             />
           </Link>
         </motion.div>
-
 
       </div>
     </div>

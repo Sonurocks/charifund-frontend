@@ -30,7 +30,7 @@ export const VolunteerCard: React.FC<VolunteerCardProps> = ({ member, idx }) => 
     if (inView) controls.start({ opacity: 1, y: 0 });
   }, [inView, controls]);
 
-  const bgClass = isHovered ? "bg-dark-green" : "bg-[#f1f0ee]";
+  const bgClass = isHovered ? "bg-dark-green" : "bg-gray-200";
   const nameColor = isHovered ? "text-white" : "text-black";
   const roleColor = isHovered ? "text-yellow-400" : "text-black";
 
@@ -53,8 +53,12 @@ export const VolunteerCard: React.FC<VolunteerCardProps> = ({ member, idx }) => 
           src={member.image || "/assets/volunteer1.webp"}
           alt={member.name}
           fill
+          sizes="(max-width: 768px) 100vw, 
+         (max-width: 1200px) 50vw, 
+         25vw"
           className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
         />
+
         <motion.div
           initial={{ opacity: 0 }}
           whileHover={{ opacity: 1 }}

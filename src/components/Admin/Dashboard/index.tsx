@@ -38,34 +38,20 @@ export const pieData = [
 export const Dashboard = () => {
   const { data: dashboardData, isLoading, error } = useFetchDashboardData();
 
- 
+  const safeDashboardData = {
+    totalFunds: dashboardData?.totalFunds ?? 0,
+    activeCampaign: dashboardData?.activeCampaign ?? 0,
+    totalMembers: dashboardData?.totalMembers ?? 0,
+    pendingRequest: dashboardData?.pendingRequest ?? 0,
+  };
 
   const cards = [
-    { 
-      title: "Total Funds", 
-      value: dashboardData ? `₹${dashboardData.totalFunds.toLocaleString()}` : "₹0", 
-      icon: <FaMoneyBillWave size={24} />, 
-      color: "from-yellow-400 to-yellow-600" 
-    },
-    { 
-      title: "Active Campaigns", 
-      value: dashboardData ? dashboardData.activeCampaign.toString() : "0", 
-      icon: <FaClipboardList size={24} />, 
-      color: "from-green-400 to-green-600" 
-    },
-    { 
-      title: "Members", 
-      value: dashboardData ? dashboardData.totalMembers.toString() : "0", 
-      icon: <FaUsers size={24} />, 
-      color: "from-yellow-300 to-yellow-500" 
-    },
-    { 
-      title: "Pending Requests", 
-      value: dashboardData ? dashboardData.pendingRequest.toString() : "0", 
-      icon: <FaRegBell size={24} />, 
-      color: "from-green-300 to-green-500" 
-    },
+    { title: "Total Funds", value: `₹${safeDashboardData.totalFunds.toLocaleString()}`, icon: <FaMoneyBillWave size={24} />, color: "from-yellow-400 to-yellow-600" },
+    { title: "Active Campaigns", value: safeDashboardData.activeCampaign.toString(), icon: <FaClipboardList size={24} />, color: "from-green-400 to-green-600" },
+    { title: "Members", value: safeDashboardData.totalMembers.toString(), icon: <FaUsers size={24} />, color: "from-yellow-300 to-yellow-500" },
+    { title: "Pending Requests", value: safeDashboardData.pendingRequest.toString(), icon: <FaRegBell size={24} />, color: "from-green-300 to-green-500" },
   ];
+
 
   const cardVariants: Variants = {
     hidden: { opacity: 0, y: 30 },
@@ -75,8 +61,6 @@ export const Dashboard = () => {
       transition: { delay: i * 0.15, type: "spring", stiffness: 80 },
     }),
   };
-
-
 
   const chartVariants: Variants = {
     hidden: { opacity: 0 },
@@ -96,26 +80,6 @@ export const Dashboard = () => {
     );
   }
 
-  if (error) {
-    console.error("Dashboard API Error:", error);
-    return (
-      <div className="md:p-5 md:pr-0 w-full">
-        <Breadcrumb lable="Dashboard" />
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <p className="text-red-600 font-semibold mb-2">Failed to load dashboard data</p>
-          <p className="text-red-500 text-sm">
-            Error: {error?.message || "Unknown error occurred"}
-          </p>
-          <p className="text-gray-600 text-sm mt-2">
-            API URL: {process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"}
-          </p>
-          <p className="text-gray-600 text-sm">
-            Please check if your backend server is running and the API endpoint is accessible.
-          </p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="md:p-5 md:pr-0 w-full">
@@ -140,6 +104,7 @@ export const Dashboard = () => {
           </motion.div>
         ))}
       </div>
+      <RecentCampaign />
 
       <motion.div
         variants={chartVariants}
@@ -159,7 +124,7 @@ export const Dashboard = () => {
               <CartesianGrid strokeDasharray="3 3" stroke="var(--gray-200)" />
               <XAxis dataKey="name" tickLine={false} />
               <YAxis tickLine={false} />
-              <Tooltip cursor={{ fill: "var(--gray-100)" }} formatter={(value: number) => `₹${value.toLocaleString()}`} />
+              <Tooltip cursor={{ fill: "var(--gray-100)" }} formatter={(value: number) => `₹${value.toLocaleString() ?? "-"}`} />
               <Bar dataKey="funds" radius={[8, 8, 0, 0]} barSize={20}>
                 {barData.map((entry, index) => (
                   <Cell
@@ -174,7 +139,6 @@ export const Dashboard = () => {
           </ResponsiveContainer>
         </div>
       </motion.div>
-      <RecentCampaign />
 
     </div>
   );

@@ -14,7 +14,7 @@ const BannerTable = dynamic(() => import("./BannerTable"), {
 
 const Banner = () => {
   return (
-    <div>d:\Projects\deployed Cherifund\cherifund\src\components\Admin\Event
+    <div>
       <Breadcrumb lable="Banner" />
       <BannerTable />
     </div>

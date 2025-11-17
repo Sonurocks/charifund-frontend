@@ -31,7 +31,7 @@ const Footer = () => {
   };
 
   const underlineBase =
-    "relative inline-flex items-center gap-2 text-white/50 before:content-[''] before:absolute before:left-0 before:bottom-0 before:h-[1px] before:w-full before:bg-yellow before:block before:scale-x-0 before:origin-center before:transition-transform";
+    "relative inline-flex items-center gap-2 text-white/50 before:content-[''] before:absolute before:left-0 before:bottom-0 before:h-[1px] before:w-[calc(100%)] before:bg-yellow before:block before:scale-x-0 before:origin-center before:transition-transform";
 
   const underlineOnGroupHover = `${underlineBase} text-white transition-colors group-hover:text-yellow before:duration-500 group-hover:before:scale-x-100`;
   const underlineOnHover = `${underlineBase} cursor-pointer hover:text-yellow before:duration-300 hover:before:scale-x-100`;
@@ -145,48 +145,36 @@ const Footer = () => {
           </motion.div>
 
           {/* Get In Touch */}
-          <motion.div variants={item} className="relative">
+          <motion.div variants={item} className="relative ">
             <h3 className="text-[20px] xl:text-2xl lg:text-[20px] 2xl:text-[24px] font-bold mb-3">
               {t("Get In Touch")}
             </h3>
             <div className="w-[35%] mb-5">
               <Divider />
             </div>
-            <div className="space-y-4">
-              <p className={`${underlineOnHover} text-sm xl:text-base lg:text-[20px] 2xl:text`}>
-                <Icon
-                  icon="ion:location"
-                  width="22"
-                  height="22"
-                  className="text-yellow"
-                />
-                <span>{footerData.contact.address}</span>
-              </p>
-              <p className={`${underlineOnHover} text-sm xl:text-base`}>
-                <Icon
-                  icon="mdi:phone"
-                  width="22"
-                  height="22"
-                  className="text-yellow"
-                />
-                <a href={`tel:${footerData.contact.phone_number}`}>
-                  <span>{footerData.contact.phone_label}</span>
-                </a>
+          <div className="space-y-4 flex flex-col">
 
-              </p>
-              <p className={`${underlineOnHover} text-sm xl:text-base`}>
-                <Icon
-                  icon="mdi:email"
-                  width="22"
-                  height="22"
-                  className="text-yellow"
-                />
-                <a href={`mailto:${footerData.contact.email}`}>
-                  <span>{footerData.contact.email}</span>
-                </a>
+  <p className={`${underlineOnHover} text-sm xl:text-base inline-flex items-center gap-2`}>
+    <Icon icon="ion:location" width="22" height="22" className="text-yellow" />
+    <span>{footerData.contact.address}</span>
+  </p>
 
-              </p>
-            </div>
+  <p className={`${underlineOnHover} text-sm xl:text-base inline-flex items-center gap-2`}>
+    <Icon icon="mdi:phone" width="22" height="22" className="text-yellow" />
+    <a href={`tel:${footerData.contact.phone_number}`}>
+      <span>{footerData.contact.phone_label}</span>
+    </a>
+  </p>
+
+  <div className={`${underlineOnHover} text-sm xl:text-base inline-flex items-center gap-2`}>
+    <Icon icon="mdi:email" width="22" height="22" className="text-yellow" />
+    <a href={`mailto:${footerData.contact.email}`}>
+      <span>{footerData.contact.email}</span>
+    </a>
+  </div>
+
+</div>
+
 
             <motion.div
               animate={{ scale: [1, 1.3, 1], opacity: [0.6, 1, 0.6] }}

@@ -65,7 +65,7 @@ const QueryPreview = ({ data, onClose } : {data:Query, onClose?: () => void}) =>
       <FieldRow label="Form Type" value={formType} />
       <FieldRow
         label="Created At"
-        value={createdAt ? new Date(createdAt).toLocaleString() : null}
+        value={createdAt ? new Date(createdAt).toLocaleString() ?? "-" : null}
       />
       <FieldRow label="Email" value={email} />
       <FieldRow label="First Name" value={firstName} />

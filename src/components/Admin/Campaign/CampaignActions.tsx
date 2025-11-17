@@ -6,7 +6,6 @@ import React from "react";
 import dynamic from "next/dynamic";
 import { TableRowActionsProps } from "@/src/types/admin/campaign";
 
-//  Dynamically import Tooltip from MUI (reduces initial JS bundle)
 const Tooltip = dynamic(() => import("@mui/material/Tooltip"), {
   ssr: false,
   loading: () => <span className="text-gray-400 text-xs">...</span>,

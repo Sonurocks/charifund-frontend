@@ -45,8 +45,8 @@ function RecentCampaign() {
               >
                 <td className="p-3 border border-foreground/30">{index + 1}</td>
                 <td className="p-3 border border-foreground/30">{item.title}</td>
-                <td className="p-3 border border-foreground/30">₹{item.goalAmount.toLocaleString()}</td>
-                <td className="p-3 border border-foreground/30">₹{item.raisedAmount.toLocaleString()}</td>
+                <td className="p-3 border border-foreground/30">₹{item.goalAmount.toLocaleString() ?? 0}</td>
+                <td className="p-3 border border-foreground/30">₹{item.raisedAmount.toLocaleString() ?? 0}</td>
                 <td className="p-3 border border-foreground/30">{item.status}</td>
               </motion.tr>
             ))}

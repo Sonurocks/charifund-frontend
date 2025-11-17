@@ -124,11 +124,11 @@ const CampaignPreview = ({
         </p>
         <p>
           <span className="font-semibold text-foreground">Goal Amount:</span> ₹{" "}
-          {data.goalAmount?.toLocaleString()}
+          {data.goalAmount?.toLocaleString() ?? 0}
         </p>
         <p>
           <span className="font-semibold text-foreground">Raised Amount:</span> ₹{" "}
-          {data.raisedAmount?.toLocaleString()}
+          {data.raisedAmount?.toLocaleString() ?? 0}
         </p>
       </div>
 
