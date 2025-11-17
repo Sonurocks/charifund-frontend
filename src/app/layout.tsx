@@ -26,7 +26,7 @@ export const metadata: Metadata = {
       // { url: "/favicon-48x48.ico", sizes: "48x48", type: "image/x-icon" },
       // { url: "/favicon-32x32.ico", sizes: "32x32", type: "image/x-icon" },
       // { url: "/favicon-16x16.ico", sizes: "16x16", type: "image/x-icon" },
-    ],          
+    ],
   },
 };
 
@@ -40,9 +40,9 @@ export default function RootLayout({
       <body
         className={`${caveat.variable} ${nunito.variable} antialiased min-h-screen flex flex-col`}
       >
-          <AppProviders>
-            {children}
-          </AppProviders>
+        <AppProviders>
+          {children}
+        </AppProviders>
       </body>
     </html>
   );

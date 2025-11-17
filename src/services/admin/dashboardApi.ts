@@ -9,16 +9,9 @@ export interface DashboardData {
   pendingRequest: number;
 }
 
-export const dashboardApi = {
-  getDashboardData: async (): Promise<DashboardData> => {
-    try {
-      console.log("Making API call to:", "/admin/dashboard/get-data");
-      const response = await api.get("/admin/dashboard/get-data");
-      console.log("Dashboard API Response:", response.data);
-      return response.data;
-    } catch (error) {
-      console.error("Dashboard API Error Details:", error);
-      throw error;
-    }
-  },
+export const dashboardApi = async () => {
+  console.log("che809")
+  const  {data}  = await api.get("/admin/dashboard/get-data");
+  console.log("che", data)
+  return data;
 };

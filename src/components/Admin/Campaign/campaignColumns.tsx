@@ -3,8 +3,7 @@
 
 import React from "react";
 import dynamic from "next/dynamic";
-import { Campaign } from "../../../static-resource/admin";
-import { CampaignColumnCallbacks } from "@/src/types/admin/campaign";
+import { Campaign, CampaignColumnCallbacks } from "@/src/types/admin/campaign";
 
 //  Dynamically import TableRowActions
 const TableRowActions = dynamic(() => import("./CampaignActions"), {
@@ -29,16 +28,16 @@ export const getCampaignColumns = ({
   onView,
 }: CampaignColumnCallbacks) => [
   { name: "SNo", cell: (_row: Campaign, index: number) => index + 1, width: "80px" },
-  { name: "Title", selector: (row: Campaign) => row.title, sortable: true },
-  { name: "Organizer", selector: (row: Campaign) => row.organizer },
-  { name: "Category", selector: (row: Campaign) => row.category },
+  { name: "Title", selector: (row: Campaign) => row.title ?? "-", sortable: true },
+  { name: "Organizer", selector: (row: Campaign) => row.organizer ?? "-" },
+  { name: "Category", selector: (row: Campaign) => row.category ?? "-" },
   {
     name: "Goal",
-    selector: (row: Campaign) => `₹${row.goalAmount.toLocaleString()}`,
+    selector: (row: Campaign) => `₹${row.goalAmount.toLocaleString() ?? "-"}`,
   },
   {
     name: "Raised",
-    selector: (row: Campaign) => `₹${row.raisedAmount.toLocaleString()}`,
+    selector: (row: Campaign) => `₹${row.raisedAmount.toLocaleString() ?? "-"}`,
   },
   { name: "Status", selector: (row: Campaign) => row.status },
   {
