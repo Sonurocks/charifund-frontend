@@ -27,7 +27,6 @@ const EventForm = ({ initialData, onClose, mode, onPreview }: EventFormProps) =>
 
   const isView = mode === "view";
   const isEdit = mode === "edit";
-  console.log(initialData)
   return (
     <div className="w-full pb-10">
       <LanguageToggle language={language} onChange={toggleLanguage} />
@@ -36,7 +35,6 @@ const EventForm = ({ initialData, onClose, mode, onPreview }: EventFormProps) =>
         initialValues={initialValues}
         validationSchema={EventSchema}
        onSubmit={(values: EventFormValues) => {
-        console.log("reached")
           const payload = { ...values };
           onPreview?.(payload);
         }}
@@ -75,7 +73,6 @@ const EventForm = ({ initialData, onClose, mode, onPreview }: EventFormProps) =>
                       setTouched(touchAllFields(values));
           
                       const formErrors = await validateForm();
-                      console.log("Form Errors:", formErrors);
           
                       for (const l of ["en", "hi"] as const) {
                         if (hasErrorsForLang(formErrors, l)) {

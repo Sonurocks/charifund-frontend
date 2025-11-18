@@ -11,7 +11,6 @@ export const createEvent = async (campaign: CampaignFormValues) => {
 
 export const fetchAllEvent = async (page: number = 1, limit: number = 2,search?:string,searchedData?:string) => {
   let url = `/admin/event/getAllEvents?page=${page}&limit=${limit}`;
-  console.log("search data",searchedData)
   if (searchedData && search) {
     url += `&${encodeURIComponent(searchedData)}=${encodeURIComponent(search)}`;
   } else if (search && search.trim() !== "") {

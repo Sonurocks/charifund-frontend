@@ -4,7 +4,6 @@ import React, { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import Button from "../../../UI/web/Buttons/Button";
 import { useTranslation } from "react-i18next";
 
 import becomeVolunteerBg from "@/public/assets/becomevoluntter2.webp";
@@ -12,6 +11,7 @@ import volunteerIcon from "@/public/assets/icon.webp";
 import yellowImage from "@/public/assets/yellow_image.webp";
 import videoBg from "@/public/assets/sendmessagefordonation.webp";
 import thumbLg from "@/public/assets/becomevolunteer3.webp";
+import Button from "@/src/components/UI/web/Buttons/Button";
 
 const BecomeVolunteer: React.FC = () => {
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
@@ -101,7 +101,6 @@ const BecomeVolunteer: React.FC = () => {
           </div>
         </div>
 
-        {/* Middle Panel */}
         <div className="flex-1 flex items-center justify-center relative lg:h-full md:h-[400px] h-[300px] min-h-[200px]">
           {/* Desktop version with mask */}
           <div className="hidden lg:block">

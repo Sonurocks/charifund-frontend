@@ -7,7 +7,6 @@ import { QueryFormValues } from "@/src/utils/validations/FormValidation";
 export const fetchAllQueries = async (page: number = 1, limit: number = 10, filterValue?: string, filterField?: string) => {
 
   let url = `/admin/form/getAllForms?page=${page}&limit=${limit}`;
-  console.log("object check", filterValue)
   let searchValue = filterValue === "all" ? "" : filterValue;
 
   if (filterValue) url += `&${encodeURIComponent(filterField ?? "")}=${encodeURIComponent(searchValue ?? "")}`;

@@ -17,8 +17,7 @@ const MemberPreview = ({ data, onSubmit, onBack, mode,showButton=true,createMuta
 
   const { language, toggleLanguage } = useLanguageToggle();
   const lang = language;
-   console.log(data) 
-  // Get localized string
+  
   const getLangText = (field: any): string => {
     if (field && typeof field === "object" && lang in field) {
       return field[lang] ?? "";

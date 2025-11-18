@@ -13,20 +13,16 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { motion, useInView } from 'framer-motion';
 import ArrowButton from '@/src/components/UI/web/Buttons/ArrowButton';
-import { useTranslation } from "react-i18next";
 
 import { useFetchAllCampaigns } from '@/src/hooks/web/useCampaigns';
-import { allDonationCards } from '@/src/static-resource/web';
 
 import CarouselIndicators from './CarouselIndicators';
 import CampaignCard from '../../Campaign/CampaignCard';
 import { CampaignApiResponse, CampaignCardInterface } from '@/src/types/web/campaign';
 import ComponentLabel from '@/src/components/UI/web/ComponentLabel';
 import ComponentTitle from '@/src/components/UI/web/ComponentTitle';
-//import ArrowButton from '@/src/components/Button'; // ✅ your new button
 
 const HelpAndDonate: React.FC = () => {
-  const { t } = useTranslation();
   const router = useRouter();
 
   const [activeIndex, setActiveIndex] = useState(0);
@@ -66,10 +62,8 @@ const HelpAndDonate: React.FC = () => {
         };
       });
     }
-    return allDonationCards;
+    return [];
   }, [campaignsData]);
-
-  if (!isLoading && (!campaignsToDisplay.length)) return null;
 
   const handleCardClick = useCallback((id?: string) => {
     router.push(id ? `/campaign/${id}` : '/donation');
@@ -86,12 +80,22 @@ const HelpAndDonate: React.FC = () => {
   const headerRef = useRef(null);
   const isHeaderInView = useInView(headerRef, { once: true });
 
+  if (!isLoading && campaignsToDisplay.length === 0) {
+    return (
+      <section className="py-20 text-center">
+        <h2 className="text-xl md:text-2xl font-semibold text-gray-600">
+          No campaigns found
+        </h2>
+      </section>
+    );
+  }
+
+
   return (
     <section
       ref={sectionRef}
       className="relative py-12 md:py-16 lg:py-20 min-h-[400px] md:min-h-[500px] overflow-hidden"
     >
-      {/* Background */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: "url('/assets/bgsection3.webp')" }}
@@ -122,8 +126,8 @@ const HelpAndDonate: React.FC = () => {
                 onClick={handlePrev}
                 size={55}
                 className={`shadow-md hover:scale-105 transition-transform ${leftButtonColor === "green"
-                    ? "bg-dark-green text-white hover:bg-yellow hover:text-black"
-                    : "bg-yellow text-black hover:bg-dark-green hover:text-white"
+                  ? "bg-dark-green text-white hover:bg-yellow hover:text-black"
+                  : "bg-yellow text-black hover:bg-dark-green hover:text-white"
                   }`}
               />
               <ArrowButton
@@ -131,8 +135,8 @@ const HelpAndDonate: React.FC = () => {
                 onClick={handleNext}
                 size={55}
                 className={`shadow-md hover:scale-105 transition-transform ${rightButtonColor === "yellow"
-                    ? "bg-yellow text-black hover:bg-dark-green hover:text-white"
-                    : "bg-dark-green text-white hover:bg-yellow hover:text-black"
+                  ? "bg-yellow text-black hover:bg-dark-green hover:text-white"
+                  : "bg-dark-green text-white hover:bg-yellow hover:text-black"
                   }`}
               />
             </div>

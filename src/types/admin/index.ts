@@ -1,8 +1,5 @@
 import { BannerFormValues, BlogFormValues, CampaignFormValues, EventFormValues, MemberFormValues } from "@/src/utils/validations/FormValidation";
 import { Comment } from "../web/comments";
-import { Feedback } from "@/src/components/Admin/types/feedback";
-import { Member } from "@/src/components/Admin/types/members";
-import { Query } from "@/src/components/Admin/types/query";
 import { JSX } from "react";
 
 export interface AdminSideBarTabProps {
@@ -151,11 +148,16 @@ import { ChangeEvent, KeyboardEvent, ReactNode, RefObject } from "react";
 import { TableColumn } from "react-data-table-component";
 import { Banner } from "./banner";
 import { UseMutationResult } from "@tanstack/react-query";
+import { Member } from "./members";
+import { Query } from "./query";
+import { Feedback } from "./feedback";
 
 
 export interface DropdownOption<T> {
   label: string;
   value: T;
+  disabled?: boolean; 
+  names?: any;
 }
 
 

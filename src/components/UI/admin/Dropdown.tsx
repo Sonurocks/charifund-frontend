@@ -6,8 +6,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { AdminDropdownProps } from "@/src/types/admin";
 
-
-
 const Dropdown = <T extends string | number | Record<string, any>>({
   options,
   value,
@@ -24,7 +22,6 @@ const Dropdown = <T extends string | number | Record<string, any>>({
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown on outside click
   useEffect(() => {
     if (disabled) return;
     const handleClickOutside = (e: MouseEvent) => {
@@ -40,7 +37,6 @@ const Dropdown = <T extends string | number | Record<string, any>>({
     val !== null && typeof val === "object";
 
 
-  // Handle both object and primitive comparison for selected value
   const selectedOption = options.find((opt) => {
     if (isObject(opt.value) && isObject(value)) {
       return opt.value.en === value.en || opt.value.hi === value.hi;
@@ -73,7 +69,12 @@ const Dropdown = <T extends string | number | Record<string, any>>({
         )}
 
         <span className="flex-1 whitespace-nowrap text-[13px]">
-          {selectedOption ? selectedOption.label : placeholder || "Select"}
+          {selectedOption
+            ? selectedOption.label
+            : options.length === 1 && (options[0] as any).disabled
+              ? "No category available"
+              : placeholder || "Select"}
+
         </span>
 
         {!readOnly && (
@@ -105,16 +106,21 @@ const Dropdown = <T extends string | number | Record<string, any>>({
 
               return (
                 <li
-                   key={isObject(opt.value) ? opt.value.en || opt.label : opt.value || opt.label}
+                  key={
+                    isObject(opt.value)
+                      ? opt.value.en || opt.label
+                      : opt.value || opt.label
+                  }
                   onClick={() => {
+                    if (opt.disabled) return;
                     onChange(opt.value);
                     setIsOpen(false);
                   }}
-                  className={`px-3 py-2 text-[14px] cursor-pointer hover:bg-primaryColor/30 ${isSelected ? "bg-primaryColor/60 font-medium" : ""
-                    }`}
+                  className={`px-3 py-2 text-[14px] cursor-pointer  ${opt.disabled ? "text-gray-400 cursor-not-allowed" : "hover:bg-primaryColor/30"}  ${isSelected ? "bg-primaryColor/60 font-medium" : ""} `}
                 >
                   {opt.label}
                 </li>
+
               );
             })}
           </motion.ul>

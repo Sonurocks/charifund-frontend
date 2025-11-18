@@ -1,7 +1,3 @@
-
-
-
-
 "use client";
 
 import React, { useState, useMemo, useCallback, useRef } from "react";
@@ -11,8 +7,7 @@ import CustomInput from "../../UI/admin/CustomInput";
 import Dropdown from "../../UI/admin/Dropdown";
 import AnimatedReveal from "@/src/animations/AnimatedReveal";
 import { getBlogColumns } from "./BlogColumns";
-import {
-  submitBlogForm,
+import { submitBlogForm,
   useDeleteSingleBlog,
   useFetchAllBlogs,
   useFetchSingleBlog,
@@ -29,7 +24,6 @@ import Button from "../../UI/web/Buttons/Button";
 import CustomLoader from "../../UI/web/Loader/CustomLoader";
 import { useLanguageToggle } from "@/src/hooks/admin/useLanguageToggle";
 
-//  Dynamic imports for heavy components
 const DataTableWrapper = dynamic(
   () => import("../../UI/admin/DataTableWrapper"),
   { ssr: false, loading: () => <p className="p-4">Loading Table...</p> }
@@ -60,7 +54,6 @@ const ConfirmModal = dynamic(() => import("../../UI/admin/ConfirmModal"), {
 });
 
 const BlogTable = () => {
-  // -------------------- States --------------------
   const [search, setSearch] = useState("");
   const [searchField, setSearchField] = useState<SearchField>("title");
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -76,7 +69,6 @@ const BlogTable = () => {
   const [selectedBlog, setSelectedBlog] = useState<Blog | null>(null);
   const searchedData = useDebounce(search, 1000);
 
-  // -------------------- Data Fetching --------------------
   const { data: blogData, isLoading: isAllBlogLoading } = useFetchAllBlogs(
     currentPage,
     itemsPerPage,
@@ -96,10 +88,8 @@ const BlogTable = () => {
       value: category.name?.[language] || category.name.en,
     })) ?? [];
 
-  // -------------------- Delete Mutation --------------------
   const deleteMutation = useDeleteSingleBlog();
 
-  // -------------------- Handlers --------------------
   const handleEdit = useCallback((b: Blog) => {
     setBlogId(b.id.toString());
     setMode("edit");
@@ -150,7 +140,6 @@ const BlogTable = () => {
     }
   }, [selectedBlog, deleteMutation]);
 
-  // -------------------- Table Data --------------------
   const columns = useMemo(
     () =>
       getBlogColumns({
@@ -169,7 +158,6 @@ const BlogTable = () => {
     }));
   }, [blogData]);
 
-  // -------------------- Mutations --------------------
   const queryClient = useQueryClient();
 
   const createMutation = useMutation({
@@ -261,7 +249,6 @@ const BlogTable = () => {
         </AnimatedReveal>
       </div>
 
-      {/* Table */}
       {isAllBlogLoading ? (
         <div className="flex justify-center py-8">
           <CustomLoader />

@@ -23,7 +23,6 @@ const DonateDifferentWay: React.FC = () => {
   const tabs = donateDifferentWayTabs;
   const missionItems = donateDifferentWayMissionItems;
   const headerRef = useRef(null);
-  const isHeaderInView = useInView(headerRef, { once: true });
 
   return (
     <div className='w-full py-4 sm:py-6 lg:py-2 lg:px-0 px-2 -mt-2 sm:-mt-1 md:mt-2 lg:mt-25 mb-10 xl:mb-20 bg-white '>
@@ -188,9 +187,7 @@ const DonateDifferentWay: React.FC = () => {
                     ))}
                   </div>
 
-                  {/* Tab Content with Donation Cards */}
                   <div className='flex flex-col cursor-pointer md:flex-row md:pl-2 xl:mt-5 mt-2 xs:mt-7 lg:mt-0  lg:py-3 lg:px-8  xl:p-2'>
-                    {/* Mission/Vision/Excellence Content */}
                     <div className='flex-1 cursor-pointer'>
                       {(activeTab === 'mission' || activeTab === 'vision' || activeTab === 'excellence') && (
                         <div className='space-y-3 sm:space-y-4'>

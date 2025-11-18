@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import Button from "../../UI/web/Buttons/Button";
 import Image from "next/image";
-import { useTranslation } from "react-i18next";
 import { useFetchAllMembers } from "@/src/hooks/web/useMembers";
 import { VolunteerCard } from "../Team/TeamMemberCard";
 import CustomLoader from "../../UI/web/Loader/CustomLoader";
@@ -17,7 +16,6 @@ const VolunteerTeam = ({ bg = '' }: { bg?: string }) => {
 
   const router = useRouter();
   const [bgColor, setBgColor] = useState<string>();
-  const { t } = useTranslation();
 
   useEffect(() => {
     if (bg && bg.trim() !== '') {

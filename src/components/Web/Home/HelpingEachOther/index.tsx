@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { FiPhoneCall } from "react-icons/fi";
-import { motion, useAnimation, useInView } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import Button from "../../../UI/web/Buttons/Button";
 
 import { useTranslation } from "react-i18next";

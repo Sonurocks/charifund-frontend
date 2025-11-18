@@ -3,7 +3,6 @@
 
 
 "use client";
-/* eslint-disable @typescript-eslint/no-require-imports */
 
 import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
@@ -38,8 +37,6 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
   const [categories, setCategories] = useState<{ en?: any[]; hi?: any[] }>({});
   const { data: categoryData } = useFetchCategory();
 
-  console.log("inital data", initialData)
-
   useEffect(() => {
     if (categoryData?.category) {
       setCategories((prev) => ({
@@ -54,10 +51,15 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
       label: cat.name[language],
       value: cat._id || cat.name,
       names: cat.name,
-    })) || [];
+    })) || [
+      {
+        label: "No category available, add category first",
+        value: "",
+        disabled: true,
+      },
+    ];
 
   const isView = mode === "view";
-  const isEdit = mode === "edit";
 
   const handlePreviewClick = async (
     values: CampaignFormValues,

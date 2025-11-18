@@ -47,7 +47,6 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ initialData, onClose, mode 
     status: mapBackendStatusToFormStatus(initialData?.status),
   };
 
-  console.log("initialData", initialData)
   const hasBeenReviewed =
     initialData?.status && initialData.status.toUpperCase() !== "PENDING";
 

@@ -10,8 +10,6 @@ export interface DashboardData {
 }
 
 export const dashboardApi = async () => {
-  console.log("che809")
   const  {data}  = await api.get("/admin/dashboard/get-data");
-  console.log("che", data)
   return data;
 };

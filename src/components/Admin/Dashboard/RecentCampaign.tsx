@@ -15,8 +15,6 @@ function RecentCampaign() {
 
   const { data } = useFetchAllCampaigns(1, 10) as { data: { campaigns: Campaign[] } };
 
-  console.log(data)
-
   return (
     <div className="bg-white rounded-xl my-6 w-full">
       <h2 className="text-gray-700 font-semibold mb-4">Recent Campaigns</h2>

@@ -31,7 +31,6 @@ const TeamMemberDetails: React.FC = () => {
   const inView = useInView(ref, { once: true, amount: 0.3 });
   const controls = useAnimation();
   const { data: memberData, isLoading: isLoading } = useFetchSingleMember(id as string);
-  console.log(memberData)
 
   // --- Animation trigger when section is visible ---
   useEffect(() => {

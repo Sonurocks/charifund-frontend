@@ -9,7 +9,6 @@ const Recent = ({ causes,name,bgColor,route }: { causes: any,name?:string,bgColo
   const { t } = useTranslation();
   
   if (!causes || causes.length === 0) return null;
-  console.log(causes)
  return( 
   <FadeInUp
     className={`${bgColor} px-3 py-5 rounded-2xl shadow-md`}>
