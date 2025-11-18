@@ -14,14 +14,7 @@ const Donation = () => {
   const dispatch=useDispatch();
   const { amount, method } = useSelector((state: RootState) => state.donation);
   const { t } = useTranslation();
-
   const presetAmounts = [20, 50, 100, 200];
-
-  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    if (/^\d*$/.test(val)) dispatch(setAmount(val));
-  };
-
   return (
     <div className="max-w-2xl mx-auto xl:px-4 xl:py-8 space-y-8 ">
       <h2 className="text-xl font-semibold">{t("Support Where It Counts.")}</h2>
