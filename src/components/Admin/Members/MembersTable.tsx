@@ -52,7 +52,6 @@ const MemberTable = () => {
   );
   const { data: singleMemberData, isLoading: isLoadingMember, refetch } =
     useFetchSingleMember(editMember || undefined);
-  console.log("check", singleMemberData)
 
   const deleteMember = useDeleteSingleMember();
 

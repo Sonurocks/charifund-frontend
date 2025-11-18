@@ -1,6 +1,3 @@
-
-
-
 "use client";
 
 import { FaArrowUpLong } from "react-icons/fa6";

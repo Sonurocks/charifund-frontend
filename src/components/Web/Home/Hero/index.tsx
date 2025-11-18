@@ -20,28 +20,24 @@ import { pageBannerBackgourndColor } from "@/src/helper/PageBanner";
 import { Banner } from "@/src/types/web/banner";
 import ArrowButton from "@/src/components/UI/web/Buttons/ArrowButton";
 
-// Static fallback images
 const staticImages = [bannerOne.src, bannerTwo.src];
 
 export default function HeroStaticSlider() {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
 
-  // Fetch dynamic banner data
-  const { data: bannersData, isLoading, error } = useFetchAllBanners(1, 10);
+  const { data: bannersData } = useFetchAllBanners(1, 10);
   const banners = bannersData?.banners || [];
 
   const images =
     banners.length > 0
       ? banners
-          .filter((banner: Banner) => banner.image && banner.image.trim() !== "")
-          .map((banner: Banner) => banner.image)
+        .filter((banner: Banner) => banner.image && banner.image.trim() !== "")
+        .map((banner: Banner) => banner.image)
       : staticImages;
 
-  // If no valid dynamic images, use static fallback
   const finalImages = images.length > 0 ? images : staticImages;
 
-  // Auto image change
   useEffect(() => {
     if (paused) return;
 
@@ -161,9 +157,9 @@ export default function HeroStaticSlider() {
           </AnimatedReveal>
         </div>
 
-        {/* ✅ Navigation Arrows - Desktop (Updated) */}
         <div className="absolute right-4 md:right-22 top-1/2 -translate-y-1/2 hidden min-[800px]:flex flex-col gap-4 z-30">
-         {/* <button
+          <ArrowButton
+            direction="left"
             onClick={handlePrev}
             size={60}
             className="shadow-md hover:scale-105"
@@ -171,23 +167,9 @@ export default function HeroStaticSlider() {
           <ArrowButton
             direction="right"
             onClick={handleNext}
-            className="w-15 h-15 rounded-full bg-yellow cursor-pointer flex items-center justify-center text-black shadow-md hover:text-white hover:scale-105 hover:bg-dark-green transition"
-          >
-            <Icon icon="mdi:arrow-right" className="text-3xl" />
-          </button>*/}
-
-          <ArrowButton
-    direction="left"
-    onClick={handlePrev}
-    size={60}
-    className="shadow-md hover:scale-105"
-  />
-  <ArrowButton
-    direction="right"
-    onClick={handleNext}
-    size={60}
-    className="shadow-md hover:scale-105"
-  />
+            size={60}
+            className="shadow-md hover:scale-105"
+          />
 
           {/* Floating Decorative Icon */}
           <motion.div
@@ -202,7 +184,7 @@ export default function HeroStaticSlider() {
             }}
             className="absolute top-[29%] xl:top-[82%] right-38 xl:right-40 transform -translate-y-1/2 text-yellow size-20"
           >
-            <Image src={spradeBase.src} alt="decoration" width={28} height={28}/>
+            <Image src={spradeBase.src} alt="decoration" width={28} height={28} />
           </motion.div>
         </div>
       </div>

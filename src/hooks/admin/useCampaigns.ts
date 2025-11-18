@@ -86,7 +86,6 @@ const handleUpdateCampaign = (
   toast.dismiss();
   toast.loading("Updating campaign...");
   const formData = buildFormData(values);
-  console.log("check", formData)
   updateMutation.mutate(
     { id, values: formData },
     {

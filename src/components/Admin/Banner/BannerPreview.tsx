@@ -6,7 +6,6 @@ import Image from "next/image";
 import { useLanguageToggle } from "@/src/hooks/admin/useLanguageToggle";
 import { BannerPreviewProps } from "@/src/types/admin";
 
-//  Lazy-load heavy components
 const LanguageToggle = dynamic(() => import("../../UI/admin/LanguageToggle"), {
   loading: () => <p className="text-gray-400 animate-pulse">Loading language toggle...</p>,
 });

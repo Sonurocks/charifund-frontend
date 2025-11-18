@@ -22,7 +22,6 @@ const MemberForm = ({
     createMutation,
     updateMutation,
 }: MemberFormProps) => {
-    console.log("initial value", initialData)
 
     // Prepare initial values for the form - use useMemo to recalculate when initialData changes
     const initialValues = React.useMemo(() => {
@@ -110,7 +109,6 @@ const MemberForm = ({
                         setTouched(touchAllFields(values));
 
                         const formErrors = await validateForm();
-                        console.log("Form Errors:", formErrors);
 
                         for (const l of ["en", "hi"] as const) {
                             if (hasErrorsForLang(formErrors, l)) {

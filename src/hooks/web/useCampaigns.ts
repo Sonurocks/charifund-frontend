@@ -15,7 +15,6 @@ export const useFetchAllCampaigns = (page: number, limit: number = 10,search?:st
 
 
 export const useFetchSingleCampaign = (id?: string,options?: { enabled?: boolean }) => {
-    console.log(id)
   return useLanguageAwareQuery(
     ["campaign", id],
     () => fetchCampaignById(id!),

@@ -93,7 +93,6 @@ const handleUpdateBlog = (
   toast.dismiss();
   toast.loading("Updating blog...");
   const formData = buildFormData(values);
-  console.log("data", formData)
   updateMutation.mutate(
     { id, values: formData },
     {

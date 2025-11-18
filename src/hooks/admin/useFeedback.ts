@@ -65,14 +65,8 @@ const buildFeedbackFormData = (values: FeedbackFormValues) => {
   formData.append("feedback", values.feedback);
   formData.append("rating", values.rating.toString());
 
-  // Handle image
   if (values.image && values.image instanceof File) {
     formData.append("image", values.image);
-  }
-
-
-  for (let [key, value] of formData.entries()) {
-    console.log(`  ${key}:`, value);
   }
 
   return formData;
@@ -92,7 +86,6 @@ const handleCreateFeedback = (
   toast.loading("Submitting feedback...");
   const formData = buildFeedbackFormData(values);
 
-  console.log('🌐 Sending API request to backend...');
   createMutation.mutate(formData, {
     onSuccess: (response: any) => {
       toast.dismiss();

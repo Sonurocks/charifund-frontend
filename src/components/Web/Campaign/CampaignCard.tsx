@@ -7,7 +7,6 @@ import AnimatedProgressBar from "../../UI/web/AnimatedProgressBar";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { CampaignCardProps } from "@/src/types/web/campaign";
-import Button from "../../UI/web/Buttons/Button";
 
 const CampaignCard: React.FC<CampaignCardProps> = ({
   card,
@@ -25,33 +24,10 @@ const CampaignCard: React.FC<CampaignCardProps> = ({
       </div>
     );
   }
-
-  // ✅ Parse string or number amounts safely
-  const parseAmount = (amount?: string | number) => {
-    if (typeof amount === "number") return amount;
-    if (typeof amount === "string") {
-      return Number(amount.replace(/[^0-9.-]+/g, "")) || 0; // Remove $ or commas
-    }
-    return 0;
-  };
-
-  const raisedAmount = parseAmount(card.raised);
-  const goalAmount = parseAmount(card.goal);
-  const progress = card.progress || Math.min((raisedAmount / goalAmount) * 100, 100);
-
-  // Truncate description
-  //const maxLength=120;
-  const descMaxLength = 20;
   const desc = card.description || "No description available";
-  const displayText =
-    desc.length > descMaxLength ? desc.slice(0, descMaxLength).concat("...") : desc;
-
-  // Truncate title with "..."
-  const titleMaxLength = 20;
   const title = card.title || "No Title";
-  const displayTitle =
-    title.length > titleMaxLength ? title.slice(0, titleMaxLength).concat("...") : title;
-    const {t} = useTranslation();
+
+  const { t } = useTranslation();
 
   return (
     <div

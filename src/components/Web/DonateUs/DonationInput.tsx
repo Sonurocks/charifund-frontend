@@ -11,15 +11,14 @@ const DonationInput: React.FC<DonationInputProps> = ({
 }) => {
   const [amount, setAmount] = useState<string>(value || "");
 
-  // Sync internal state if parent controls value
   useEffect(() => {
     if (value !== undefined) setAmount(value);
   }, [value]);
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value.replace(/[^0-9]/g, ""); // Only numbers
-    if (value === undefined) setAmount(newValue); // internal mode
-    onAmountChange?.(newValue); // notify parent
+    const newValue = e.target.value.replace(/[^0-9]/g, ""); 
+    if (value === undefined) setAmount(newValue); 
+    onAmountChange?.(newValue); 
   };
 
   const handlePresetClick = (preset: number) => {
@@ -71,7 +70,7 @@ const DonationInput: React.FC<DonationInputProps> = ({
 
         <button
           onClick={() => {
-            if (value === undefined) setAmount(""); // reset to allow typing
+            if (value === undefined) setAmount(""); 
             onAmountChange?.("");
           }}
           className={`px-5 py-2 rounded-full text-sm font-semibold cursor-pointer border transition

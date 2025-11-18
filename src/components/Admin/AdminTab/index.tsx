@@ -3,7 +3,6 @@
 import React, { JSX, useState } from "react";
 import dynamic from "next/dynamic";
 
-//  Lazy load all heavy components
 const AdminSideBarTab = dynamic(() => import("./AdminSidebarTab"), { ssr: false });
 const Dashboard = dynamic(() => import("../Dashboard"), { ssr: false });
 const Notifications = dynamic(() => import("../Notifications"), { ssr: false });
@@ -22,7 +21,6 @@ const AdminTab = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [activeTab, setActiveTab] = useState<string>("dashboard");
 
-  // Define your tab map
   const Tab: { [key: string]: JSX.Element } = {
     dashboard: <Dashboard />,
     

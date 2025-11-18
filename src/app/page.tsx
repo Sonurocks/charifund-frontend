@@ -1,4 +1,4 @@
-import Homepage from "./home/page";
+import Home from "../components/Web/Home";
 
 export const metadata = {
   title:"charifund | Home"
@@ -7,7 +7,7 @@ export const metadata = {
 export default function Page() {
   return (
     <>
-      <Homepage />
+      <Home />
     </>
   );
 }

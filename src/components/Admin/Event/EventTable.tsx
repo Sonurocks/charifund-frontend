@@ -52,7 +52,6 @@ const EventTable = () => {
   const { data: singleEventData, isLoading: isLoadingEvent, refetch } = useFetchSingleEvent(editEvent || undefined);
   const deleteEvent = useDeleteSingleEvent();
   const totalPages = eventData?.totalPages || 1;
-  console.log(eventData)
   const lang = language
   const queryClient = useQueryClient();
 

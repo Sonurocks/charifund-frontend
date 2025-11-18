@@ -22,7 +22,6 @@ import ComponentLabel from '@/src/components/UI/web/ComponentLabel';
 import ComponentTitle from '@/src/components/UI/web/ComponentTitle';
 
 export default function CharityWithDifference() {
-  // Animation refs
   const headerRef = useRef(null);
   const isHeaderInView = useInView(headerRef, { once: true });
   const swiperRef = useRef<SwiperType | null>(null);

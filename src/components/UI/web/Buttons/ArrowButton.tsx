@@ -6,7 +6,7 @@ import { IoArrowForwardOutline } from "react-icons/io5";
 interface ArrowButtonProps {
   direction: "left" | "right";
   onClick?: () => void;
-  size?: number; // overall button diameter
+  size?: number;
   className?: string;
 }
 

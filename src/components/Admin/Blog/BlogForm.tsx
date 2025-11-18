@@ -14,7 +14,6 @@ import { Category } from "@/src/types/admin/category";
 import { hasErrorsForLang } from "../../UI/admin/hasErrorsForLang";
 import { getInitialBlogValues } from "../InitialValues/blogInitialValues";
 
-//  Dynamically imported heavy UI components
 const CustomInput = dynamic(() => import("../../UI/admin/CustomInput"), {
   loading: () => <p>Loading input...</p>,
 });
@@ -53,20 +52,27 @@ const BlogForm = ({
   const { data: categoryData } = useFetchCategory();
 
   const categoryOptions =
-    categoryData?.category?.map((category: Category) => ({
-      label: category.name?.[language] || category.name.en,
-      value: category.name?.[language] || category.name.en,
-      names: category.name,
-    })) ?? [];
+    categoryData?.category && categoryData.category.length > 0
+      ? categoryData.category.map((category: Category) => ({
+        label: category.name?.[language] || category.name.en,
+        value: category.name?.[language] || category.name.en,
+        names: category.name,
+      }))
+      : [
+        {
+          label: "No category available, add category first",
+          value: "",
+          disabled: true,
+        },
+      ];
+
 
   const isView = mode === "view";
   const isEdit = mode === "edit";
 
   return (
     <div className="w-full pb-10">
-      {/* Language Toggle */}
       <LanguageToggle language={language} onChange={toggleLanguage} />
-
       <Formik
         enableReinitialize
         initialValues={initialValues}
@@ -123,27 +129,20 @@ const BlogForm = ({
 
             const formErrors = await validateForm();
 
-            // If currently on English, check English fields first
             if (language === "en") {
-              // Check for English errors
               if (hasErrorsForLang(formErrors, "en")) {
-                // Stay on English and show errors
                 return;
               }
 
-              // Check image validation error
               if (formErrors._combinedImagesGuard) {
                 return;
               }
 
-              // English is complete, switch to Hindi
               toggleLanguage("hi");
               return;
             }
 
-            // If currently on Hindi, check both languages
             if (language === "hi") {
-              // Check for errors in both languages
               for (const l of ["en", "hi"] as const) {
                 if (hasErrorsForLang(formErrors, l)) {
                   toggleLanguage(l);
@@ -151,12 +150,9 @@ const BlogForm = ({
                 }
               }
 
-              // Check image validation error
               if (formErrors._combinedImagesGuard) {
                 return;
               }
-
-              // All fields are complete, submit preview
               submitForm();
             }
           };
@@ -247,6 +243,11 @@ const BlogForm = ({
                 }}
                 placeholder={lang === "en" ? "Select category" : "श्रेणी चुनें"}
                 width="w-full"
+                error={
+                  touched.category?.[lang] && errors.category?.[lang]
+                    ? errors.category[lang]
+                    : ""
+                }
               />
 
               {/* Tags */}
@@ -263,8 +264,8 @@ const BlogForm = ({
                     ? typeof errors.tags[lang] === "string"
                       ? errors.tags[lang]
                       : Array.isArray(errors.tags[lang])
-                      ? errors.tags[lang].filter(Boolean).join(", ")
-                      : ""
+                        ? errors.tags[lang].filter(Boolean).join(", ")
+                        : ""
                     : undefined
                 }
               />
@@ -283,8 +284,8 @@ const BlogForm = ({
                     ? typeof errors.keyPoints[lang] === "string"
                       ? errors.keyPoints[lang]
                       : Array.isArray(errors.keyPoints[lang])
-                      ? errors.keyPoints[lang].filter(Boolean).join(", ")
-                      : ""
+                        ? errors.keyPoints[lang].filter(Boolean).join(", ")
+                        : ""
                     : undefined
                 }
               />

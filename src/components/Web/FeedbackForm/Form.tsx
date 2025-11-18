@@ -1,11 +1,7 @@
-
-
-
 'use client'
 
 import React, { Suspense, lazy } from 'react'
 import { createPortal } from 'react-dom'
-import * as Yup from 'yup'
 import dynamic from 'next/dynamic'
 const Icon = dynamic(() => import('@iconify/react').then(m => m.Icon), { ssr: false })
 import Button from '../../UI/web/Buttons/Button'
@@ -15,8 +11,6 @@ import { useCreateFeedback, submitFeedbackForm } from '@/src/hooks/web/useFeedba
 import { useTranslation } from 'react-i18next';
 import { FeedbackFormValues, feedbackSchema } from '@/src/utils/validations/FormValidation';
 import Image from "next/image";
-
-// Dynamic imports for Formik components
 const Formik = lazy(() => import("formik").then(module => ({ default: module.Formik })));
 const Form = lazy(() => import("formik").then(module => ({ default: module.Form })));
 

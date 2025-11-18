@@ -124,8 +124,8 @@ export const useAddReply=()=>{
         onSuccess:(data)=>{
             console.log("Reply Added",data)
         },
-        onError:()=>{
-            console.log("data not added");
+        onError:(err)=>{
+            console.log("Error: ", err.message);
         }
       })
 }

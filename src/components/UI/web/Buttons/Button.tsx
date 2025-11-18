@@ -24,7 +24,6 @@ const Button: React.FC<DynamicButtonProps> = ({
   const iconControls = useAnimationControls();
   const { t } = useTranslation();
 
-  // Unified content block
   const buttonContent = (
     <div
       className={`flex items-center justify-center gap-2 relative z-10 font-bold transition-colors duration-300 ${textColor} ${hoverTextColor} whitespace-nowrap`}
