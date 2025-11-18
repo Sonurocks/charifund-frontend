@@ -1,3 +1,4 @@
+'use client';
 import { TeamMember } from "@/src/types/web/members";
 import { FaBehance, FaFacebookF, FaInstagram, FaTwitter } from "react-icons/fa";
 

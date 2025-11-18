@@ -1,10 +1,8 @@
 "use client";
-import { motion, MotionProps } from "framer-motion";
-import { ReactNode, useRef } from "react";
+import { motion } from "framer-motion";
+import { useRef } from "react";
 import { useInView } from "framer-motion";
 import { AnimatedRevealProps } from "../types";
-
-
 
 const AnimatedReveal = ({
   children,

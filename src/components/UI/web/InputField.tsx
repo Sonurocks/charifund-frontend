@@ -26,7 +26,6 @@ const InputField: React.FC<InputFieldProps & FieldHookConfig<string>> = ({
   const isTextarea = as === "textarea";
   const isPassword = type === "password";
 
-  // 🔍 Check if the icon is a string (Iconify) or JSX (React Icon or custom)
   const renderIcon = () => {
     if (!icon) return null;
 

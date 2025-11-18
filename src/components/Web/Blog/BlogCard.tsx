@@ -35,12 +35,10 @@ const BlogCard: React.FC<BlogCardProps> = ({ card }) => {
 
   const { id, images, title, creator, commentCount, category } = card;
 
-  // Navigate to blog details
   const handleCardClick = () => {
     router.push(`/blog/${id}`);
   };
 
-  // Prevent event bubbling when clicking category
   const handleCategoryClick = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
@@ -49,10 +47,12 @@ const BlogCard: React.FC<BlogCardProps> = ({ card }) => {
     <motion.div
       className="bg-white cursor-pointer hover:bg-green rounded-2xl h-full shadow-xl text-black hover:text-white overflow-hidden group relative transition-colors duration-500 p-5 flex flex-col"
       initial={{ y: 50, opacity: 0 }}
-  whileHover="hover"
-      variants={{initial: { y: 50, opacity: 0 },
-    animate: { y: 0, opacity: 1 },
-    hover: {},}}
+      whileHover="hover"
+      variants={{
+        initial: { y: 50, opacity: 0 },
+        animate: { y: 0, opacity: 1 },
+        hover: {},
+      }}
       animate={{ y: 0, opacity: 1, transition: { duration: 0.6, ease: "easeOut" } }}
       onClick={handleCardClick}
       onHoverStart={() => heartControls.start("hover")}
@@ -64,10 +64,10 @@ const BlogCard: React.FC<BlogCardProps> = ({ card }) => {
           src={images?.[0] || "/default-image.webp"}
           alt={title || "Blog Image"}
           className="absolute top-0 left-0 w-full h-full object-cover"
-         variants={{
-        hover: { scale: 1.2, rotate: 6 },
-        initial: { scale: 1, rotate: 0 },
-      }}
+          variants={{
+            hover: { scale: 1.2, rotate: 6 },
+            initial: { scale: 1, rotate: 0 },
+          }}
           transition={{ duration: 0.6, ease: "easeOut" }}
         />
 
