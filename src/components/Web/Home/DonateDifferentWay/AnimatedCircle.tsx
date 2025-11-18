@@ -5,7 +5,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { AnimatedCircleProps } from "@/src/types";
 
-
 const AnimatedCircle: React.FC<AnimatedCircleProps> = ({ percentage, label }) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const isInView = useInView(ref, { once: true, amount: 0.4 });
@@ -52,7 +51,7 @@ const AnimatedCircle: React.FC<AnimatedCircleProps> = ({ percentage, label }) =>
             cx="50"
             cy="50"
             r={radius}
-            stroke="#046b59" // green color
+            stroke="#046b59" 
             strokeWidth="6"
             fill="none"
             strokeLinecap="round"

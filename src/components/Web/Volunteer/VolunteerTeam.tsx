@@ -1,15 +1,15 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import Button from "../../UI/web/Buttons/Button";
+import { useInView } from "framer-motion";
 import Image from "next/image";
 import { useFetchAllMembers } from "@/src/hooks/web/useMembers";
+import Button from "../../UI/web/Buttons/Button";
 import { VolunteerCard } from "../Team/TeamMemberCard";
 import CustomLoader from "../../UI/web/Loader/CustomLoader";
-import { useEffect, useRef, useState } from "react";
 import { bgOneVolunteer, greenspade } from "@/public/assets";
 import ComponentLabel from "../../UI/web/ComponentLabel";
-import { useInView } from "framer-motion";
 import ComponentTitle from "../../UI/web/ComponentTitle";
 
 const VolunteerTeam = ({ bg = '' }: { bg?: string }) => {

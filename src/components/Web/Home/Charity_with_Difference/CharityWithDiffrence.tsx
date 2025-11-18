@@ -21,7 +21,7 @@ import { charityCards } from '@/src/static-resource/web';
 import ComponentLabel from '@/src/components/UI/web/ComponentLabel';
 import ComponentTitle from '@/src/components/UI/web/ComponentTitle';
 
-export default function CharityWithDifference() {
+const  CharityWithDifference  = () =>{
   const headerRef = useRef(null);
   const isHeaderInView = useInView(headerRef, { once: true });
   const swiperRef = useRef<SwiperType | null>(null);
@@ -193,3 +193,5 @@ export default function CharityWithDifference() {
     </div>
   );
 }
+
+export default CharityWithDifference

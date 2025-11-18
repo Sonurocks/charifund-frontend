@@ -18,7 +18,7 @@ import { RootState } from "@/src/store";
 import { setAmount, setMethod } from "@/src/store/slice/donationSlice";
 import { pageBannerBackgourndColor } from "@/src/helper/PageBanner";
 
-const Community = ({ hasfeedback }: { hasfeedback?: boolean | null }) => {
+const Community = ({ hasFeedback }: { hasFeedback?: boolean | null }) => { 
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { amount, method } = useSelector((state: RootState) => state.donation);
@@ -31,7 +31,7 @@ const Community = ({ hasfeedback }: { hasfeedback?: boolean | null }) => {
 
     return (
         <section
-            className={`relative ${hasfeedback ? 'h-[800px]' : 'h-[990px]'}  z-40 text-white flex justify-center items-cente overflow-hidde`}
+            className={`relative ${hasFeedback ? 'h-[800px]' : 'h-[990px]'}  z-40 text-white flex justify-center items-cente overflow-hidde`}
         >
             <div className="absolute  z-0 inset-0">
                 <Image src={community2.src} alt="bg image" fill className="object-cover" />

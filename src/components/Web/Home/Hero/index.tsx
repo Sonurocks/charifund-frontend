@@ -22,7 +22,7 @@ import ArrowButton from "@/src/components/UI/web/Buttons/ArrowButton";
 
 const staticImages = [bannerOne.src, bannerTwo.src];
 
-export default function HeroStaticSlider() {
+ const HeroStaticSlider  = () => {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
 
@@ -191,3 +191,6 @@ export default function HeroStaticSlider() {
     </div>
   );
 }
+
+
+export default HeroStaticSlider
