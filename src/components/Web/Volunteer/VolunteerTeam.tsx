@@ -19,11 +19,12 @@ const VolunteerTeam = ({ bg = '' }: { bg?: string }) => {
 
   useEffect(() => {
     if (bg && bg.trim() !== '') {
-      setBgColor(bg)
+      setBgColor(bg);
     } else {
-      setBgColor(`bg-[url('/assets/bg-one-volunteer.webp')]`)
+      setBgColor(`bg-[url('/assets/bg-one-volunteer.webp')]`);
     }
-  })
+  }, [bg]);
+
 
   const itemsPerPage = 4;
 
@@ -32,11 +33,13 @@ const VolunteerTeam = ({ bg = '' }: { bg?: string }) => {
     itemsPerPage
   );
 
-  const members = data?.members || [];
+  const members = Array.isArray(data?.members) ? data.members : [];
 
-  if (!isLoading && (!data?.members || data.members.length === 0)) {
+
+  if (!isLoading && members.length === 0) {
     return null;
   }
+
 
 
 
@@ -74,8 +77,9 @@ const VolunteerTeam = ({ bg = '' }: { bg?: string }) => {
               className=" grid grid-cols-1 sm:grid-cols-2  xl:grid-cols-4 gap-3 md:gap-5 space-y-5 xl:gap-7"
             >
               {members.map((member: any, idx: number) => (
-                <VolunteerCard key={member.id || idx} member={member} idx={idx} />
+                <VolunteerCard key={member?.id || idx} member={member} idx={idx} />
               ))}
+
             </div>
           )}
         </div>
