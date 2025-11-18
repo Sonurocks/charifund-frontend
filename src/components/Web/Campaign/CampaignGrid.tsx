@@ -1,6 +1,5 @@
 import FadeUpCard from '@/src/animations/FadeButtomUp'
 import React, { useMemo, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next';
 import { useInView } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import CustomLoader from '../../UI/web/Loader/CustomLoader';
@@ -31,8 +30,6 @@ const CampaignGrid = () => {
             goal: `$${campaign.goalAmount}`,
         }));
     }, [data]);
-
-    const { t } = useTranslation();
 
     const handleCardClick = (id?: string) => {
         if (!id) return;

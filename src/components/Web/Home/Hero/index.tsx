@@ -59,7 +59,6 @@ const staticImages = [bannerOne.src, bannerTwo.src];
     currentBanner.title || "Giving Help To Those Who Need It";
   const bannerSubtitle =
     currentBanner.subtitle || "Start Donating Poor People";
-  const bannerLink = currentBanner.link || "/contact";
 
   return (
     <div

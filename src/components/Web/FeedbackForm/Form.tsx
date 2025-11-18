@@ -29,10 +29,8 @@ const FormComponent = ({ onClose }: { onClose: () => void }) => {
   const [imageSizeError, setImageSizeError] = React.useState<string>('')
   const [toast, setToast] = React.useState<{ type: 'success' | 'error', message: string } | null>(null)
   
-  // Initialize the mutation hook
   const createFeedbackMutation = useCreateFeedback()
 
-  // Lock body scroll when modal is open
   React.useEffect(() => {
     document.body.style.overflow = 'hidden'
     return () => {
@@ -40,7 +38,6 @@ const FormComponent = ({ onClose }: { onClose: () => void }) => {
     }
   }, [])
 
-  // Auto-hide toast
   React.useEffect(() => {
     if (toast) {
       const timer = setTimeout(() => setToast(null), 3000)

@@ -9,7 +9,6 @@ import { useTranslation } from "react-i18next";
 
 import { DetailsformSchema, DetailsFormValues } from "@/src/utils/validations/FormValidation";
 import { DetailsInformationForm } from "@/src/services/web/client/clientServices";
-// Lazy-load Formik to defer form code until needed
 const Formik = lazy(() => import("formik").then((m) => ({ default: m.Formik })));
 const Form = lazy(() => import("formik").then((m) => ({ default: m.Form })));
 import InputField from "../../UI/web/InputField";

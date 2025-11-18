@@ -21,7 +21,7 @@ import ButtonLoader from "../../UI/web/Loader/ButtonLoader";
 import { NewsletterEmailForm } from "@/src/services/web/client/clientServices";
 
 const Newsletter = () => {
-  const { t, i18n } = useTranslation();
+  const { t} = useTranslation();
 
   const mutation = useMutation({
     mutationFn: (email: string) => NewsletterEmailForm(email),

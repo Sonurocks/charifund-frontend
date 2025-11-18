@@ -3,21 +3,10 @@
 import Image from "next/image";
 import { IoLocationSharp, IoCalendarSharp } from "react-icons/io5";
 import {
-  FaRegCheckCircle,
-  FaFacebookF,
-  FaTwitter,
-  FaPinterest,
-  FaLinkedinIn,
-  FaTumblr,
-} from "react-icons/fa";
-
-import {
   eventdetail1,
   oureventbanner,
 } from "@/public/assets";
-
 import Comments from "../comments/Comments";
-import { socialMediaButtons } from "@/src/static-resource/web";
 import LeaveComment from "../comments/LeaveComment";
 import { useFetchSingleEvent } from "@/src/hooks/web/useEvent";
 import { useParams } from "next/navigation";
@@ -25,19 +14,11 @@ import { EventInterface } from "@/src/types";
 import CustomLoader from "../../UI/web/Loader/CustomLoader";
 import PageBanner from "@/src/helper/PageBanner";
 import Sidebar from "../../UI/web/sideBar";
+import { FaRegCheckCircle } from "react-icons/fa";
 
 const EventDetail = () => {
   const eventTid = useParams().id as string;
   const { data: event, isLoading } = useFetchSingleEvent(eventTid) as { data: EventInterface, isLoading: boolean };
-
-  const socialIcons = [
-    { icon: FaFacebookF, bg: socialMediaButtons[0].bg, label: socialMediaButtons[0].label },
-    { icon: FaTwitter, bg: socialMediaButtons[1].bg, label: socialMediaButtons[1].label },
-    { icon: FaPinterest, bg: socialMediaButtons[2].bg, label: socialMediaButtons[2].label },
-    { icon: FaLinkedinIn, bg: socialMediaButtons[3].bg, label: socialMediaButtons[3].label },
-    { icon: FaTumblr, bg: socialMediaButtons[4].bg, label: socialMediaButtons[4].label },
-  ];
-
   const mapUrl = event?.latitude && event?.longitude
     ? `https://maps.google.com/maps?q=${event.latitude},${event.longitude}&z=15&output=embed`
     : "";
