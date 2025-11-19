@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
 
 /* Font imports */
 @font-face {
@@ -117,6 +118,29 @@ body {
 
 .recharts-sector:focus {
   outline: none !important;
+}
+
+.custom-timepicker-popper {
+  top: 65 !important;
+  transform: translateY(0px) !important;
+  z-index: 50;
+}
+
+/* In your global stylesheet or a module CSS file imported correctly */
+.zero-space-wrapper,
+/* The next two selectors target the specific nested divs created by react-datepicker */
+.zero-space-wrapper > div.react-datepicker-wrapper, 
+.zero-space-wrapper > div > div.react-datepicker__input-container {
+    /* Ensure it takes up no space and is removed from the flow */
+    position: absolute !important;
+    visibility: hidden !important; 
+    width: 0 !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    /* Optional: Ensure it does not render and affects layout */
+    display: none !important; 
 }
 
 

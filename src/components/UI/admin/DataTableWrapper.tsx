@@ -6,7 +6,7 @@
 import React from "react";
 import dynamic from "next/dynamic";
 import AnimatedReveal from "@/src/animations/AnimatedReveal";
-import { AdminDataTableWrapperProps } from "@/src/types/adminCommon";
+import { AdminDataTableWrapperProps } from "@/src/types/admin";
 
 const DataTable = dynamic(() => import("react-data-table-component"), {
   ssr: false,
@@ -21,7 +21,6 @@ const DataTableWrapper = <T,>({
   //  Defensive check
   const safeColumns = Array.isArray(columns) ? columns : [];
   const safeData = Array.isArray(data) ? data : [];
-
   return (
     <AnimatedReveal>
       <DataTable

@@ -1,13 +1,12 @@
-
-import { keepPreviousData, useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteSingleEvent, fetchAllEvent, fetchEventById } from "@/src/services/admin/eventApi";
-import { CampaignFormValues, EventFormValues } from "@/src/utils/validations/FormValidation";
+// src/hooks/useEvents.ts
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { useLanguageAwareQuery } from "@/src/hooks/web/useLanguageAwareQuery";
+import { EventFormValues } from "@/src/utils/validations/FormValidation";
+import { deleteSingleEvent, fetchAllEvent, fetchEventById } from "@/src/services/admin/eventApi";
 import { EventFormProps } from "@/src/types/admin/event";
+import { mergeDateTime } from "@/src/helper/mergeDateTime";
 
-// Convert values to FormData
-const buildFormData = (values: CampaignFormValues) => {
+const buildFormData = (values: EventFormValues) => {
   const formData = new FormData();
 
   const appendNestedObject = (key: string, obj: any) => {
@@ -15,18 +14,11 @@ const buildFormData = (values: CampaignFormValues) => {
   };
 
   appendNestedObject("title", values.title);
-  appendNestedObject("category", values.category);
   appendNestedObject("description", values.description);
   appendNestedObject("summary", values.summary);
   appendNestedObject("location", values.location);
 
-  // Goal amount
-  formData.append("goalAmount", values.goalAmount.toString());
-
-  // KeyPoints by language
-  if (values.keyPoints) {
-    appendNestedObject("keyPoints", values.keyPoints);
-  }
+  if (values.keyPoints) appendNestedObject("keyPoints", values.keyPoints);
 
   // Existing images URLs
   values.existingImages?.forEach((url) => {
@@ -34,50 +26,55 @@ const buildFormData = (values: CampaignFormValues) => {
   });
 
   // New image files
-  if (values.images && values.images.length > 0) {
-    values.images.forEach((file) => {
-      if (file instanceof File) {
-        formData.append("images", file);
-      }
-    });
-  }
+  values.images?.forEach((file) => {
+    if (file instanceof File) formData.append("images", file);
+  });
 
+  const start = mergeDateTime(values.startDateTime
+, values.startTime);
+const end = mergeDateTime(values.endDateTime, values.endTime);
+
+if (start) formData.append("startTime", start.toISOString());
+if (end) formData.append("endTime", end.toISOString());
+
+
+  if (values.latitude) formData.append("latitude", values.latitude.toString());
+  if (values.longitude) formData.append("longitude", values.longitude.toString());
   return formData;
 };
 
-
-
-const handleCreatEvent = (
-  values: CampaignFormValues,
+// ✅ Handle event create
+const handleCreateEvent = (
+  values: EventFormValues,
   createMutation: any,
   resetForm: () => void,
   setSubmitting: (isSubmitting: boolean) => void,
   onClose: () => void
 ) => {
   toast.dismiss();
-  toast.loading("Creating Event...");
+  toast.loading("Creating event...");
   const formData = buildFormData(values);
 
   createMutation.mutate(formData, {
     onSuccess: () => {
       toast.dismiss();
-      toast.success("Event created");
+      toast.success("Event created successfully");
       resetForm();
       setSubmitting(false);
       onClose();
     },
     onError: (err: any) => {
       toast.dismiss();
-      toast.error(err?.response?.data?.message || "Failed to create");
+      toast.error(err?.response?.data?.message || "Failed to create event");
       setSubmitting(false);
     },
   });
 };
 
-
+// ✅ Handle event update
 const handleUpdateEvent = (
   id: string,
-  values: CampaignFormValues,
+  values: EventFormValues,
   updateMutation: any,
   resetForm: () => void,
   setSubmitting: (isSubmitting: boolean) => void,
@@ -92,21 +89,21 @@ const handleUpdateEvent = (
     {
       onSuccess: () => {
         toast.dismiss();
-        toast.success("event updated");
+        toast.success("Event updated successfully");
         resetForm();
         setSubmitting(false);
         onClose();
       },
       onError: (err: any) => {
         toast.dismiss();
-        toast.error(err?.response?.data?.message || "Failed to update");
+        toast.error(err?.response?.data?.message || "Failed to update event");
         setSubmitting(false);
       },
     }
   );
 };
 
-
+// ✅ Unified event form submit
 export const submitEventForm = (
   values: EventFormValues,
   initialData: EventFormProps["initialData"],
@@ -116,53 +113,43 @@ export const submitEventForm = (
   setSubmitting: (isSubmitting: boolean) => void,
   onClose: () => void
 ) => {
-  // if (initialData?.id) {
-  //   handleUpdateCampaign(initialData.id.toString(), values, updateMutation, resetForm, setSubmitting, onClose);
-  // } else {
-  //   handleCreateCampaign(values, createMutation, resetForm, setSubmitting, onClose);
-  // }
+  if (initialData?.id) {
+    handleUpdateEvent(initialData.id.toString(), values, updateMutation, resetForm, setSubmitting, onClose);
+  } else {
+    handleCreateEvent(values, createMutation, resetForm, setSubmitting, onClose);
+  }
 };
 
-
-export const useFetchAllEvent = (page: number, limit: number = 10, search?: string, searchedData?: string) => {
-  return useLanguageAwareQuery(
-    ["event", page, limit, search, searchedData],
-    () => fetchAllEvent(page, limit, search, searchedData),
-    {
-      staleTime: 5 * 60 * 1000,
-      placeholderData: keepPreviousData
-
-    }
-  );
+// ✅ Fetch all events with pagination
+export const useFetchAllEvent = (page: number, limit: number = 10, search?: string, searchField?: string) => {
+  return useQuery({
+    queryKey: ["events", page, limit, search, searchField],
+    queryFn: () => fetchAllEvent(page, limit, search, searchField),
+    placeholderData: keepPreviousData,
+  });
 };
 
-
-export const useFetchSingleEvent = (id?: string, options?: { enabled?: boolean }) => {
-  return useLanguageAwareQuery(
-    ["event", id],
-    () => fetchEventById(id!),
-    {
-      enabled: options?.enabled ?? !!id,
-      staleTime: 5 * 60 * 1000,
-    }
-  );
+// ✅ Fetch single event
+export const useFetchSingleEvent = (id?: string) => {
+  return useQuery({
+    queryKey: ["event", id],
+    queryFn: () => fetchEventById(id!),
+    enabled: !!id,
+  });
 };
 
-
-
+// ✅ Delete single event
 export const useDeleteSingleEvent = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteSingleEvent,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["event"] });
+      queryClient.invalidateQueries({ queryKey: ["events"] });
       toast.dismiss();
-      toast.success("event deleted successfully");
+      toast.success("Event deleted successfully");
     },
     onError: (error: any) => {
       toast.error(error?.response?.data?.message || "Failed to delete event");
-    }
+    },
   });
 };
-
-

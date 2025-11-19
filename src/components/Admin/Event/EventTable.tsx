@@ -42,7 +42,6 @@ const EventTable = () => {
   const[deleteLoading,setDeleteLoading]=useState<boolean>(false);
 
   const [previewData, setPreviewData] = useState<EventFormValues | null>(null);
-
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const searchedData = useDebounce(search, 1000);
@@ -58,7 +57,7 @@ const EventTable = () => {
   const createMutation = useMutation({
     mutationFn: createEvent,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["event"] });
+      queryClient.invalidateQueries({ queryKey: ["events"] });
     },
   });
 
@@ -66,9 +65,10 @@ const EventTable = () => {
     mutationFn: (data: { id: string; values: EventFormValues }) =>
       updateEvent(data.id, data.values),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["event"] });
+      queryClient.invalidateQueries({ queryKey: ["events"] });
     },
   });
+
   const normalizeEventData = (data: any): EventFormValues => {
     const start = new Date(data.startTime);
     const end = new Date(data.endTime);
@@ -145,9 +145,7 @@ const EventTable = () => {
     }
   }, [selectedEvent, deleteEvent]);
 
-  const columns = useMemo(
-    () =>
-      getEventColumns({
+  const columns = useMemo( () => getEventColumns({
         onEdit: handleEdit,
         onDelete: handleDelete,
         onView: handleView,
@@ -188,11 +186,10 @@ const EventTable = () => {
 
     return {
       ...singleEventData,
-      // existingImages: singleEventData.existingImages ?? stringImages,
+      existingImages: singleEventData.existingImages ?? stringImages,
       images: singleEventData.images ?? stringImages,
     };
   }, [singleEventData]);
-
 
   return (
     <div>
@@ -333,7 +330,7 @@ const EventTable = () => {
                 onSubmit={() => {
                   submitEventForm(
                     { ...previewData!, keyPoints: previewData!.keyPoints },
-                    singleCampaignData,
+                    singleEventData,
                     createMutation,
                     updateMutation,
                     () => {
@@ -361,7 +358,11 @@ const EventTable = () => {
                     images:
                       previewData?.images?.length
                         ? previewData.images
-                        : normalizedEventData?.images ?? []
+                        : normalizedEventData?.images ?? [],
+                    existingImages:
+                      previewData?.existingImages?.length
+                        ? previewData.existingImages
+                        : normalizedEventData?.existingImages ?? [],
                   }}
                   onClose={() => {
                     setDrawerOpen(false);

@@ -1,109 +1,138 @@
 "use client";
+import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
+import L from "leaflet";
+import { useEffect, useState } from "react";
+import CustomInput from "./CustomInput"; // import your CustomInput
 
-import React, { useState, useEffect } from "react";
-import { GoogleMap, Marker, useJsApiLoader, Autocomplete } from "@react-google-maps/api";
-import CustomInput from "./CustomInput";
-import { LocationPickerProps } from "@/src/types/admin";
+const markerIcon = L.icon({
+  iconUrl: "/leaflet/marker-icon.png",
+  shadowUrl: "/leaflet/marker-shadow.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+});
 
-const containerStyle = {
-  width: "100%",
-  height: "300px",
-};
+interface Props {
+  value: {
+    location: { en?: string; hi?: string };
+    latitude: number | null;
+    longitude: number | null;
+  };
+  onChange: (v: { location: any; latitude: number; longitude: number }) => void;
+  disabled?: boolean;
+}
 
-const defaultCenter = { lat: 28.6139, lng: 77.209 }; 
-
-const LocationPicker: React.FC<LocationPickerProps> = ({ value, onChange, disabled }) => {
-  const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "", 
-    libraries: ["places"],
-  });
-
-  const [map, setMap] = useState<google.maps.Map | null>(null);
-  const [searchLocationText,setSearchLocationtext]=useState<string>('');
-  const [marker, setMarker] = useState({ lat: value.latitude || defaultCenter.lat, lng: value.longitude || defaultCenter.lng });
-  const [autocomplete, setAutocomplete] = useState<google.maps.places.Autocomplete | null>(null);
+export default function LocationPicker({ value, onChange, disabled }: Props) {
+  const [position, setPosition] = useState<[number, number] | null>(
+    value.latitude && value.longitude ? [value.latitude, value.longitude] : null
+  );
+  const [searchText, setSearchText] = useState("");
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
-    setMarker({ lat: value.latitude || defaultCenter.lat, lng: value.longitude || defaultCenter.lng });
-  }, [value]);
+    if (value.latitude && value.longitude) {
+      setPosition([value.latitude, value.longitude]);
+    }
+  }, [value.latitude, value.longitude]);
 
-  const onLoadAutocomplete = (autoC: google.maps.places.Autocomplete) => {
-    setAutocomplete(autoC);
+  // fetch suggestions
+  const fetchSuggestions = async (query: string) => {
+    if (!query) return setSuggestions([]);
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&addressdetails=1&limit=5`
+      );
+      const data = await res.json();
+      setSuggestions(data);
+      setShowDropdown(true);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const onPlaceChanged = () => {
-    if (!autocomplete) return;
-    const place = autocomplete.getPlace();
-    if (!place.geometry || !place.geometry.location) return;
+  // debounce input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchSuggestions(searchText);
+    }, 300); // 300ms debounce
+    return () => clearTimeout(timer);
+  }, [searchText]);
 
-    const lat = place.geometry.location.lat();
-    const lng = place.geometry.location.lng();
-    setMarker({ lat, lng });
+  const handleSelect = (item: any) => {
+    const lat = parseFloat(item.lat);
+    const lon = parseFloat(item.lon);
+    setPosition([lat, lon]);
     onChange({
-      location: { en: place.formatted_address || "", hi: place.formatted_address || "" },
+      location: { en: item.display_name, hi: item.display_name },
       latitude: lat,
-      longitude: lng,
+      longitude: lon,
     });
-    map?.panTo({ lat, lng });
+    setSearchText(item.display_name);
+    setShowDropdown(false);
   };
 
-  const handleMapClick = (e: google.maps.MapMouseEvent) => {
-    if (disabled || !e.latLng) return;
-    const lat = e.latLng.lat();
-    const lng = e.latLng.lng();
-    setMarker({ lat, lng });
-    onChange({
-      location: { en: `Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}`, hi: `Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}` },
-      latitude: lat,
-      longitude: lng,
-    });
+  const MapUpdater = () => {
+    const map = useMap();
+    useEffect(() => {
+      if (position) {
+        map.setView(position, 13);
+      }
+    }, [position, map]);
+    return null;
   };
-
-  if (!isLoaded) return <div>Loading map...</div>;
 
   return (
-    <div className="flex flex-col gap-2">
-      <Autocomplete onLoad={onLoadAutocomplete} onPlaceChanged={onPlaceChanged}>
-        <CustomInput
-        value={searchLocationText}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>)=>{setSearchLocationtext(e.target.value)}}
-          type="text"
-          placeholder="Search location..."
-          className="  rounded w-full"
-          disabled={disabled}
-        />
-      </Autocomplete>
+    <div className="w-full relative">
+      {/* Search Input */}
+      <div className="flex flex-col relative w-full z-50">
+        {/* Dropdown */}
+        {showDropdown && suggestions.length > 0 && (
+          <ul className="absolute top-full left-0 z-50 bg-white border w-full mt-1 max-h-52 overflow-y-auto rounded shadow">
+            {suggestions.map((item, idx) => (
+              <li
+                key={idx}
+                className="p-2 cursor-pointer hover:bg-gray-100 text-sm"
+                onMouseDown={() => handleSelect(item)} // <-- use onMouseDown instead of onClick
+              >
+                {item.display_name}
+              </li>
+            ))}
+          </ul>
+        )}
 
-      <GoogleMap
-        mapContainerStyle={containerStyle}
-        center={{ lat: marker.lat, lng: marker.lng }}
-        zoom={13}
-        onLoad={(map) => setMap(map)}
-        onClick={handleMapClick}
-      >
-        <Marker position={{ lat: marker.lat, lng: marker.lng }} />
-      </GoogleMap>
+      </div>
 
+      {/* Map */}
+      <div className="w-full h-[300px] rounded-md overflow-hidden  relative z-40 mt-2">
+        <MapContainer
+          center={position || [28.6139, 77.209]}
+          zoom={position ? 13 : 5}
+          className="h-full w-full"
+        >
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution="© OpenStreetMap contributors"
+          />
+          <MapUpdater />
+          {position && <Marker position={position} icon={markerIcon} />}
+        </MapContainer>
+      </div>
+
+      {/* Latitude / Longitude display */}
       <div className="flex gap-2 mt-2">
         <CustomInput
-        onChange={()=>{}}
-          type="text"
-          value={value.latitude || ""}
-          readOnly
+          value={position ? position[0] : ""}
           placeholder="Latitude"
-          className="  rounded flex-1"
+          readOnly
+          className="flex-1"
         />
         <CustomInput
-        onChange={()=>{}}
-          type="text"
-          value={value.longitude || ""}
-          readOnly
+          value={position ? position[1] : ""}
           placeholder="Longitude"
-          className="  rounded flex-1"
+          readOnly
+          className="flex-1"
         />
       </div>
     </div>
   );
-};
-
-export default LocationPicker;
+}

@@ -157,10 +157,10 @@ export const EventSchema = Yup.object({
     en: Yup.string().required("Summary is required"),
     hi: Yup.string().required("सारांश आवश्यक है"),
   }),
-  startDate: Yup.date().nullable(),
-  startTime: Yup.date().nullable(),
-  endDate: Yup.date().nullable(),
-  endTime: Yup.date().nullable(),
+  startDate: Yup.date().nullable().required("Start date is required"),
+  startTime: Yup.date().nullable().required("Start time is required") ,
+  endDate: Yup.date().nullable().required("End date is required"),
+  endTime: Yup.date().nullable().required("End time is required"),
   keyPoints: Yup.object({
     en: Yup.array()
       .of(Yup.string().required("Key point in English is required"))

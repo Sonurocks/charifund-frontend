@@ -46,6 +46,7 @@ export interface Comment {
   totalReplies?: number;
   isPending?: boolean;
   isLiked?: boolean;
+  status?:string;
 }
 
 export interface CommentsProps {

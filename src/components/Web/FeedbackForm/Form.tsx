@@ -56,7 +56,7 @@ const FormComponent = ({ onClose }: { onClose: () => void }) => {
         onClose
       );
     } catch (error) {
-      console.log('❌ Error in feedback submission:', error);
+      console.log(' Error in feedback submission:', error);
       setToast({ type: 'error', message: t('Failed to submit feedback') });
     }
   }

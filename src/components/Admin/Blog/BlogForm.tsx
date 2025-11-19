@@ -50,7 +50,6 @@ const BlogForm = ({
   const initialValues = getInitialBlogValues(initialData);
   const { language, toggleLanguage } = useLanguageToggle();
   const { data: categoryData } = useFetchCategory();
-
   const categoryOptions =
     categoryData?.category && categoryData.category.length > 0
       ? categoryData.category.map((category: Category) => ({
@@ -122,6 +121,7 @@ const BlogForm = ({
               }
               return touchedObj;
             };
+
 
             const touchedFields = touchAllFields(values);
             touchedFields._combinedImagesGuard = true;
