@@ -35,9 +35,7 @@ const CancelButton = dynamic(() => import("../../UI/web/Buttons/CancelButton"), 
 const Button = dynamic(() => import("../../UI/web/Buttons/Button"), {
   loading: () => <p>Loading button...</p>,
 });
-const ButtonLoader = dynamic(() => import("../../UI/web/Loader/ButtonLoader"), {
-  loading: () => <p>Loading loader...</p>,
-});
+
 
 const BlogForm = ({
   initialData,
@@ -76,7 +74,9 @@ const BlogForm = ({
         enableReinitialize
         initialValues={initialValues}
         validationSchema={blogSchema}
+         validateOnChange={true}
         onSubmit={(values) => {
+          console.log("values check for blog", values)
           const payload = {
             creator: values.creator,
             title: values.title,
@@ -310,6 +310,7 @@ const BlogForm = ({
                   setFieldValue("images", files);
                   setFieldValue("existingImages", existingUrls);
                 }}
+                initialUrls={values.existingImages}
                 uploadType="multiple"
                 disabled={isView}
                 mode={mode}

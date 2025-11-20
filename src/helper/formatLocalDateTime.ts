@@ -1,11 +1,19 @@
-const formatLocalDateTime = (date?: Date | null, time?: Date | null) => {
-  if (!date || !time) return "";
-  const y = date.getFullYear();
-  const m = (date.getMonth() + 1).toString().padStart(2, "0");
-  const d = date.getDate().toString().padStart(2, "0");
-  const h = time.getHours().toString().padStart(2, "0");
-  const min = time.getMinutes().toString().padStart(2, "0");
-  return `${y}-${m}-${d} ${h}:${min}:00`;
-};
+export const formatIndianDateTime = (dateStr: string) => {
+  // Remove trailing 'Z' if present to treat as local time
+  const localStr = dateStr.endsWith("Z") ? dateStr.slice(0, -1) : dateStr;
+  const date = new Date(localStr);
 
-export default formatLocalDateTime;
+  const formattedDate = date.toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+
+  const formattedTime = date.toLocaleTimeString("en-IN", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+
+  return `${formattedDate} ${formattedTime}`;
+};

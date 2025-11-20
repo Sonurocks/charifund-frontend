@@ -98,6 +98,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
         enableReinitialize
         initialValues={initialValues}
         validationSchema={campaignSchema}
+        validateOnChange={true}
         onSubmit={(values: CampaignFormValues) => {
           const payload: CampaignFormValues = {
             ...values,
@@ -239,6 +240,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
                   (errors as any)?.existingImages ||
                   (errors as any)?._combinedImagesGuard
                 }
+                initialUrls={values.existingImages || []}
                 onChange={(files: File[], existingUrls: string[]) => {
                   setFieldValue("images", files);
                   setFieldValue("existingImages", existingUrls);

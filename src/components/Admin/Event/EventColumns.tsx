@@ -12,12 +12,8 @@ export const getEventColumns = ({
 }: EventColumnCallbacks) => [
     { name: "SNo", cell: (_row: Event, index: number) => index + 1, width: "80px" },
     { name: "Title", selector: (row: Event) => row.title, sortable: true },
-    { name: "Date", selector: (row: Event) => row.Date },
-    { name: "Start Time", selector: (row: Event) => row.startTime },
-    {
-      name: "End Time",
-      selector: (row: Event) => `${row.endTime}`,
-    },
+    { name: "Start Date", selector: (row: Event) => row.startDate, width: "170px" },
+    { name: "End Date", selector: (row: Event) => row.endDate , width: "170px"},
     { name: "Location", selector: (row: Event) => row.location },
     { name: "Status", selector: (row: Event) => row.status },
     {

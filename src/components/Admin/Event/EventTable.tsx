@@ -26,6 +26,7 @@ import { useLanguageToggle } from "@/src/hooks/admin/useLanguageToggle";
 import { getEventColumns } from "./EventColumns";
 import EventPreview from "./EventPreview";
 import EventForm from "./EventForm";
+import { formatIndianDateTime } from "@/src/helper/formatLocalDateTime";
 
 const EventTable = () => {
   const [search, setSearch] = useState("");
@@ -39,7 +40,7 @@ const EventTable = () => {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [showPreview, setShowPreview] = useState(false);
-  const[deleteLoading,setDeleteLoading]=useState<boolean>(false);
+  const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
 
   const [previewData, setPreviewData] = useState<EventFormValues | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -132,24 +133,24 @@ const EventTable = () => {
       toast.dismiss();
       toast.loading("Deleting Event....")
       deleteEvent.mutate(selectedEvent.id.toString(), {
-      onSuccess: () => {
-        setDeleteLoading(false)
-        setIsOpen(false);
-      setSelectedEvent(null);
-      },
-      onError: () => {
-        setDeleteLoading(false)
-        setIsOpen(false); 
-      },
-    });      
+        onSuccess: () => {
+          setDeleteLoading(false)
+          setIsOpen(false);
+          setSelectedEvent(null);
+        },
+        onError: () => {
+          setDeleteLoading(false)
+          setIsOpen(false);
+        },
+      });
     }
   }, [selectedEvent, deleteEvent]);
 
-  const columns = useMemo( () => getEventColumns({
-        onEdit: handleEdit,
-        onDelete: handleDelete,
-        onView: handleView,
-      }),
+  const columns = useMemo(() => getEventColumns({
+    onEdit: handleEdit,
+    onDelete: handleDelete,
+    onView: handleView,
+  }),
     [handleEdit, handleDelete, handleView]
   );
 
@@ -157,9 +158,8 @@ const EventTable = () => {
     if (!eventData?.events) return [];
 
     return eventData.events.map((e: any, index: number) => {
-      const start = new Date(e.startTime);
-      const end = new Date(e.endTime);
 
+      console.log("time check", e)
       return {
         id: e.id,
         title: e.title,
@@ -169,9 +169,8 @@ const EventTable = () => {
         images: e.images,
         keyPoints: e.keyPoints,
         status: e.status || "Active",
-        startTime: start.toLocaleTimeString("en-IN", { hour: '2-digit', minute: '2-digit', hour12: true }),
-        endTime: end.toLocaleTimeString("en-IN", { hour: '2-digit', minute: '2-digit', hour12: true }),
-        Date: start.toLocaleDateString("en-IN", { day: '2-digit', month: 'short', year: 'numeric' }),
+        startDate: formatIndianDateTime(e.startTime),
+        endDate: formatIndianDateTime(e.endTime),
       };
     });
   }, [eventData]);
@@ -190,6 +189,7 @@ const EventTable = () => {
       images: singleEventData.images ?? stringImages,
     };
   }, [singleEventData]);
+
 
   return (
     <div>

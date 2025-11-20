@@ -34,6 +34,7 @@ const CustomFileInput: React.FC<AdminCustomFileInputProps & { onClearError?: () 
     })),
   ]);
 
+  console.log(" object check from file input", initialFiles, initialUrls)
   const inputRef = useRef<HTMLInputElement>(null);
   const isView = mode === "view";
   const isEditable = mode === "add" || mode === "edit";

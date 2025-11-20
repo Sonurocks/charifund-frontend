@@ -20,28 +20,43 @@ const buildFormData = (values: EventFormValues) => {
 
   if (values.keyPoints) appendNestedObject("keyPoints", values.keyPoints);
 
-  // Existing images URLs
-  values.existingImages?.forEach((url) => {
+  // 1️⃣ Ensure URLs in values.images are added to existingImages
+  const urlsFromImages: string[] = [];
+  const filesFromImages: File[] = [];
+
+  values.images?.forEach((img) => {
+    if (typeof img === "string") {
+      urlsFromImages.push(img);
+    } else if (img instanceof File) {
+      filesFromImages.push(img);
+    }
+  });
+
+  // Combine with already existing URLs
+  const allExistingImages = [...(values.existingImages || []), ...urlsFromImages];
+
+  // Append existing images URLs
+  allExistingImages.forEach((url) => {
     if (url) formData.append("existingImages[]", url);
   });
 
-  // New image files
-  values.images?.forEach((file) => {
-    if (file instanceof File) formData.append("images", file);
+  // Append new image files
+  filesFromImages.forEach((file) => {
+    formData.append("images", file);
   });
 
-  const start = mergeDateTime(values.startDateTime
-, values.startTime);
-const end = mergeDateTime(values.endDateTime, values.endTime);
+  const start = mergeDateTime(values.startDate, values.startTime);
+  const end = mergeDateTime(values.endDate, values.endTime);
 
-if (start) formData.append("startTime", start.toISOString());
-if (end) formData.append("endTime", end.toISOString());
-
+  if (start) formData.append("startTime", start.toISOString());
+  if (end) formData.append("endTime", end.toISOString());
 
   if (values.latitude) formData.append("latitude", values.latitude.toString());
   if (values.longitude) formData.append("longitude", values.longitude.toString());
+
   return formData;
 };
+
 
 // ✅ Handle event create
 const handleCreateEvent = (
