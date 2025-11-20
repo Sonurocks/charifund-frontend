@@ -28,6 +28,11 @@ export const getCommentColumns = ({
     selector: (row: Comment) => row.status,
     sortable: true,
   },
+   {
+    name: "Created At",
+    selector: (row: Comment) => row?.createdAt?.split("T")[0],
+    sortable: true,
+  },
  
   {
     name: "Actions",

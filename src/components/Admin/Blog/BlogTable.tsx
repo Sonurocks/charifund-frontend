@@ -181,7 +181,7 @@ const BlogTable = () => {
 
     const stringImages =
       singleBlogData.images?.filter((img: any) => typeof img === "string") ?? [];
-
+    console.log("string images", stringImages)
     return {
       ...singleBlogData,
       existingImages: singleBlogData.existingImages ?? stringImages,

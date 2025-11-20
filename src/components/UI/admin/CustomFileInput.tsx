@@ -1,5 +1,6 @@
 "use client";
-import React, { useState, ChangeEvent, DragEvent, useRef, use } from "react";
+
+import React, { useState, ChangeEvent, DragEvent, useRef } from "react";
 import { IoMdClose } from "react-icons/io";
 import { Icon } from "@iconify/react";
 import toast from "react-hot-toast";
@@ -7,8 +8,7 @@ import { AdminCustomFileInputProps, AdminFileItem } from "@/src/types/admin";
 import { useTranslation } from "react-i18next";
 import Image from "next/image";
 
-
-const CustomFileInput: React.FC<AdminCustomFileInputProps> = ({
+const CustomFileInput: React.FC<AdminCustomFileInputProps & { onClearError?: () => void }> = ({
   label,
   name,
   onChange,
@@ -18,6 +18,7 @@ const CustomFileInput: React.FC<AdminCustomFileInputProps> = ({
   initialUrls = [],
   initialFiles = [],
   uploadType = "single",
+  onClearError,
 }) => {
   const [files, setFiles] = useState<AdminFileItem[]>([
     ...initialUrls.map((url) => ({
@@ -33,7 +34,7 @@ const CustomFileInput: React.FC<AdminCustomFileInputProps> = ({
     })),
   ]);
 
-
+  console.log(" object check from file input", initialFiles, initialUrls)
   const inputRef = useRef<HTMLInputElement>(null);
   const isView = mode === "view";
   const isEditable = mode === "add" || mode === "edit";
@@ -48,10 +49,10 @@ const CustomFileInput: React.FC<AdminCustomFileInputProps> = ({
         prev.map((f, i) =>
           i === index
             ? {
-              ...f,
-              progress,
-              status: progress >= 100 ? "success" : "processing",
-            }
+                ...f,
+                progress,
+                status: progress >= 100 ? "success" : "processing",
+              }
             : f
         )
       );
@@ -59,7 +60,7 @@ const CustomFileInput: React.FC<AdminCustomFileInputProps> = ({
     }, 200);
   };
 
-  // ✅ Handle file selection with size check
+  // Handle file selection
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selected = Array.from(e.target.files || []);
     if (selected.length === 0) return;
@@ -89,6 +90,7 @@ const CustomFileInput: React.FC<AdminCustomFileInputProps> = ({
     const updated = uploadType === "single" ? newItems : [...files, ...newItems];
     setFiles(updated);
 
+    // Trigger onChange with new files
     onChange(
       updated.filter((f) => f.file).map((f) => f.file!),
       updated
@@ -96,6 +98,9 @@ const CustomFileInput: React.FC<AdminCustomFileInputProps> = ({
         .map((f) => f.url)
         .filter((u) => typeof u === "string" && !u.startsWith("blob:"))
     );
+
+    // Clear error if any
+    onClearError?.();
 
     newItems.forEach((_, idx) => {
       const actualIndex = uploadType === "single" ? idx : files.length + idx;
@@ -105,7 +110,7 @@ const CustomFileInput: React.FC<AdminCustomFileInputProps> = ({
     if (inputRef.current) inputRef.current.value = "";
   };
 
-  // ✅ Handle drag & drop with size check
+  // Handle drag & drop
   const handleDrop = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     if (disabled) return;
@@ -140,6 +145,9 @@ const CustomFileInput: React.FC<AdminCustomFileInputProps> = ({
         .filter((u) => typeof u === "string" && !u.startsWith("blob:"))
     );
 
+    // Clear error if any
+    onClearError?.();
+
     newItems.forEach((_, idx) => {
       const actualIndex = uploadType === "single" ? idx : files.length + idx;
       simulateUpload(actualIndex);
@@ -151,21 +159,23 @@ const CustomFileInput: React.FC<AdminCustomFileInputProps> = ({
   const removeFile = (idx: number) => {
     const updated = files.filter((_, i) => i !== idx);
     setFiles(updated);
+
     const keptFiles = updated.filter((f) => f.file).map((f) => f.file!);
     const keptUrls = updated
       .filter((f) => !f.file)
       .map((f) => f.url)
       .filter((u) => typeof u === "string" && !u.startsWith("blob:"));
+
     onChange(keptFiles, keptUrls);
+
+    // Clear error if any
+    onClearError?.();
   };
 
   return (
     <div className="w-full">
       {label && (
-        <label
-          htmlFor={name}
-          className="block mb-1 font-medium text-gray-700 text-[14px]"
-        >
+        <label htmlFor={name} className="block mb-1 font-medium text-gray-700 text-[14px]">
           {label}
         </label>
       )}
@@ -189,13 +199,9 @@ const CustomFileInput: React.FC<AdminCustomFileInputProps> = ({
             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             disabled={disabled}
           />
-          <Icon
-            icon="mdi:image-plus-outline"
-            className="text-3xl text-yellow mx-auto"
-          />
+          <Icon icon="mdi:image-plus-outline" className="text-3xl text-yellow mx-auto" />
           <p className="mt-2 text-sm text-gray-600">
-            Drag & Drop your images here or{" "}
-            <span className="text-yellow underline">browse files</span>
+            Drag & Drop your images here or <span className="text-yellow underline">browse files</span>
           </p>
         </div>
       )}
@@ -208,10 +214,9 @@ const CustomFileInput: React.FC<AdminCustomFileInputProps> = ({
               className="flex items-center justify-between border border-gray-200 rounded-md px-3 py-2 bg-white shadow-sm"
             >
               <div className="flex items-center gap-2">
-                
                 <div className="relative w-10 h-10 rounded overflow-hidden">
                   <Image
-                    src={f.url || "/default-image.webp"} // fallback image
+                    src={f.url || "/default-image.webp"}
                     alt={f.file?.name || `file-${idx}`}
                     fill
                     className="object-cover rounded"
@@ -220,16 +225,10 @@ const CustomFileInput: React.FC<AdminCustomFileInputProps> = ({
                 </div>
 
                 <div className="text-sm">
-                  <p className="font-medium text-blue-50">
-                    {f.file?.name || f?.url?.split("/").pop()}
-                  </p>
+                  <p className="font-medium text-blue-50">{f.file?.name || f?.url?.split("/").pop()}</p>
                   <p className="text-xs text-gray-400">
                     {f.status === "processing" && `Uploading... ${f.progress}%`}
-                    {f.status === "success" && (
-                      <span className="text-green text-xs">
-                        Uploaded successfully
-                      </span>
-                    )}
+                    {f.status === "success" && <span className="text-green text-xs">Uploaded successfully</span>}
                     {f.status === "error" && "Failed to upload"}
                   </p>
                 </div>

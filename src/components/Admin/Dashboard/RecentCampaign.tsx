@@ -15,10 +15,13 @@ function RecentCampaign() {
 
   const { data } = useFetchAllCampaigns(1, 10) as { data: { campaigns: Campaign[] } };
 
+  
+   if (!data || !data.campaigns || data.campaigns.length === 0) {
+    return null;
+  }
   return (
     <div className="bg-white rounded-xl my-6 w-full">
       <h2 className="text-gray-700 font-semibold mb-4">Recent Campaigns</h2>
-
       {/* Scrollable table container */}
       <div className=" overflow-y-auto">
         <table className="w-full table-auto border-collapse ">
