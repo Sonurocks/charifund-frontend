@@ -108,13 +108,12 @@ const FormComponent = ({ onClose }: { onClose: () => void }) => {
             <div className="flex-1 pr-2">
               <FadeUpCard delay={0.3}>
                 <div className="flex gap-1 sm:gap-2 mt-2 sm:mt-3 mb-2 sm:mb-3">
-                  <Icon icon={"mdi:hand-heart"} className="text-lg sm:text-xl text-yellow" />
                   <span className="text-yellow font-caveat font-extrabold text-sm sm:text-lg md:text-xl">
-                    {t("Start Donating Poor People")}
+                    {t("Your Voice Matters")}
                   </span>
                 </div>
                 <h2 className="text-lg sm:text-xl md:text-2xl font-nunito font-extrabold text-white leading-tight">
-                  {t("Share Your")} <span className="text-yellow">{t("Experience!")}</span>
+                  {t("Share Your Experience with Youth Util Welfare Association")}
                 </h2>
               </FadeUpCard>
             </div>
@@ -162,7 +161,7 @@ const FormComponent = ({ onClose }: { onClose: () => void }) => {
                     <div className="relative">
                       <InputField
                         name="name"
-                        placeholder={t("Your name...")}
+                        placeholder={t("Full Name")}
                         icon={"mdi:account"}
                         textSize="text-base"
                         errorTextSize="text-sm"
@@ -176,7 +175,7 @@ const FormComponent = ({ onClose }: { onClose: () => void }) => {
                         name="designation"
                         textSize="text-base"
                         errorTextSize="text-sm"
-                        placeholder={t("Your designation...")}
+                        placeholder={t("Designation / Association")}
                         icon="mdi:briefcase"
                         iconClassName="text-yellow text-base font-bold size-5 mt-[2px]"
                         className="w-full rounded-md border flex border-gray-green h-[44px] sm:h-[48px] bg-foreground/18 px-3 sm:px-4 py-2 sm:py-3 text-white focus:outline-none"
@@ -187,7 +186,7 @@ const FormComponent = ({ onClose }: { onClose: () => void }) => {
                   {/* Rating */}
                   <div className="relative">
                     <label className="block text-xs sm:text-sm font-medium text-white mb-2">
-                      {t("Rating")} * (1-5)
+                      {t("Your Experience (1–5)")} *
                     </label>
                     <div className="flex gap-1 sm:gap-2">
                       {[1, 2, 3, 4, 5].map((star) => (
@@ -218,7 +217,7 @@ const FormComponent = ({ onClose }: { onClose: () => void }) => {
                       name="feedback"
                       textSize="text-base"
                       errorTextSize="text-sm"
-                      placeholder={t("Your feedback...")}
+                      placeholder={t("Tell us about your experience with Yuva India...")}
                       icon="mdi:message-text"
                       iconClassName="text-yellow text-base font-bold size-5 mt-[2px]"
                       className="w-full rounded-md border border-gray-green h-[100px] sm:h-[96px] bg-foreground/18 px-3 sm:px-4 py-2 sm:py-3 focus:outline-none resize-none overflow-y-auto scrollbar-hide"
@@ -231,7 +230,7 @@ const FormComponent = ({ onClose }: { onClose: () => void }) => {
                   {/* Image */}
                   <div className="relative text-white">
                     <label className="block text-xs sm:text-sm font-medium text-white mb-2">
-                      {t("Profile Image")} *
+                      {t("Profile Photo (Optional)")}
                     </label>
                     <div className="relative">
                       {imagePreview ? (

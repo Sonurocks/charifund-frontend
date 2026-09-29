@@ -96,7 +96,7 @@ export default function HelpingEachOther() {
           />
         </motion.div>
 
-        <div className=" w-full mx-auto xl:px-2 2xl:px-0 mt-10 lg:mt-20 max-w-[1440px]">
+        <div className="w-full mx-auto px-4 sm:px-6 md:px-8 xl:px-2 2xl:px-0 mt-10 lg:mt-20 max-w-[1440px]">
           <div className="grid grid-cols-1 lg:grid-cols-7 xl:pl-30  xl:gap-15">
 
             <div className="relative  col-span-3  opacity-0 anim-fade-in-left hidden lg:block">

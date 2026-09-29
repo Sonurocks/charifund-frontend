@@ -111,7 +111,7 @@ const staticImages = [bannerOne.src, bannerTwo.src];
 
       {/*  Text Overlay */}
       <div
-        className="absolute inset-0 flex flex-col justify-center items-start px-4 sm:px-6 md:px-16 lg:px-30 z-20 font-nunito"
+        className="absolute inset-0 flex flex-col justify-center items-start px-4 sm:px-6 md:px-8 xl:px-30 z-20 font-nunito"
         style={pageBannerBackgourndColor}
       >
         <div className="ml-2 md:ml-4 lg:ml-6 xl:ml-8">

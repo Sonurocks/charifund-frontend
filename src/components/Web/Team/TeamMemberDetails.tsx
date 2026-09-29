@@ -86,7 +86,7 @@ const TeamMemberDetails: React.FC = () => {
               <div className="relative w-full aspect-[4/5]">
 
                 <Image
-                  src={memberData?.image}
+                  src={memberData?.image || "/assets/volunteer1.webp"}
                   alt={memberData?.name || "Volunteer"}
                   width={534}
                   height={639}

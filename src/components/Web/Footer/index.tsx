@@ -1,4 +1,3 @@
-
 "use client";
 import { Icon } from "@iconify/react";
 import Newsletter from "./Newsletter";
@@ -38,13 +37,9 @@ const Footer = () => {
   const underlineOnHover = `${underlineBase} cursor-pointer hover:text-yellow before:duration-300 hover:before:scale-x-100`;
 
   return (
-    <footer
-      ref={ref}
-      className="bg-dark-green text-white "
-    >
+    <footer ref={ref} className="bg-dark-green text-white ">
       <ScrollImgSection />
       <section className="py-15 sm:py-14 px-4 sm:px-6 md:px-8 xl:px-28 relative">
-
         <Newsletter />
 
         {/* Floating Decorative Icon */}
@@ -70,7 +65,6 @@ const Footer = () => {
         >
           {/* Brand Section */}
           <motion.div variants={item}>
-
             <div className="h-18 w-62 md:h-12  md:w-56 lg:h-14  lg:w-64 xl:h-16 xl:w-72 relative -ml-15 md:-ml-22">
               <Image
                 src={logo}
@@ -106,7 +100,10 @@ const Footer = () => {
             </div>
             <ul className="space-y-3">
               {footerData.quickLinks.map((link, i) => (
-                <li key={i} className="group text-[16px] xl:text-base lg:text-[16px] 2xl:text-[16px]">
+                <li
+                  key={i}
+                  className="group text-[16px] xl:text-base lg:text-[16px] 2xl:text-[16px]"
+                >
                   <a href={link.href} className={underlineOnGroupHover}>
                     <Icon
                       icon="mingcute:arrow-up-fill"
@@ -131,7 +128,10 @@ const Footer = () => {
             </div>
             <ul className="space-y-3">
               {footerData.services.map((service, i) => (
-                <li key={i} className="group text-[16px] xl:text-[16px] lg:text-[16px] 2xl:text-[16px]">
+                <li
+                  key={i}
+                  className="group text-[16px] xl:text-[16px] lg:text-[16px] 2xl:text-[16px]"
+                >
                   <a href={service.href} className={underlineOnGroupHover}>
                     <Icon
                       icon="mingcute:arrow-up-fill"
@@ -154,29 +154,67 @@ const Footer = () => {
             <div className="w-[35%] mb-5">
               <Divider />
             </div>
-          <div className="space-y-4 flex flex-col">
+            <div className="space-y-4 flex flex-col">
+              <div
+                className={`${underlineOnHover} text-sm xl:text-base flex items-start gap-2`}
+              >
+                <Icon
+                  icon="ion:location"
+                  width="22"
+                  height="22"
+                  className="text-yellow shrink-0 mt-1"
+                />
+                <span className="whitespace-pre-line break-words">
+                  {footerData.contact.address}
+                </span>
+              </div>
 
-  <p className={`${underlineOnHover} text-sm xl:text-base inline-flex items-center gap-2`}>
-    <Icon icon="ion:location" width="22" height="22" className="text-yellow" />
-    <span>{footerData.contact.address}</span>
-  </p>
+              <p
+                className={`${underlineOnHover} text-sm xl:text-base flex items-center gap-2`}
+              >
+                <Icon
+                  icon="mdi:phone"
+                  width="22"
+                  height="22"
+                  className="text-yellow shrink-0"
+                />
+                <a href={`tel:${footerData.contact.phone_number}`}>
+                  <span>{footerData.contact.phone_label}</span>
+                </a>
+              </p>
 
-  <p className={`${underlineOnHover} text-sm xl:text-base inline-flex items-center gap-2`}>
-    <Icon icon="mdi:phone" width="22" height="22" className="text-yellow" />
-    <a href={`tel:${footerData.contact.phone_number}`}>
-      <span>{footerData.contact.phone_label}</span>
-    </a>
-  </p>
+              <div
+                className={`${underlineOnHover} text-sm xl:text-base flex items-center gap-2`}
+              >
+                <Icon
+                  icon="mdi:email"
+                  width="22"
+                  height="22"
+                  className="text-yellow shrink-0"
+                />
+                <a href={`mailto:${footerData.contact.email}`}>
+                  <span>{footerData.contact.email}</span>
+                </a>
+              </div>
 
-  <div className={`${underlineOnHover} text-sm xl:text-base inline-flex items-center gap-2`}>
-    <Icon icon="mdi:email" width="22" height="22" className="text-yellow" />
-    <a href={`mailto:${footerData.contact.email}`}>
-      <span>{footerData.contact.email}</span>
-    </a>
-  </div>
-
-</div>
-
+              <div
+                className={`${underlineOnHover} text-sm xl:text-base flex items-center gap-2`}
+              >
+                <Icon
+                  icon="mdi:web"
+                  width="22"
+                  height="22"
+                  className="text-yellow shrink-0"
+                />
+                <a
+                  href={`https://${footerData.contact.website}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span>{footerData.contact.website}</span>
+                </a>
+              </div>
+            </div>
 
             <motion.div
               animate={{ scale: [1, 1.3, 1], opacity: [0.6, 1, 0.6] }}
@@ -221,7 +259,6 @@ const Footer = () => {
         </div>
       </motion.div>
       <CookieSettingsModal />
-
     </footer>
   );
 };

@@ -28,7 +28,7 @@ const  CharityWithDifference  = () =>{
   const { t } = useTranslation();
 
   return (
-    <div className="bg-white overflow-hidden py-4  lg:py-4 px-4 relative">
+    <div className="bg-white overflow-hidden py-4 lg:py-4 px-4 sm:px-6 md:px-8 xl:px-0 relative">
       <div className="max-w-7xl mx-auto mt-15">
         {/* Header Section */}
         <FadeUpCard delay={0.3}>

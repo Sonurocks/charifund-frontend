@@ -67,9 +67,9 @@ const ValueableCustomer = () => {
           />
           <ComponentTitle
             className="lg:text-center"
-            preText="What Our Supporters Say,"
-            highlightText="Your Voices"
-            postText="That Inspire Us"
+            preText="Our Supporters & Partners –"
+            highlightText="Their Valuable"
+            postText="Feedback"
           />
         </div>
       </div>

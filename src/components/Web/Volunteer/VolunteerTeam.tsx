@@ -45,7 +45,7 @@ const VolunteerTeam = ({ bg = "" }: { bg?: string }) => {
 
   return (
     <section
-      className={`relative bg-cover pt-6 pb-2 lg:py-30 xl:py-20 bg-center ${bgColor} w-full px-3 lg:px-0 flex justify-center items-center`}
+      className={`relative bg-cover pt-6 pb-2 lg:py-30 xl:py-20 bg-center ${bgColor} w-full px-4 sm:px-6 md:px-8 xl:px-0 flex justify-center items-center`}
       style={{ backgroundImage: `url(${bgOneVolunteer.src})` }}
     >
       <div
@@ -66,7 +66,7 @@ const VolunteerTeam = ({ bg = "" }: { bg?: string }) => {
             highlightText={t("Team")}
             postText={t(" Members")}
           />
-          <p className="text-center text-sm md:text-base text-gray-600 mt-4 max-w-2xl px-4">
+          <p className="text-center text-gray-green text-[16px] md:text-[16px] font-semibold font-nunito leading-7 mt-4 max-w-[780px] lg:max-w-2xl xl:max-w-3xl px-4 mx-auto">
             {t("Leading Youth Util Welfare Association with a commitment to social service, youth empowerment and community development.")}
           </p>
         </div>
@@ -114,7 +114,7 @@ const VolunteerTeam = ({ bg = "" }: { bg?: string }) => {
       </div>
 
       {/* Side Image */}
-      <div className="absolute top-[10%] md:top-[220] lg:top-[130] lg:right-[50] md:right-[-45] xl:right-[6%] z-0 font-bold hidden md:block">
+      <div className="absolute top-[10%] md:top-[220] lg:top-[130] lg:right-[50] md:right-[-45] xl:right-[6%] z-0 font-bold hidden ">
         <Image
           src={greenspade}
           alt="green spade"

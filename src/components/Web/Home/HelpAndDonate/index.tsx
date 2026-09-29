@@ -111,7 +111,7 @@ const HelpAndDonate: React.FC = () => {
         <div className="absolute inset-0 bg-black/4" />
       </div>
 
-      <div className="relative z-10 container mx-auto px-3 sm:px-6 lg:px-0 xl:px-0 max-w-7xl">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 md:px-8 xl:px-0 max-w-7xl">
         {/* Header */}
         <div
           ref={headerRef}

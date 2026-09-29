@@ -14,7 +14,7 @@ const displaySponsors = [...sponsors, ...sponsors];
 const PartnersCompanies = () => {
   return (
     <div className="w-full bg-[var(--gray-200)] py-16 overflow-hidden">
-      <div className="relative w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
+      <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-8">
         <Swiper
           modules={[Autoplay]}
           loop={true}
