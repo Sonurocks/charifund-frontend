@@ -32,7 +32,7 @@ const CampaignCard: React.FC<CampaignCardProps> = ({
   return (
     <div
       key={card.id}
-      className="bg-white rounded-2xl shadow-lg p-2.5 space-y-3 border-white overflow-hidden relative flex flex-col  min-h-[380px]  w-full  mx-auto"
+      className="bg-white rounded-2xl shadow-lg p-2.5 space-y-3 border-white overflow-hidden relative flex flex-col h-full min-h-[380px] w-full mx-auto"
       onMouseEnter={() => card.id && onMouseEnter(card.id)}
       onMouseLeave={onMouseLeave}
     >
@@ -68,21 +68,15 @@ const CampaignCard: React.FC<CampaignCardProps> = ({
 
       {/* Content */}
       <div className="p-4 flex flex-col flex-grow">
-        <h3 onClick={() => onCardClick(card.id)} className="text-[17px] xl:text-xl font-extrabold cursor-pointer mb-2 font-nunito transition-colors duration-300 text-dark-green hover:text-olive-brown truncate">{title}</h3>
-        <p className="text-gray-green text-[14px] leading-5 font-nunito line-clamp-2 flex-grow truncate">{desc}</p>
-
+        <h3 onClick={() => onCardClick(card.id)} className="text-[17px] xl:text-xl font-extrabold cursor-pointer mb-2 font-nunito transition-colors duration-300 text-dark-green hover:text-olive-brown">{title}</h3>
+        <p className="text-gray-green text-xs lg:text-[14px] leading-5 font-nunito">{desc}</p>
       </div>
-       {/* Bottom Section */}
-      <div className="bg-gray-light p-5 space-y-5 lg:space-y-6 rounded-lg mt-auto">
-          <AnimatedProgressBar progress={card.progress || 0} isInView={isInView} />
-            <div className="flex justify-between  text-[13px] xl:text-sm text-gray-green mt-2 font-nunito">
-              <span className="text-dark-green font-nunito font-bold">Raised: {card.raised || "0"}</span>
-              <span className="text-dark-green font-nunito font-bold">Goal: <span className="text-olive-brown font-bold">{card.goal || "0"}</span></span>
-            </div>
-          <div className={`w-fit transition-all duration-300 mt-4 ${hoveredCard === card.id ? 'group' : ''}`}>
+      {/* Bottom Section */}
+      <div className="bg-gray-light p-4 rounded-lg mt-auto flex justify-center w-full">
+          <div className={`w-fit transition-all duration-300 ${hoveredCard === card.id ? 'group' : ''}`}>
             <button
-              className={`w-fit relative cursor-pointer font-semibold font-nunito
-                bg-white border-2 border-dark-green rounded-full px-6  py-2.5 lg:py-3 
+              className={`w-full relative cursor-pointer font-semibold font-nunito
+                bg-white border-[1.5px] border-dark-green rounded-full px-3 md:px-4 lg:px-6 py-2.5 lg:py-3 
                 overflow-hidden group
                 before:content-[''] before:absolute before:-inset-[0.5px] before:bg-dark-green 
                 before:transition-transform before:duration-500 before:rounded-full 
@@ -92,10 +86,9 @@ const CampaignCard: React.FC<CampaignCardProps> = ({
               <div className={`flex items-center justify-center gap-2 relative z-10 font-bold transition-colors duration-300 whitespace-nowrap font-nunito ${
                 hoveredCard === card.id ? 'text-white' : 'text-dark-green group-hover:text-white'
               }`}>
-                <span className="leading-none text-sm">{t("Donate Now")}</span>
+                <span className="leading-none text-sm">{t("Support This Initiative →")}</span>
               </div>
             </button>
-
           </div>
         </div>
     </div>

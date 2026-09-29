@@ -8,7 +8,7 @@ import { SocialBar } from "../../UI/web/SocialBar";
 import { VolunteerCardProps } from "@/src/types/web/members";
 import { useRouter } from "next/navigation";
 
-export const VolunteerCard: React.FC<VolunteerCardProps> = ({ member, idx }) => {
+export const VolunteerCard: React.FC<VolunteerCardProps & { isClickable?: boolean }> = ({ member, idx, isClickable = true }) => {
   const ref = useRef<HTMLDivElement>(null);
   const controls = useAnimation();
   const inView = useInView(ref, { margin: "-100px" });
@@ -47,8 +47,8 @@ export const VolunteerCard: React.FC<VolunteerCardProps> = ({ member, idx }) => 
       onMouseLeave={() => setIsHovered(false)}
     >
       <div
-        className="relative w-full aspect-[5/6] cursor-pointer overflow-hidden"
-        onClick={() => window.location.href = `/team/${member.id}`}
+        className={`relative w-full aspect-[5/6] overflow-hidden ${isClickable ? 'cursor-pointer' : ''}`}
+        onClick={() => isClickable && router.push(`/team/${member.id}`)}
       >
         <Image
           src={member.image || "/assets/volunteer1.webp"}
@@ -78,7 +78,7 @@ export const VolunteerCard: React.FC<VolunteerCardProps> = ({ member, idx }) => 
       </div>
 
       <div className={`relative h-28 p-8 flex flex-col items-start transition-all duration-500 ${bgClass}`}>
-        <h6 className={`font-extrabold font-nunito text-dark-green text-md xl:text-xl transition-colors duration-300 cursor-pointer ${nameColor}`} onClick={() => { router.push(`/volunteer/${member.id}`) }}>
+        <h6 className={`font-extrabold font-nunito text-dark-green text-md xl:text-xl transition-colors duration-300 ${isClickable ? 'cursor-pointer' : ''} ${nameColor}`} onClick={() => { isClickable && router.push(`/team/${member.id}`) }}>
           {member.name}
         </h6>
         <p className={`text-sm font-nunito font-semibold mt-2 text-dark-green transition-colors duration-300 ${roleColor}`}>

@@ -1,4 +1,4 @@
-import { FaEnvelope, FaFacebookF, FaLinkedinIn, FaMapMarkerAlt, FaPhoneAlt, FaShareAlt, FaTwitter, FaVimeoV } from "react-icons/fa";
+import { FaEnvelope, FaFacebookF, FaMapMarkerAlt, FaPhoneAlt, FaShareAlt, FaInstagram, FaYoutube, FaWhatsapp } from "react-icons/fa";
 import {charityLife,  heartCare, loremIpsum, theBird, treeLife,  photo1, photo2, photo3, photo4 } from "../../public/assets";
 import { CharityCard, DonationCardData, InfoItem, SocialMediaButton } from "../types";
 import { FAQItem } from "../types/web/faq";
@@ -6,10 +6,10 @@ import { FAQItem } from "../types/web/faq";
 
 
 export const socialIcons = [
-  { icon: "fa6-brands:facebook-f", label: "Facebook", link: "https://www.facebook.com/" },
-  { icon: "simple-icons:vimeo", label: "Vimeo", link: "https://www.vimeo.com/" },
-  { icon: "fa6-brands:twitter", label: "Twitter", link: "https://twitter.com/" },
-  { icon: "fa6-brands:linkedin-in", label: "LinkedIn", link: "https://www.linkedin.com/" },
+  { icon: "fa6-brands:facebook-f", label: "Facebook", link: "https://www.facebook.com/yuwaaindia" },
+  { icon: "fa6-brands:instagram", label: "Instagram", link: "https://www.instagram.com/yuwaaindia" },
+  { icon: "fa6-brands:whatsapp", label: "WhatsApp", link: "https://wa.me/918565006669" },
+  { icon: "fa6-brands:youtube", label: "YouTube", link: "https://www.youtube.com/@yuwaindiaofficial" },
 ];
 
 export const footerData = {
@@ -32,9 +32,9 @@ export const footerData = {
   ],
   contact: {
     address: "455 west orchard street kings mountain, nc 280867",
-    phone_label: "+246-642-27-10",
-    phone_number: "+2466422710",
-    email: "example@email.com",
+    phone_label: "+91 85650 06669",
+    phone_number: "+918565006669",
+    email: "yuwaaindia@gmail.com",
   },
   bottomLinks: [
     { label: "Terms & Conditions", href: "/term-and-conditions" },
@@ -133,60 +133,75 @@ export const VolunteerFeatures = [
 export const charityCards: CharityCard[] = [
   {
     id: 1,
-    title: "Healthy Food",
-    description: "Set Up A Secure And User-Friendly Online Donation Platform That Accepts Multiple",
-    icon: "\e82a",
-    image: "/blue_bg.webp",
-    color: "border-green-600",
-    bgColor: "bg-gray-100"
-
+    title: "Child Education & Welfare",
+    description: "Supporting children through education, care, learning opportunities, and welfare initiatives.",
+    icon: "\e829",
+    image: "/yellow_bg.webp",
+    color: "border-yellow-500",
+    bgColor: "bg-yellow-50"
   },
   {
     id: 2,
-    title: "Medical Care",
-    description: "Set Up A Secure And User-Friendly Online Donation Platform That Accepts Multiple",
-    icon: "\e82b",
-    image: "/green_bg.webp",
-    color: "border-orange-500",
-    bgColor: "bg-orange-50"
-
-  },
-  {
-    id: 3,
-    title: "Child Education",
-    description: "Set Up A Secure And User-Friendly Online Donation Platform That Accepts Multiple",
-    icon: "\e829",
-    image: "/yellow_bg.webp",
-    color: "border-yellow-500",
-    bgColor: "bg-yellow-50"
-  },
-  {
-    id: 4,
-    title: "Healthy Food",
-    description: "Set Up A Secure And User-Friendly Online Donation Platform That Accepts Multiple",
+    title: "Women Empowerment",
+    description: "Empowering women and girls through awareness, training, skills, and opportunities for self-reliance.",
     icon: "\e82a",
     image: "/blue_bg.webp",
     color: "border-green-600",
     bgColor: "bg-gray-100"
   },
   {
-    id: 5,
-    title: "Medical Care",
-    description: "Set Up A Secure And User-Friendly Online Donation Platform That Accepts Multiple",
+    id: 3,
+    title: "Youth Empowerment",
+    description: "Empowering youth through leadership, confidence, social participation, and development opportunities.",
     icon: "\e82b",
     image: "/green_bg.webp",
     color: "border-orange-500",
     bgColor: "bg-orange-50"
-
+  },
+  {
+    id: 4,
+    title: "Skill Development",
+    description: "Providing practical skills and vocational training to promote employment and self-reliance.",
+    icon: "\e82a",
+    image: "/blue_bg.webp",
+    color: "border-yellow-500",
+    bgColor: "bg-yellow-50"
+  },
+  {
+    id: 5,
+    title: "Healthcare & Blood Donation",
+    description: "Promoting health awareness and supporting voluntary blood donation and healthcare initiatives.",
+    icon: "\e82b",
+    image: "/green_bg.webp",
+    color: "border-orange-500",
+    bgColor: "bg-orange-50"
   },
   {
     id: 6,
-    title: "Child Education",
-    description: "Set Up A Secure And User-Friendly Online Donation Platform That Accepts Multiple",
+    title: "Nutrition & Food Support",
+    description: "Providing nutritional and food support to underprivileged children, families, and communities.",
+    icon: "\e82a",
+    image: "/blue_bg.webp",
+    color: "border-green-600",
+    bgColor: "bg-gray-100"
+  },
+  {
+    id: 7,
+    title: "Environmental Protection",
+    description: "Promoting environmental awareness, cleanliness, plantation, and sustainable community practices.",
     icon: "\e829",
     image: "/yellow_bg.webp",
     color: "border-yellow-500",
     bgColor: "bg-yellow-50"
+  },
+  {
+    id: 8,
+    title: "Awareness & Social Support",
+    description: "Creating awareness and providing social support for community welfare and inclusive development.",
+    icon: "\e82a",
+    image: "/blue_bg.webp",
+    color: "border-green-600",
+    bgColor: "bg-gray-100"
   },
 ];
 
@@ -379,10 +394,10 @@ export const filterOptions = [
 
 export const socialMediaButtons: SocialMediaButton[] = [
   { icon: "FaFacebookF", bg: "#4267B2", label: "Facebook" },
-  { icon: "FaTwitter", bg: "#1DA1F2", label: "Twitter" },
+  { icon: "FaWhatsapp", bg: "#25D366", label: "WhatsApp" },
   { icon: "FaPinterest", bg: "#E60023", label: "Pinterest" },
-  { icon: "FaLinkedinIn", bg: "#0077B5", label: "LinkedIn" },
-  { icon: "FaTumblr", bg: "#ff5528", label: "Tumblr" },
+  { icon: "FaYoutube", bg: "#FF0000", label: "YouTube" },
+  { icon: "FaInstagram", bg: "#C13584", label: "Instagram" },
 ];
 
 export const defaultEventData = {
@@ -409,28 +424,27 @@ export const SocialMedia = [
   {
     label: "Facebook",
     icon: FaFacebookF,
-    href: "https://www.facebook.com/",
+    href: "https://www.facebook.com/yuwaaindia",
     getShareUrl: (url: string, title?: string) =>
       `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(title || "")}`,
   },
   {
-    label: "Twitter",
-    icon: FaTwitter,
-    href: "https://twitter.com/",
+    label: "WhatsApp",
+    icon: FaWhatsapp,
+    href: "https://wa.me/918565006669",
     getShareUrl: (url: string, title?: string) =>
-      `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title || "")}`,
+      `https://api.whatsapp.com/send?text=${encodeURIComponent(title || "")}%20${encodeURIComponent(url)}`,
   },
   {
-    label: "LinkedIn",
-    icon: FaLinkedinIn,
-    href: "https://www.linkedin.com/",
-    getShareUrl: (url: string, title?: string) =>
-      `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
+    label: "YouTube",
+    icon: FaYoutube,
+    href: "https://www.youtube.com/@yuwaaindiaofficial",
+    getShareUrl: (url: string, title?: string) => ``, // YouTube does not have a direct share URL
   },
   {
-    label: "Vimeo",
-    icon: FaVimeoV,
-    href: "https://vimeo.com/", // Vimeo does not have a direct share URL for blogs
+    label: "Instagram",
+    icon: FaInstagram,
+    href: "https://www.instagram.com/yuwaaindia", 
   },
 ];
 
@@ -446,14 +460,14 @@ export const contactInfo: InfoItem[] = [
   {
     icon: FaPhoneAlt,
     title: "Phone",
-    lines: ["+1 (368) 567 89 54", "+236 (456) 896 22"],
-    links: ["tel:+13685678954", "tel:+23645689622"],
+    lines: ["+91 85650 06669"],
+    links: ["tel:+918565006669"],
   },
   {
     icon: FaEnvelope,
     title: "Email",
-    lines: ["example@email.com", "charifund@email.com"],
-    links: ["mailto:example@email.com", "mailto:charifund@email.com"],
+    lines: ["yuwaaindia@gmail.com"],
+    links: ["mailto:yuwaaindia@gmail.com"],
   },
   {
     icon: FaShareAlt,
@@ -508,7 +522,7 @@ export const termsSections = [
     id: 8,
     title: "Contact Us",
     content:
-      "If you have any questions about these Terms and Conditions, please contact us at support@example.com. We are here to help and provide clarity where needed."
+      "If you have any questions about these Terms and Conditions, please contact us at yuwaaindia@gmail.com. We are here to help and provide clarity where needed."
   }
 ];
 
@@ -565,6 +579,6 @@ export const privacyPolicySections = [
   {
     id: 8,
     title: "8. Contact Us",
-    content: "If you have any questions, concerns, or requests related to this Privacy Policy, please contact us at support@example.com. We are here to ensure your experience with us remains safe, transparent, and respectful of your privacy."
+    content: "If you have any questions, concerns, or requests related to this Privacy Policy, please contact us at yuwaaindia@gmail.com. We are here to ensure your experience with us remains safe, transparent, and respectful of your privacy."
   }
 ];

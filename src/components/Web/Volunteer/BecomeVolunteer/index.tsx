@@ -23,7 +23,7 @@ const BecomeVolunteer: React.FC = () => {
   const{t}=useTranslation();
   const openVideoModal = () => setIsVideoModalOpen(true);
   const closeVideoModal = () => setIsVideoModalOpen(false);
-  const handleDonateNow = () => router.push("/donate-us");
+  const handleDonateNow = () => router.push("/contact");
   const handleContactNow = () => router.push("/volunteer");
 
   return (
@@ -66,10 +66,10 @@ const BecomeVolunteer: React.FC = () => {
               animate={leftPanelInView ? { opacity: 1 } : { opacity: 0 }}
               transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
             >
-              {t("We Give Child A Gift Of A Education")}
+              {t("Join Our Social Mission")}
             </motion.p>
             <motion.h3
-              className="text-white text-xl md:text-2xl lg:text-3xl font-bold mb-6 md:mb-8"
+              className="text-white text-xl md:text-2xl lg:text-3xl font-bold mb-3 md:mb-4"
               style={{
                 fontFamily: "var(--font-nunito), Nunito, sans-serif",
                 fontWeight: "700",
@@ -78,8 +78,17 @@ const BecomeVolunteer: React.FC = () => {
               animate={leftPanelInView ? { opacity: 1 } : { opacity: 0 }}
               transition={{ duration: 1, ease: "easeOut", delay: 0.4 }}
             >
-              {t("Become A Volunteer")}?
+              {t("Become a Volunteer?")}
             </motion.h3>
+
+            <motion.p
+              className="text-white text-xs md:text-sm mb-6 px-2 lg:px-4 leading-relaxed"
+              initial={{ opacity: 0 }}
+              animate={leftPanelInView ? { opacity: 1 } : { opacity: 0 }}
+              transition={{ duration: 1, ease: "easeOut", delay: 0.5 }}
+            >
+              {t("Join Youth Util Welfare Association and contribute your time, skills and ideas to meaningful social service initiatives.")}
+            </motion.p>
 
             <motion.div
               initial={{ opacity: 0 }}
@@ -87,7 +96,7 @@ const BecomeVolunteer: React.FC = () => {
               transition={{ duration: 1, ease: "easeOut", delay: 0.6 }}
             >
               <Button
-                text="Contact Now"
+                text={t("Join Us")}
                 icon=""
                 bgColor="bg-green"
                 hoverBg="before:bg-yellow"
@@ -148,7 +157,7 @@ const BecomeVolunteer: React.FC = () => {
           </div>
 
           <div className="relative z-10 h-full flex flex-col items-center justify-center md:bg-center absolute inset-0">
-            <div className="relative flex items-center justify-center w-full h-full">
+            <div className="relative flex flex-col items-center justify-center w-full h-full">
               <motion.div
                 className="w-16 h-16 md:w-20 md:h-20 bg-yellow rounded-full flex items-center justify-center relative cursor-pointer"
                 style={{
@@ -171,6 +180,14 @@ const BecomeVolunteer: React.FC = () => {
               >
                 <div className="w-0 h-0 border-l-[12px] md:border-l-[16px] border-l-black border-t-[8px] md:border-t-[12px] border-t-transparent border-b-[8px] md:border-b-[12px] border-b-transparent ml-1"></div>
               </motion.div>
+              <motion.p
+                className="mt-5 md:mt-6 text-white/95 text-xs md:text-sm font-medium drop-shadow-lg text-center whitespace-nowrap tracking-wide"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1, delay: 0.5 }}
+              >
+                {t("Together for a Better Society")}
+              </motion.p>
             </div>
           </div>
         </div>
@@ -209,10 +226,10 @@ const BecomeVolunteer: React.FC = () => {
               animate={rightPanelInView ? { opacity: 1 } : { opacity: 0 }}
               transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
             >
-              {t("We Give Child A Gift Of A Education")}
+              {t("Support Our Social Initiatives")}
             </motion.p>
             <motion.h3
-              className="text-white text-xl md:text-2xl lg:text-3xl font-bold mb-6 md:mb-8"
+              className="text-white text-xl md:text-2xl lg:text-3xl font-bold mb-3 md:mb-4"
               style={{
                 fontFamily: "var(--font-nunito), Nunito, sans-serif",
                 fontWeight: "700",
@@ -221,8 +238,17 @@ const BecomeVolunteer: React.FC = () => {
               animate={rightPanelInView ? { opacity: 1 } : { opacity: 0 }}
               transition={{ duration: 1, ease: "easeOut", delay: 0.4 }}
             >
-              {t("Make Donation To Us?")}
+              {t("Support Youth Util Welfare Association")}
             </motion.h3>
+
+            <motion.p
+              className="text-white text-xs md:text-sm mb-6 px-2 lg:px-4 leading-relaxed"
+              initial={{ opacity: 0 }}
+              animate={rightPanelInView ? { opacity: 1 } : { opacity: 0 }}
+              transition={{ duration: 1, ease: "easeOut", delay: 0.5 }}
+            >
+              {t("Your support helps us continue our work in education, child welfare, women empowerment, healthcare, blood donation and environmental protection.")}
+            </motion.p>
 
             <motion.div
               initial={{ opacity: 0 }}
@@ -230,7 +256,7 @@ const BecomeVolunteer: React.FC = () => {
               transition={{ duration: 1, ease: "easeOut", delay: 0.6 }}
             >
               <Button
-                text="Donate Now"
+                text={t("Section6 Donate Now")}
                 icon=""
                 bgColor="bg-yellow"
                 hoverBg="before:bg-green"

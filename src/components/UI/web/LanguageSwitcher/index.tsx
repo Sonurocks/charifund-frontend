@@ -15,7 +15,7 @@ const dropdownVariants = {
 };
 
 const languages = [
-  { code: 'en', label: 'English', icon: 'twemoji:flag-united-kingdom' },
+  { code: 'en', label: 'English', image: '/assets/englishlogo-transparent.png' },
   { code: 'hi', label: 'हिंदी', icon: 'twemoji:flag-india' },
 ];
 
@@ -90,7 +90,11 @@ const LanguageSwitcher = ({
         className={`flex items-center gap-2 cursor-pointer bg-yellow text-foreground text-sm shadow-md hover:shadow-lg transition-all ${rounded} ${paddingx} ${paddingy}`}
       >
         <span className="flex items-center gap-2">
-          <Icon icon={selectedLang.icon} className="w-5 h-5" />
+          {selectedLang.image ? (
+            <img src={selectedLang.image} alt={selectedLang.label} className="w-5 h-5 object-contain" />
+          ) : (
+            selectedLang.icon && <Icon icon={selectedLang.icon} className="w-5 h-5" />
+          )}
           {selectedLang.label}
         </span>
         <Icon icon={open ? 'mdi:chevron-up' : 'mdi:chevron-down'} className="text-base" />
@@ -114,7 +118,11 @@ const LanguageSwitcher = ({
                   className={`w-full cursor-pointer px-4 py-3 flex items-center gap-2 text-left text-sm hover:bg-gray-200 transition-colors ${i18n.language === lang.code ? 'font-bold bg-yellow/40' : ''
                     }`}
                 >
-                  <Icon icon={lang.icon} className="w-5 h-5" />
+                  {lang.image ? (
+                    <img src={lang.image} alt={lang.label} className="w-5 h-5 object-contain" />
+                  ) : (
+                    lang.icon && <Icon icon={lang.icon} className="w-5 h-5" />
+                  )}
                   {lang.label}
                 </button>
               </li>

@@ -35,11 +35,11 @@ const  CharityWithDifference  = () =>{
           <div ref={headerRef} className="md:text-center mb-4 lg:mb-6 relative z-10">
 
             <ComponentLabel
-              text="Start Donating Poor People"
+              text={t("Together For a Better Society")}
               isVisible={isHeaderInView}
             />
             <ComponentTitle
-              preText="Charity With Difference"
+              preText={t("Service With Purpose")}
               highlightText=""
               postText=" "
             />
@@ -50,7 +50,7 @@ const  CharityWithDifference  = () =>{
               animate={isHeaderInView ? { opacity: 1, transform: 'translateZ(0)' } : { opacity: 0, transform: 'translateZ(0)' }}
               transition={{ duration: 1, delay: 0.4 }}
             >
-              {t("Join Our Monthly Giving Program To Provide Consistent Support To Our Initiatives. Regular Contributions, No Matter The Size, Help Us Plan And Sustain Long-Term Projects.")}
+              {t("Yuva India is committed to creating positive social change through meaningful initiatives in education, healthcare, women empowerment, youth development and community welfare. Every contribution helps us build a stronger and more inclusive society.")}
             </motion.p>
           </div>
         </FadeUpCard>

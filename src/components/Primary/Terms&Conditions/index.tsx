@@ -38,8 +38,8 @@ export default function TermsAndConditionsPage() {
           <h3 className="text-xl font-medium text-gray-800 mb-2">{t("Questions about our terms?")}</h3>
           <p className="text-gray-600">
             {t("Contact us at")}{" "}
-            <a href="mailto:support@example.com" className="text-green-700 font-medium hover:underline">
-              support@example.com
+            <a href="mailto:yuwaaindia@gmail.com" className="text-green-700 font-medium hover:underline">
+              yuwaaindia@gmail.com
             </a>{" "}
             {t("and we’ll get back to you shortly.")}
           </p>

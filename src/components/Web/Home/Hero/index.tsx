@@ -138,7 +138,7 @@ const staticImages = [bannerOne.src, bannerTwo.src];
               <div className="w-auto sm:w-auto min-w-[50px] sm:min-w-[120px]">
                 <Link href="/campaign">
                   <Button
-                    text="Discover More"
+                    text="Know more"
                     textColor="text-white"
                     bgColor="bg-black/30"
                     hoverBg="before:bg-yellow"
@@ -149,7 +149,7 @@ const staticImages = [bannerOne.src, bannerTwo.src];
               </div>
               <div className="sm:w-auto min-w-[50px] sm:min-w-[120px]">
                 <Link href="/contact">
-                  <Button text="Get A Quote" paddingy="py-5" />
+                  <Button text="Join us" paddingy="py-5" />
                 </Link>
               </div>
             </div>

@@ -62,14 +62,14 @@ const ValueableCustomer = () => {
         <div className="lg:max-w-[700px]">
           <ComponentLabel
             className="text-center"
-            text="Start Donating Poor People"
+            text="Together for a Better Society"
             isVisible={isHeaderInView}
           />
           <ComponentTitle
             className="lg:text-center"
-            preText="Our"
-            highlightText="Valuable Customers"
-            postText=" Awesome Feedback"
+            preText="What Our Supporters Say,"
+            highlightText="Your Voices"
+            postText="That Inspire Us"
           />
         </div>
       </div>

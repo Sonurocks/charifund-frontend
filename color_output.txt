@@ -1,0 +1,6 @@
+public/assets/furnishingshop.png max saturation (0-255): 255
+public/assets/goldgym.png max saturation (0-255): 255
+public/assets/jeewancharitable.png max saturation (0-255): 255
+public/assets/skaeenglish.png max saturation (0-255): 255
+public/assets/naval'sacademy.png max saturation (0-255): 255
+public/assets/naval'sacademy.webp max saturation (0-255): 255

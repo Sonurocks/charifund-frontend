@@ -23,13 +23,13 @@ const InfoBar = () => {
             className="flex items-center space-x-2 transition duration-150 hover:text-yellow"
           >
             <a
-              href="mailto:support@example.com"
+              href="mailto:yuwaaindia@gmail.com"
               className="flex items-center space-x-2"
               target="_blank"
               rel="noopener noreferrer"
             >
               <Icon icon="mdi:email-outline" className="w-5 h-5 text-yellow" />
-              <span>support@example.com</span>
+              <span>yuwaaindia@gmail.com</span>
             </a>
           </motion.div>
 
@@ -38,11 +38,11 @@ const InfoBar = () => {
             className="flex items-center space-x-2 transition duration-150 hover:text-yellow"
           >
             <a
-              href="tel:+23055873407"
+              href="tel:+918565006669"
               className="flex items-center space-x-2"
             >
               <Icon icon="mdi:phone" className="w-5 h-5 text-yellow" />
-              <span>+2 (305) 587-3407</span>
+              <span>+91 85650 06669</span>
             </a>
           </motion.div>
 
@@ -57,6 +57,8 @@ const InfoBar = () => {
               <a
                 key={label}
                 href={link}
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label={label}
                 className={`cursor-pointer text-palate-white hover:text-yellow transition-colors duration-200`}
               >

@@ -35,7 +35,7 @@ const FeedbackForm = () => {
             transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
           >
             <Icon icon="mdi:hand-heart" className="cursor-pointer text-sm sm:text-base md:text-lg" />
-            <span className="truncate">{t("Start Donating Poor People")}</span>
+            <span className="truncate">{t("Together for a Better Society")}</span>
           </motion.p>
         </div>
         
@@ -46,12 +46,12 @@ const FeedbackForm = () => {
             animate={isHeadingInView ? { opacity: 1, transform: 'translateZ(0)' } : { opacity: 0, transform: 'translateZ(0)' }}
             transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
           >
-                   {t("Our Valuable")} <span className="text-yellow">{t("Feedback")},</span> {t("your opinion counts here")}.
+                   {t("What Our Supporters Say,")} <span className="text-yellow">{t("your voice")}</span> {t("matters")}
           </motion.h1>
            <div className="mt-6 sm:mt-8 md:mt-10 lg:mt-13 flex justify-center">
              <div className="w-fit scale-90 sm:scale-100">
                <Button 
-                 text={t("Send Feedback")} 
+                 text={t("Share Your Feedback")} 
                  onClick={() => setShowForm(true)}
                />
              </div>

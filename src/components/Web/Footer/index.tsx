@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 
 import CookieSettingsModal from "../../UI/web/CookieSettingsModal";
 import Link from "next/link";
+import ScrollImgSection from "../../UI/web/ScrollImgSection";
 
 const Footer = () => {
   const ref = useRef(null);
@@ -41,6 +42,7 @@ const Footer = () => {
       ref={ref}
       className="bg-dark-green text-white "
     >
+      <ScrollImgSection />
       <section className="py-15 sm:py-14 px-4 sm:px-6 md:px-8 xl:px-28 relative">
 
         <Newsletter />

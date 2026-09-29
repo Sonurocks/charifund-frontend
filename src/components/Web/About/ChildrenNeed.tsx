@@ -50,19 +50,22 @@ const ChildrenNeed = () => {
             >
               <i className="text-xl mr-2 text-[#ffc107] hand-icon"></i>
               <span className="text-yellow font-caveat text-xl md:text-2xl font-semibold">
-                {t("Start Donating Poor People")}
+                {t("Together for a Better Society")}
               </span>
-              <p className="text-3xl sm:text-3xl md:text-[40px] max-w-2xl xl:max-w-3xl mx-auto xl:text-[55px] font-extrabold text-white mb-6 font-nunito leading-snug">
-                {t("Children Need Your Help By Donating Today")}
+              <p className="text-3xl sm:text-3xl md:text-[40px] max-w-2xl xl:max-w-3xl mx-auto xl:text-[55px] font-extrabold text-white mb-3 sm:mb-4 font-nunito leading-snug">
+                {t("Every Child Deserves a Better Future")}
+              </p>
+              <p className="text-[17px] sm:text-[19px] md:text-[20px] text-white/80 w-full max-w-[580px] mx-auto font-nunito font-normal leading-[1]">
+                {t("Support education, nutrition, healthcare, and opportunities for children in need.")}
               </p>
             </motion.div>
 
-            <div className="flex justify-center items-center gap-4 mt-6">
-              <div className="flex items-center justify-center flex-wrap gap-3 mt-6">
+            <div className="flex justify-center items-center gap-4 mt-6 sm:mt-10">
+              <div className="flex items-center justify-center flex-wrap gap-3">
                 <div className="text-white bg-black/30 transparent  rounded-full  ">
                 <Link href="/campaign">
                   <Button
-                    text={t("Discover More")}
+                    text={t("Know More")}
                     bgColor="bg-transparent"
                     textColor="text-white"
                     hoverTextColor="group-hover:text-black"
@@ -73,7 +76,7 @@ const ChildrenNeed = () => {
 
                 <div className="">
                   <Button
-                    text={t("Get A Quote")}
+                    text={t("Join Us")}
                     bgColor="bg-[#FFC107]"
                     textColor="text-black"
                     hoverTextColor="group-hover:text-white"

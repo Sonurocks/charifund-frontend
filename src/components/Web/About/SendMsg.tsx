@@ -104,7 +104,7 @@ const SendMsg: React.FC = () => {
                 className="text-[20px]  md:text-[24px] text-yellow"
               />
               <span className=" text-yellow font-caveat font-extrabold block text-[18px]  md:text-[22px] ">
-                {t("Start Donating Poor People")}
+                {t("Together for a Better Society")}
               </span>
             </div>
 

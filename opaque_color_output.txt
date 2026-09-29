@@ -1,0 +1,6 @@
+public/assets/furnishingshop.png max non-transparent saturation : 1.0
+public/assets/goldgym.png max non-transparent saturation : 1.0
+public/assets/jeewancharitable.png max non-transparent saturation : 1.0
+public/assets/skaeenglish.png max non-transparent saturation : 1.0
+public/assets/naval'sacademy.png max non-transparent saturation : 1.0
+public/assets/naval'sacademy.webp max non-transparent saturation : 1.0
