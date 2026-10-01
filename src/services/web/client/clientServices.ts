@@ -154,6 +154,16 @@ export const DetailsInformationForm = async (values:DetailsFormValues) =>{
     return data;
 }
 
+export const createPaymentOrder = async (orderData: { amount: number; campaignId: string }) => {
+    const { data } = await api.post(`/web/payment/create-order`, orderData);
+    return data;
+}
+
+export const verifyPaymentOrder = async (verifyData: { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }) => {
+    const { data } = await api.post(`/web/payment/verify-payment`, verifyData);
+    return data;
+}
+
 export const ContactUsForm = async (values:ContactFormValues) => {
   const { data } = await api.post(`/web/form/contact-query`, values);
   return data;

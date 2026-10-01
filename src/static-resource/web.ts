@@ -156,9 +156,8 @@ export const GalleryImage = [
 ];
 
 export const Donationmethods = [
-  { label: "Test Donation", value: "test" },
+  { label: "Online Payment", value: "online" },
   { label: "Offline Donation", value: "offline" },
-  { label: "Credit Card", value: "credit" },
 ];
 
 export const VolunteerPage = {

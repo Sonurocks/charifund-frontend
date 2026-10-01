@@ -10,7 +10,7 @@ import { RootState } from "@/src/store";
 import { setAmount, setMethod } from "@/src/store/slice/donationSlice";
 import { useTranslation } from "react-i18next";
 
-const Donation = () => {
+const Donation = ({ campaignId }: { campaignId?: string }) => {
   const dispatch=useDispatch();
   const { amount, method } = useSelector((state: RootState) => state.donation);
   const { t } = useTranslation();
@@ -19,7 +19,7 @@ const Donation = () => {
     <div className="max-w-2xl mx-auto xl:px-4 xl:py-8 space-y-8 ">
       <h2 className="text-xl font-semibold">{t("Support Where It Counts.")}</h2>
       {/* Notice */}
-      <Notice message={t("Test Mode Is Enabled. While In Test Mode No Live Donations Are Processed.")} />
+      <Notice message={t("Online Payment via Razorpay and Offline Donation are supported.")} />
 
       {/* Donation Input */}
       <DonationInput
@@ -40,12 +40,14 @@ const Donation = () => {
           unselectedColor="bg-gray-300"
           className="mb-6"
         />
-      </div>
-      <div className="container w-[200px]">
-        <Button text={t("Donate Now")} />
+        {method === "online" && (
+          <p className="text-sm text-gray-500 mt-2">
+            {t("Razorpay supports UPI, Cards, NetBanking, and Wallets.")}
+          </p>
+        )}
       </div>
       <div className="bg-gray-200 h-[3px]" />
-      <DetailsForm />
+      <DetailsForm campaignId={campaignId} />
     </div>
   );
 };
