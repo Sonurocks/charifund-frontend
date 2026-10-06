@@ -4,7 +4,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import AnimatedProgressBar from "../../UI/web/AnimatedProgressBar";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useTranslation } from "react-i18next";
 import { CampaignCardProps } from "@/src/types/web/campaign";
 
@@ -16,7 +16,6 @@ const CampaignCard: React.FC<CampaignCardProps> = ({
   onMouseLeave,
   onCardClick,
 }) => {
-  const router =useRouter();
   if (!card) {
     return (
       <div className="bg-gray-100 rounded-2xl shadow-lg p-6 flex flex-col h-full">
@@ -80,21 +79,21 @@ const CampaignCard: React.FC<CampaignCardProps> = ({
               <span className="text-dark-green font-nunito font-bold">Goal: <span className="text-olive-brown font-bold">{card.goal || "0"}</span></span>
             </div>
           <div className={`w-fit transition-all duration-300 mt-4 ${hoveredCard === card.id ? 'group' : ''}`}>
-            <button
-              className={`w-fit relative cursor-pointer font-semibold font-nunito
+            <Link
+              href={`/donate-us/${card.id}`}
+              className={`inline-block w-fit relative cursor-pointer font-semibold font-nunito
                 bg-white border-2 border-dark-green rounded-full px-6  py-2.5 lg:py-3 
                 overflow-hidden group
                 before:content-[''] before:absolute before:-inset-[0.5px] before:bg-dark-green 
                 before:transition-transform before:duration-500 before:rounded-full 
                 before:origin-center before:scale-x-0 ${hoveredCard === card.id ? 'before:scale-x-100' : 'hover:before:scale-x-100'} before:z-0`}
-              onClick={() =>{router.push(`/donate-us/${card.id}`)}}
             >
               <div className={`flex items-center justify-center gap-2 relative z-10 font-bold transition-colors duration-300 whitespace-nowrap font-nunito ${
                 hoveredCard === card.id ? 'text-white' : 'text-dark-green group-hover:text-white'
               }`}>
                 <span className="leading-none text-sm">{t("Donate Now")}</span>
               </div>
-            </button>
+            </Link>
 
           </div>
         </div>
