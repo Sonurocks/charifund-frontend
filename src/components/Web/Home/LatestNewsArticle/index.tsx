@@ -26,7 +26,7 @@ const LatestNewsArticle: React.FC = () => {
 
   return (
     <div
-      className={`w-full py-20 px-3 mt-15 relative `}
+      className={`w-full py-20 px-4 sm:px-6 md:px-8 xl:px-0 mt-15 relative `}
     >
       <div className="absolute inset-0">
         <div className="h-1/2 w-full bg-[url('/assets/latestNewsArticalbg.webp')] bg-cover bg-center bg-no-repeat" />
@@ -44,9 +44,8 @@ const LatestNewsArticle: React.FC = () => {
             />
             <ComponentTitle
               className='lg:justify-center'
-              preText="Our Latest "
-              highlightText="News"
-              postText="& Articles You Like"
+              preText="Start Donating Poor People"
+              highlightText=""
             />
           </div>
 

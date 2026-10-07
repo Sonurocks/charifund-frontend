@@ -15,8 +15,8 @@ export interface BannerPreviewProps {
   onSubmit: () => void;
   mode?: "add" | "edit" | "view" | "preview-edit";
   showButtons?: boolean
-  createMutation?: UseMutationResult<any, Error, BannerFormValues>;
-  updateMutation?: UseMutationResult<any, Error, { id: string; values: BannerFormValues }>;
+  createMutation?: UseMutationResult<any, Error, any>;
+  updateMutation?: UseMutationResult<any, Error, any>;
 }
 
 export interface EventPreviewProps {
@@ -25,8 +25,8 @@ export interface EventPreviewProps {
   onBack: () => void;
   mode?: "add" | "edit" | "view" | "preview-edit";
   showButton?: boolean;
-  createMutation?: UseMutationResult<any, Error, EventFormValues>;
-  updateMutation?: UseMutationResult<any, Error, { id: string; values: EventFormValues }>;
+  createMutation?: UseMutationResult<any, Error, any>;
+  updateMutation?: UseMutationResult<any, Error, any>;
 }
 export interface MemberPreviewProps {
   data: MemberFormValues & { createdAt?: string };
@@ -34,8 +34,8 @@ export interface MemberPreviewProps {
   onBack: () => void;
   mode?: "add" | "edit" | "view" | "preview-edit";
   showButton?: boolean;
-  createMutation?: UseMutationResult<any, Error, MemberFormValues>;
-  updateMutation?: UseMutationResult<any, Error, { id: string; values: MemberFormValues }>;
+  createMutation?: UseMutationResult<any, Error, any>;
+  updateMutation?: UseMutationResult<any, Error, any>;
 }
 
 export interface BannerColumnCallbacks {
@@ -63,8 +63,8 @@ export interface BlogPreviewProps {
   onBack: () => void;
   mode: string;
   showButton?: boolean
-  createMutation?: UseMutationResult<any, Error, FormData>;
-  updateMutation?: UseMutationResult<any, Error, { id: string; values: FormData }>;
+  createMutation?: UseMutationResult<any, Error, any>;
+  updateMutation?: UseMutationResult<any, Error, any>;
 }
 
 export interface CampaignPreviewProps {
@@ -73,9 +73,8 @@ export interface CampaignPreviewProps {
   onBack: () => void;
   mode?: "add" | "edit" | "view" | "preview-edit";
   showButton?: boolean
-  createMutation?: UseMutationResult<any, Error, FormData>;
-updateMutation?: UseMutationResult<any, Error, { id: string; values: FormData }>;
-
+  createMutation?: UseMutationResult<any, Error, any>;
+  updateMutation?: UseMutationResult<any, Error, any>;
 }
 
 export interface CommentFormProps {
@@ -182,14 +181,14 @@ export interface AdminCustomInputProps {
   as?: "input" | "textarea";
   placeholder?: string;
   value: string | number | undefined;
-  onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onChange?: (e: ChangeEvent<any>) => void;
   error?: string;
   name?: string;
-  onKeyDown?: (e: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onKeyDown?: (e: KeyboardEvent<any>) => void;
   className?: string,
   disabled?: boolean;
   readOnly?: boolean;
-  ref?: RefObject<HTMLInputElement | null>
+  ref?: RefObject<any>
 }
 
 export interface AdminFileItem {
@@ -218,6 +217,7 @@ export interface AdminMultiInputListProps {
   placeholder?: string;
   isView?: boolean;
   colorClass?: { normal: string; view: string }; // optional styling
+  error?: string | string[];
 }
 
 export interface AdminDrawerProps {

@@ -212,7 +212,7 @@ const BlogTable = () => {
               <Dropdown
                 options={categoryOptions}
                 value={search || ""}
-                onChange={(value: SearchField) => setSearch(value)}
+                onChange={(value: any) => setSearch(value)}
               />
             ) : (
               <CustomInput
@@ -254,7 +254,7 @@ const BlogTable = () => {
           <CustomLoader />
         </div>
       ) : (
-        <DataTableWrapper columns={columns} data={paginatedData} />
+        <DataTableWrapper columns={columns as any} data={paginatedData} />
       )}
 
       {/* Pagination */}

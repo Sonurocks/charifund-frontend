@@ -62,14 +62,14 @@ const ValueableCustomer = () => {
         <div className="lg:max-w-[700px]">
           <ComponentLabel
             className="text-center"
-            text="Start Donating Poor People"
+            text="Together for a Better Society"
             isVisible={isHeaderInView}
           />
           <ComponentTitle
             className="lg:text-center"
-            preText="Our"
-            highlightText="Valuable Customers"
-            postText=" Awesome Feedback"
+            preText="Our Supporters & Partners –"
+            highlightText="Their Valuable"
+            postText="Feedback"
           />
         </div>
       </div>
@@ -84,8 +84,8 @@ const ValueableCustomer = () => {
             1280: { slidesPerView: 3 },
           }}
           navigation={{
-            prevEl: ".prev-btn",
-            nextEl: ".next-btn",
+            prevEl: ".swiper-button-prev-custom",
+            nextEl: ".swiper-button-next-custom",
           }}
           loop
           autoplay={{ delay: 3000, pauseOnMouseEnter: true }}

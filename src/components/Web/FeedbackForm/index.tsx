@@ -26,7 +26,7 @@ const FeedbackForm = () => {
       <div className="absolute inset-0 bg-gradient-to-r from-foreground/100 to-dark-green/50 z-10"></div>
       
       {/* Title and Heading */}
-      <div className="absolute top-50 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center z-20 text-white px-4 sm:px-6 md:px-8">
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full text-center z-20 text-white px-4 sm:px-6 md:px-8">
         <div className="mb-3 sm:mb-4 md:mb-5" ref={titleRef}>
           <motion.p 
             className="text-yellow font-medium flex items-center gap-1 sm:gap-2 font-caveat text-lg sm:text-xl md:text-2xl justify-center whitespace-nowrap"
@@ -34,24 +34,31 @@ const FeedbackForm = () => {
             animate={isInView ? { opacity: 1, transform: 'translateZ(0)' } : { opacity: 0, transform: 'translateZ(0)' }}
             transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
           >
-            <Icon icon="mdi:hand-heart" className="cursor-pointer text-sm sm:text-base md:text-lg" />
-            <span className="truncate">{t("Start Donating Poor People")}</span>
+            <span className="truncate">🤝 {t("Feedback_Together_For_Better_Society")}</span>
           </motion.p>
         </div>
         
           <motion.h1 
             ref={headingRef}
-            className="text-3xl sm:text-4xl md:text-3xl lg:text-4xl xl:text-5xl font-extrabold text-white leading-tight mt-3 sm:mt-4 md:mt-5 font-nunito max-w-sm sm:max-w-sm md:max-w-xl lg:max-w-2xl mx-auto px-2"
+            className="text-3xl sm:text-4xl md:text-3xl lg:text-4xl xl:text-5xl font-extrabold text-white leading-tight mt-3 sm:mt-4 md:mt-5 font-nunito w-full max-w-[90%] md:max-w-3xl lg:max-w-5xl mx-auto px-2"
             initial={{ opacity: 0, transform: 'translateZ(0)' }}
             animate={isHeadingInView ? { opacity: 1, transform: 'translateZ(0)' } : { opacity: 0, transform: 'translateZ(0)' }}
             transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
           >
-                   {t("Our Valuable")} <span className="text-yellow">{t("Feedback")},</span> {t("your opinion counts here")}.
+                   <span className="whitespace-nowrap">{t("Our Supporters &")} <span className="text-yellow">{t("Community")}</span></span> <br /> {t("Voices")}
           </motion.h1>
-           <div className="mt-6 sm:mt-8 md:mt-10 lg:mt-13 flex justify-center">
+          <motion.p
+            className="text-white text-base sm:text-lg md:text-xl font-nunito mt-4 mx-auto w-full max-w-[90%] md:max-w-2xl px-2 leading-relaxed"
+            initial={{ opacity: 0, y: 10 }}
+            animate={isHeadingInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+            transition={{ duration: 1, delay: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
+          >
+            {t("Your support and participation help us create meaningful change in the community.")}
+          </motion.p>
+           <div className="mt-6 sm:mt-8 md:mt-10 lg:mt-13 flex justify-center w-full">
              <div className="w-fit scale-90 sm:scale-100">
                <Button 
-                 text={t("Send Feedback")} 
+                 text={t("Share Your Feedback")} 
                  onClick={() => setShowForm(true)}
                />
              </div>

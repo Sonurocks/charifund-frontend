@@ -1,16 +1,18 @@
-import type { NextConfig } from "next";
-
 const nextConfig = {
- images: {
-    domains: ['res.cloudinary.com'], 
+  env: {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'https://tunnel.yuwaindia.org/api/V1',
+    NEXT_PUBLIC_RAZORPAY_KEY_ID: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_test_TYs001lG3f9e2i'
   },
-  typescript: {
-    ignoreBuildErrors: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      }
+    ],
+    dangerouslyAllowSVG: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  experimental: {},
 };
-
 
 export default nextConfig;

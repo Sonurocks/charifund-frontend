@@ -45,7 +45,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ initialData, onClose, mode })
     name: initialData?.name ?? "",
     comment: initialData?.comment ?? "",
     status: mapBackendStatusToFormStatus(initialData?.status),
-    email: initialData?.email ?? "",
+    email: (initialData as any)?.email ?? "",
   };
 
   const hasBeenReviewed = initialData?.status && initialData.status.toUpperCase() !== "PENDING";

@@ -87,6 +87,7 @@ const staticImages = [bannerOne.src, bannerTwo.src];
           src={horizontalWhiteShape.src}
           alt="Horizontal White Shape"
           fill
+          priority
         />
       </section>
 
@@ -105,13 +106,14 @@ const staticImages = [bannerOne.src, bannerTwo.src];
             alt="Vertical Yellow Shape"
             fill
             className="object-cover"
+            priority
           />
         </motion.div>
       </section>
 
       {/*  Text Overlay */}
       <div
-        className="absolute inset-0 flex flex-col justify-center items-start px-4 sm:px-6 md:px-16 lg:px-30 z-20 font-nunito"
+        className="absolute inset-0 flex flex-col justify-center items-start px-4 sm:px-6 md:px-8 xl:px-30 z-20 font-nunito"
         style={pageBannerBackgourndColor}
       >
         <div className="ml-2 md:ml-4 lg:ml-6 xl:ml-8">
@@ -138,7 +140,7 @@ const staticImages = [bannerOne.src, bannerTwo.src];
               <div className="w-auto sm:w-auto min-w-[50px] sm:min-w-[120px]">
                 <Link href="/campaign">
                   <Button
-                    text="Discover More"
+                    text="Know more"
                     textColor="text-white"
                     bgColor="bg-black/30"
                     hoverBg="before:bg-yellow"
@@ -149,7 +151,7 @@ const staticImages = [bannerOne.src, bannerTwo.src];
               </div>
               <div className="sm:w-auto min-w-[50px] sm:min-w-[120px]">
                 <Link href="/contact">
-                  <Button text="Get A Quote" paddingy="py-5" />
+                  <Button text="Join us" paddingy="py-5" />
                 </Link>
               </div>
             </div>

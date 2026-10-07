@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { CampaignPreviewProps } from "@/src/types/admin";
+import { BlogPreviewProps } from "@/src/types/admin";
 
 // Dynamic imports
 const Image = dynamic(() => import("next/image"), { ssr: false });
@@ -22,14 +22,14 @@ const MotionDiv = dynamic(
   { ssr: false }
 );
 
-const CampaignPreview = ({
+const BlogPreview = ({
   data,
   onSubmit,
   onBack,
   showButton = true,
   createMutation,
   updateMutation,
-}: CampaignPreviewProps) => {
+}: BlogPreviewProps) => {
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [language, setLanguage] = useState<"en" | "hi">("en");
 
@@ -225,4 +225,4 @@ const CampaignPreview = ({
   );
 };
 
-export default CampaignPreview;
+export default BlogPreview;

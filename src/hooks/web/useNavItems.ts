@@ -13,11 +13,12 @@ export const useNavItems = (): NavItem[] => {
     {
       label: t("Pages"),
       dropdown: [
-        { label: t("FAQ"), href: "/faq" },
+        // { label: t("FAQ"), href: "/faq" },
         { label: t("Donate Us"), href: "/donate-us" },
         { label: t("Become Volunteer"), href: "/volunteer" },
         { label: t("Events"), href: "/events" },
         { label: t("Team"), href: "/team" },
+        { label: t("Sponsors"), href: "/sponsors" },
       ],
     },
     { label: t("Blog"), href: "/blog" },

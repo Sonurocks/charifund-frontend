@@ -3,11 +3,11 @@ import { CampaignFormValues, CategoryFormValues } from "../../utils/validations/
 import { Category } from "../web/category";
 export interface Campaign {
   id: number;
-  title: string;
-  category: string;
-  description: string;
+  title: { en: string; hi: string } | string;
+  category: { en: string; hi: string; name?: { en: string; hi: string } } | string | any;
+  description: { en: string; hi: string } | string;
   goalAmount: number;
-  summary: string;
+  summary: { en: string; hi: string } | string;
   organizer: string;
   raisedAmount: number;
   status: string;
@@ -15,7 +15,7 @@ export interface Campaign {
   endDate: string;
   images?: (string | File)[];
   imageUrl?: string[]; 
-  location: string;
+  location: { en: string; hi: string } | string;
   existingImages:(string|File)[];
 }
 
@@ -25,6 +25,8 @@ export interface CampaignFormProps {
   readOnly?: boolean; 
   mode?: "add" | "edit" | "view";
   onPreview?: (values: CampaignFormValues & { keyPoints: string[] }) => void;
+  createMutation?: any;
+  updateMutation?: any;
 }
 
 export interface CampaignColumnCallbacks {

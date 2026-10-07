@@ -251,7 +251,6 @@ const EventForm = ({ initialData, onClose, mode, onPreview }: EventFormProps) =>
                   error={touched.location?.[lang] ? errors.location?.[lang] : ""}
                   disabled={isView}
                   className="w-full "
-                  autoComplete="off"
                 />
 
                 {showDropdown && suggestions.length > 0 && (
@@ -340,7 +339,7 @@ const EventForm = ({ initialData, onClose, mode, onPreview }: EventFormProps) =>
                   setFieldValue("existingImages", existingUrls);
 
                   // Mark the field as touched
-                  setTouched(prev => ({ ...prev, images: true }));
+                  setTouched({ ...touched, images: true });
 
                   // Immediately clear the error
                   setFieldError("images", "");

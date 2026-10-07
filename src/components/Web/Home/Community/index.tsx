@@ -3,11 +3,9 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import Image from "next/image";
 
 import { useRouter } from "next/navigation";
-import Notice from "../../../UI/web/Notice";
 import DonationInput from "../../DonateUs/DonationInput";
 import RadioGroup from "../../../UI/web/RadioGroup";
 import Button from "../../../UI/web/Buttons/Button";
-import { Donationmethods } from "@/src/static-resource/web";
 import { community2, yellowspade } from "@/public/assets";
 import { motion } from 'framer-motion'
 import SideImage from "./SideImage";
@@ -22,7 +20,11 @@ const Community = ({ hasFeedback }: { hasFeedback?: boolean | null }) => {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const { amount, method } = useSelector((state: RootState) => state.donation);
-    const presetAmounts = [20, 50, 100, 200];
+    const presetAmounts = i18n.language === 'hindi' ? [20, 50, 100, 200] : [50, 100, 200, 500];
+    const localDonationMethods = [
+        { label: "Online Donation", value: "credit" },
+        { label: "Offline Donation", value: "offline" }
+    ];
     const router = useRouter();
 
     const handleDonateNow = () => {
@@ -68,11 +70,11 @@ const Community = ({ hasFeedback }: { hasFeedback?: boolean | null }) => {
 
                     <p className={`text-yellow font-medium flex items-center gap-2 font-caveat ${i18n.language === 'hindi' ? 'text-sm' : 'text-base'}`} style={{ fontSize: i18n.language === 'hindi' ? 'clamp(0.875rem, 2.5vw, 1.5rem)' : 'clamp(1rem, 2.5vw, 1.5rem)' }}>
                         <Icon icon="mdi:hand-heart" className=" cursor-pointer" />
-                        {t("Start Donating Poor People")}
+                        {t("Together for a Better Tomorrow")}
                     </p>
 
                     <h1 className={`font-extrabold text-white leading-tight mt-5 font-nunito max-w-xl lg:max-w-2xl ${i18n.language === 'hindi' ? 'text-base' : 'text-lg'}`} style={{ fontSize: i18n.language === 'hindi' ? 'clamp(1rem, 4vw, 2.5rem)' : 'clamp(1.125rem, 4vw, 3rem)' }}>
-                        {t("Join The")} <span className="text-yellow">{t("community")}</span>  {t("To Give Education For Children")}
+                        {t("Join Us To Create")} <span className="text-yellow">{t("Positive Change")}</span>
                     </h1>
 
                 </motion.div>
@@ -80,10 +82,10 @@ const Community = ({ hasFeedback }: { hasFeedback?: boolean | null }) => {
                     className="max-w-7xl h-[650px] bg-white   rounded-2xl overflow-hidden mx-auto grid lg:grid-cols-8 xl:grid-cols-5 relative bottom-[-50px] z-5 mb-15">
 
                     <div className="bg-white text-foreground rounded-xl  py-4 px-4 md:p-12 w-full lg:col-span-5 xl:col-span-3  relative z-10">
-                        <h2 className="md:text-3xl font-bold mb-3  md:mb-10">{t("Support Where It Counts")}.</h2>
+                        <h2 className="md:text-3xl font-bold mb-3 md:mb-6">{t("Support Where It Matters")}</h2>
 
-                        <div className="mb-8">
-                            <Notice message={t("Test Mode Is Enabled. While In Test Mode No Live Donations Are Processed.")} />
+                        <div className="mb-8 font-nunito leading-relaxed text-gray-500 font-semibold md:text-[16px]">
+                            {t("Your support helps us make a meaningful difference in the lives of children, women and communities. Every contribution helps us continue our work in education, healthcare, skill development, blood donation and community welfare.")}
                         </div>
 
                         {/* Donation Input */}
@@ -98,8 +100,7 @@ const Community = ({ hasFeedback }: { hasFeedback?: boolean | null }) => {
                             <p className="text-xl font-semibold">{t("Select Payment Method")}</p>
                             <RadioGroup
                                 name="payment"
-                                // options={Donationmethods}
-                                options={Donationmethods.map(option => ({
+                                options={localDonationMethods.map(option => ({
                                     ...option,
                                     label: t(option.label) 
                                 }))}
@@ -112,7 +113,7 @@ const Community = ({ hasFeedback }: { hasFeedback?: boolean | null }) => {
                         </div>
                         <div className="w-fit">
 
-                            <Button text={t("Donate Now")} onClick={handleDonateNow} />
+                            <Button text={t("Section 8 Donate Now")} onClick={handleDonateNow} />
                         </div>
                     </div>
                     <motion.div

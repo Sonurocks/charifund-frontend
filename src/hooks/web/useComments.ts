@@ -49,7 +49,7 @@ export const useCreateComment = () => {
     onSuccess: (data, variables) => {
       const existingComments = JSON.parse(localStorage.getItem("LocalComments") || "[]");
       const newComment = {
-        id: data.comment?.id || `local_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        id: data.comment?.id || data.comment?._id || `local_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         name: variables.data.name,
         comment: variables.data.comment,
         email: variables.data.email,

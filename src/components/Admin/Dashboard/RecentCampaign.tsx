@@ -45,7 +45,7 @@ function RecentCampaign() {
                 transition={{ type: "spring", stiffness: 80 }}
               >
                 <td className="p-3 border border-foreground/30">{index + 1}</td>
-                <td className="p-3 border border-foreground/30">{item.title}</td>
+                <td className="p-3 border border-foreground/30">{(typeof item.title === 'string' ? item.title : item.title?.en) || 'Untitled'}</td>
                 <td className="p-3 border border-foreground/30">₹{item.goalAmount.toLocaleString() ?? 0}</td>
                 <td className="p-3 border border-foreground/30">₹{item.raisedAmount.toLocaleString() ?? 0}</td>
                 <td className="p-3 border border-foreground/30">{item.status}</td>

@@ -53,7 +53,7 @@ const Newsletter = () => {
             <h2 className="text-[30px] sm:text-[24px] md:text-[30px] xl:text-[40px]  2xl:text-[40px] flex font-nunito font-extrabold sm:my-[-8px] ">
               {t("Subscribe To Our Newsletter")}
             </h2>
-            <p className="text-[18px] opacity-70 sm:text-[18px] xl:text-[18px] md:text-[18px] 2xl:text-[18px] mt-2 xl:leading-8 2xl:mt-8px">
+            <p className="text-[18px] opacity-70 sm:text-[18px] xl:text-[18px] md:text-[18px] 2xl:text-[18px] mt-2 xl:leading-8 2xl:mt-8px lg:pr-10 xl:pr-24">
               {t("Regular Inspections And Feedback Mechanisms")}
             </p>
           </div>
@@ -70,13 +70,13 @@ const Newsletter = () => {
             </div>
           </div>
         }>
-          <Formik<NewsletterEmailValues>
+          <Formik
             initialValues={{ email: "" }}
             validationSchema={NewsletterEmailSchema}
-            onSubmit={handleSubmit}
+            onSubmit={handleSubmit as any}
           >
           {({ isSubmitting }) => (
-            <Form className="flex items-center gap-3 md:gap-4 lg:gap-5 w-fit lg:w-2/5 lg:ml-auto">
+            <Form className="flex items-center gap-3 md:gap-4 lg:gap-5 w-full min-w-0 md:w-3/4 lg:w-2/5 lg:ml-auto">
               <InputField
                 name="email"
                 placeholder={t("Enter Email")}
@@ -97,11 +97,7 @@ const Newsletter = () => {
                   {isSubmitting || mutation.isPending ? (
                     <ButtonLoader />
                   ) : (
-                    <Icon
-                      icon="bitcoin-icons:share-filled"
-                      height={28}
-                      width={28}
-                    />
+                    <span className="font-bold md:text-[16px]">{t("Subscribe")}</span>
                   )}
                 </Button>
               </div>

@@ -21,7 +21,19 @@ export function getLocalComments(blogId: string): CommentType[] {
 
   try {
     const allLocalComments: CommentType[] = JSON.parse(stored);
-    return allLocalComments
+    
+    // Purge local comments older than 24 hours to prevent ghost comments
+    const now = new Date().getTime();
+    const validComments = allLocalComments.filter(c => {
+       const commentTime = new Date(c.createdAt || Date.now()).getTime();
+       return (now - commentTime) < 24 * 60 * 60 * 1000; 
+    });
+
+    if (validComments.length !== allLocalComments.length) {
+       localStorage.setItem("LocalComments", JSON.stringify(validComments));
+    }
+
+    return validComments
       .filter((c) => c.blogId === blogId)
       .map((c) => ({ ...c, isPending: true }));
   } catch (error) {

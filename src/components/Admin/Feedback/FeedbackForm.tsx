@@ -38,14 +38,14 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ initialData, onClose, mode 
     }
   };
 
-  const initialValues: FeedbackFormValues = {
+  const initialValues = {
     name: initialData?.name ?? "",
     designation: initialData?.designation ?? "",
     image: initialData?.image as string | undefined,
     feedback: initialData?.feedback ?? "",
     rating: initialData?.rating ?? 0,
     status: mapBackendStatusToFormStatus(initialData?.status),
-  };
+  } as any;
 
   const hasBeenReviewed =
     initialData?.status && initialData.status.toUpperCase() !== "PENDING";
@@ -75,9 +75,9 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ initialData, onClose, mode 
 
     let statusBoolean: boolean | undefined;
 
-    if (values.status === "APPROVED") {
+    if ((values as any).status === "APPROVED") {
       statusBoolean = true;
-    } else if (values.status === "REJECTED") {
+    } else if ((values as any).status === "REJECTED") {
       statusBoolean = false;
     } else {
       statusBoolean = undefined;
@@ -123,7 +123,7 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ initialData, onClose, mode 
           handleSubmit(values, resetForm, setSubmitting)
         }
       >
-        {({ values, handleChange, errors, touched, isSubmitting, setFieldValue }) => (
+        {({ values, handleChange, errors, touched, isSubmitting, setFieldValue }: any) => (
           <Form className="flex flex-col gap-3">
             <CustomInput
               label="Name"
@@ -149,7 +149,7 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ initialData, onClose, mode 
 
             <div className="relative w-[200px] h-[200px] rounded-lg overflow-hidden">
               <Image
-                src={values.image || "/default-avatar.webp"} // fallback agar image missing ho
+                src={(values.image as string) || "/default-avatar.webp"} // fallback agar image missing ho
                 alt="Feedback user"
                 fill
                 className="object-cover object-center rounded-lg"

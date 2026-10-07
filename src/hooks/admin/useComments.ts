@@ -65,10 +65,16 @@ export const useDeleteComment = () => {
 
   return useMutation({
     mutationFn: deleteComment,
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["comments"] });
       toast.dismiss();
       toast.success("Comment deleted successfully");
+      
+      // Permanently wipe local test caches since Admin deleted the main thread
+      try {
+        localStorage.removeItem("LocalComments");
+        localStorage.removeItem("LocalReplies");
+      } catch (e) {}
     },
     onError: (err: any) => {
       toast.error(err?.response?.data?.message || "Failed to delete comment");

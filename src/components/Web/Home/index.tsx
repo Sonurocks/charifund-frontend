@@ -1,22 +1,24 @@
-'use client'
+"use client";
 
-import React, { useState } from 'react'
-import PartnersCompanies from './PartnersCompanies';
-import HelpAndDonate from './HelpAndDonate';
-import BecomeVolunteer from '../Volunteer/BecomeVolunteer';
-import Community from './Community';
-import FeedbackForm from '../FeedbackForm';
-import DonateDifferentWay from './DonateDifferentWay';
-import LatestNewsArticle from './LatestNewsArticle';
-import ScrollToTop from '../../../helper/ScrollToTop';
-import VolunteerTeam from '../Volunteer/VolunteerTeam';
-import ValueableCustomer from '../Volunteer/ValueableCustomer';
-import HelpingEachOther from './HelpingEachOther';
-import HeroStaticSlider from './Hero';
-import CharityWithDifference from './Charity_with_Difference/CharityWithDiffrence';
+import React, { useState } from "react";
+import dynamic from "next/dynamic";
+
+const PartnersCompanies = dynamic(() => import("./PartnersCompanies"));
+const HelpAndDonate = dynamic(() => import("./HelpAndDonate"));
+const BecomeVolunteer = dynamic(() => import("../Volunteer/BecomeVolunteer"));
+const Community = dynamic(() => import("./Community"));
+const FeedbackForm = dynamic(() => import("../FeedbackForm"));
+const DonateDifferentWay = dynamic(() => import("./DonateDifferentWay"));
+const LatestNewsArticle = dynamic(() => import("./LatestNewsArticle"));
+const ScrollToTop = dynamic(() => import("../../../helper/ScrollToTop"));
+const VolunteerTeam = dynamic(() => import("../Volunteer/VolunteerTeam"));
+const ValueableCustomer = dynamic(() => import("../Volunteer/ValueableCustomer"));
+const HelpingEachOther = dynamic(() => import("./HelpingEachOther"));
+import HeroStaticSlider from "./Hero";
+import CharityWithDifference from "./Charity_with_Difference/CharityWithDiffrence";
 
 const Home = () => {
-      const [hasFeedback, setHasFeedback]=useState<boolean|null>(true);
+  const [hasFeedback, setHasFeedback] = useState<boolean | null>(true);
   return (
     <div>
       <HeroStaticSlider />
@@ -29,7 +31,7 @@ const Home = () => {
       <Community hasFeedback={hasFeedback} />
       <div className="mt-8 md:mt-0"></div>
       {hasFeedback ? (
-        <ValueableCustomer/>
+        <ValueableCustomer />
       ) : (
         <div className="mt-[100px] md:mt-[112px] " />
       )}
@@ -38,7 +40,7 @@ const Home = () => {
       <LatestNewsArticle />
       <ScrollToTop />
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

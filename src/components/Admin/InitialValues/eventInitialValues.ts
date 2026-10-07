@@ -8,20 +8,20 @@ export const getInitialEventValues = (initialData: any): EventFormValues =>( {
     en: initialData?.description?.en ?? "",
     hi: initialData?.description?.hi ?? "",
   },
- startDate: initialData?.startDate
+ startDate: (initialData?.startDate
     ? new Date(initialData.startDate)
     : initialData?.startTime
     ? new Date(initialData.startTime)
-    : null,
-  endDate: initialData?.endDate
+    : null) as any,
+  endDate: (initialData?.endDate
     ? new Date(initialData.endDate)
     : initialData?.endTime
     ? new Date(initialData.endTime)
-    : null,
-  startTime: initialData?.startTime
+    : null) as any,
+  startTime: (initialData?.startTime
     ? new Date(initialData.startTime)
-    : null,
-  endTime: initialData?.endTime ? new Date(initialData.endTime) : null,
+    : null) as any,
+  endTime: (initialData?.endTime ? new Date(initialData.endTime) : null) as any,
   summary: {
     en: initialData?.summary?.en ?? "",
     hi: initialData?.summary?.hi ?? "",

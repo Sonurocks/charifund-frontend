@@ -2,8 +2,8 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Icon } from "@iconify/react";
-import { DropdownOption, DropdownProps } from "@/src/types/header";
-
+export type DropdownOption = { label: string; icon?: string };
+export type DropdownProps = { options: (DropdownOption | string)[]; label: string; };
 const dropdownVariants = {
   hidden: { opacity: 0, y: -10 },
   visible: { opacity: 1, y: 0 },

@@ -8,15 +8,27 @@ import EventCard from "./EventCard";
 import { ApiEvent } from "@/src/types/web/event";
 import EmptyState from "../../UI/web/EmptyState";
 import { upcomingEvents } from "@/public/assets";
+import ArrowButton from "../../UI/web/Buttons/ArrowButton";
+import FadeUpCard from "@/src/animations/FadeButtomUp";
+import CarouselIndicators from "../Home/HelpAndDonate/CarouselIndicators";
 
 type FormattedEvent = Pick<ApiEvent, "id" | "title" | "location"> & {
   date: string;
   image: string;
 };
 
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Autoplay } from "swiper/modules";
+import type { Swiper as SwiperType } from "swiper";
+import "swiper/css";
+import "swiper/css/navigation";
+
 export default function EventList({ currentPage, onPageChange, onEmptyChange }: EventListProps) {
-  const itemsPerPage = 3;
+  const itemsPerPage = 8;
   const { data, isLoading, isError } = useFetchAllEvent(currentPage, itemsPerPage);
+  
+  const swiperRef = React.useRef<SwiperType | null>(null);
+  const [activeIndex, setActiveIndex] = React.useState(0);
 
   const events = useMemo<FormattedEvent[]>(() => {
     if (!data?.events) return [];
@@ -26,7 +38,7 @@ export default function EventList({ currentPage, onPageChange, onEmptyChange }: 
       location: event.location,
       date: new Date(event.startTime).toLocaleDateString("en-US", {
         year: "numeric",
-        month: "long",
+        month: "short", // using short month so it fits inside the Pill (e.g. Oct 22, 2026)
         day: "numeric",
       }),
       image: event.images?.[0] || "/assets/events.webp",
@@ -68,39 +80,92 @@ export default function EventList({ currentPage, onPageChange, onEmptyChange }: 
   }
 
   return (
-    <section className="py-12 w-full">
-      {events.length === 1 ? (
-        <EventCard event={events[0]} large />
-      ) : events.length === 2 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
-          {events.map((event: FormattedEvent) => (
-            <EventCard key={event.id} event={event} large />
-          ))}
-        </div>
-      ) : (
-        <div className="flex flex-col items-center gap-6 lg:grid lg:grid-cols-5 w-full">
-          {events[0] && (
-            <div className="col-span-3 relative w-full h-[250px] sm:h-[350px] lg:h-[700px] overflow-hidden">
-              <EventCard event={events[0]} large />
-            </div>
-          )}
-          <div className="col-span-2 flex flex-col gap-6 w-full h-full">
-            {events.slice(1).map((event: FormattedEvent, index: number) => (
-              <EventCard key={event.id} event={event} index={index} />
+    <section className="relative py-12 min-h-[500px] overflow-hidden">
+      <div className="container mx-auto px-4 max-w-7xl">
+        {events.length <= 4 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {events.map((event: FormattedEvent, index: number) => (
+              <FadeUpCard key={event.id} delay={index * 0.2} className="h-full">
+                <EventCard event={event} />
+              </FadeUpCard>
             ))}
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="relative w-full">
+            <style dangerouslySetInnerHTML={{__html: `
+              .event-swiper { padding-bottom: 20px !important; }
+              .event-swiper .swiper-wrapper { align-items: stretch !important; }
+              .event-swiper .swiper-slide { height: auto !important; display: flex !important; }
+            `}} />
+            <Swiper
+              modules={[Navigation, Autoplay]}
+              slidesPerView={1}
+              spaceBetween={25}
+              loop={true}
+              autoplay={{ delay: 3000, pauseOnMouseEnter: true }}
+              speed={1000}
+              navigation={{
+                prevEl: ".event-swiper-button-prev",
+                nextEl: ".event-swiper-button-next",
+              }}
+              onSlideChange={(swiper: SwiperType) => setActiveIndex(swiper.realIndex)}
+              onSwiper={(swiper: SwiperType) => (swiperRef.current = swiper)}
+              breakpoints={{
+                640: { slidesPerView: 2 },
+                1024: { slidesPerView: 3 },
+                1280: { slidesPerView: 4 }, // Based on Campaign layout
+              }}
+              className="w-full event-swiper"
+            >
+              {events.map((event: FormattedEvent, index: number) => (
+                 <SwiperSlide key={event.id} className="h-auto w-full">
+                   <FadeUpCard delay={index * 0.1} className="h-full">
+                     <EventCard event={event} />
+                   </FadeUpCard>
+                 </SwiperSlide>
+              ))}
+            </Swiper>
+            
+            {/* Unified Navigation (Dots & Arrows) matching Campaign Carousel */}
+            {events.length > 1 && (
+              <div className="flex flex-col items-center mt-6 lg:mt-10 gap-6 w-full">
+                {/* Pagination Dots Row */}
+                <CarouselIndicators
+                  length={events.length}
+                  activeIndex={activeIndex}
+                  onDotClick={(index) => swiperRef.current?.slideTo(index)}
+                />
 
-      {totalPages > 1 && onPageChange && (
-        <div className="flex justify-center mt-12">
-          <CustomPagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={onPageChange}
-          />
-        </div>
-      )}
+                {/* Arrows Row */}
+                <div className="flex justify-center items-center gap-4 md:gap-6 w-full">
+                  <ArrowButton 
+                    direction="left" 
+                    size={55} 
+                    className="shadow-md hover:scale-105 transition-transform cursor-pointer bg-dark-green text-white hover:bg-yellow hover:text-black"
+                    onClick={() => swiperRef.current?.slidePrev()} 
+                  />
+                  <ArrowButton 
+                    direction="right" 
+                    size={55} 
+                    className="shadow-md hover:scale-105 transition-transform cursor-pointer bg-yellow text-black hover:bg-dark-green hover:text-white"
+                    onClick={() => swiperRef.current?.slideNext()} 
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {totalPages > 1 && onPageChange && (
+          <div className="flex justify-center mt-12 w-full">
+            <CustomPagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={onPageChange}
+            />
+          </div>
+        )}
+      </div>
     </section>
   );
 }

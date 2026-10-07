@@ -14,15 +14,16 @@ const Campaign = () => {
     <div>
       <PageBanner
         bgImage={ourcausebanner}
-        tagline={t("Start Donating Poor People")}
-        title={t("Our Campaign")}
+        tagline="Together for a Better Society"
+        title="Our Campaigns for Social Change"
+        titleClassName="mx-auto max-w-[17ch] sm:max-w-[18ch] leading-tight xl:leading-[1.1]"
         smallIcon="mdi:hand-heart"
         decoIcon="mdi:ribbon"
         decoPosition="absolute bottom-10 left-10"
       />
       <CampaignGrid />
       <ChildrenNeed />
-      <HelpAndDonate />
+      {/* <HelpAndDonate /> */}
       <SendMsg />
     </div>
   )

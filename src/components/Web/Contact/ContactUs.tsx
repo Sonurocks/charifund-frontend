@@ -151,7 +151,7 @@ const ContactUs = () => {
           )}
 
           {/* Contact Info */}
-          <div className="grid sm:grid-cols-2 gap-x-8 gap-y-10 mb-10 max-w-[700px]">
+          {/* <div className="grid sm:grid-cols-2 gap-x-8 gap-y-10 mb-10 max-w-[700px]">
             {contactInfo.map((info, idx) => (
               <ContactInfoBlock
                 key={idx}
@@ -162,10 +162,10 @@ const ContactUs = () => {
                 links={info.links}
               />
             ))}
-          </div>
+          </div> */}
 
           {/* Contact Image */}
-          <div className="w-full text-center mt-6">
+          {/* <div className="w-full text-center mt-6">
             <Image
               src="/assets/conatctusimage.webp"
               alt="Contact Illustration"
@@ -174,7 +174,7 @@ const ContactUs = () => {
               className="w-full h-auto object-cover"
                loading="lazy"
             />
-          </div>
+          </div> */}
         </AnimatedReveal>
 
         {/* RIGHT SECTION */}

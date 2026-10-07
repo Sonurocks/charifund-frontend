@@ -60,7 +60,7 @@ export default function HelpingEachOther() {
             </button>
             <div className="relative w-full aspect-video cursor-pointer bg-foreground rounded-lg overflow-hidden">
               <iframe
-                src="https://www.youtube.com/embed/XxVg_s8xAms?autoplay=1&rel=0&modestbranding=1"
+                src="https://www.youtube.com/embed/YE7VzlLtp-4?autoplay=1&rel=0&modestbranding=1"
                 width="100%"
                 height="100%"
                 frameBorder="0"
@@ -96,7 +96,7 @@ export default function HelpingEachOther() {
           />
         </motion.div>
 
-        <div className=" w-full mx-auto xl:px-2 2xl:px-0 mt-10 lg:mt-20 max-w-[1440px]">
+        <div className="w-full mx-auto px-4 sm:px-6 md:px-8 xl:px-2 2xl:px-0 mt-10 lg:mt-20 max-w-[1440px]">
           <div className="grid grid-cols-1 lg:grid-cols-7 xl:pl-30  xl:gap-15">
 
             <div className="relative  col-span-3  opacity-0 anim-fade-in-left hidden lg:block">
@@ -109,9 +109,9 @@ export default function HelpingEachOther() {
                     fontWeight: "800",
                   }}
                 >
-                  <span className="text-white">{t("We give")} </span>
-                  <span className="text-yellow">{t("donations")}</span>
-                  <span className="text-white"> {t("to poor people")}</span>
+                  <span className="text-white">{t("Together, ")} </span>
+                  <span className="text-yellow">{t("We Can Make ")}</span>
+                  <span className="text-white"> {t("a Difference")}</span>
                 </div>
               </div>
 
@@ -315,13 +315,13 @@ export default function HelpingEachOther() {
               >
                 <i className="text-lg md:text-xl mr-2 text-green hand-icon"></i>
                 <span className="text-green font-caveat text-lg md:text-2xl lg:text-2xl font-bold">
-                  {t("Start Donating Poor People")}
+                  {t("Together for a Better Society")}
                 </span>
               </div>
               <ComponentTitle
-                preText="Helping Each Other Can Make"
-                highlightText="World"
-                postText=" Better"
+                preText={t("Empowering Lives, Building a Better Society")}
+                highlightText=""
+                postText=""
               />
 
               <p
@@ -329,7 +329,7 @@ export default function HelpingEachOther() {
                 style={{ animationDelay: "1s" }}
               >
                 {t(
-                  "Volunteering Offers Opportunities To Develop New Skills And Gain Valuable Experience. This Can Include Leadership, Communication, Project Management, And Teamwork Skills."
+                  "YUWA India is committed to creating positive social change through education, child welfare, women empowerment, skill development, healthcare, blood donation and environmental protection. We work together to empower individuals and build a stronger, healthier and more inclusive society."
                 )}
               </p>
 
@@ -355,11 +355,11 @@ export default function HelpingEachOther() {
                         fontWeight: "800",
                       }}
                     >
-                      {t("Start Helping Them")}
+                      {t("Join Our Mission")}
                     </h3>
                     <p className="text-gray-green pr-5 xs:pr-5 font-nunito text-sm lg:text-sm  xl:leading-6">
                       {t(
-                        "Raising Awareness About The Charity Mission And Cause."
+                        "Become a volunteer and contribute your time, skills and ideas to meaningful community service initiatives."
                       )}
                     </p>
                   </div>
@@ -386,11 +386,11 @@ export default function HelpingEachOther() {
                         fontWeight: "800",
                       }}
                     >
-                      {t("Make Donations")}
+                      {t("Support Our Cause")}
                     </h3>
                     <p className="text-gray-green pr-5 xs:pr-5 font-nunito text-sm lg:text-sm xl:leading-6">
                       {t(
-                        "Raising Awareness About The Charity Mission And Cause."
+                        "Your support helps us reach more children, women and families through our social welfare and development initiatives."
                       )}
                     </p>
                   </div>
@@ -398,28 +398,41 @@ export default function HelpingEachOther() {
               </div>
 
               <div
-                className="space-y-2 md:space-y-3 xl:space-y-5 mb-5 md:mb-8 lg:mb-6 opacity-0 anim-fade-in-up"
+                className="space-y-4 md:space-y-5 mb-5 md:mb-8 lg:mb-6 opacity-0 anim-fade-in-up"
                 style={{ animationDelay: "1.6s" }}
               >
-                <div className="flex items-start  gap-2 md:gap-3">
-                  <FaCheckCircle className="text-dark-green  md:w-5 md:h-5 mt-2 md:mt-0.5 flex-shrink-0" />
-                  <span className="text-dark-green leading-7 md:leading-tight tracking-wide text-sm md:text-sm xl:text-[16px]">
-                    {t("Helped Fund 3,265 Project Powerful Corporate Poor.")}
-                  </span>
+                <div className="flex items-start gap-2 md:gap-3">
+                  <FaCheckCircle className="text-dark-green md:w-5 md:h-5 mt-1 flex-shrink-0" />
+                  <div className="flex flex-col">
+                    <span className="text-dark-green font-bold text-sm md:text-sm xl:text-[16px] leading-tight">
+                      {t("Child Education & Welfare")}
+                    </span>
+                    <span className="text-gray-green leading-snug tracking-wide text-xs sm:text-sm mt-1">
+                      {t("Supporting education, care and opportunities for underprivileged children.")}
+                    </span>
+                  </div>
                 </div>
                 <div className="flex items-start gap-2 md:gap-3">
-                  <FaCheckCircle className="text-dark-green md:w-5 md:h-5 mt-2 md:mt-0.5 flex-shrink-0" />
-                  <span className="text-dark-green leading-7 md:leading-tight tracking-wide text-sm md:text-sm xl:text-[16px]">
-                    {t("We Give Child A Gift Of A Education")}
-                  </span>
+                  <FaCheckCircle className="text-dark-green md:w-5 md:h-5 mt-1 flex-shrink-0" />
+                  <div className="flex flex-col">
+                    <span className="text-dark-green font-bold text-sm md:text-sm xl:text-[16px] leading-tight">
+                      {t("Women & Youth Empowerment")}
+                    </span>
+                    <span className="text-gray-green leading-snug tracking-wide text-xs sm:text-sm mt-1">
+                      {t("Promoting skill development, self-reliance and leadership among women and youth.")}
+                    </span>
+                  </div>
                 </div>
                 <div className="flex items-start gap-2 md:gap-3">
-                  <FaCheckCircle className="text-dark-green md:w-5 md:h-5 mt-2 md:mt-0.5 flex-shrink-0" />
-                  <span className="text-dark-green leading-7 md:leading-tight tracking-wide text-sm md:text-sm xl:text-[16px]">
-                    {t(
-                      "We Help Companies Develop Powerful Corporate Social Responsibility."
-                    )}
-                  </span>
+                  <FaCheckCircle className="text-dark-green md:w-5 md:h-5 mt-1 flex-shrink-0" />
+                  <div className="flex flex-col">
+                    <span className="text-dark-green font-bold text-sm md:text-sm xl:text-[16px] leading-tight">
+                      {t("Healthcare, Blood Donation & Environment")}
+                    </span>
+                    <span className="text-gray-green leading-snug tracking-wide text-xs sm:text-sm mt-1">
+                      {t("Organising blood donation drives, health awareness activities and environmental initiatives.")}
+                    </span>
+                  </div>
                 </div>
               </div>
 
@@ -429,7 +442,7 @@ export default function HelpingEachOther() {
               >
                 <div className="flex items-center justify-center">
                   <Button
-                    text="More About Us"
+                    text={t("More About Us →")}
                     bgColor="bg-yellow"
                     textColor="text-foreground text-sm  lg:text-sm xl:text-[16px] font-extrabold"
                     fontWeight=""
@@ -445,13 +458,13 @@ export default function HelpingEachOther() {
                   <FiPhoneCall className="w-7 h-7 sm:w-7 sm:h-7 font-light text-dark-green" />
                   <div>
                     <p className="text-gray-green text-[12px] xs:text-sm font-bold lg:font-semibold sm:text-[14px] font-nunito leading-none ">
-                      {t("Phone")}
+                      {t("Get Involved With Us")}
                     </p>
                     <a
-                      href="tel:+23645689622"
+                      href="tel:+918565006669"
                       className="text-[16px] font-bold xs:text-[18px] lg:text-lg lg:font-bold font-nunito text-dark-green"
                     >
-                      +236 (456) 896 22
+                      +91 85650 06669
                     </a>
                   </div>
                 </div>

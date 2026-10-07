@@ -5,7 +5,7 @@ const initialState:{
     method:string;
 }={
     amount:'50',
-    method:"test",
+    method:"online",
 }
 
 const donationSlice=createSlice({
@@ -21,7 +21,7 @@ const donationSlice=createSlice({
         },
         resetDonation:(state)=>{
             state.amount='50';
-            state.method="test";
+            state.method="online";
         }
     }
 })

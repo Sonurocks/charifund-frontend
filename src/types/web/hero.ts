@@ -6,6 +6,7 @@ export interface PageBannerProps {
   smallIcon?: string; 
   tagline?: string; 
   title: string; 
+  titleClassName?: string;
   decoIcon?: string; 
   decoPosition?: string; 
 }

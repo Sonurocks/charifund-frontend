@@ -3,8 +3,7 @@
 import React, { ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoClose } from "react-icons/io5";
-import { AdminDrawerProps } from "@/src/types/adminCommon";
-import LanguageSwitcher from "../../LanguageSwitcher";
+import { AdminDrawerProps } from "@/src/types/admin";
 
 const Drawer: React.FC<AdminDrawerProps> = ({
   isOpen,

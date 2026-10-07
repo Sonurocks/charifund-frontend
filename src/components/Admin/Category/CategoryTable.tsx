@@ -109,7 +109,7 @@ const CategoryTable = () => {
             <Dropdown
               options={CategorySearchOptions}
               value={searchField}
-              onChange={(value) => {
+              onChange={(value: any) => {
                 setSearchField(value);
                 setTimeout(() => searchInputRef.current?.focus(), 0);
               }}

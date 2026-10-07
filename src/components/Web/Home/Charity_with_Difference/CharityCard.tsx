@@ -6,12 +6,14 @@ import { useTranslation } from "react-i18next";
 import { CharityCardProps } from "@/src/types";
 
 const translations = {
-  1: { titleKey: "Healthy Food", descriptionKey: "Set Up A Secure And User-Friendly Online Donation Platform That Accepts Multiple" },
-  2: { titleKey: "Medical Care", descriptionKey: "Set Up A Secure And User-Friendly Online Donation Platform That Accepts Multiple" },
-  3: { titleKey: "Child Education", descriptionKey: "Set Up A Secure And User-Friendly Online Donation Platform That Accepts Multiple" },
-  4: { titleKey: "Healthy Food", descriptionKey: "Set Up A Secure And User-Friendly Online Donation Platform That Accepts Multiple" },
-  5: { titleKey: "Medical Care", descriptionKey: "Set Up A Secure And User-Friendly Online Donation Platform That Accepts Multiple" },
-  6: { titleKey: "Child Education", descriptionKey: "Set Up A Secure And User-Friendly Online Donation Platform That Accepts Multiple" },
+  1: { titleKey: "Child Education & Welfare", descriptionKey: "Supporting children through education, care, learning opportunities, and welfare initiatives." },
+  2: { titleKey: "Women Empowerment", descriptionKey: "Empowering women and girls through awareness, training, skills, and opportunities for self-reliance." },
+  3: { titleKey: "Youth Empowerment", descriptionKey: "Empowering youth through leadership, confidence, social participation, and development opportunities." },
+  4: { titleKey: "Skill Development", descriptionKey: "Providing practical skills and vocational training to promote employment and self-reliance." },
+  5: { titleKey: "Healthcare & Blood Donation", descriptionKey: "Promoting health awareness and supporting voluntary blood donation and healthcare initiatives." },
+  6: { titleKey: "Nutrition & Food Support", descriptionKey: "Providing nutritional and food support to underprivileged children, families, and communities." },
+  7: { titleKey: "Environmental Protection", descriptionKey: "Promoting environmental awareness, cleanliness, plantation, and sustainable community practices." },
+  8: { titleKey: "Awareness & Social Support", descriptionKey: "Creating awareness and providing social support for community welfare and inclusive development." },
 };
 
 const colorMap: Record<string, string> = {
@@ -24,12 +26,14 @@ const colorMap: Record<string, string> = {
 };
 
 const iconMap: Record<number, string> = {
-  1: "icon-healthy-food",
-  2: "icon-medical-care",
+  1: "icon-education",
+  2: "icon-healthy-food",
   3: "icon-education",
-  4: "icon-healthy-food",
+  4: "icon-medical-care",
   5: "icon-medical-care",
-  6: "icon-education",
+  6: "icon-healthy-food",
+  7: "icon-education",
+  8: "icon-healthy-food",
 };
 
 const CharityCard: React.FC<CharityCardProps> = ({

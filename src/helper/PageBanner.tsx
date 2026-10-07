@@ -23,6 +23,7 @@ const PageBanner: React.FC<PageBannerProps> = ({
   smallIcon = "mdi:hand-heart-outline",
   tagline = "Start Donating Poor People",
   title,
+  titleClassName = "",
 }) => {
   const { t } = useTranslation();
   return (
@@ -68,7 +69,7 @@ const PageBanner: React.FC<PageBannerProps> = ({
         </div>
 
         {/* Title */}
-        <h1 className="text-3xl sm:text-3xl md:text-4xl xl:text-[80px] font-extrabold text-white font-nunito">
+        <h1 className={`text-3xl sm:text-3xl md:text-4xl xl:text-[80px] font-extrabold text-white font-nunito ${titleClassName}`}>
           {t(title)}
         </h1>
       </div>

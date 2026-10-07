@@ -35,7 +35,7 @@ const DonationSection = ({data,isError,isLoading}:DonationSectionProps) => {
       <p className="text-gray-green my-4">
         {data?.description||t("Lorem Ipsum Is Simply Dummy A Of The Printing And Type Setting Industry. Ipsum Has Been The Industry's Standard Dummy.")}
       </p>
-      <Donation />
+      <Donation campaignId={data?.id} />
     </motion.div>
   </div>
   );

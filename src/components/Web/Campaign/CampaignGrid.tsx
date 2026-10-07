@@ -26,8 +26,8 @@ const CampaignGrid = () => {
             title: campaign.title,
             description: campaign.description,
             progress: (campaign.raisedAmount / campaign.goalAmount) * 100,
-            raised: `$${campaign.raisedAmount}`,
-            goal: `$${campaign.goalAmount}`,
+            raised: `₹${campaign.raisedAmount}`,
+            goal: `₹${campaign.goalAmount}`,
         }));
     }, [data]);
 
@@ -50,8 +50,8 @@ const CampaignGrid = () => {
                             isVisible={isHeaderInView}
                         />
                         <ComponentTitle
-                            preText="Be the reason of someone"
-                            highlightText="smiles"
+                            preText="Be The Reason Of Someone's"
+                            highlightText="Smile"
                             postText=""
                         />
                     </div>
@@ -69,7 +69,7 @@ const CampaignGrid = () => {
                         </div>
                     ) : (
                         campaignsToDisplay.map((card: any, index: number) => (
-                            <FadeUpCard key={card.id || index} delay={index * 0.2}>
+                            <FadeUpCard key={card.id || index} delay={index * 0.2} className="h-full">
                                 <CampaignCard
                                     card={card}
                                     isInView={isInView}

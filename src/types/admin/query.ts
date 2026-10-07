@@ -1,5 +1,5 @@
 import { UseMutationResult } from "@tanstack/react-query";
-import { QueryFormValues } from "../../../utils/validations/FormValidation"; 
+import { QueryFormValues } from "../../utils/validations/FormValidation"; 
 
 export type QuerySearchField = "title" | "subtitle"; 
 

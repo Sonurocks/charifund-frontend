@@ -254,7 +254,7 @@ const BlogForm = ({
               <MultiInputList
                 label={`${lang === "en" ? "Tags" : "टैग"}`}
                 values={values.tags[lang]}
-                onChange={(newTags: string) =>
+                onChange={(newTags: string[]) =>
                   setFieldValue(`tags.${lang}`, newTags)
                 }
                 placeholder={lang === "en" ? "Add a tag" : "टैग जोड़ें"}
@@ -274,7 +274,7 @@ const BlogForm = ({
               <MultiInputList
                 label={`${lang === "en" ? "Key Points" : "मुख्य बिंदु"}`}
                 values={values.keyPoints[lang]}
-                onChange={(newKeyPoints: string) =>
+                onChange={(newKeyPoints: string[]) =>
                   setFieldValue(`keyPoints.${lang}`, newKeyPoints)
                 }
                 placeholder={lang === "en" ? "Add a key point" : "मुख्य बिंदु जोड़ें"}
@@ -308,9 +308,9 @@ const BlogForm = ({
                 name="images"
                 onChange={(files, existingUrls) => {
                   setFieldValue("images", files);
-                  setFieldValue("existingImages", existingUrls);
+                  setFieldValue("existingImages", existingUrls as string[]);
                 }}
-                initialUrls={values.existingImages}
+                initialUrls={values.existingImages as string[]}
                 uploadType="multiple"
                 disabled={isView}
                 mode={mode}

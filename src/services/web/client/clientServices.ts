@@ -73,8 +73,17 @@ export const fetchCommentsById = async (id: string) => {
 
 //fetch get-comment by id 
 export const fetchgetcomments = async (id: string) => {
-  const { data } = await api.get(`/web/comment/get-comments/${id}`);
-  return data;
+  try {
+    const { data } = await api.get(`/web/comment/get-comments/${id}`);
+    return data;
+  } catch (error: any) {
+    if (error.response && error.response.status === 404) {
+      // Backend throws 404 when no comments exist instead of empty array.
+      // We must handle this so React Query doesn't get stuck caching old data.
+      return { comments: [] };
+    }
+    throw error;
+  }
 };
 
 
@@ -151,6 +160,23 @@ export const SendMsgInformationForm = async (values: SendMsgFormValues) => {
 
 export const DetailsInformationForm = async (values:DetailsFormValues) =>{
     const { data } = await api.post(`/web/form/detail-information`, values);
+    return data;
+}
+
+export interface CreatePaymentOrderResponse {
+  orderId: string;
+  key?: string;
+  amount: number;
+  currency: string;
+}
+
+export const createPaymentOrder = async (orderData: { amount: number; campaignId?: string }): Promise<CreatePaymentOrderResponse> => {
+    const { data } = await api.post<CreatePaymentOrderResponse>(`/web/payment/create-order`, orderData);
+    return data;
+}
+
+export const verifyPaymentOrder = async (verifyData: { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }) => {
+    const { data } = await api.post(`/web/payment/verify-payment`, verifyData);
     return data;
 }
 

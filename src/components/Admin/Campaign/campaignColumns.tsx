@@ -28,9 +28,9 @@ export const getCampaignColumns = ({
   onView,
 }: CampaignColumnCallbacks) => [
   { name: "SNo", cell: (_row: Campaign, index: number) => index + 1, width: "80px" },
-  { name: "Title", selector: (row: Campaign) => row.title ?? "-", sortable: true },
+  { name: "Title", selector: (row: Campaign) => (row.title as any)?.en ?? row.title ?? "-", sortable: true },
   { name: "Organizer", selector: (row: Campaign) => row.organizer ?? "-" },
-  { name: "Category", selector: (row: Campaign) => row.category ?? "-" },
+  { name: "Category", selector: (row: Campaign) => (row.category as any)?.name?.en || (row.category as any)?.en || row.category || "-" },
   {
     name: "Goal",
     selector: (row: Campaign) => `₹${row.goalAmount.toLocaleString() ?? "-"}`,
@@ -44,7 +44,7 @@ export const getCampaignColumns = ({
     name: "Actions",
     cell: (row: Campaign) => (
       <TableRowActions
-        row={row}
+        row={row as any}
         actions={[
           {
             label: "View Campaign",
@@ -64,7 +64,7 @@ export const getCampaignColumns = ({
             onClick: onDelete,
             colorClass: "text-red-500 hover:text-red-700",
           },
-        ]}
+        ] as any}
       />
     ),
   },

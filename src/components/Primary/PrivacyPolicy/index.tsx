@@ -37,8 +37,8 @@ export default function PrivacyPolicyPage() {
           <h3 className="text-xl font-medium text-gray-800">{t("Still have questions?")}</h3>
           <p className="text-gray-600 mt-2">
             {t("Contact our support team at")}{" "}
-            <a href="mailto:support@example.com" className="text-blue-600 underline">
-              support@example.com
+            <a href="mailto:yuwaaindia@gmail.com" className="text-blue-600 underline">
+              yuwaaindia@gmail.com
             </a>{" "}
             {t("and we’ll be happy to help.")}
           </p>

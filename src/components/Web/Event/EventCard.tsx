@@ -1,68 +1,54 @@
 "use client";
 import React from "react";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import { Icon } from "@iconify/react";
-import Image from "next/image";
-
+import CampaignCard from "../Campaign/CampaignCard";
+import { useTranslation } from "react-i18next";
 
 interface EventCardProps {
-  event: any;
-  large?: boolean;
-  index?: number;
+  event: {
+    id: string;
+    title: string;
+    location: string;
+    date: string;
+    image: string;
+  };
+  large?: boolean; // Kept for backward compatibility
+  index?: number; 
 }
 
-export default function EventCard({ event, large = false, index = 0 }: EventCardProps) {
-  return (
-    <motion.div
-      key={event.id}
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className={`relative w-full overflow-hidden rounded-xl  ${
-        large
-          ? "h-[400px] sm:h-[500px] lg:h-[700px]"
-          : "h-[200px] sm:h-[250px] lg:h-full bg-black"
-      } ${index ? `card-stagger-${index + 2}` : ""}`}
-    >
-      {/* Full card clickable */}
-      <Link href={`/events/${event.id}`} className="absolute inset-0 z-0" aria-label={event.title} >
-      <Image
-        src={event.image}
-        alt={event.title}
-        className="absolute inset-0 w-full h-full object-cover rounded-xl"
-        fill={true}
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent" />
+export default function EventCard({ event }: EventCardProps) {
+  const { t } = useTranslation();
+  const [hoveredCard, setHoveredCard] = React.useState<string | null>(null);
+  
+  // Transform Event data into CampaignCard expected footprint
+  const mappedCardData = {
+    id: event.id,
+    image: event.image,
+    category: event.date,
+    title: event.title,
+    description: event.location?.length > 75 
+        ? event.location.slice(0, 75) + "..." 
+        : event.location,
+    progress: 0,
+    raised: "0",
+    goal: "0",
+    actionText: t("View Details →"),
+    actionRoute: `/events/${event.id}`
+  };
 
-      {/* Text overlay */}
-      <div
-        className={`absolute text-white font-nunito font-extrabold animate-slide-up-delay z-10 ${
-          large
-            ? "bottom-6 left-4 sm:left-6 w-full text-center"
-            : "bottom-4 left-4 sm:left-6 max-w-[350px] lg:max-w-[300px]"
-        }`}
-      >
-        <span className={`${large ? "text-base lg:text-lg" : "text-base lg:text-sm"}`}>
-          {event.date}
-        </span>
-        <h3
-          className={`font-bold leading-snug ${
-            large ? "text-lg sm:text-2xl lg:text-5xl" : "text-lg sm:text-2xl lg:text-[34px]"
-          }`}
-        >
-          <Link href={`/events/${event.id}`}>{event?.title}</Link>
-        </h3>
-        <p
-          className={`flex items-center justify-${large ? "center" : "start"} gap-2 ${
-            large ? "text-sm lg:text-lg" : "text-base lg:text-base"
-          }`}
-        >
-          <Icon icon="ion:location" width="20" height="20" className="text-white" />
-          {event.location}
-        </p>
-      </div>
-      </Link>
-    </motion.div>
+  return (
+    <div 
+      className="w-full h-full"
+      onMouseEnter={() => setHoveredCard(event.id)}
+      onMouseLeave={() => setHoveredCard(null)}
+    >
+      <CampaignCard 
+        card={mappedCardData} 
+        isInView={true} 
+        hoveredCard={hoveredCard}
+        onMouseEnter={() => setHoveredCard(event.id)}
+        onMouseLeave={() => setHoveredCard(null)}
+        onCardClick={() => {}}
+      />
+    </div>
   );
 }

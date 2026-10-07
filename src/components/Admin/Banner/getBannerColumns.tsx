@@ -6,14 +6,7 @@ import React from "react";
 import dynamic from "next/dynamic";
 import { BannerColumnCallbacks } from "@/src/types/admin";
 
-export interface Banner {
-  _id: string;
-  title: string | { en?: string };
-  subtitle: string | { en?: string };
-  priority?: number;
-  [key: string]: any;
-}
-
+import { Banner } from "@/src/types/admin/banner";
 
 //  Reusable prop type for dynamic component
 export type TableRowActionsProps<T> = {
@@ -51,19 +44,21 @@ export const getBannerColumns = ({
   {
     name: "Title",
     selector: (row: Banner) => {
-      if (typeof row.title === "object" && row.title !== null) {
-        return row.title.en ?? "-";
+      const title: any = row.title;
+      if (typeof title === "object" && title !== null) {
+        return title.en ?? "-";
       }
-      return row.title ?? "-";
+      return title ?? "-";
     },
   },
   {
     name: "Subtitle",
     selector: (row: Banner) => {
-      if (typeof row.subtitle === "object" && row.subtitle !== null) {
-        return row.subtitle.en ?? "-";
+      const subtitle: any = row.subtitle;
+      if (typeof subtitle === "object" && subtitle !== null) {
+        return subtitle.en ?? "-";
       }
-      return row.subtitle ?? "-";
+      return subtitle ?? "-";
     },
   },
   {

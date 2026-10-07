@@ -209,7 +209,7 @@ const CampaignTable = () => {
             <Dropdown
               options={CampaignSearchOptions}
               value={searchField}
-              onChange={(value) => {
+              onChange={(value: any) => {
                 setSearchField(value);
                 setSearch("");
                 setTimeout(() => searchInputRef.current?.focus(), 0);
@@ -220,13 +220,13 @@ const CampaignTable = () => {
               <Dropdown
                 options={categoryOptions}
                 value={search || ""}
-                onChange={(value) => value && setSearch(value)}
+                onChange={(value: any) => value && setSearch(value)}
               />
             ) : searchField === "status" ? (
               <Dropdown
                 options={statusValue}
                 value={statusField}
-                onChange={(value) => {
+                onChange={(value: any) => {
                   setSearch(value);
                   setStatusField(value);
                 }}
@@ -266,7 +266,7 @@ const CampaignTable = () => {
       {isLoading ? (
         <div className="flex justify-center py-8"><CustomLoader /></div>
       ) : (
-        <DataTableWrapper columns={columns} data={paginatedData} />
+        <DataTableWrapper columns={columns as any} data={paginatedData} />
       )}
 
       {/*  Pagination */}
@@ -302,7 +302,7 @@ const CampaignTable = () => {
               <CampaignPreview
                 mode={mode}
                 showButton={mode === "preview-edit"}
-                data={normalizeCampaignData(previewData)}
+                data={normalizeCampaignData(previewData as any) as any}
                 onBack={() => {
                   setShowPreview(false);
                   setMode(editCampaign ? "edit" : "add");
@@ -311,8 +311,8 @@ const CampaignTable = () => {
                 updateMutation={updateMutation}
                 onSubmit={() =>
                   submitCampaignForm(
-                    { ...previewData!, keyPoints: previewData!.keyPoints },
-                    singleCampaignData,
+                    { ...previewData!, keyPoints: previewData!.keyPoints } as any,
+                    singleCampaignData as any,
                     createMutation,
                     updateMutation,
                     () => {
@@ -342,7 +342,7 @@ const CampaignTable = () => {
                   existingImages: previewData?.existingImages?.length
                     ? previewData.existingImages
                     : normalizedCampaignData?.existingImages ?? [],
-                }}
+                } as any}
                 onClose={() => {
                   setDrawerOpen(false);
                   setPreviewData(null);

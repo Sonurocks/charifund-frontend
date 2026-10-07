@@ -4,7 +4,7 @@ import React from 'react';
 const CarouselIndicators: React.FC<CarouselIndicatorsProps> = ({ length, activeIndex, onDotClick }) => {
   const maxIndicators = Math.min(length, 8);
   return (
-    <div className="flex justify-center mt-6 md:mt-8 space-x-1.5 md:space-x-2">
+    <div className="flex justify-center flex-shrink-0 space-x-1.5 md:space-x-2">
       {Array.from({ length: maxIndicators }, (_, index) => {
         const isActive = activeIndex === index;
         return (

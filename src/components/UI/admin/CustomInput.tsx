@@ -1,9 +1,7 @@
 "use client";
 import React, { useState} from "react";
 import { Icon } from "@iconify/react";
-import { AdminCustomInputProps } from "@/src/types/adminCommon";
-
-
+import { AdminCustomInputProps } from "@/src/types/admin";
 
 const CustomInput: React.FC<AdminCustomInputProps> = ({
   label,

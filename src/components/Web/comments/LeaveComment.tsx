@@ -72,10 +72,10 @@ export default function LeaveComment({ blogId }: { blogId: string }) {
           </div>
         </div>
       }>
-        <Formik<LeaveCommentFormValues>
+        <Formik
           initialValues={initialValues}
           validationSchema={LeaveCommentSchema}
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit as any}
         >
         {() => (
           <Form className="space-y-4">

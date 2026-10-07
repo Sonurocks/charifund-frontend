@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useInView } from "framer-motion";
 import Image from "next/image";
+import { useTranslation } from "react-i18next";
 import { useFetchAllMembers } from "@/src/hooks/web/useMembers";
 import Button from "../../UI/web/Buttons/Button";
 import { VolunteerCard } from "../Team/TeamMemberCard";
@@ -18,12 +19,13 @@ const VolunteerTeam = ({ bg = "" }: { bg?: string }) => {
   const [bgColor, setBgColor] = useState<string>();
   const headerRef = useRef(null);
   const isHeaderInView = useInView(headerRef, { once: true });
+  const { t } = useTranslation();
 
   const itemsPerPage = 4;
 
   const { data, isLoading, isError } = useFetchAllMembers(1, itemsPerPage);
 
-  const members = Array.isArray(data?.members) ? data.members : [];
+  const finalMembers = Array.isArray(data?.members) ? data.members : [];
 
   useEffect(() => {
     if (bg && bg.trim() !== "") {
@@ -36,14 +38,14 @@ const VolunteerTeam = ({ bg = "" }: { bg?: string }) => {
   const handleViewAll = () => {
     router.push("/team");
   };
-  if (!isLoading && !isError && members.length === 0) {
+  if (!isLoading && !isError && finalMembers.length === 0) {
     return <></>;
   }
 
 
   return (
     <section
-      className={`relative bg-cover pt-6 pb-2 lg:py-30 xl:py-20 bg-center ${bgColor} w-full px-3 lg:px-0 flex justify-center items-center`}
+      className={`relative bg-cover pt-6 pb-2 lg:py-30 xl:py-20 bg-center ${bgColor} w-full px-4 sm:px-6 md:px-8 xl:px-0 flex justify-center items-center`}
       style={{ backgroundImage: `url(${bgOneVolunteer.src})` }}
     >
       <div
@@ -51,19 +53,22 @@ const VolunteerTeam = ({ bg = "" }: { bg?: string }) => {
         className="w-full md:w-10/11 flex flex-col justify-center items-center"
       >
         {/* Title Section */}
-        <div className="lg:max-w-[600px]">
+        <div className="lg:max-w-[700px] flex flex-col items-center">
           <ComponentLabel
             className="text-center"
-            text="Start Donating Poor People"
+            text={t("Meet Our Volunteer Team")}
             isVisible={isHeaderInView}
           />
 
           <ComponentTitle
             className="lg:text-center"
-            preText="Meet Our Volunteer"
-            highlightText="Team"
-            postText=" members"
+            preText={t("Meet Our Volunteer")}
+            highlightText={t("Team")}
+            postText={t(" Members")}
           />
+          <p className="text-center text-gray-green text-[16px] md:text-[16px] font-semibold font-nunito leading-7 mt-4 max-w-[780px] lg:max-w-2xl xl:max-w-3xl px-4 mx-auto">
+            {t("Leading Youth Util Welfare Association with a commitment to social service, youth empowerment and community development.")}
+          </p>
         </div>
 
         {/* Members Section */}
@@ -80,9 +85,9 @@ const VolunteerTeam = ({ bg = "" }: { bg?: string }) => {
             </p>
           )}
 
-          {!isLoading && !isError && members.length > 0 && (
+          {!isLoading && !isError && finalMembers.length > 0 && (
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 md:gap-5 xl:gap-7">
-              {members.map((member: any, idx: number) => (
+              {finalMembers.map((member: any, idx: number) => (
                 <VolunteerCard
                   key={member?.id || idx}
                   member={member}
@@ -94,7 +99,7 @@ const VolunteerTeam = ({ bg = "" }: { bg?: string }) => {
         </div>
 
         {/* View All Button */}
-        {!isLoading && !isError && members.length > 0 && (
+        {!isLoading && !isError && finalMembers.length > 0 && (
           <div className="flex items-center w-[170px] h-[90px] justify-center mt-6">
             <Button
               text="View All"
@@ -109,7 +114,7 @@ const VolunteerTeam = ({ bg = "" }: { bg?: string }) => {
       </div>
 
       {/* Side Image */}
-      <div className="absolute top-[10%] md:top-[220] lg:top-[130] lg:right-[50] md:right-[-45] xl:right-[6%] z-0 font-bold hidden md:block">
+      <div className="absolute top-[10%] md:top-[220] lg:top-[130] lg:right-[50] md:right-[-45] xl:right-[6%] z-0 font-bold hidden ">
         <Image
           src={greenspade}
           alt="green spade"

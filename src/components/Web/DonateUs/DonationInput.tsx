@@ -79,7 +79,7 @@ const DonationInput: React.FC<DonationInputProps> = ({
               : "bg-[var(--white)] text-[var(--green)] border-[var(--gray-200)]"
             } hover:bg-[var(--green)] hover:text-[var(--white)]`}
         >
-          {t("Custom")}
+          {t("Custom Amount")}
         </button>
       </div>
     </div>

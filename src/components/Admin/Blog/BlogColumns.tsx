@@ -20,10 +20,10 @@ export const getBlogColumns = ({
   onView,
 }: BlogColumnCallbacks) => [
   { name: "SNo", cell: (_row: Blog, index: number) => index + 1, width: "80px" },
-  { name: "Creator", selector: (row: Blog) => row.creator },
-  { name: "Title", selector: (row: Blog) => row.title },
-  { name: "Category", selector: (row: Blog) => row.category },
-  { name: "Location", selector: (row: Blog) => row.location },
+  { name: "Creator", selector: (row: Blog) => (row.creator as any)?.en || row.creator },
+  { name: "Title", selector: (row: Blog) => (row.title as any)?.en || row.title },
+  { name: "Category", selector: (row: Blog) => (row.category as any)?.name?.en || (row.category as any)?.en || row.category },
+  { name: "Location", selector: (row: Blog) => (row.location as any)?.en || row.location },
   {
     name: "Created",
     selector: (row: Blog) =>
@@ -38,7 +38,7 @@ export const getBlogColumns = ({
     name: "Actions",
     cell: (row: Blog) => (
       <TableRowActions
-        row={row}
+        row={row as any}
         actions={[
           {
             label: "View Blog",
@@ -58,7 +58,7 @@ export const getBlogColumns = ({
             onClick: onDelete,
             colorClass: "text-red-500 hover:text-red-700",
           },
-        ]}
+        ] as any}
       />
     ),
   },

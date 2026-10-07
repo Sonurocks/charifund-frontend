@@ -273,7 +273,7 @@ const EventTable = () => {
         </div>
       ) : (
         <DataTableWrapper
-          columns={columns}
+          columns={columns as any}
           data={paginatedData}
         />
       )}
@@ -320,7 +320,7 @@ const EventTable = () => {
               <EventPreview
                 mode={mode}
                 showButton={mode === "preview-edit"}
-                data={normalizeEventData(previewData)}
+                data={normalizeEventData(previewData as any) as any}
                 onBack={() => {
                   setShowPreview(false);
                   setMode(editEvent ? "edit" : "add");
@@ -329,8 +329,8 @@ const EventTable = () => {
                 updateMutation={updateMutation}
                 onSubmit={() => {
                   submitEventForm(
-                    { ...previewData!, keyPoints: previewData!.keyPoints },
-                    singleEventData,
+                    { ...previewData!, keyPoints: previewData!.keyPoints } as any,
+                    singleEventData as any,
                     createMutation,
                     updateMutation,
                     () => {
@@ -351,19 +351,19 @@ const EventTable = () => {
             ) :
               (
                 <EventForm
-                  initialData={{
+                  initialData={({
                     ...(normalizedEventData ?? {}),
                     ...(previewData ?? {}),
                     // Ensure both arrays persist
                     images:
-                      previewData?.images?.length
-                        ? previewData.images
+                      (previewData as any)?.images?.length
+                        ? (previewData as any).images
                         : normalizedEventData?.images ?? [],
                     existingImages:
-                      previewData?.existingImages?.length
-                        ? previewData.existingImages
-                        : normalizedEventData?.existingImages ?? [],
-                  }}
+                      (previewData as any)?.existingImages?.length
+                        ? (previewData as any).existingImages
+                        : (normalizedEventData as any)?.existingImages ?? [],
+                  } as any)}
                   onClose={() => {
                     setDrawerOpen(false);
                     setPreviewData(null);

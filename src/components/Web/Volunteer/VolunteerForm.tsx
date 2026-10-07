@@ -83,10 +83,10 @@ const VolunteerForm = () => {
           </div>
         </div>
       }>
-        <Formik<VolunteerValues>
+        <Formik
           initialValues={initialValues}
           validationSchema={volunteerSchema}
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit as any}
         >
           {({ isSubmitting }) => (
             <Form className="space-y-6 ">

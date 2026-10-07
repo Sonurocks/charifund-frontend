@@ -2,6 +2,7 @@ import React from "react";
 import { FaEdit, FaEye, FaTrash } from "react-icons/fa";
 import TableRowActions from "../Campaign/CampaignActions";
 import { Member } from "@/src/types/web/members";
+import { MemberColumnCallbacks } from "@/src/types/admin";
 
 export const getMemberColumns = ({
   onEdit,
@@ -15,23 +16,23 @@ export const getMemberColumns = ({
   },
   {
     name: "Name",
-    selector: (row: Member) => row.name || "-",
+    selector: (row: Member) => row.name?.en || "-",
     sortable: true,
   },
   {
     name: "Position",
-    selector: (row: Member) => row.position || "-",
+    selector: (row: Member) => row.position?.en || "-",
     sortable: true,
   },
   {
     name: "Title",
-    selector: (row: Member) => row.title || "-",
+    selector: (row: Member) => row.title?.en || "-",
   },
   {
     name: "Actions",
     cell: (row: Member) => (
       <TableRowActions
-        row={row}
+        row={row as any}
         actions={[
           ...(onView
             ? [
@@ -55,7 +56,7 @@ export const getMemberColumns = ({
             onClick: onDelete,
             colorClass: "text-red-500 hover:text-red-700",
           },
-        ]}
+        ] as any}
       />
     ),
   },

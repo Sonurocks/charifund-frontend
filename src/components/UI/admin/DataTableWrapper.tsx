@@ -24,7 +24,7 @@ const DataTableWrapper = <T,>({
   return (
     <AnimatedReveal>
       <DataTable
-        columns={safeColumns}
+        columns={safeColumns as any}
         data={safeData}
         progressPending={loading}
         progressComponent={<p className="p-4">Loading...</p>}

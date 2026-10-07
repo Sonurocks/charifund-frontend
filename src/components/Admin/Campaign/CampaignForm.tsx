@@ -111,7 +111,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
                 : [],
             },
           };
-          onPreview?.(payload);
+          onPreview?.(payload as any);
         }}
       >
         {({
@@ -145,7 +145,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
                 label={lang === "en" ? "Category" : "श्रेणी"}
                 options={mergedCategories}
                 value={values.category?.id || ""}
-                onChange={(val: string) => {
+                onChange={(val: any) => {
                   const selected = mergedCategories.find((opt: any) => opt.value === val);
                   if (selected) {
                     setFieldValue("category", {
@@ -240,15 +240,14 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
                   (errors as any)?.existingImages ||
                   (errors as any)?._combinedImagesGuard
                 }
-                initialUrls={values.existingImages || []}
-                onChange={(files: File[], existingUrls: string[]) => {
+                initialUrls={Array.isArray(values.existingImages) ? values.existingImages : []}
+                onChange={(files: File[], existingUrls?: string[]) => {
                   setFieldValue("images", files);
-                  setFieldValue("existingImages", existingUrls);
+                  setFieldValue("existingImages", existingUrls || []);
                 }}
                 uploadType="multiple"
                 disabled={isView}
                 mode={mode}
-                initialUrls={Array.isArray(values.existingImages) ? values.existingImages : []}
                 initialFiles={
                   Array.isArray(values.images)
                     ? values.images.filter((f: any) => f instanceof File)

@@ -111,10 +111,10 @@ const handleSubmit = (values: CommentReplyFormValues, { resetForm }: { resetForm
           </div>
         </div>
       }>
-        <Formik<CommentReplyFormValues>
+        <Formik
           initialValues={initialValues}
           validationSchema={CommentReplySchema}
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit as any}
         >
         {() => (
           <Form className="space-y-4">

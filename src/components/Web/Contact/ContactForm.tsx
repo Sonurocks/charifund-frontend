@@ -3,8 +3,8 @@
 
 import React, { Suspense, lazy } from "react";
 // Dynamic imports for Formik components
-const Formik = lazy(() => import("formik").then(module => ({ default: module.Formik })));
-const Form = lazy(() => import("formik").then(module => ({ default: module.Form })));
+const Formik = lazy(() => import("formik").then(module => ({ default: module.Formik }))) as typeof import("formik").Formik;
+const Form = lazy(() => import("formik").then(module => ({ default: module.Form }))) as typeof import("formik").Form;
 import * as Yup from "yup";
 import InputField from "../../UI/web/InputField";
 import Button from "../../UI/web/Buttons/Button";
@@ -73,10 +73,10 @@ const ContactForm = () => {
                     </div>
                 </div>
             }>
-                <Formik<ContactFormValues>
+                <Formik
                     initialValues={initialValues}
                     validationSchema={ContactFormSchema}
-                    onSubmit={handleSubmit}
+                    onSubmit={handleSubmit as any}
                 >
                 {({isSubmitting}) => (
                     <Form className="space-y-9">

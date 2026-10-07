@@ -17,6 +17,7 @@ import Footer from "../components/Web/Footer";
 import CustomCursor from "../components/Web/CustomCursor/CustomCursor";
 import LanguageInitializer from "../components/UI/web/LanguageSwitcher/LanguageInitializer";
 import ClientRedirect from "../middleware/clientMiddleware";
+import GlobalActionCTA from "../components/UI/web/GlobalActionCTA";
 
 export default function AppProviders({ children }: { children: ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
@@ -67,6 +68,7 @@ export default function AppProviders({ children }: { children: ReactNode }) {
                   loading ? <Loader /> : children
                 )}
                 <CustomCursor />
+                <GlobalActionCTA />
                 <Toaster
                   position="top-center"
                   toastOptions={{ duration: 3000 }}

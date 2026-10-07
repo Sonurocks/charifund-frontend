@@ -149,7 +149,7 @@ const QueriesTable = () => {
           <CustomLoader />
         </div>
       ) : (
-        <DataTableWrapper columns={columns} data={allData?.forms} />
+        <DataTableWrapper columns={columns as any} data={allData?.queries || []} />
       )}
 
       {/* Pagination */}

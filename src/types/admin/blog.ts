@@ -43,8 +43,8 @@ export interface BlogFormProps {
   readOnly?: boolean;
   mode?: "add" | "edit" | "view";
   onPreview?: (data: BlogFormValues) => void;
-  createMutation: UseMutationResult<any, Error, BlogFormValues, unknown>;
-  updateMutation: UseMutationResult<any, Error, { id: string; values: BlogFormValues }, unknown>;
+  createMutation: UseMutationResult<any, Error, any, unknown>;
+  updateMutation: UseMutationResult<any, Error, any, unknown>;
 }
 
 

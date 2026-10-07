@@ -63,6 +63,7 @@ export interface TeamMember {
   name: string;
   role?: string;
   position?: string;
+  description?: string;
   image?: string;
   imageUrl?: string;
   facebookUrl?: string;

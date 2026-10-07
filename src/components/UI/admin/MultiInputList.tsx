@@ -4,7 +4,7 @@ import { IoMdClose } from "react-icons/io";
 import CustomInput from "./CustomInput";
 import { AdminMultiInputListProps } from "@/src/types/admin";
 
-const MultiInputList: React.FC<AdminMultiInputListProps & { error?: string[] }> = ({
+const MultiInputList: React.FC<AdminMultiInputListProps> = ({
   label,
   values,
   onChange,

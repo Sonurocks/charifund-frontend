@@ -158,7 +158,7 @@ const FeedbackTable = () => {
           <CustomLoader />
         </div>
       ) : (
-        <DataTableWrapper columns={columns} data={tableData} />
+        <DataTableWrapper columns={columns as any} data={tableData} />
       )}
 
       {/* Pagination */}
