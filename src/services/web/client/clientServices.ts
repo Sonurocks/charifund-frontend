@@ -154,8 +154,15 @@ export const DetailsInformationForm = async (values:DetailsFormValues) =>{
     return data;
 }
 
-export const createPaymentOrder = async (orderData: { amount: number; campaignId: string }) => {
-    const { data } = await api.post(`/web/payment/create-order`, orderData);
+export interface CreatePaymentOrderResponse {
+  orderId: string;
+  key?: string;
+  amount: number;
+  currency: string;
+}
+
+export const createPaymentOrder = async (orderData: { amount: number; campaignId?: string }): Promise<CreatePaymentOrderResponse> => {
+    const { data } = await api.post<CreatePaymentOrderResponse>(`/web/payment/create-order`, orderData);
     return data;
 }
 

@@ -1,22 +1,21 @@
 "use client";
-import React, { Suspense, lazy } from "react";
 import { useMutation } from "@tanstack/react-query";
+import type { AxiosError } from "axios";
+import React, { Suspense, lazy } from "react";
 import { useTranslation } from "react-i18next";
 
 
 
 
-
-import { DetailsformSchema, DetailsFormValues } from "@/src/utils/validations/FormValidation";
-import { DetailsInformationForm, createPaymentOrder, verifyPaymentOrder } from "@/src/services/web/client/clientServices";
-import { useSelector } from "react-redux";
+import { CreatePaymentOrderResponse, DetailsInformationForm, createPaymentOrder, verifyPaymentOrder } from "@/src/services/web/client/clientServices";
 import { RootState } from "@/src/store";
 import { loadRazorpayScript } from "@/src/utils/razorpay";
-const Formik = lazy(() => import("formik").then((m) => ({ default: m.Formik })));
-const Form = lazy(() => import("formik").then((m) => ({ default: m.Form })));
-import InputField from "../../UI/web/InputField";
+import { DetailsFormValues, DetailsformSchema } from "@/src/utils/validations/FormValidation";
+import { useSelector } from "react-redux";
 import Button from "../../UI/web/Buttons/Button";
-import ButtonLoader from "../../UI/web/Loader/ButtonLoader";
+import InputField from "../../UI/web/InputField";
+const Formik = lazy(() => import("formik").then((m) => ({ default: m.Formik }))) as typeof import("formik").Formik;
+const Form = lazy(() => import("formik").then((m) => ({ default: m.Form }))) as typeof import("formik").Form;
 const initialValues: DetailsFormValues = {
     firstName: "",
     lastName: "",
@@ -30,9 +29,9 @@ const DetailsForm = ({ campaignId }: { campaignId?: string }) => {
     const { method, amount } = useSelector((state: RootState) => state.donation);
     const [paymentStep, setPaymentStep] = React.useState<"idle" | "details" | "creating" | "verifying">("idle");
     
-    const detailsMutation = useMutation({
+    const detailsMutation = useMutation<any, AxiosError<{ message: string }>, DetailsFormValues>({
         mutationFn: DetailsInformationForm,
-        onError: async (error: any) => {
+        onError: async (error) => {
             const toastModule = await import("react-hot-toast");
             toastModule.default.error(t("Something went wrong saving details."));
             console.error("Submission error:", error);
@@ -40,16 +39,16 @@ const DetailsForm = ({ campaignId }: { campaignId?: string }) => {
         },
     });
 
-    const createOrderMutation = useMutation<any, any, { amount: number; campaignId: string }>({
+    const createOrderMutation = useMutation<CreatePaymentOrderResponse, AxiosError<{ message: string }>, { amount: number; campaignId?: string }>({
         mutationFn: createPaymentOrder,
-        onError: async (error: any) => {
+        onError: async (error) => {
             const toastModule = await import("react-hot-toast");
             toastModule.default.error(error?.response?.data?.message || t("Unable to start payment. Please try again."));
             setPaymentStep("idle");
         }
     });
 
-    const verifyMutation = useMutation<any, any, { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }>({
+    const verifyMutation = useMutation<any, AxiosError<{ message: string }>, { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }>({
         mutationFn: verifyPaymentOrder,
     });
 
@@ -57,14 +56,22 @@ const DetailsForm = ({ campaignId }: { campaignId?: string }) => {
         values: DetailsFormValues,
         { resetForm }: { resetForm: () => void }
     ) => {
+        if (paymentStep !== "idle") return; // Prevent duplicate payments
+        const parsedAmount = parseFloat(amount);
+        if (isNaN(parsedAmount) || parsedAmount <= 0) {
+            const toastModule = await import("react-hot-toast");
+            toastModule.default.error(t("Please enter a valid donation amount."));
+            return;
+        }
+
         setPaymentStep("details");
         // 1. Save donor details
-        await detailsMutation.mutateAsync(values);
+        const detailsData = await detailsMutation.mutateAsync(values);
 
         // 2. Offline donation flow
         if (method === "offline") {
             const toastModule = await import("react-hot-toast");
-            toastModule.default.success(t("Offline donation logged successfully!"));
+            toastModule.default.success(detailsData?.message || t("Offline donation logged successfully!"));
             resetForm();
             setPaymentStep("idle");
             return;
@@ -84,20 +91,34 @@ const DetailsForm = ({ campaignId }: { campaignId?: string }) => {
 
         try {
             let razorpayOrderId = "";
+            let backendAmount = 0;
             try {
-                const orderData = await createOrderMutation.mutateAsync({
-                    amount: parseFloat(amount),
-                    campaignId: campaignId || "", // NOTE: Backend requires campaignId but it can fail if missing
-                });
-                razorpayOrderId = orderData?.id || orderData?.order_id || "";
+                const payload: { amount: number; campaignId?: string } = { amount: parsedAmount };
+                if (campaignId) payload.campaignId = campaignId; // Only pass if valid
+                const orderData = await createOrderMutation.mutateAsync(payload);
+                
+                razorpayOrderId = orderData?.orderId || "";
+                backendAmount = orderData?.amount || 0; // Prioritize Backend verification of amount
+                
+                if (!razorpayOrderId) throw new Error("Order ID missing from backend response.");
             } catch (backendError) {
-                console.warn("Backend API crashed, falling back to unlinked checkout for frontend testing mode.", backendError);
-                // Proceed with empty orderId for testing
+                console.error("Payment Order Creation Failed:", backendError);
+                setPaymentStep("idle");
+                return; // Stop the flow
+            }
+
+            const rzpKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+            if (!rzpKey) {
+                console.error("Critical Error: NEXT_PUBLIC_RAZORPAY_KEY_ID is missing.");
+                const toastModule = await import("react-hot-toast");
+                toastModule.default.error(t("Payment gateway is temporarily unavailable. Please contact support."));
+                setPaymentStep("idle");
+                return;
             }
 
             const options = {
-                key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_dummykey12345",
-                amount: parseFloat(amount) * 100, // assuming backend handles actual order amount, this is fallback config
+                key: rzpKey,
+                amount: backendAmount, // Trusted backend amount
                 currency: "INR",
                 name: "Charifund",
                 description: t("Donation for Charifund"),
@@ -111,11 +132,11 @@ const DetailsForm = ({ campaignId }: { campaignId?: string }) => {
                             razorpay_signature: response.razorpay_signature
                         });
                         const toastModule = await import("react-hot-toast");
-                        toastModule.default.success(t("Payment Successful! Thank you for supporting our mission."));
+                        toastModule.default.success(verified?.message || t("Payment Successful! Thank you for supporting our mission."));
                         resetForm();
-                    } catch (e) {
+                    } catch (e: any) {
                          const toastModule = await import("react-hot-toast");
-                         toastModule.default.error(t("Payment verification failed. Please contact support if the amount was deducted."));
+                         toastModule.default.error(e?.response?.data?.message || t("Payment status could not be confirmed. Please check your payment status or contact support."));
                     } finally {
                         setPaymentStep("idle");
                     }
@@ -136,9 +157,10 @@ const DetailsForm = ({ campaignId }: { campaignId?: string }) => {
 
             const rzp = new (window as any).Razorpay(options);
             
-            rzp.on("payment.failed", async function (response: Record<string, unknown>) {
+            rzp.on("payment.failed", async function (response: any) {
                 const toastModule = await import("react-hot-toast");
-                toastModule.default.error(t("Payment Failed. Your payment could not be completed."));
+                const errorMsg = response?.error?.description || response?.error?.message || t("Payment Failed. Your payment could not be completed.");
+                toastModule.default.error(errorMsg);
                 setPaymentStep("idle");
             });
 
@@ -166,7 +188,7 @@ const DetailsForm = ({ campaignId }: { campaignId?: string }) => {
                 <Formik
                     initialValues={initialValues}
                     validationSchema={DetailsformSchema}
-                    onSubmit={handleSubmit as any}
+                    onSubmit={handleSubmit}
                 >
                 {({ isSubmitting }) => (
                     <Form className="space-y-6">
