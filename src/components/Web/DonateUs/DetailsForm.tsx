@@ -14,6 +14,7 @@ import { DetailsFormValues, DetailsformSchema } from "@/src/utils/validations/Fo
 import { useSelector } from "react-redux";
 import Button from "../../UI/web/Buttons/Button";
 import InputField from "../../UI/web/InputField";
+import ThankYouModal from "./ThankYouModal";
 const Formik = lazy(() => import("formik").then((m) => ({ default: m.Formik }))) as typeof import("formik").Formik;
 const Form = lazy(() => import("formik").then((m) => ({ default: m.Form }))) as typeof import("formik").Form;
 const initialValues: DetailsFormValues = {
@@ -28,12 +29,13 @@ const DetailsForm = ({ campaignId }: { campaignId?: string }) => {
     const { t } = useTranslation();
     const { method, amount } = useSelector((state: RootState) => state.donation);
     const [paymentStep, setPaymentStep] = React.useState<"idle" | "details" | "creating" | "verifying">("idle");
+    const [paymentReceipt, setPaymentReceipt] = React.useState<{ amount: number; paymentId: string; orderId: string; status: string; date: string } | null>(null);
     
     const detailsMutation = useMutation<any, AxiosError<{ message: string }>, DetailsFormValues>({
         mutationFn: DetailsInformationForm,
-        onError: async (error) => {
+        onError: async (error: any) => {
             const toastModule = await import("react-hot-toast");
-            toastModule.default.error(t("Something went wrong saving details."));
+            toastModule.default.error(error?.response?.data?.msg || error?.response?.data?.message);
             console.error("Submission error:", error);
             setPaymentStep("idle");
         },
@@ -41,9 +43,9 @@ const DetailsForm = ({ campaignId }: { campaignId?: string }) => {
 
     const createOrderMutation = useMutation<CreatePaymentOrderResponse, AxiosError<{ message: string }>, { amount: number; campaignId?: string }>({
         mutationFn: createPaymentOrder,
-        onError: async (error) => {
+        onError: async (error: any) => {
             const toastModule = await import("react-hot-toast");
-            toastModule.default.error(error?.response?.data?.message || t("Unable to start payment. Please try again."));
+            toastModule.default.error(error?.response?.data?.msg || error?.response?.data?.message);
             setPaymentStep("idle");
         }
     });
@@ -71,7 +73,7 @@ const DetailsForm = ({ campaignId }: { campaignId?: string }) => {
         // 2. Offline donation flow
         if (method === "offline") {
             const toastModule = await import("react-hot-toast");
-            toastModule.default.success(detailsData?.message || t("Offline donation logged successfully!"));
+            toastModule.default.success(detailsData?.msg || detailsData?.message);
             resetForm();
             setPaymentStep("idle");
             return;
@@ -92,6 +94,7 @@ const DetailsForm = ({ campaignId }: { campaignId?: string }) => {
         try {
             let razorpayOrderId = "";
             let backendAmount = 0;
+            let backendKey = "";
             try {
                 const payload: { amount: number; campaignId?: string } = { amount: parsedAmount };
                 if (campaignId) payload.campaignId = campaignId; // Only pass if valid
@@ -99,6 +102,7 @@ const DetailsForm = ({ campaignId }: { campaignId?: string }) => {
                 
                 razorpayOrderId = orderData?.orderId || "";
                 backendAmount = orderData?.amount || 0; // Prioritize Backend verification of amount
+                backendKey = orderData?.key || "";
                 
                 if (!razorpayOrderId) throw new Error("Order ID missing from backend response.");
             } catch (backendError) {
@@ -107,7 +111,7 @@ const DetailsForm = ({ campaignId }: { campaignId?: string }) => {
                 return; // Stop the flow
             }
 
-            const rzpKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+            const rzpKey = backendKey || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
             if (!rzpKey) {
                 console.error("Critical Error: NEXT_PUBLIC_RAZORPAY_KEY_ID is missing.");
                 const toastModule = await import("react-hot-toast");
@@ -132,11 +136,19 @@ const DetailsForm = ({ campaignId }: { campaignId?: string }) => {
                             razorpay_signature: response.razorpay_signature
                         });
                         const toastModule = await import("react-hot-toast");
-                        toastModule.default.success(verified?.message || t("Payment Successful! Thank you for supporting our mission."));
+                        toastModule.default.success(verified?.msg || verified?.message || t("Payment Verification Success"));
                         resetForm();
+
+                        setPaymentReceipt({
+                            amount: backendAmount / 100,
+                            paymentId: response.razorpay_payment_id,
+                            orderId: response.razorpay_order_id,
+                            status: "Successful",
+                            date: new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })
+                        });
                     } catch (e: any) {
                          const toastModule = await import("react-hot-toast");
-                         toastModule.default.error(e?.response?.data?.message || t("Payment status could not be confirmed. Please check your payment status or contact support."));
+                         toastModule.default.error(e?.response?.data?.msg || e?.response?.data?.message || t("Payment Verification Failed"));
                     } finally {
                         setPaymentStep("idle");
                     }
@@ -224,6 +236,16 @@ const DetailsForm = ({ campaignId }: { campaignId?: string }) => {
                 )}
             </Formik>
             </Suspense>
+            
+            <ThankYouModal 
+                isOpen={!!paymentReceipt} 
+                onClose={() => setPaymentReceipt(null)}
+                onResetDonation={() => {
+                    setPaymentReceipt(null);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                paymentData={paymentReceipt}
+            />
         </div>
     );
 };
