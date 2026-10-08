@@ -6,6 +6,9 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
 import { logo } from "@/public/assets";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { AdminSideBarTabProps } from "@/src/types/admin";
 import { sidebarAd } from "@/src/utils/AdminSidebarData";
 
@@ -32,12 +35,11 @@ const MdMenu = dynamic(() =>
 const AdminSideBarTab = ({
   isOpen,
   setIsOpen,
-  activeTab,
-  setActiveTab,
 }: AdminSideBarTabProps) => {
   const [isMobile, setIsMobile] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const { t } = useTranslation();
+  const pathname = usePathname();
 
   // Detect mobile screen
   useEffect(() => {
@@ -95,23 +97,23 @@ const AdminSideBarTab = ({
 
             <div className="flex flex-col">
               {sidebarAd.map((item, i) => {
-                const isActive = activeTab === item.nav;
+                const isActive = pathname.startsWith(item.link);
                 return (
-                  <MotionDiv
-                    key={i}
-                    onClick={() => {
-                      setActiveTab(item.nav);
-                      setMobileDrawerOpen(false);
-                    }}
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                    className={`flex items-center gap-3 py-4 px-6 cursor-pointer rounded-r-lg ${
-                      isActive ? "bg-primaryColor text-white" : "text-black"
-                    }`}
-                  >
-                    {item.icon && <item.icon className="w-5 h-5" />}
-                    <span>{t(item.lable)}</span>
-                  </MotionDiv>
+                  <Link href={item.link} key={i}>
+                    <MotionDiv
+                      onClick={() => {
+                        setMobileDrawerOpen(false);
+                      }}
+                      whileHover={{ scale: 1.05 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                      className={`flex items-center gap-3 py-4 px-6 cursor-pointer rounded-r-lg ${
+                        isActive ? "bg-primaryColor text-white" : "text-black"
+                      }`}
+                    >
+                      {item.icon && <item.icon className="w-5 h-5" />}
+                      <span>{t(item.lable)}</span>
+                    </MotionDiv>
+                  </Link>
                 );
               })}
             </div>
@@ -143,12 +145,12 @@ const AdminSideBarTab = ({
 
           <div className="flex flex-col w-full font-medium flex-grow border-t border-gray-200 overflow-y-scroll scrollbar-hide">
             {sidebarAd.map((item, i) => {
-              const isActive = activeTab === item.nav;
+              const isActive = pathname.startsWith(item.link);
               return (
-                <div
-                  onClick={() => setActiveTab(item.nav)}
+                <Link
+                  href={item.link}
                   key={i}
-                  className="relative"
+                  className="relative block"
                 >
                   <MotionDiv
                     whileHover={{
@@ -190,7 +192,7 @@ const AdminSideBarTab = ({
                       </MotionDiv>
                     )}
                   </MotionDiv>
-                </div>
+                </Link>
               );
             })}
           </div>

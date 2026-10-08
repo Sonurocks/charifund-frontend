@@ -2,15 +2,15 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// Only /admin needs authentication
-const protectedRoutes = ["/admin"];
+// Only routes starting with /admin need authentication
+const protectedRoutePrefix = "/admin";
 
 export function middleware(req: NextRequest) {
   const token = req.cookies.get("token"); // read token from cookie
   const { pathname } = req.nextUrl;
 
-  // Redirect unauthenticated users from /admin
-  if (protectedRoutes.includes(pathname) && !token) {
+  // Redirect unauthenticated users from /admin and its subroutes
+  if (pathname.startsWith(protectedRoutePrefix) && !token) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 

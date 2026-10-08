@@ -4,9 +4,7 @@ import { JSX } from "react";
 
 export interface AdminSideBarTabProps {
   isOpen: boolean;
-  setIsOpen: (state: boolean) => void;
-  activeTab: string;
-  setActiveTab: (tab: string) => void;
+  setIsOpen: (val: boolean) => void;
 }
 
 export interface BannerPreviewProps {
