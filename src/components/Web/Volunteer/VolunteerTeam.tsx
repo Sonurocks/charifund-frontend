@@ -13,19 +13,32 @@ import { bgOneVolunteer, greenspade } from "@/public/assets";
 import ComponentLabel from "../../UI/web/ComponentLabel";
 import ComponentTitle from "../../UI/web/ComponentTitle";
 
-const VolunteerTeam = ({ bg = "" }: { bg?: string }) => {
+import WebCustomPagination from "../../UI/web/Pagination/Paginationlogic";
+
+const VolunteerTeam = ({ 
+  bg = "", 
+  hideViewAll = false, 
+  showPagination = false, 
+  limit = 4 
+}: { 
+  bg?: string; 
+  hideViewAll?: boolean; 
+  showPagination?: boolean; 
+  limit?: number; 
+}) => {
   const router = useRouter();
 
   const [bgColor, setBgColor] = useState<string>();
+  const [currentPage, setCurrentPage] = useState(1);
   const headerRef = useRef(null);
   const isHeaderInView = useInView(headerRef, { once: true });
   const { t } = useTranslation();
 
-  const itemsPerPage = 4;
+  const { data, isLoading, isError } = useFetchAllMembers(currentPage, limit);
 
-  const { data, isLoading, isError } = useFetchAllMembers(1, itemsPerPage);
-
-  const finalMembers = Array.isArray(data?.members) ? data.members : [];
+  const safeMemberData = data ?? { members: [], totalPages: 1 };
+  const finalMembers = Array.isArray(safeMemberData.members) ? safeMemberData.members : [];
+  const totalPages = typeof safeMemberData.totalPages === "number" && safeMemberData.totalPages > 0 ? safeMemberData.totalPages : 1;
 
   useEffect(() => {
     if (bg && bg.trim() !== "") {
@@ -38,10 +51,10 @@ const VolunteerTeam = ({ bg = "" }: { bg?: string }) => {
   const handleViewAll = () => {
     router.push("/team");
   };
+
   if (!isLoading && !isError && finalMembers.length === 0) {
     return <></>;
   }
-
 
   return (
     <section
@@ -56,7 +69,7 @@ const VolunteerTeam = ({ bg = "" }: { bg?: string }) => {
         <div className="lg:max-w-[700px] flex flex-col items-center">
           <ComponentLabel
             className="text-center"
-            text={t("Meet Our Volunteer Team")}
+            text={t("Start Donating Poor People")}
             isVisible={isHeaderInView}
           />
 
@@ -98,8 +111,17 @@ const VolunteerTeam = ({ bg = "" }: { bg?: string }) => {
           )}
         </div>
 
+        {/* Pagination */}
+        {showPagination && totalPages > 1 && (
+          <WebCustomPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        )}
+
         {/* View All Button */}
-        {!isLoading && !isError && finalMembers.length > 0 && (
+        {!hideViewAll && !showPagination && !isLoading && !isError && finalMembers.length > 0 && (
           <div className="flex items-center w-[170px] h-[90px] justify-center mt-6">
             <Button
               text="View All"

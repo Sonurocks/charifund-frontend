@@ -31,4 +31,24 @@ api.interceptors.request.use((config) => {
   return config;
 }, (error) => Promise.reject(error));
 
+// Add global response interceptor to handle auth failures
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (
+      error.response?.status === 401 ||
+      error.response?.status === 403 ||
+      error.response?.data?.message === "invalid signature" ||
+      error.response?.data?.message === "jwt expired"
+    ) {
+      Cookies.remove("token");
+      localStorage.removeItem("user");
+      if (typeof window !== "undefined") {
+        window.location.href = "/login";
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default api;

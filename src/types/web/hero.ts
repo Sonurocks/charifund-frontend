@@ -9,6 +9,9 @@ export interface PageBannerProps {
   titleClassName?: string;
   decoIcon?: string; 
   decoPosition?: string; 
+  description?: string;
+  buttonText?: string;
+  buttonRoute?: string;
 }
 
 export interface PulsingImageProps {

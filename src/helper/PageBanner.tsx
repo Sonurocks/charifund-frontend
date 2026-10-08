@@ -5,6 +5,8 @@ import { horizontalWhiteShape, spradeBase } from "@/public/assets";
 import { useTranslation } from "react-i18next";
 import PulsingImage from "../components/UI/web/PulsingImage";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import Button from "../components/UI/web/Buttons/Button";
 
 export const pageBannerBackgourndColor = {
   background: `
@@ -24,8 +26,12 @@ const PageBanner: React.FC<PageBannerProps> = ({
   tagline = "Start Donating Poor People",
   title,
   titleClassName = "",
+  description,
+  buttonText,
+  buttonRoute,
 }) => {
   const { t } = useTranslation();
+  const router = useRouter();
   return (
     <section className="relative w-full h-[50vh] md:h-[80vh] md:w-full flex items-center justify-center overflow-hidden">
       {/* Background image */}
@@ -72,6 +78,28 @@ const PageBanner: React.FC<PageBannerProps> = ({
         <h1 className={`text-3xl sm:text-3xl md:text-4xl xl:text-[80px] font-extrabold text-white font-nunito ${titleClassName}`}>
           {t(title)}
         </h1>
+
+        {/* Description */}
+        {description && (
+          <p className="mt-4 text-white/90 text-sm sm:text-base md:text-lg max-w-2xl mx-auto font-nunito">
+            {t(description)}
+          </p>
+        )}
+
+        {/* Action Button */}
+        {buttonText && buttonRoute && (
+          <div className="mt-8 flex justify-center w-full">
+             <div className="w-fit">
+                <Button 
+                   text={t(buttonText)} 
+                   onClick={() => router.push(buttonRoute)}
+                   icon="mdi:arrow-right"
+                   paddingx="px-8"
+                   paddingy="py-3"
+                />
+             </div>
+          </div>
+        )}
       </div>
     </section>
   );

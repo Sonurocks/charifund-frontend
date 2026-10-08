@@ -124,7 +124,7 @@ const HelpAndDonate: React.FC = () => {
               isVisible={isHeaderInView}
             />
             <ComponentTitle
-              preText={t("Together, We Can Create Positive Change")}
+              preText={t("Be the Reason for Someone’s Smile")}
               highlightText=""
               postText=""
             />

@@ -125,24 +125,44 @@ export const PartnersCompaniesData = [
 
 export const faqData: FAQItem[] = [
   {
-    question: "What kind of recipes can I find on your website?",
+    question: "What is YUWA INDIA and what does it do?",
     answer:
-      "It is a long established fact that a reader will be distracted by the readable the a content of a page when looking at its layout. Many desktop publishing packages and web page editors.",
+      "YUWA INDIA is a social welfare initiative working for education, child welfare, women empowerment, livelihood development, health, nutrition, environmental protection and community development.",
   },
   {
-    question: "Are the recipes suitable for beginners?",
+    question: "How can I support YUWA INDIA?",
     answer:
-      "It is a long established fact that a reader will be distracted by the readable the a content of a page when looking at its layout. Many desktop publishing packages and web page editors.",
+      "You can support our work by making a donation, volunteering, participating in our campaigns, or contributing your time, skills and resources.",
   },
   {
-    question: "Do you offer cooking tips and techniques?",
+    question: "How can I make a donation?",
     answer:
-      "It is a long established fact that a reader will be distracted by the readable the a content of a page when looking at its layout. Many desktop publishing packages and web page editors.",
+      "You can make a donation through the available online payment options on our website. You may also contact us for offline donation options.",
   },
   {
-    question: "How frequently you update you recipe collection?",
+    question: "Where is my donation used?",
     answer:
-      "It is a long established fact that a reader will be distracted by the readable the a content of a page when looking at its layout. Many desktop publishing packages and web page editors.",
+      "Your contribution is used to support our charitable activities and community welfare programs, including education, food and nutrition support, child welfare, women empowerment, healthcare and other social initiatives.",
+  },
+  {
+    question: "How can I become a volunteer?",
+    answer:
+      "You can join our volunteer team by contacting us or submitting the volunteer registration form available on our website.",
+  },
+  {
+    question: "Can I support a specific campaign or project?",
+    answer:
+      "Yes. You can choose from our ongoing campaigns and contribute specifically to the cause or project you wish to support.",
+  },
+  {
+    question: "How can I get a donation receipt?",
+    answer:
+      "After making a donation, an official donation receipt can be provided as per the applicable requirements. Please provide your correct name, contact details and email address while donating.",
+  },
+  {
+    question: "How can I contact YUWA INDIA?",
+    answer:
+      "You can contact us through the details provided on our Contact Us page. Our team will be happy to assist you.",
   },
 ];
 
@@ -164,26 +184,21 @@ export const VolunteerPage = {
   subtitle: "Become A Volunteer",
   title: "Volunteer Requirements",
   description:
-    "Sed Ut Perspiciatis Unde Omnis Iste Natus Error Sit Voluptatem Accusantium Doloremque Laudantium, Totam Rem Aperiam, Eaque Inventore",
+    "Join us in creating positive change in society. We welcome individuals who are willing to contribute their time, skills and ideas to support our community initiatives.",
 };
 
-export const VolunteerNotice = {
-  icon: "mdi:alert",
-  title: "Notice",
-  message:
-    "Test Mode Is Enabled. While In Test Mode No Live Donations Are Processed.",
-};
+
 
 export const VolunteerProgress = [
-  { label: "Donation Collect", value: 70 },
-  { label: "Successful Events", value: 85 },
+  { label: "Volunteer Engagement — Growing Together", value: 85 },
+  { label: "Community Outreach — Expanding Our Reach", value: 92 },
 ];
 
 export const VolunteerFeatures = [
-  { text: "Best Quality Services" },
-  { text: "Time Saving" },
-  { text: "Meet The Deadlines" },
-  { text: "24/7 Customer Support" },
+  { text: "Meaningful Social Service" },
+  { text: "Flexible Volunteer Opportunities" },
+  { text: "Skill-Based Volunteering" },
+  { text: "Community Impact" },
 ];
 
 export const charityCards: CharityCard[] = [

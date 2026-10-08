@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { FaHandHoldingHeart } from "react-icons/fa";
 import ContactForm from "./ContactForm";
+import { Icon } from "@iconify/react";
 import ContactInfoBlock from "./ContactInfoBlock";
 import AnimatedReveal from "@/src/animations/AnimatedReveal";
 import { useTranslation } from "react-i18next";
@@ -39,17 +40,39 @@ const ContactUs = () => {
         {/* LEFT SECTION */}
         <AnimatedReveal className="flex-1">
           <p className="inline-flex items-center justify-center gap-2 text-green font-caveat font-bold text-2xl mb-2">
-            <FaHandHoldingHeart size={20} />
             {t("Get In Touch")}
           </p>
           <h1 className="text-[28px] sm:text-[34px] md:text-[40px] xl:text-[55px] font-nunito font-extrabold text-dark-green mb-3">
             {t("Contact Us")}
           </h1>
-          <p className="text-muted-gray font-nunito text-[15px] sm:text-[16px] capitalize leading-7 md:leading-8 mb-10">
+          <p className="text-muted-gray font-nunito text-[15px] sm:text-[16px] capitalize leading-7 md:leading-8 mb-8">
             {t(
-              "Your support makes a difference. If you would like to learn more about our work, make a donation, or find out how you can volunteer, you can contact us using the information below."
+              "Your support can make a meaningful difference. If you would like to learn more about our work, support our initiatives, volunteer with us, or collaborate with our organization, we would be happy to hear from you. Please feel free to contact us using the information below."
             )}
           </p>
+
+          {/* Left Section List */}
+          <div className="mb-10 lg:mb-14 space-y-4">
+             <h3 className="text-xl sm:text-2xl font-bold font-nunito text-dark-green mb-4">
+                {t("How Can We Help?")}
+             </h3>
+             <ul className="space-y-3 font-nunito font-semibold text-gray-700">
+                {[
+                  "Learn More About Our Work",
+                  "Support Our Social Initiatives",
+                  "Become a Volunteer",
+                  "Partner or Collaborate With Us",
+                  "Support Child Education & Welfare",
+                  "Support Women Empowerment & Skill Development",
+                  "Contribute to Health, Nutrition & Community Welfare"
+                ].map((item, idx) => (
+                  <li key={idx} className="flex items-center gap-3">
+                    <span className="text-green text-2xl leading-none">•</span> 
+                    <span className="text-[15.5px] tracking-wide">{t(item)}</span>
+                  </li>
+                ))}
+             </ul>
+          </div>
 
           {/* SWIPER FEEDBACK SECTION */}
           {feedbacks.length > 0 && (
@@ -180,17 +203,75 @@ const ContactUs = () => {
         {/* RIGHT SECTION */}
         <AnimatedReveal className="flex-1 bg-white">
           <div className="p-6 sm:p-8 md:p-10 rounded-xl border border-gray-200">
+            <p className="inline-flex items-center justify-center gap-2 text-green font-caveat font-bold text-2xl mb-2">
+               {t("We’d Love to Hear From You")}
+            </p>
             <h2 className="text-3xl sm:text-4xl font-bold mb-3">
-              {t("Fill Up The Form")}
+              {t("Fill Out the Form")}
             </h2>
-            <p className="font-nunito text-base text-gray-500 mb-6">
-              {t(
-                "Your email address will not be published. Required fields are marked *"
-              )}
+            <p className="font-nunito text-[15px] text-muted-gray leading-7 mb-8">
+              {t("Have a question, partnership proposal, volunteering interest, or would like to support our work? Please complete the form below and our team will get back to you as soon as possible.")}
             </p>
             <ContactForm />
+
+            <div className="mt-12 text-center lg:text-left">
+               <h3 className="text-2xl font-bold font-nunito text-dark-green mb-4">
+                 {t("Connect With Us")}
+               </h3>
+               <p className="font-nunito text-[15.5px] text-muted-gray leading-7">
+                 {t("Together, we can empower communities, create opportunities, and build a more inclusive and sustainable society.")}
+               </p>
+            </div>
           </div>
         </AnimatedReveal>
+      </div>
+
+      {/* LOCATION SECTION */}
+      <div className="mt-16 sm:mt-20 border-t border-gray-200 pt-16">
+         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 font-nunito">
+            {/* New Delhi */}
+            <div className="flex flex-col">
+              <h4 className="text-xl font-bold text-dark-green mb-3 flex items-center gap-2">
+                 <Icon icon="mdi:office-building" width="22" height="22" className="text-green" />
+                 {t("Head Office- New Delhi")}
+              </h4>
+              <p className="text-muted-gray text-[15px] leading-7">
+                 {t("H. No. RZC-13, Khasra No. 72/23, 78/3, Nihal Vihar, Nangloi, New Delhi – 110041, India")}
+              </p>
+            </div>
+            
+            {/* Gorakhpur */}
+            <div className="flex flex-col">
+              <h4 className="text-xl font-bold text-dark-green mb-3 flex items-center gap-2">
+                 <Icon icon="mdi:map-marker" width="22" height="22" className="text-green" />
+                 {t("Branch Office- Gorakhpur")}
+              </h4>
+              <p className="text-muted-gray text-[15px] leading-7">
+                 {t("393-I, Rajeev Nagar, West Basharatpur, Gorakhpur, Uttar Pradesh – 273004, India")}
+              </p>
+            </div>
+
+            {/* Email */}
+            <div className="flex flex-col">
+              <h4 className="text-xl font-bold text-dark-green mb-3 flex items-center gap-2">
+                 <Icon icon="mdi:email" width="22" height="22" className="text-green" />
+                 {t("Email")}
+              </h4>
+              <a href="mailto:yuwaaindia@gmail.com" className="text-muted-gray text-[15px] leading-7 hover:text-green transition-colors">
+                yuwaaindia@gmail.com
+              </a>
+            </div>
+
+            {/* Phone */}
+            <div className="flex flex-col">
+              <h4 className="text-xl font-bold text-dark-green mb-3 flex items-center gap-2">
+                 <Icon icon="mdi:phone" width="22" height="22" className="text-green" />
+                 {t("Phone")}
+              </h4>
+              <a href="tel:+918565006669" className="text-muted-gray text-[15px] leading-7 block hover:text-green transition-colors">+91 85650 06669</a>
+              <a href="tel:+917394886855" className="text-muted-gray text-[15px] leading-7 block hover:text-green transition-colors">+91 73948 86855</a>
+            </div>
+         </div>
       </div>
     </div>
   );

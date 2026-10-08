@@ -85,7 +85,7 @@ const CampaignCard: React.FC<CampaignCardProps> = ({
                 hoveredCard === card.id ? 'text-white' : 'text-dark-green group-hover:text-white'
               }`}>
                 <span className="leading-none text-sm">
-                  {('actionText' in card && card.actionText) ? ((card as any).actionText as string) : t("Support This Initiative →")}
+                  {('actionText' in card && card.actionText) ? ((card as any).actionText as string) : t("Donate Now →")}
                 </span>
               </div>
             </Link>

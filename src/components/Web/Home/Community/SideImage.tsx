@@ -3,8 +3,8 @@ import Image from "next/image";
 
 export default function SideImage() {
     return (
-        <div className="hidden lg:flex gap-10 p-10 bg-[var(--white)] w-[700px]">
-            <div className="relative w-full max-w-3xl h-[700px] mx-auto">
+        <div className="hidden lg:flex gap-10 p-10 bg-white w-full h-full min-h-[500px]">
+            <div className="relative w-full h-full mx-auto">
                 {/* Image with brush mask */}
                 <div
                     className={`

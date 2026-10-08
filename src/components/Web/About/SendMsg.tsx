@@ -212,7 +212,7 @@ const SendMsg: React.FC = () => {
                       {isSubmitting || mutation.isPending ? (
                         <ButtonLoader />
                       ) : (
-                        t("Get A Quote")
+                        t("Send Message")
                       )}
                     </Button>
                   </div>

@@ -123,11 +123,12 @@ const ContactForm = () => {
 
                             <Button
                                 type="submit"
-                                text={t("Get A Quote")}
+                                text={t("Send Message")}
+                                icon="mdi:arrow-right"
                                 hoverBg="before:bg-foreground"
                                 paddingy="py-5"
                             > 
-                            {isSubmitting ? <ButtonLoader /> : t("Get A Quote")}
+                            {isSubmitting ? <ButtonLoader /> : t("Send Message")}
                             </Button>
                         </div>
                     </Form>

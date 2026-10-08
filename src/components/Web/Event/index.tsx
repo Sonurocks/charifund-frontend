@@ -17,7 +17,12 @@ export const Event = () => {
 
   return (
     <>
-      <PageBanner bgImage={oureventbanner} title="Our Event" />
+      <PageBanner 
+        bgImage={oureventbanner} 
+        title="Our Events & Activities" 
+        tagline="Making a Difference Together"
+        description="We organize meaningful events and community activities to create positive change and support those in need."
+      />
 
       <section className="bg-gray-100 py-16 flex justify-center items-center w-full">
 

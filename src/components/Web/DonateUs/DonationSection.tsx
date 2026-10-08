@@ -6,7 +6,7 @@ import Donation from "./Donation";
 import CustomLoader from "../../UI/web/Loader/CustomLoader";
 import { useTranslation } from "react-i18next";
 import { DonationSectionProps } from "@/src/types";
-
+import ComponentLabel from "../../UI/web/ComponentLabel";
 
 const DonationSection = ({data,isError,isLoading}:DonationSectionProps) => {
   const { t } = useTranslation();
@@ -29,11 +29,16 @@ const DonationSection = ({data,isError,isLoading}:DonationSectionProps) => {
       transition={{ duration: 0.6 }}
       className="relative top-[-52px] left-1/2 transform -translate-x-1/2 bg-white rounded-2xl w-[95%] md:w-[90%] px-4 xl:px-8 py-16 shadow z-20"
     >
+      {!data && (
+        <div className="mb-4">
+          <ComponentLabel text={t("Together, We Can Make a Difference")} isVisible={true} />
+        </div>
+      )}
       <h2 className="text-2xl md:text-4xl font-bold mb-6">
-        {data?.title||t("Help Children Rise Out Of Poverty")}
+        {data?.title||t("Donate Today, Make a Difference")}
       </h2>
       <p className="text-gray-green my-4">
-        {data?.description||t("Lorem Ipsum Is Simply Dummy A Of The Printing And Type Setting Industry. Ipsum Has Been The Industry's Standard Dummy.")}
+        {data?.description||t("Your support can help us provide education, food and nutrition, healthcare, skill development, and other essential support to children, women, and underprivileged communities.")}
       </p>
       <Donation campaignId={data?.id} />
     </motion.div>

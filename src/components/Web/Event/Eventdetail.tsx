@@ -29,8 +29,9 @@ const EventDetail = () => {
     <>
       <PageBanner
         bgImage={oureventbanner}
-        title="Event Details"
-        tagline="Start Donating Poor People"
+        title="Our Events & Activities" 
+        tagline="Making a Difference Together"
+        description="We organize meaningful events and community activities to create positive change and support those in need."
         smallIcon="mdi:calendar-heart"
       />
 
