@@ -16,17 +16,17 @@ export const getMemberColumns = ({
   },
   {
     name: "Name",
-    selector: (row: Member) => row.name?.en || "-",
+    selector: (row: Member) => (typeof row.name === 'string' ? row.name : row.name?.en) || "-",
     sortable: true,
   },
   {
     name: "Position",
-    selector: (row: Member) => row.position?.en || "-",
+    selector: (row: Member) => (typeof row.position === 'string' ? row.position : row.position?.en) || "-",
     sortable: true,
   },
   {
     name: "Title",
-    selector: (row: Member) => row.title?.en || "-",
+    selector: (row: Member) => (typeof row.title === 'string' ? row.title : row.title?.en) || "-",
   },
   {
     name: "Actions",

@@ -74,6 +74,7 @@ const PageBanner: React.FC<ExtendedPageBannerProps> = ({
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [failedImageKeys, setFailedImageKeys] = useState<Record<string, boolean>>({});
+  const [staticImgFailed, setStaticImgFailed] = useState(false);
 
   // Fetch dynamic banners if pageName is provided (up to 10 for carousels)
   const { data: bannerData, isLoading } = useFetchAllBanners(1, 10, pageName);
@@ -121,7 +122,7 @@ const PageBanner: React.FC<ExtendedPageBannerProps> = ({
   const hasBackendBanner = banners.length > 0 && currentBanner !== null && Boolean(currentBanner.image) && !isCurrentImgFailed;
 
   // Determine active fields (Backend first if present and not failed, static fallback if not)
-  const finalBgImage = hasBackendBanner ? currentBanner.image : bgImage;
+  const finalBgImage = hasBackendBanner ? currentBanner.image : (staticImgFailed ? "/assets/aboutus.webp" : bgImage);
 
   const rawTitle = (banners.length > 0 && currentBanner)
     ? getLocalizedText(currentBanner.title, title, currentLang)
@@ -141,10 +142,10 @@ const PageBanner: React.FC<ExtendedPageBannerProps> = ({
 
   // Helper to extract image URL string
   const getImgSrc = (img: any): string => {
-    if (!img) return "";
+    if (!img) return "/assets/aboutus.webp"; // Absolute static fallback everywhere
     if (typeof img === "string") return img;
-    if (typeof img === "object") return img.src || img.default?.src || "";
-    return "";
+    if (typeof img === "object") return img.src || img.default?.src || "/assets/aboutus.webp";
+    return "/assets/aboutus.webp";
   };
 
   const bgUrl = getImgSrc(finalBgImage);
@@ -174,8 +175,10 @@ const PageBanner: React.FC<ExtendedPageBannerProps> = ({
               unoptimized
               className="object-cover object-center"
               onError={() => {
-                if (currentBannerId) {
+                if (hasBackendBanner && currentBannerId) {
                   setFailedImageKeys((prev) => ({ ...prev, [currentBannerId]: true }));
+                } else if (!staticImgFailed) {
+                  setStaticImgFailed(true);
                 }
               }}
             />

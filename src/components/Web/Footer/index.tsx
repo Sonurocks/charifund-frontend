@@ -104,7 +104,7 @@ const Footer = () => {
                   key={i}
                   className="group text-[16px] xl:text-base lg:text-[16px] 2xl:text-[16px]"
                 >
-                  <a href={link.href} className={underlineOnGroupHover}>
+                  <Link href={link.href} className={underlineOnGroupHover}>
                     <Icon
                       icon="mingcute:arrow-up-fill"
                       width={16}
@@ -112,7 +112,7 @@ const Footer = () => {
                       className="rotate-45"
                     />
                     {t(link.label)}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -132,7 +132,7 @@ const Footer = () => {
                   key={i}
                   className="group text-[16px] xl:text-[16px] lg:text-[16px] 2xl:text-[16px]"
                 >
-                  <a href={service.href} className={underlineOnGroupHover}>
+                  <Link href={service.href} className={underlineOnGroupHover}>
                     <Icon
                       icon="mingcute:arrow-up-fill"
                       width={16}
@@ -140,7 +140,7 @@ const Footer = () => {
                       className="rotate-45"
                     />
                     {t(service.label)}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

@@ -188,6 +188,34 @@ const BannerForm: React.FC<BannerFormProps> = ({
                 }
               />
 
+              {/* Page Name */}
+              <div className="w-full">
+                <label htmlFor="pageName" className="block mb-1 font-medium text-blue-50 text-[14px]">
+                  {lang === "en" ? "Page Name" : "पृष्ठ का नाम"}
+                </label>
+                <select
+                  id="pageName"
+                  name="pageName"
+                  value={values.pageName || ""}
+                  onChange={handleChange}
+                  className="w-full bg-gray-200/60 px-3 py-2 rounded-md border border-transparent outline-none text-[13px] text-foreground/70"
+                >
+                  <option value="">{lang === "en" ? "Select Page (Default: General / Home)" : "पृष्ठ चुनें"}</option>
+                  <option value="Home">Home</option>
+                  <option value="About Us">About Us</option>
+                  <option value="Services">Services</option>
+                  <option value="Campaign">Campaign</option>
+                  <option value="Donate Us">Donate Us</option>
+                  <option value="Blog">Blog</option>
+                  <option value="Contact Us">Contact Us</option>
+                  <option value="Volunteer">Volunteer</option>
+                  <option value="Events">Events</option>
+                  <option value="Team">Team</option>
+                  <option value="Sponsors">Sponsors</option>
+                  <option value="FAQ">FAQ</option>
+                </select>
+              </div>
+
               {/* Priority */}
               <CustomInput
                 label={`${lang === "en" ? "Priority" : "प्राथमिकता"}*`}
