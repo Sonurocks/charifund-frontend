@@ -77,62 +77,100 @@ const PageBanner: React.FC<ExtendedPageBannerProps> = ({
   const [staticImgFailed, setStaticImgFailed] = useState(false);
 
   // Fetch dynamic banners if pageName is provided (up to 10 for carousels)
-  const { data: bannerData, isLoading } = useFetchAllBanners(1, 10, pageName);
+  const { data: bannerData } = useFetchAllBanners(1, 10, pageName);
 
   const rawBanners = bannerData?.banners || bannerData?.data || (Array.isArray(bannerData) ? bannerData : []);
-  const banners: Banner[] = pageName && Array.isArray(rawBanners) && rawBanners.length > 0
+  const fetchedBanners: Banner[] = pageName && Array.isArray(rawBanners) && rawBanners.length > 0
     ? rawBanners
     : [];
 
-  // Reset index if banners array changes or index exceeds length
+  // Build active slides list - clean & no fallback image flash on refresh, guarantees arrows are always shown
+  const activeSlides = (() => {
+    if (fetchedBanners.length > 1) {
+      return fetchedBanners;
+    }
+    if (fetchedBanners.length === 1) {
+      return [
+        fetchedBanners[0],
+        {
+          id: "static-slide-fallback-2",
+          priority: 2,
+          image: bgImage || "/assets/aboutus.webp",
+          title: title || "Empowering Communities Together",
+          subtitle: tagline || "Join Our Cause",
+          description: description || "Creating a lasting positive impact for those in need.",
+        } as unknown as Banner,
+      ];
+    }
+    return [
+      {
+        id: "static-slide-1",
+        priority: 1,
+        image: bgImage || "/assets/aboutus.webp",
+        title: title || "Giving Help To Those Who Need It",
+        subtitle: tagline || "Start Donating Poor People",
+        description: description || "Support communities and transform lives with YUWA India.",
+      } as unknown as Banner,
+      {
+        id: "static-slide-2",
+        priority: 2,
+        image: "/assets/aboutus.webp",
+        title: title || "Empowering Communities Together",
+        subtitle: tagline || "Join Our Cause",
+        description: description || "Creating a lasting positive impact for those in need.",
+      } as unknown as Banner,
+    ];
+  })();
+
+  // Reset index if slides array changes or index exceeds length
   useEffect(() => {
-    if (banners.length > 0 && index >= banners.length) {
+    if (activeSlides.length > 0 && index >= activeSlides.length) {
       setIndex(0);
     }
-  }, [banners.length, index]);
+  }, [activeSlides.length, index]);
 
   // Auto transition for multi-banner carousels
   useEffect(() => {
-    if (paused || banners.length <= 1) return;
+    if (paused || activeSlides.length <= 1) return;
 
     const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % banners.length);
+      setIndex((prev) => (prev + 1) % activeSlides.length);
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [paused, banners.length]);
+  }, [paused, activeSlides.length]);
 
   const handlePrev = useCallback(() => {
-    if (banners.length === 0) return;
-    setIndex((prev) => (prev - 1 + banners.length) % banners.length);
-  }, [banners.length]);
+    if (activeSlides.length === 0) return;
+    setIndex((prev) => (prev - 1 + activeSlides.length) % activeSlides.length);
+  }, [activeSlides.length]);
 
   const handleNext = useCallback(() => {
-    if (banners.length === 0) return;
-    setIndex((prev) => (prev + 1) % banners.length);
-  }, [banners.length]);
+    if (activeSlides.length === 0) return;
+    setIndex((prev) => (prev + 1) % activeSlides.length);
+  }, [activeSlides.length]);
 
   // Current active language
   const currentLang = (i18n.language || "en") as "en" | "hi";
 
-  const currentBanner = banners[index] || null;
+  const currentBanner = activeSlides[index] || null;
   const currentBannerId = currentBanner?.id || `banner-idx-${index}`;
   const isCurrentImgFailed = failedImageKeys[currentBannerId];
 
-  const hasBackendBanner = banners.length > 0 && currentBanner !== null && Boolean(currentBanner.image) && !isCurrentImgFailed;
+  const hasBackendBanner = currentBanner !== null && Boolean(currentBanner.image) && !isCurrentImgFailed;
 
-  // Determine active fields (Backend first if present and not failed, static fallback if not)
+  // Determine active fields (Backend / active slide first if present and not failed, static fallback if not)
   const finalBgImage = hasBackendBanner ? currentBanner.image : (staticImgFailed ? "/assets/aboutus.webp" : bgImage);
 
-  const rawTitle = (banners.length > 0 && currentBanner)
+  const rawTitle = currentBanner
     ? getLocalizedText(currentBanner.title, title, currentLang)
     : title;
 
-  const rawSubtitle = (banners.length > 0 && currentBanner)
+  const rawSubtitle = currentBanner
     ? getLocalizedText(currentBanner.subtitle, tagline, currentLang)
     : tagline;
 
-  const rawDescription = (banners.length > 0 && currentBanner)
+  const rawDescription = currentBanner
     ? getLocalizedText((currentBanner as any).description, description, currentLang)
     : description;
 
@@ -142,7 +180,7 @@ const PageBanner: React.FC<ExtendedPageBannerProps> = ({
 
   // Helper to extract image URL string
   const getImgSrc = (img: any): string => {
-    if (!img) return "/assets/aboutus.webp"; // Absolute static fallback everywhere
+    if (!img) return "/assets/aboutus.webp";
     if (typeof img === "string") return img;
     if (typeof img === "object") return img.src || img.default?.src || "/assets/aboutus.webp";
     return "/assets/aboutus.webp";
@@ -159,7 +197,7 @@ const PageBanner: React.FC<ExtendedPageBannerProps> = ({
       {/* Background Image Carousel */}
       <AnimatePresence mode="sync">
         <motion.div
-          key={hasBackendBanner ? `banner-${index}-${currentBanner?.id || index}` : `static-${index}`}
+          key={`banner-${index}-${currentBanner?.id || index}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -208,12 +246,34 @@ const PageBanner: React.FC<ExtendedPageBannerProps> = ({
         />
       </div>
 
+      {/* Mobile Floating Overlay Left/Right Arrows (< 800px) */}
+      {activeSlides.length > 1 && (
+        <>
+          <div className="absolute left-3 top-1/2 -translate-y-1/2 z-30 min-[800px]:hidden">
+            <ArrowButton
+              direction="left"
+              onClick={handlePrev}
+              size={44}
+              className="shadow-lg hover:scale-105"
+            />
+          </div>
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 z-30 min-[800px]:hidden">
+            <ArrowButton
+              direction="right"
+              onClick={handleNext}
+              size={44}
+              className="shadow-lg hover:scale-105"
+            />
+          </div>
+        </>
+      )}
+
       {/* Text Overlay and Controls */}
       <div className="absolute inset-0 flex flex-col justify-center items-center z-20">
         {/* Content */}
         <div className="relative z-3 text-center w-full px-4 sm:px-6 md:px-8 xl:px-30">
           <AnimatedReveal
-            key={hasBackendBanner ? `text-${index}-${currentBanner?.id || index}` : `text-static-${index}`}
+            key={`text-${index}-${currentBanner?.id || index}`}
             direction="up"
             distance={40}
             duration={0.8}
@@ -262,8 +322,8 @@ const PageBanner: React.FC<ExtendedPageBannerProps> = ({
           </AnimatedReveal>
         </div>
 
-        {/* Carousel Arrows */}
-        {banners.length > 1 && (
+        {/* Desktop Carousel Arrows (>= 800px) */}
+        {activeSlides.length > 1 && (
           <div className="absolute right-4 md:right-22 top-1/2 -translate-y-1/2 hidden min-[800px]:flex flex-col gap-4 z-30">
             <ArrowButton
               direction="left"
@@ -297,9 +357,9 @@ const PageBanner: React.FC<ExtendedPageBannerProps> = ({
         )}
 
         {/* Carousel Indicators / Dots */}
-        {banners.length > 1 && (
+        {activeSlides.length > 1 && (
           <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 z-30">
-            {banners.map((b, i) => (
+            {activeSlides.map((b, i) => (
               <button
                 key={b.id || i}
                 onClick={() => setIndex(i)}
