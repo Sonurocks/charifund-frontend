@@ -158,19 +158,30 @@ export const SendMsgInformationForm = async (values: SendMsgFormValues) => {
   return data;
 };
 
-export const DetailsInformationForm = async (values:DetailsFormValues) =>{
-    const { data } = await api.post(`/web/form/detail-information`, values);
-    return data;
+
+export interface CreatePaymentOrderPayload {
+  amount: number;
+  campaignId?: string;
+  campaignTitle?: string;
+  paymentMethod: "online" | "offline";
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  address: string;
+  message?: string;
 }
 
 export interface CreatePaymentOrderResponse {
-  orderId: string;
+  orderId?: string; 
   key?: string;
-  amount: number;
-  currency: string;
+  amount?: number;
+  currency?: string;
+  msg?: string;
+  message?: string;
 }
 
-export const createPaymentOrder = async (orderData: { amount: number; campaignId?: string }): Promise<CreatePaymentOrderResponse> => {
+export const createPaymentOrder = async (orderData: CreatePaymentOrderPayload): Promise<CreatePaymentOrderResponse> => {
     const { data } = await api.post<CreatePaymentOrderResponse>(`/web/payment/create-order`, orderData);
     return data;
 }

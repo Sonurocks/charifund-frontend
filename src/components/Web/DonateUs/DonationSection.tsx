@@ -40,7 +40,10 @@ const DonationSection = ({data,isError,isLoading}:DonationSectionProps) => {
       <p className="text-gray-green my-4">
         {data?.description||t("Your support can help us provide education, food and nutrition, healthcare, skill development, and other essential support to children, women, and underprivileged communities.")}
       </p>
-      <Donation campaignId={data?.id} />
+      <Donation 
+        campaignId={data?.id || (data as any)?.campaign?.id || ""} 
+        campaignTitle={data?.title || (data as any)?.campaign?.title || ""} 
+      />
     </motion.div>
   </div>
   );

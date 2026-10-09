@@ -25,9 +25,9 @@ const DonateUs = ({ id }: { id?: string }) => {
     isError: singleCampaignError,
   } = useFetchSingleCampaign(id!, { enabled: !!id });
 
-  const isLoading = id ? singleCampaignLoading : false;
-  const isError = id ? singleCampaignError : false;
-  const campaigns = id ? singleCampaign : null;
+  const isLoading = id ? singleCampaignLoading : allCampaignsLoading;
+  const isError = id ? singleCampaignError : allCampaignsError;
+  const campaigns = id ? singleCampaign : allCampaigns?.campaigns?.[0] || null;
 
   return (
     <section>

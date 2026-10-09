@@ -33,6 +33,7 @@ export interface CampaignColumnCallbacks {
   onEdit: (campaign: Campaign) => void;
   onDelete: (campaign: Campaign) => void;
   onView: (campaign: Campaign) => void;
+  onDonors?: (campaign: Campaign) => void;
 }
 
 export interface ActionItem<RowType> {

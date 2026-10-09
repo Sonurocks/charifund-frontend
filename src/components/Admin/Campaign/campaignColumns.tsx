@@ -21,11 +21,15 @@ const FaEdit = dynamic(() => import("react-icons/fa").then(mod => mod.FaEdit), {
 const FaTrash = dynamic(() => import("react-icons/fa").then(mod => mod.FaTrash), {
   ssr: false,
 });
+const FaUsers = dynamic(() => import("react-icons/fa").then(mod => mod.FaUsers), {
+  ssr: false,
+});
 
 export const getCampaignColumns = ({
   onEdit,
   onDelete,
   onView,
+  onDonors,
 }: CampaignColumnCallbacks) => [
   { name: "SNo", cell: (_row: Campaign, index: number) => index + 1, width: "80px" },
   { name: "Title", selector: (row: Campaign) => (row.title as any)?.en ?? row.title ?? "-", sortable: true },
@@ -47,6 +51,12 @@ export const getCampaignColumns = ({
         row={row as any}
         actions={[
           {
+            label: "View Donors",
+            icon: <FaUsers />,
+            onClick: onDonors,
+            colorClass: "text-purple-500 hover:text-purple-700",
+          },
+          {
             label: "View Campaign",
             icon: <FaEye />,
             onClick: onView,
@@ -64,7 +74,7 @@ export const getCampaignColumns = ({
             onClick: onDelete,
             colorClass: "text-red-500 hover:text-red-700",
           },
-        ] as any}
+        ].filter((action) => action.onClick !== undefined) as any}
       />
     ),
   },

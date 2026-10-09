@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 
 
 
-import { CreatePaymentOrderResponse, DetailsInformationForm, createPaymentOrder, verifyPaymentOrder } from "@/src/services/web/client/clientServices";
+import { CreatePaymentOrderResponse, createPaymentOrder, verifyPaymentOrder, CreatePaymentOrderPayload } from "@/src/services/web/client/clientServices";
 import { RootState } from "@/src/store";
 import { loadRazorpayScript } from "@/src/utils/razorpay";
 import { DetailsFormValues, DetailsformSchema } from "@/src/utils/validations/FormValidation";
@@ -25,23 +25,13 @@ const initialValues: DetailsFormValues = {
     address: "",
     message: "",
 };
-const DetailsForm = ({ campaignId }: { campaignId?: string }) => {
+const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campaignTitle?: string }) => {
     const { t } = useTranslation();
     const { method, amount } = useSelector((state: RootState) => state.donation);
     const [paymentStep, setPaymentStep] = React.useState<"idle" | "details" | "creating" | "verifying">("idle");
     const [paymentReceipt, setPaymentReceipt] = React.useState<{ amount: number; paymentId: string; orderId: string; status: string; date: string } | null>(null);
     
-    const detailsMutation = useMutation<any, AxiosError<{ message: string }>, DetailsFormValues>({
-        mutationFn: DetailsInformationForm,
-        onError: async (error: any) => {
-            const toastModule = await import("react-hot-toast");
-            toastModule.default.error(error?.response?.data?.msg || error?.response?.data?.message);
-            console.error("Submission error:", error);
-            setPaymentStep("idle");
-        },
-    });
-
-    const createOrderMutation = useMutation<CreatePaymentOrderResponse, AxiosError<{ message: string }>, { amount: number; campaignId?: string }>({
+    const createOrderMutation = useMutation<CreatePaymentOrderResponse, AxiosError<{ message: string }>, CreatePaymentOrderPayload>({
         mutationFn: createPaymentOrder,
         onError: async (error: any) => {
             const toastModule = await import("react-hot-toast");
@@ -66,16 +56,36 @@ const DetailsForm = ({ campaignId }: { campaignId?: string }) => {
             return;
         }
 
-        setPaymentStep("details");
-        // 1. Save donor details
-        const detailsData = await detailsMutation.mutateAsync(values);
+        setPaymentStep("creating");
 
-        // 2. Offline donation flow
+        const orderPayload: CreatePaymentOrderPayload = {
+            amount: parsedAmount,
+            paymentMethod: method as "online" | "offline",
+            firstName: values.firstName,
+            lastName: values.lastName,
+            email: values.email,
+            phone: values.phone,
+            address: values.address,
+            message: values.message,
+        };
+
+        if (campaignId) {
+            orderPayload.campaignId = campaignId;
+            orderPayload.campaignTitle = campaignTitle || "";
+        }
+
+        // Offline donation flow
         if (method === "offline") {
-            const toastModule = await import("react-hot-toast");
-            toastModule.default.success(detailsData?.msg || detailsData?.message);
-            resetForm();
-            setPaymentStep("idle");
+            try {
+                const response = await createOrderMutation.mutateAsync(orderPayload);
+                const toastModule = await import("react-hot-toast");
+                toastModule.default.success(response?.msg || response?.message || t("Donation details submitted successfully."));
+                resetForm();
+            } catch (error) {
+                console.error("Offline Donated Failed:", error);
+            } finally {
+                setPaymentStep("idle");
+            }
             return;
         }
 
@@ -96,9 +106,7 @@ const DetailsForm = ({ campaignId }: { campaignId?: string }) => {
             let backendAmount = 0;
             let backendKey = "";
             try {
-                const payload: { amount: number; campaignId?: string } = { amount: parsedAmount };
-                if (campaignId) payload.campaignId = campaignId; // Only pass if valid
-                const orderData = await createOrderMutation.mutateAsync(payload);
+                const orderData = await createOrderMutation.mutateAsync(orderPayload);
                 
                 razorpayOrderId = orderData?.orderId || "";
                 backendAmount = orderData?.amount || 0; // Prioritize Backend verification of amount
