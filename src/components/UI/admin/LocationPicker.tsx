@@ -1,14 +1,14 @@
 "use client";
-import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from "react-leaflet";
 import L from "leaflet";
 import { useEffect, useState } from "react";
 import CustomInput from "./CustomInput"; // import your CustomInput
 
-const markerIcon = L.icon({
-  iconUrl: "/leaflet/marker-icon.png",
-  shadowUrl: "/leaflet/marker-shadow.png",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
+const markerIcon = L.divIcon({
+  html: '<div style="font-size: 28px; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; margin-top: -14px;">📍</div>',
+  className: 'custom-leaflet-icon',
+  iconSize: [28, 28],
+  iconAnchor: [14, 28],
 });
 
 interface Props {
@@ -81,6 +81,36 @@ export default function LocationPicker({ value, onChange, disabled }: Props) {
     return null;
   };
 
+  const MapEventsHandler = () => {
+    useMapEvents({
+      click: async (e) => {
+        if (disabled) return;
+        const lat = e.latlng.lat;
+        const lon = e.latlng.lng;
+        setPosition([lat, lon]);
+        
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+          const data = await res.json();
+          const displayName = data.display_name || "Unknown Location";
+          onChange({
+            location: { en: displayName, hi: displayName },
+            latitude: lat,
+            longitude: lon,
+          });
+        } catch (error) {
+          console.error("Error reverse geocoding:", error);
+          onChange({
+            location: { en: "", hi: "" },
+            latitude: lat,
+            longitude: lon,
+          });
+        }
+      },
+    });
+    return null;
+  };
+
   return (
     <div className="w-full relative">
       {/* Search Input */}
@@ -114,6 +144,7 @@ export default function LocationPicker({ value, onChange, disabled }: Props) {
             attribution="© OpenStreetMap contributors"
           />
           <MapUpdater />
+          <MapEventsHandler />
           {position && <Marker position={position} icon={markerIcon} />}
         </MapContainer>
       </div>

@@ -55,7 +55,7 @@ const EventDetail = () => {
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 text-black mb-6">
                   <span className="flex items-center gap-1">
                     <IoCalendarSharp className="text-yellow-400" />
-                    <span>{event?.startDate?.toLocaleDateString() || "N/A"}</span>
+                    <span>{event?.startTime ? new Date(event.startTime).toLocaleDateString() : "N/A"}</span>
                   </span>
                   <span className="flex items-center gap-1">
                     <IoLocationSharp className="text-yellow-400" />
@@ -87,14 +87,15 @@ const EventDetail = () => {
                 </div>
 
                 {/* Detail Images */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-                  <div className="relative w-full h-[300px] rounded-lg overflow-hidden">
-                    <Image src={event?.images?.[1] || eventdetail1} alt="Detail 1" fill className="object-cover"  loading="lazy" />
+                {event?.images && event.images.length > 1 && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                    {event.images.slice(1).map((img, idx) => (
+                      <div key={idx} className={`relative w-full rounded-lg overflow-hidden ${idx === 0 ? 'h-[300px]' : 'h-[220px] sm:h-[300px]'}`}>
+                        <Image src={img} alt={`Detail ${idx + 1}`} fill className="object-cover" loading="lazy" />
+                      </div>
+                    ))}
                   </div>
-                  <div className="relative w-full h-[220px] sm:h-[300px] rounded-lg overflow-hidden">
-                    <Image src={event?.images?.[2] || eventdetail1} alt="Detail 2" fill className="object-cover"  loading="lazy" />
-                  </div>
-                </div>
+                )}
 
                 {/* Social Media Grid */}
                 <div className="flex flex-col gap-6 items-center justify-between mb-8">
