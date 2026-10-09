@@ -39,7 +39,7 @@ const AdminCustomPagination: React.FC<AdminCustomPaginationProps> = ({
   const pages = generatePageNumbers();
 
   return (
-    <div className="flex  items-center justify-center gap-1 mb-6 flex-wrap">
+    <div className="flex items-center justify-end gap-1 mb-6 flex-wrap w-full">
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}

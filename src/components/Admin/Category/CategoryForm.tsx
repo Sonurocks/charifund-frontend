@@ -78,14 +78,14 @@ const CategoryForm = ({ initialData, onClose, mode }: CategoryFormProps) => {
     mutationFn
       .then(() => {
         toast.dismiss();
-        toast.success(isEdit ? "Category updated" : "Category created");
+        // toast success delegated to hook
         resetForm();
         setSubmitting(false);
         onClose();
       })
       .catch((err: any) => {
         toast.dismiss();
-        toast.error(err?.message || "Failed to process category");
+        // toast error delegated to hook
         setSubmitting(false);
       });
   };

@@ -1,3 +1,4 @@
+import { getApiErrorMessage, getApiSuccessMessage } from "@/src/utils/apiHelpers";
 // // src/hooks/useComment.ts
 import { deleteComment, fetchComments, fetchCommentsById, fetchgetcomments, updateComment } from "@/src/services/admin/commentsApi";
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery, QueryFunctionContext, keepPreviousData } from "@tanstack/react-query";
@@ -49,12 +50,12 @@ export const useUpdateComment = () => {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: { content: string; author?: string, approved: boolean } }) =>
       updateComment(id, data),
-    onSuccess: () => {
+    onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ["comments"] });
-      toast.success("Comment updated successfully");
+      toast.success(getApiSuccessMessage(data, "Comment updated successfully"));
     },
     onError: (err: any) => {
-      toast.error(err?.response?.data?.message || "Failed to update comment");
+      toast.error(getApiErrorMessage(err, "Failed to update comment"));
     },
   });
 };
@@ -68,7 +69,7 @@ export const useDeleteComment = () => {
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["comments"] });
       toast.dismiss();
-      toast.success("Comment deleted successfully");
+      toast.success(getApiSuccessMessage(data, "Comment deleted successfully"));
       
       // Permanently wipe local test caches since Admin deleted the main thread
       try {
@@ -77,7 +78,7 @@ export const useDeleteComment = () => {
       } catch (e) {}
     },
     onError: (err: any) => {
-      toast.error(err?.response?.data?.message || "Failed to delete comment");
+      toast.error(getApiErrorMessage(err, "Failed to delete comment"));
     },
   });
 };

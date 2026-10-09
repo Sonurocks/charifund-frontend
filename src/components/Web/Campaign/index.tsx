@@ -12,7 +12,7 @@ const Campaign = () => {
   const { t } = useTranslation();
   return (
     <div>
-      <PageBanner
+      <PageBanner pageName="Campaign"
         bgImage={ourcausebanner}
         tagline="Together for a Better Society"
         title="Our Campaigns for Social Change"

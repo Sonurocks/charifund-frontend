@@ -1,3 +1,4 @@
+import { getApiErrorMessage, getApiSuccessMessage } from "@/src/utils/apiHelpers";
 
 import { useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import { CampaignFormValues } from "@/src/utils/validations/FormValidation";
@@ -59,16 +60,16 @@ const handleCreateCampaign = (
   const formData = buildFormData(values);
 
   createMutation.mutate(formData, {
-    onSuccess: () => {
+    onSuccess: (data: any) => {
       toast.dismiss();
-      toast.success("Campaign created");
+      toast.success(getApiSuccessMessage(data, "Campaign created"));
       resetForm();
       setSubmitting(false);
       onClose();
     },
     onError: (err: any) => {
       toast.dismiss();
-      toast.error(err?.response?.data?.message || "Failed to create");
+      toast.error(getApiErrorMessage(err, "Failed to create"));
       setSubmitting(false);
     },
   });
@@ -89,16 +90,16 @@ const handleUpdateCampaign = (
   updateMutation.mutate(
     { id, values: formData },
     {
-      onSuccess: () => {
+      onSuccess: (data: any) => {
         toast.dismiss();
-        toast.success("Campaign updated");
+        toast.success(getApiSuccessMessage(data, "Campaign updated"));
         resetForm();
         setSubmitting(false);
         onClose();
       },
       onError: (err: any) => {
         toast.dismiss();
-        toast.error(err?.response?.data?.message || "Failed to update");
+        toast.error(getApiErrorMessage(err, "Failed to update"));
         setSubmitting(false);
       },
     }
@@ -153,13 +154,13 @@ export const useDeleteSignleCampaign = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteSingleCampaign,
-    onSuccess: () => {
+    onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ["campaigns"] });
       toast.dismiss();
-      toast.success("Campaign deleted successfully");
+      toast.success(getApiSuccessMessage(data, "Campaign deleted successfully"));
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "Failed to delete campaign");
+      toast.error(getApiErrorMessage(error, "Failed to delete campaign"));
     }
   });
 };

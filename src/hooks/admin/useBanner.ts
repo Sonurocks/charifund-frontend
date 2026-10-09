@@ -1,3 +1,4 @@
+import { getApiErrorMessage, getApiSuccessMessage } from "@/src/utils/apiHelpers";
 // src/hooks/useBanners.ts
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -12,7 +13,15 @@ const buildFormData = (values: BannerFormValues) => {
   formData.append("title", JSON.stringify(values.title ?? {}));
   formData.append("subtitle", JSON.stringify(values.subtitle ?? {}));
 
+  if ((values as any).description) {
+    formData.append("description", JSON.stringify((values as any).description));
+  }
+
   formData.append("priority", (values.priority ?? 0).toString());
+
+  if ((values as any).pageName) {
+    formData.append("pageName", (values as any).pageName);
+  }
 
   if (values.image instanceof File) {
     formData.append("image", values.image);
@@ -35,16 +44,16 @@ const handleCreateBanner = (
     const formData = buildFormData(values);
 
     createMutation.mutate(formData, {
-        onSuccess: () => {
+        onSuccess: (data: any) => {
             toast.dismiss();
-            toast.success("Banner created successfully");
+            toast.success(getApiSuccessMessage(data, "Banner created successfully"));
             resetForm();
             setSubmitting(false);
             onClose();
         },
         onError: (err: any) => {
             toast.dismiss();
-            toast.error(err?.response?.data?.message || "Failed to create banner");
+            toast.error(getApiErrorMessage(err, "Failed to create banner"));
             setSubmitting(false);
         },
     });
@@ -66,16 +75,16 @@ const handleUpdateBanner = (
     updateMutation.mutate(
         { id, values: formData },
         {
-            onSuccess: () => {
+            onSuccess: (data: any) => {
                 toast.dismiss();
-                toast.success("Banner updated successfully");
+                toast.success(getApiSuccessMessage(data, "Banner updated successfully"));
                 resetForm();
                 setSubmitting(false);
                 onClose();
             },
             onError: (err: any) => {
                 toast.dismiss();
-                toast.error(err?.response?.data?.message|| "Failed to update banner");
+                toast.error(getApiErrorMessage(err, "Failed to update banner"));
                 setSubmitting(false);
             },
         }
@@ -100,16 +109,17 @@ export const submitBannerForm = (
 };
 
 
-// ✅ Fetch banners with pagination and optional search
+// ✅ Fetch banners with pagination, search, and pageName filter
 export const useFetchAllBanners = (
   page: number, 
   limit: number = 10, 
   search?: string, 
-  searchField?: string
+  searchField?: string,
+  pageName?: string
 ) => {
   return useQuery({
-    queryKey: ["banners", page, limit, search, searchField],
-    queryFn: () => fetchAllBanners(page, limit, search, searchField),
+    queryKey: ["banners", pageName, page, limit, search, searchField],
+    queryFn: () => fetchAllBanners(page, limit, search, searchField, pageName),
     placeholderData: keepPreviousData,
   });
 };
@@ -130,13 +140,13 @@ export const useDeleteBanner = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: deleteBanner,
-        onSuccess: () => {
+        onSuccess: (data: any) => {
             queryClient.invalidateQueries({ queryKey: ["banners"] });
             toast.dismiss();
-            toast.success("Banner deleted successfully");
+            toast.success(getApiSuccessMessage(data, "Banner deleted successfully"));
         },
         onError: (error: any) => {
-            toast.error(error?.response?.data?.message || "Failed to delete banner");
+            toast.error(getApiErrorMessage(error, "Failed to delete banner"));
         },
     });
 };

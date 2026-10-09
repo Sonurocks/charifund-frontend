@@ -14,7 +14,7 @@ const About = () => {
   
   return (
     <div>
-      <PageBanner 
+      <PageBanner pageName="About Us" 
         bgImage={aboutus} 
         title="About YUWA India" 
         tagline="Empowering Lives, Building a Better Society" 

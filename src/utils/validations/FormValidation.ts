@@ -289,6 +289,12 @@ export type CommentFormValues = Yup.InferType<typeof commentSchema>;
 
 // ======================= Banner ======================
 
+const wordCountMax = (max: number, msg: string) =>
+  Yup.string().test("word-count", msg, (value) => {
+    if (!value) return true;
+    return value.trim().split(/\s+/).length <= max;
+  });
+
 export const bannerSchema = Yup.object().shape({
   title: Yup.object({
     en: Yup.string().required("Title is required in English"),
@@ -298,6 +304,10 @@ export const bannerSchema = Yup.object().shape({
     en: Yup.string().required("subtitle is required in English"),
     hi: Yup.string().required("उपशीर्षक हिंदी में होना आवश्यक है"),
   }),
+  description: Yup.object({
+    en: wordCountMax(60, "Description must be 60 words or less"),
+    hi: wordCountMax(60, "विवरण 60 शब्दों या उससे कम होना चाहिए"),
+  }).optional().default(undefined),
   image: Yup.mixed()
     .test(
       "fileOrString",
@@ -310,6 +320,7 @@ export const bannerSchema = Yup.object().shape({
     )
     .required("Banner image is required"),
   priority: Yup.number().required("priority is required"),
+  pageName: Yup.string().optional(),
 });
 
 //  Inferred type from the schema

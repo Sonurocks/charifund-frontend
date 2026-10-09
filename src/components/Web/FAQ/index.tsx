@@ -8,7 +8,7 @@ import VolunteerTeam from '../Volunteer/VolunteerTeam'
 const FAQ = () => {
   return (
     <div >
-      <PageBanner
+      <PageBanner pageName="FAQ"
         bgImage={bannerBg}
         tagline="Empowering Lives, Building a Better Society"
         title="Frequently Asked Questions"

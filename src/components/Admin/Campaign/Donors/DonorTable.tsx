@@ -5,9 +5,9 @@ import dynamic from "next/dynamic";
 import { useFetchCampaignDonors } from "@/src/hooks/admin/useDonors";
 import { donorColumns } from "./donorColumns";
 import { exportCampaignDonorsCsv } from "@/src/services/admin/donorApi";
-import { useQueryClient } from "@tanstack/react-query";
 import useDebounce from "@/src/hooks/web/useDebounce";
 import toast from "react-hot-toast";
+import { getApiErrorMessage, getApiSuccessMessage } from "@/src/utils/apiHelpers";
 
 const DataTableWrapper = dynamic(() => import("@/src/components/UI/admin/DataTableWrapper"), { ssr: false });
 const CustomInput = dynamic(() => import("@/src/components/UI/admin/CustomInput"), { ssr: false });
@@ -24,7 +24,7 @@ const DonorTable = ({ campaignId }: { campaignId: string }) => {
   // Debounce search input to avoid hitting API continuously
   const searchedData = useDebounce(search, 800);
 
-  const { data: donorData, isLoading, isError } = useFetchCampaignDonors(
+  const { data: donorData, isLoading, isError, error } = useFetchCampaignDonors(
     campaignId,
     currentPage,
     itemsPerPage,
@@ -32,9 +32,8 @@ const DonorTable = ({ campaignId }: { campaignId: string }) => {
   );
 
 
-  const totalPages = donorData?.totalPages || (donorData as any)?.data?.totalPages || 1;
+  const totalPages = donorData?.totalPages || 1;
 
-  // Handle Search Change
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
     setCurrentPage(1); // Reset to page 1 on search
@@ -42,45 +41,59 @@ const DonorTable = ({ campaignId }: { campaignId: string }) => {
 
   const handleExport = async () => {
     if (exporting) return;
+    setExporting(true);
+    
+    // Create a promise wrapper for the API call
+    const exportPromise = exportCampaignDonorsCsv(campaignId, `Campaign_${campaignId}`);
+    
+    toast.promise(exportPromise, {
+      loading: "Generating CSV...",
+      success: (data) => getApiSuccessMessage(data, "Export downloaded successfully!"),
+      error: (err) => getApiErrorMessage(err, "Failed to export donors. Please try again."),
+    });
+
     try {
-      setExporting(true);
-      toast.loading("Exporting donors...", { id: "exportDonors" });
-      // We pass 'Campaign' or appropriate title. If title isn't available, pass campaignId.
-      await exportCampaignDonorsCsv(campaignId, `Campaign_${campaignId}`);
-      toast.success("Export successful", { id: "exportDonors" });
+      await exportPromise;
     } catch (error) {
       console.error("Export Failed", error);
-      toast.error("Failed to export donors. Please try again.", { id: "exportDonors" });
     } finally {
       setExporting(false);
     }
   };
 
   const paginatedData = useMemo(() => {
-    // Handling case where backend returns { data: { donors: [] } } or just { donors: [] }
-    return donorData?.donors || (donorData as any)?.data?.donors || (donorData as any)?.data || [];
+    return donorData?.donors || [];
   }, [donorData]);
 
   if (isError) {
-    return <div className="p-10 text-center text-red-500 font-semibold">Failed to load donors. Please try again.</div>;
+    return <div className="p-10 text-center text-red-500 font-semibold">{getApiErrorMessage(error, "Failed to load donors. Please try again.")}</div>;
   }
 
   return (
     <div>
-      <div className="flex flex-col sm:flex-row justify-end items-start sm:items-center mb-6 gap-4 border-b pb-4">
-        <div className="flex gap-2">
-          <Button onClick={handleExport} disabled={exporting || paginatedData.length === 0}>
-            {exporting ? "Exporting..." : "Export CSV"}
-          </Button>
-        </div>
-      </div>
-
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+        {/* Search Input on the Left */}
         <AnimatedReveal direction="left" delay={0.1}>
           <CustomInput
             placeholder="Search name, email or phone..."
             value={search}
             onChange={handleSearchChange}
+          />
+        </AnimatedReveal>
+
+        {/* Action Button on the Right */}
+        <AnimatedReveal direction="left" delay={0.3}>
+          <Button
+            text={exporting ? "Exporting..." : "Export CSV"}
+            onClick={handleExport}
+            disabled={exporting}
+            bgColor="bg-lime-green"
+            hoverBg="before:bg-primaryColor"
+            textColor="text-white"
+            hoverTextColor="group-hover:text-foreground"
+            paddingx="px-4"
+            paddingy="py-2"
+            rounded="rounded-[5px]"
           />
         </AnimatedReveal>
       </div>
@@ -94,13 +107,15 @@ const DonorTable = ({ campaignId }: { campaignId: string }) => {
       </AnimatedReveal>
 
       {totalPages > 1 && (
-        <AnimatedReveal direction="up" delay={0.3}>
-          <AdminCustomPagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={(page: number) => setCurrentPage(page)}
-          />
-        </AnimatedReveal>
+        <div className="flex justify-end mt-4">
+          <AnimatedReveal direction="up" delay={0.3}>
+            <AdminCustomPagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={(page: number) => setCurrentPage(page)}
+            />
+          </AnimatedReveal>
+        </div>
       )}
     </div>
   );

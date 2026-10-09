@@ -1,3 +1,4 @@
+import { getApiErrorMessage, getApiSuccessMessage } from "@/src/utils/apiHelpers";
 // src/hooks/useMembers.ts
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import { MemberFormValues } from "@/src/utils/validations/FormValidation";
@@ -64,9 +65,9 @@ const handleCreateMember = (
   const formData = buildFormData(values);
 
   createMutation.mutate(formData, {
-    onSuccess: () => {
+    onSuccess: (data: any) => {
       toast.dismiss();
-      toast.success("Member created successfully");
+      toast.success(getApiSuccessMessage(data, "Member created successfully"));
       resetForm();
       setSubmitting(false);
       onClose();
@@ -74,7 +75,7 @@ const handleCreateMember = (
     onError: (err: any) => {
       console.log(err)
       toast.dismiss();
-      toast.error(err?.response?.data?.message || "Failed to create member");
+      toast.error(getApiErrorMessage(err, "Failed to create member"));
       setSubmitting(false);
     },
   });
@@ -96,16 +97,16 @@ const handleUpdateMember = (
   updateMutation.mutate(
     { id, values: formData },
     {
-      onSuccess: () => {
+      onSuccess: (data: any) => {
         toast.dismiss();
-        toast.success("Member updated successfully");
+        toast.success(getApiSuccessMessage(data, "Member updated successfully"));
         resetForm();
         setSubmitting(false);
         onClose();
       },
       onError: (err: any) => {
         toast.dismiss();
-        toast.error(err?.response?.data?.message || "Failed to update member");
+        toast.error(getApiErrorMessage(err, "Failed to update member"));
         setSubmitting(false);
       },
     }
@@ -154,13 +155,13 @@ export const useDeleteSingleMember = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteMember,
-    onSuccess: () => {
+    onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ["members"] });
       toast.dismiss()
-      toast.success("Member deleted successfully");
+      toast.success(getApiSuccessMessage(data, "Member deleted successfully"));
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "Failed to delete member");
+      toast.error(getApiErrorMessage(error, "Failed to delete member"));
     },
   });
 };

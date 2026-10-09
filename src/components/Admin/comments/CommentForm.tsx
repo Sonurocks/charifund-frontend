@@ -86,14 +86,14 @@ const CommentForm: React.FC<CommentFormProps> = ({ initialData, onClose, mode })
         {
           onSuccess: () => {
             toast.dismiss();
-            toast.success("Comment updated");
+            // toast success delegated to hook
             resetForm();
             setSubmitting(false);
             onClose();
           },
           onError: (err: any) => {
             toast.dismiss();
-            toast.error(err?.message || "Failed to update comment");
+            // toast error delegated to hook
             setSubmitting(false);
           },
         }

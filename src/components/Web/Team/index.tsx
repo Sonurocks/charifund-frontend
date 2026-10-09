@@ -6,7 +6,7 @@ import PageBanner from '@/src/helper/PageBanner'
 const Teams = () => {
     return (
         <div>
-            <PageBanner 
+            <PageBanner pageName="Team" 
                bgImage={ourteambanner} 
                title="Our Dedicated Team"
                tagline="Supporting People • Empowering Communities"

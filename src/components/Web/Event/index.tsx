@@ -17,7 +17,7 @@ export const Event = () => {
 
   return (
     <>
-      <PageBanner 
+      <PageBanner pageName="Events" 
         bgImage={oureventbanner} 
         title="Our Events & Activities" 
         tagline="Making a Difference Together"

@@ -26,7 +26,7 @@ const staticImages = [bannerOne.src, bannerTwo.src];
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
 
-  const { data: bannersData } = useFetchAllBanners(1, 10);
+  const { data: bannersData } = useFetchAllBanners(1, 10, "Home");
   const banners = bannersData?.banners || [];
 
   const images =

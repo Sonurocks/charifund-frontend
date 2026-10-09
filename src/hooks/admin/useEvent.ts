@@ -1,3 +1,4 @@
+import { getApiErrorMessage, getApiSuccessMessage } from "@/src/utils/apiHelpers";
 // src/hooks/useEvents.ts
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -71,16 +72,16 @@ const handleCreateEvent = (
   const formData = buildFormData(values);
 
   createMutation.mutate(formData, {
-    onSuccess: () => {
+    onSuccess: (data: any) => {
       toast.dismiss();
-      toast.success("Event created successfully");
+      toast.success(getApiSuccessMessage(data, "Event created successfully"));
       resetForm();
       setSubmitting(false);
       onClose();
     },
     onError: (err: any) => {
       toast.dismiss();
-      toast.error(err?.response?.data?.message || "Failed to create event");
+      toast.error(getApiErrorMessage(err, "Failed to create event"));
       setSubmitting(false);
     },
   });
@@ -102,16 +103,16 @@ const handleUpdateEvent = (
   updateMutation.mutate(
     { id, values: formData },
     {
-      onSuccess: () => {
+      onSuccess: (data: any) => {
         toast.dismiss();
-        toast.success("Event updated successfully");
+        toast.success(getApiSuccessMessage(data, "Event updated successfully"));
         resetForm();
         setSubmitting(false);
         onClose();
       },
       onError: (err: any) => {
         toast.dismiss();
-        toast.error(err?.response?.data?.message || "Failed to update event");
+        toast.error(getApiErrorMessage(err, "Failed to update event"));
         setSubmitting(false);
       },
     }
@@ -158,13 +159,13 @@ export const useDeleteSingleEvent = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteSingleEvent,
-    onSuccess: () => {
+    onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ["events"] });
       toast.dismiss();
-      toast.success("Event deleted successfully");
+      toast.success(getApiSuccessMessage(data, "Event deleted successfully"));
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "Failed to delete event");
+      toast.error(getApiErrorMessage(error, "Failed to delete event"));
     },
   });
 };

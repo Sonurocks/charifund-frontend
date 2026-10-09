@@ -1,3 +1,4 @@
+import { getApiErrorMessage, getApiSuccessMessage } from "@/src/utils/apiHelpers";
 import { keepPreviousData, useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import {
@@ -87,16 +88,16 @@ const handleCreateFeedback = (
   const formData = buildFeedbackFormData(values);
 
   createMutation.mutate(formData, {
-    onSuccess: (response: any) => {
+    onSuccess: (data: any) => {
       toast.dismiss();
-      toast.success("Feedback submitted successfully");
+      toast.success(getApiSuccessMessage(data, "Feedback submitted successfully"));
       resetForm();
       setSubmitting(false);
       onClose();
     },
     onError: (err: any) => {
       toast.dismiss();
-      toast.error(err?.response?.data?.message || "Failed to submit feedback");
+      toast.error(getApiErrorMessage(err, "Failed to submit feedback"));
       setSubmitting(false);
     },
   });
@@ -107,13 +108,13 @@ export const useCreateFeedback = () => {
 
   return useMutation({
     mutationFn: (formData: FormData) => createFeedback(formData),
-    onSuccess: () => {
+    onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ["feedbacks"] });
     },
     onError: (err: any) => {
       toast.dismiss();
       console.log("error check", err)
-      toast.error(err?.response?.data?.message || "Failed to update blog");
+      toast.error(getApiErrorMessage(err, "Failed to update blog"));
     },
   });
 };
@@ -137,12 +138,12 @@ export const useUpdateFeedback = () => {
   return useMutation({
     mutationFn: ({ id, values }: { id: string; values: { approved?: boolean; status?: "approved" | "rejected" } }) =>
       updateFeedback(id, values),
-    onSuccess: () => {
+    onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ["feedbacks"] });
-      toast.success("Feedback updated successfully");
+      toast.success(getApiSuccessMessage(data, "Feedback updated successfully"));
     },
     onError: (err: any) => {
-      toast.error(err?.response?.data?.message || "Failed to update feedback");
+      toast.error(getApiErrorMessage(err, "Failed to update feedback"));
     },
   });
 };
@@ -154,13 +155,13 @@ export const useDeleteFeedback = () => {
 
   return useMutation({
     mutationFn: deleteFeedback,
-    onSuccess: () => {
+    onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ["feedbacks"] });
       toast.dismiss();
-      toast.success("Feedback deleted successfully");
+      toast.success(getApiSuccessMessage(data, "Feedback deleted successfully"));
     },
     onError: (err: any) => {
-      toast.error(err?.response?.data?.message || "Failed to delete feedback");
+      toast.error(getApiErrorMessage(err, "Failed to delete feedback"));
     },
   });
 };

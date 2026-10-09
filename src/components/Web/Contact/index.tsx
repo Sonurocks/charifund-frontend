@@ -8,7 +8,7 @@ import { contactbanner } from '@/public/assets'
 const Contact = () => {
     return (
         <div>
-            <PageBanner bgImage={contactbanner} tagline="Be a Part of Positive Change" title="Contact Us" />
+            <PageBanner pageName="Contact Us" bgImage={contactbanner} tagline="Be a Part of Positive Change" title="Contact Us" />
             <ContactUs />
         </div>
     )

@@ -97,14 +97,14 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ initialData, onClose, mode 
         {
           onSuccess: () => {
             toast.dismiss();
-            toast.success("Feedback updated");
+            // toast success delegated to hook
             resetForm();
             setSubmitting(false);
             onClose();
           },
           onError: (err: any) => {
             toast.dismiss();
-            toast.error(err?.message || "Failed to update feedback");
+            // toast error delegated to hook
             setSubmitting(false);
           },
         }

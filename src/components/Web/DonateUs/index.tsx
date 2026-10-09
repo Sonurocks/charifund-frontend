@@ -31,7 +31,7 @@ const DonateUs = ({ id }: { id?: string }) => {
 
   return (
     <section>
-      <PageBanner
+      <PageBanner pageName="Donate Us"
         bgImage={donateusbanner}
         tagline={t("Start Donating Poor People")}
         title={t("Donate Us")}

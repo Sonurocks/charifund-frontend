@@ -2,8 +2,12 @@
 import { DetailsFormValues, SendMsgFormValues, VolunteerValues } from "@/src/utils/validations/FormValidation";
 
 //  Get all banners 
-export const fetchAllBanners = async (page: number = 1, limit: number = 10) => {
-  const { data } = await api.get(`/web/banner/getAllBanners?page=${page}&limit=${limit}`);
+export const fetchAllBanners = async (page: number = 1, limit: number = 10, pageName?: string) => {
+  let url = `/web/banner/getAllBanners?page=${page}&limit=${limit}`;
+  if (pageName) {
+    url += `&pageName=${encodeURIComponent(pageName)}`;
+  }
+  const { data } = await api.get(url);
   return data;
 };
 

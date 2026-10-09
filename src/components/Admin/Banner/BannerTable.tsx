@@ -17,7 +17,7 @@ import {
   useFetchAllBanners,
   useFetchSingleBanner,
 } from "@/src/hooks/admin/useBanner";
-import { BannerSearchOptions } from "../../../static-resource/admin";
+import { BannerSearchOptions, BannerPageOptions } from "../../../static-resource/admin";
 import BannerPreview from "./BannerPreview";
 import AdminCustomPagination from "../../UI/admin/CustomePagination";
 import ConfirmModal from "../../UI/admin/ConfirmModal";
@@ -44,14 +44,15 @@ const BannerTable = () => {
   const [selectedBanner, setSelectedBanner] = useState<Banner | null>(null);
   const debounceValue = useDebounce(search, 1000);
   const queryClient = useQueryClient();
+  const [selectedPage, setSelectedPage] = useState("Home");
 
   //  Updated: Pass both field & search value
   const { data: bannerData, isLoading } = useFetchAllBanners(
     currentPage,
     itemsPerPage,
     debounceValue,
-    searchField    
-
+    searchField,
+    selectedPage
   );
 
   const deleteMutation = useDeleteBanner();
@@ -148,9 +149,18 @@ const BannerTable = () => {
     <section>
       {/* === Top Controls === */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
-        {/* Left: search field */}
+        {/* Left: Page filter + search field */}
         <AnimatedReveal direction="left" delay={0.1}>
           <div className="w-fit flex flex-row gap-2">
+            <Dropdown
+              options={BannerPageOptions}
+              value={selectedPage}
+              onChange={(value: string) => {
+                setSelectedPage(value);
+                setCurrentPage(1);
+                setSearch("");
+              }}
+            />
             <Dropdown
               options={BannerSearchOptions}
               value={searchField}
@@ -280,6 +290,7 @@ const BannerTable = () => {
                   image: previewData?.image || singleBannerData?.image || "",
                   priority:
                     previewData?.priority || singleBannerData?.priority || 0,
+                  pageName: selectedPage,
                 }}
                 onClose={() => {
                   setDrawerOpen(false);

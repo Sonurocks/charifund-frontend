@@ -6,7 +6,7 @@ import SponsorsList from './SponsorsList'
 const Sponsors = () => {
   return (
     <div>
-      <PageBanner
+      <PageBanner pageName="Sponsors"
         bgImage={ourcausebanner}
         tagline="Together for a Better Society"
         title="Our Sponsors"

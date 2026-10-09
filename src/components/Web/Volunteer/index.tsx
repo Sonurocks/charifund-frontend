@@ -15,7 +15,7 @@ const Volunteer = () => {
   const language = i18n.language;
   return (
     <section>
-      <PageBanner
+      <PageBanner pageName="Volunteer"
         bgImage={bannerBg}
         tagline="Together, We Can Make a Difference"
         title="Become a Volunteer"

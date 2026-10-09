@@ -7,7 +7,7 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import { AdminDropdownProps } from "@/src/types/admin";
 
 const Dropdown = <T extends string | number | Record<string, any>>({
-  options,
+  options = [],
   value,
   onChange,
   label,

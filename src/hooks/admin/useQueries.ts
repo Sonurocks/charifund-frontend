@@ -1,3 +1,4 @@
+import { getApiErrorMessage, getApiSuccessMessage } from "@/src/utils/apiHelpers";
 // src/hooks/useQueries.ts
 import { useQuery, useMutation, useQueryClient, keepPreviousData, UseMutationOptions } from "@tanstack/react-query";
 
@@ -37,13 +38,13 @@ export const useDeleteQuery = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteQuery,
-    onSuccess: () => {
+    onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ["queries"] });
       toast.dismiss();
-      toast.success("Query deleted successfully");
+      toast.success(getApiSuccessMessage(data, "Query deleted successfully"));
     },
     onError: (err: any) => {
-      toast.error(err?.response?.data?.message || "Failed to delete query");
+      toast.error(getApiErrorMessage(err, "Failed to delete query"));
     },
   });
 };
@@ -54,12 +55,12 @@ export const useUpdateQuery = () => {
   return useMutation({
     mutationFn: ({ id, values }: { id: string; values: Partial<QueryFormValues> }) =>
       updateQuery(id, values),
-    onSuccess: () => {
+    onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ["queries"] });
-      toast.success("Query updated");
+      toast.success(getApiSuccessMessage(data, "Query updated"));
     },
     onError: (err: any) => {
-      toast.error(err?.response?.data?.message || "Failed to update query");
+      toast.error(getApiErrorMessage(err, "Failed to update query"));
     },
   });
 };
@@ -97,15 +98,15 @@ export const submitQueryForm = (
   updateMutation.mutate(
     { id, values },
     {
-      onSuccess: () => {
+      onSuccess: (data: any) => {
         toast.dismiss();
-        toast.success("Query Maked as viewed");
+        toast.success(getApiSuccessMessage(data, "Query Maked as viewed"));
         setSubmitting(false);
         onClose();
       },
       onError: (err: any) => {
         toast.dismiss();
-        toast.error(err?.response?.data?.message || "Failed to update query");
+        toast.error(getApiErrorMessage(err, "Failed to update query"));
         setSubmitting(false);
       },
     }

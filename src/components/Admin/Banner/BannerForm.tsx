@@ -50,10 +50,15 @@ const BannerForm: React.FC<BannerFormProps> = ({
       en: initialData?.subtitle?.en ?? "",
       hi: initialData?.subtitle?.hi ?? "",
     },
+    description: {
+      en: (initialData as any)?.description?.en ?? "",
+      hi: (initialData as any)?.description?.hi ?? "",
+    },
     image: initialData?.image || "",
     existingImage:
       typeof initialData?.image === "string" ? initialData.image : undefined,
     priority: initialData?.priority ?? 0,
+    pageName: (initialData as any)?.pageName ?? "",
   };
 
   // Typed handleSubmit
@@ -160,6 +165,25 @@ const BannerForm: React.FC<BannerFormProps> = ({
                 error={
                   (touched.subtitle as any)?.[lang]
                     ? (errors.subtitle as any)?.[lang]
+                    : ""
+                }
+              />
+
+              {/* Description (optional) */}
+              <CustomInput
+                label={`${lang === "en" ? "Description (optional)" : "विवरण (वैकल्पिक)"}`}
+                as="textarea"
+                placeholder={
+                  lang === "en"
+                    ? "Enter banner description (max 60 words)"
+                    : "बैनर विवरण दर्ज करें (अधिकतम 60 शब्द)"
+                }
+                name={`description.${lang}`}
+                value={(values as any).description?.[lang] || ""}
+                onChange={handleChange}
+                error={
+                  (touched as any)?.description?.[lang]
+                    ? (errors as any)?.description?.[lang]
                     : ""
                 }
               />

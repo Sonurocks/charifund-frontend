@@ -15,9 +15,13 @@ export const fetchAllBanners = async (
   page: number = 1,
   limit: number = 10,
   search?: string,
-  searchField?: string
+  searchField?: string,
+  pageName?: string
 ) => {
   let url = `/admin/banner/getAllBanners?page=${page}&limit=${limit}`;
+  if (pageName) {
+    url += `&pageName=${encodeURIComponent(pageName)}`;
+  }
   if (search && searchField) {
     url += `&${encodeURIComponent(searchField)}=${encodeURIComponent(search)}`;
   } else if (search) {

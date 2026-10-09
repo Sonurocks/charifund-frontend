@@ -10,7 +10,7 @@ const Blog = () => {
 
     return (
         <div>
-            <PageBanner
+            <PageBanner pageName="Blog"
                 bgImage={latestnewsbanner}
                 tagline={t("Creating Awareness • Inspiring Change")}
                 title={t("Our Stories & Updates")}
