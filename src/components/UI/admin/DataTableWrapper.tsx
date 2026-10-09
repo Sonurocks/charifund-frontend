@@ -1,24 +1,27 @@
-
-
-
 "use client";
 
 import React from "react";
 import dynamic from "next/dynamic";
 import AnimatedReveal from "@/src/animations/AnimatedReveal";
 import { AdminDataTableWrapperProps } from "@/src/types/admin";
+import { Icon } from "@iconify/react";
 
 const DataTable = dynamic(() => import("react-data-table-component"), {
   ssr: false,
-  loading: () => <p className="p-4">Loading table...</p>,
 });
+
+const TableSpinner = () => (
+  <div className="flex items-center justify-center p-8 text-primaryColor">
+    <Icon icon="eos-icons:loading" width={28} height={28} className="animate-spin" />
+  </div>
+);
 
 const DataTableWrapper = <T,>({
   columns,
   data,
   loading = false,
 }: AdminDataTableWrapperProps<T>) => {
-  //  Defensive check
+  // Defensive check
   const safeColumns = Array.isArray(columns) ? columns : [];
   const safeData = Array.isArray(data) ? data : [];
   return (
@@ -27,7 +30,7 @@ const DataTableWrapper = <T,>({
         columns={safeColumns as any}
         data={safeData}
         progressPending={loading}
-        progressComponent={<p className="p-4">Loading...</p>}
+        progressComponent={<TableSpinner />}
         highlightOnHover
         striped
         customStyles={{
@@ -57,8 +60,3 @@ const DataTableWrapper = <T,>({
 };
 
 export default DataTableWrapper;
-
-
-
-
-

@@ -149,15 +149,6 @@ const PageBanner: React.FC<ExtendedPageBannerProps> = ({
 
   const bgUrl = getImgSrc(finalBgImage);
 
-  // Skeleton loader when fetching data initially
-  if (pageName && isLoading && banners.length === 0) {
-    return (
-      <section className="relative w-full h-[50vh] md:h-[80vh] flex items-center justify-center bg-gray-200 animate-pulse overflow-hidden">
-        <div className="absolute inset-0 z-2" style={pageBannerBackgourndColor} />
-      </section>
-    );
-  }
-
   return (
     <section
       className="relative w-full h-[50vh] md:h-[80vh] md:w-full overflow-hidden"
