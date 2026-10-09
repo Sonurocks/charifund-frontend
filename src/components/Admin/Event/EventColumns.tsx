@@ -11,10 +11,10 @@ export const getEventColumns = ({
   onView,
 }: EventColumnCallbacks) => [
     { name: "SNo", cell: (_row: Event, index: number) => index + 1, width: "80px" },
-    { name: "Title", selector: (row: Event) => row.title?.en || "", sortable: true },
+    { name: "Title", selector: (row: Event) => typeof row.title === 'string' ? row.title : (row.title?.en || ""), sortable: true },
     { name: "Start Date", selector: (row: Event) => row.startDate, width: "170px" },
     { name: "End Date", selector: (row: Event) => row.endDate , width: "170px"},
-    { name: "Location", selector: (row: Event) => row.location?.en || "" },
+    { name: "Location", selector: (row: Event) => typeof row.location === 'string' ? row.location : (row.location?.en || "") },
     { name: "Status", selector: (row: Event) => row.status },
     {
       name: "Actions",
