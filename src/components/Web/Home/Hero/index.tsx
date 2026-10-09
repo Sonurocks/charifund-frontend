@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Icon } from "@iconify/react";
 import {
@@ -19,15 +19,44 @@ import { useFetchAllBanners } from "@/src/hooks/web/useBanner";
 import { pageBannerBackgourndColor } from "@/src/helper/PageBanner";
 import { Banner } from "@/src/types/web/banner";
 import ArrowButton from "@/src/components/UI/web/Buttons/ArrowButton";
+import { useTranslation } from "react-i18next";
 
 const staticImages = [bannerOne.src, bannerTwo.src];
 
- const HeroStaticSlider  = () => {
+const getLocalizedText = (
+  field: any,
+  fallback: string,
+  currentLang: "en" | "hi"
+): string => {
+  if (!field) return fallback;
+  let parsed = field;
+  if (typeof field === "string") {
+    const trimmed = field.trim();
+    if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
+      try {
+        parsed = JSON.parse(trimmed);
+      } catch (e) {
+        return field;
+      }
+    } else {
+      return field;
+    }
+  }
+  if (typeof parsed === "object" && parsed !== null) {
+    return parsed[currentLang] || parsed.en || parsed.hi || (typeof field === "string" ? field : fallback);
+  }
+  return typeof parsed === "string" ? parsed : fallback;
+};
+
+const HeroStaticSlider = () => {
+  const { i18n, t } = useTranslation();
+  const currentLang = (i18n.language || "en") as "en" | "hi";
+
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
 
   const { data: bannersData } = useFetchAllBanners(1, 10, "Home");
-  const banners = bannersData?.banners || [];
+  const banners: Banner[] = bannersData?.banners || bannersData?.data || (Array.isArray(bannersData) ? bannersData : []);
 
   const images =
     banners.length > 0
@@ -39,7 +68,13 @@ const staticImages = [bannerOne.src, bannerTwo.src];
   const finalImages = images.length > 0 ? images : staticImages;
 
   useEffect(() => {
-    if (paused) return;
+    if (finalImages.length > 0 && index >= finalImages.length) {
+      setIndex(0);
+    }
+  }, [finalImages.length, index]);
+
+  useEffect(() => {
+    if (paused || finalImages.length <= 1) return;
 
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % finalImages.length);
@@ -48,17 +83,32 @@ const staticImages = [bannerOne.src, bannerTwo.src];
     return () => clearInterval(interval);
   }, [paused, finalImages.length]);
 
-  const handlePrev = () =>
-    setIndex((prev) => (prev - 1 + finalImages.length) % finalImages.length);
-  const handleNext = () =>
-    setIndex((prev) => (prev + 1) % finalImages.length);
+  const handlePrev = useCallback(() =>
+    setIndex((prev) => (prev - 1 + finalImages.length) % finalImages.length),
+    [finalImages.length]
+  );
+  const handleNext = useCallback(() =>
+    setIndex((prev) => (prev + 1) % finalImages.length),
+    [finalImages.length]
+  );
 
   // Get current banner data
-  const currentBanner = banners[index] || {};
-  const bannerTitle =
-    currentBanner.title || "Giving Help To Those Who Need It";
-  const bannerSubtitle =
-    currentBanner.subtitle || "Start Donating Poor People";
+  const currentBanner = banners[index] || null;
+  const rawTitle = currentBanner
+    ? getLocalizedText(currentBanner.title, "Giving Help To Those Who Need It", currentLang)
+    : "Giving Help To Those Who Need It";
+  const rawSubtitle = currentBanner
+    ? getLocalizedText(currentBanner.subtitle, "Start Donating Poor People", currentLang)
+    : "Start Donating Poor People";
+
+  const bannerTitle = t(rawTitle);
+  const bannerSubtitle = t(rawSubtitle);
+
+  const [failedIndices, setFailedIndices] = useState<Record<number, boolean>>({});
+
+  const currentImgSrc = failedIndices[index]
+    ? staticImages[index % staticImages.length]
+    : finalImages[index];
 
   return (
     <div
@@ -66,21 +116,28 @@ const staticImages = [bannerOne.src, bannerTwo.src];
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {/*  Background Image */}
+      {/* Background Image */}
       <motion.div
         key={index}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 2, ease: "easeInOut" }}
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage: `url(${finalImages[index]})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          width: "100%",
-          height: "922.4px",
-        }}
-      />
+        className="absolute inset-0 overflow-hidden"
+      >
+        {currentImgSrc && (
+          <Image
+            src={currentImgSrc}
+            alt={bannerTitle || "Hero Banner"}
+            fill
+            priority
+            unoptimized
+            className="object-cover object-center"
+            onError={() => {
+              setFailedIndices((prev) => ({ ...prev, [index]: true }));
+            }}
+          />
+        )}
+      </motion.div>
 
       <section className="relative h-5 w-full z-22">
         <Image
