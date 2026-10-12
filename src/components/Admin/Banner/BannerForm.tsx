@@ -19,13 +19,14 @@ import {
 import { BannerFormProps } from "@/src/types/admin/banner";
 import { submitBannerForm } from "@/src/hooks/admin/useBanner";
 import { useLanguageToggle } from "@/src/hooks/admin/useLanguageToggle";
-import { BANNER_PAGES } from "@/src/static-resource/admin";
+import { BANNER_PAGES, BannerPageOptions } from "@/src/static-resource/admin";
 import { hasErrorsForLang } from "../../UI/admin/hasErrorsForLang";
 import { IMAGE_STANDARDS } from "@/src/utils/imageStandards";
 
 //  Dynamic Imports
 const CustomInput = dynamic(() => import("../../UI/admin/CustomInput"), { ssr: false });
 const CustomFileInput = dynamic(() => import("../../UI/admin/CustomFileInput"), { ssr: false });
+const Dropdown = dynamic(() => import("../../UI/admin/Dropdown"), { ssr: false });
 const LanguageToggle = dynamic(() => import("../../UI/admin/LanguageToggle"), { ssr: false });
 const CancelButton = dynamic(() => import("../../UI/web/Buttons/CancelButton"), { ssr: false });
 const ButtonLoader = dynamic(() => import("../../UI/web/Loader/ButtonLoader"), { ssr: false });
@@ -191,25 +192,23 @@ const BannerForm: React.FC<BannerFormProps> = ({
               />
 
               {/* Page Name */}
-              <div className="w-full">
-                <label htmlFor="pageName" className="block mb-1 font-medium text-blue-50 text-[14px]">
-                  {lang === "en" ? "Page Name" : "पृष्ठ का नाम"}
-                </label>
-                <select
-                  id="pageName"
-                  name="pageName"
-                  value={values.pageName || ""}
-                  onChange={handleChange}
-                  className="w-full bg-gray-200/60 px-3 py-2 rounded-md border border-transparent outline-none text-[13px] text-foreground/70"
-                >
-                  <option value="">{lang === "en" ? "Select Page (Default: General / Home)" : "पृष्ठ चुनें"}</option>
-                  {BANNER_PAGES.map((page) => (
-                    <option key={page} value={page}>
-                      {page}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <Dropdown
+                id="pageName"
+                name="pageName"
+                label={lang === "en" ? "Page Name" : "पृष्ठ का नाम"}
+                options={BannerPageOptions}
+                value={values.pageName || ""}
+                onChange={(val: any) => setFieldValue("pageName", val)}
+                placeholder={
+                  lang === "en"
+                    ? "Select Page (Default: General / Home)"
+                    : "पृष्ठ चुनें (डिफ़ॉल्ट: सामान्य / होम)"
+                }
+                clearable
+                disabled={isView}
+                width="w-full"
+                error={touched.pageName && errors.pageName ? errors.pageName : ""}
+              />
 
               {/* Priority */}
               <CustomInput

@@ -151,7 +151,7 @@ import { Query } from "./query";
 import { Feedback } from "./feedback";
 
 
-export interface DropdownOption<T> {
+export interface DropdownOption<T = any> {
   label: string;
   value: T;
   disabled?: boolean; 
@@ -159,18 +159,26 @@ export interface DropdownOption<T> {
 }
 
 
-export interface AdminDropdownProps<T> {
+export interface AdminDropdownProps<T = any> {
+  id?: string;
+  name?: string;
   options: readonly DropdownOption<T>[];
-  value: T;
+  value?: T;
   onChange: (value: T) => void;
   label?: string;
+  required?: boolean;
   icon?: string;
   placeholder?: string;
   error?: string;
   className?: string;
   disabled?: boolean;
   readOnly?: boolean;
-  width?: string
+  width?: string;
+  searchable?: boolean;
+  searchPlaceholder?: string;
+  loading?: boolean;
+  clearable?: boolean;
+  emptyText?: string;
 }
 
 export interface AdminCustomInputProps {
