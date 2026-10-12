@@ -149,7 +149,14 @@ export const ImageGuidelinesModal: React.FC<ImageGuidelinesModalProps> = ({
                       </div>
                     </td>
                     <td className="py-3.5 px-4 font-medium text-gray-800">
-                      {item.recommendedWidth} × {item.recommendedHeight} px
+                      <div>
+                        {item.recommendedWidth} × {item.recommendedHeight} px
+                      </div>
+                      {item.minWidth && item.minHeight && (
+                        <div className="text-[11px] text-gray-500 font-normal">
+                          Min: {item.minWidth} × {item.minHeight} px
+                        </div>
+                      )}
                     </td>
                     <td className="py-3.5 px-4 text-gray-600 font-normal">
                       Max {item.maxSizeKB} KB

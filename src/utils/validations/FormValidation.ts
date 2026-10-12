@@ -1,16 +1,16 @@
 import * as Yup from "yup";
 import i18n from "i18next";
-import { IMAGE_STANDARDS, ImageStandard } from "../imageStandards";
+import { IMAGE_STANDARDS, ImageStandard, validateImageFile } from "../imageStandards";
 
 /**
- * Validates an individual image File or URL against standard constraints (size & type)
+ * Validates an individual image File or URL against standard constraints (dimensions, resolution, size & type)
  */
 export const createImageFileValidation = (
   standard: ImageStandard,
   isRequired = false,
   requiredMessage = "Image is required"
 ) => {
-  return Yup.mixed().test("imageValidation", function (value) {
+  return Yup.mixed().test("imageValidation", async function (value) {
     if (!value) {
       if (isRequired) return this.createError({ message: requiredMessage });
       return true;
@@ -20,14 +20,10 @@ export const createImageFileValidation = (
       return true;
     }
     if (typeof window !== "undefined" && value instanceof File) {
-      if (!standard.acceptedFormats.includes(value.type)) {
+      const validation = await validateImageFile(value, standard);
+      if (!validation.valid) {
         return this.createError({
-          message: `Invalid format. Allowed: ${standard.formatLabel}`,
-        });
-      }
-      if (value.size > standard.maxSizeKB * 1024) {
-        return this.createError({
-          message: `File size exceeds ${standard.maxSizeKB} KB limit`,
+          message: validation.error || `Invalid image file for ${standard.label}`,
         });
       }
     }

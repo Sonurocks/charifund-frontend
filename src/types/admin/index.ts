@@ -209,7 +209,7 @@ export interface AdminCustomFileInputProps {
   label?: string;
   name: string;
   onChange: (files: File[], updatedImageUrls?: string[]) => void;
-  error?: string;
+  error?: string | string[] | any;
   disabled?: boolean;
   mode?: "add" | "edit" | "view" | "preview-edit";
   initialUrls?: string[];
@@ -217,6 +217,7 @@ export interface AdminCustomFileInputProps {
   uploadType?: "single" | "multiple";
   standard?: ImageStandard;
   onClearError?: () => void;
+  onError?: (error: string) => void;
 }
 
 export interface AdminMultiInputListProps {

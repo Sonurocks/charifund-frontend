@@ -175,7 +175,7 @@ export const formatBytes = (bytes: number, decimals: number = 1): string => {
 };
 
 /**
- * Reads image dimensions in browser asynchronously
+ * Reads image dimensions in browser asynchronously with timeout and safety guards
  */
 export const getImageDimensions = (file: File): Promise<{ width: number; height: number }> => {
   return new Promise((resolve, reject) => {
@@ -184,24 +184,89 @@ export const getImageDimensions = (file: File): Promise<{ width: number; height:
       return;
     }
 
-    const objectUrl = URL.createObjectURL(file);
+    let objectUrl = "";
+    try {
+      objectUrl = URL.createObjectURL(file);
+    } catch {
+      reject(new Error(`Failed to create object URL for "${file.name}".`));
+      return;
+    }
+
     const img = new window.Image();
+    let settled = false;
+
+    const timeout = setTimeout(() => {
+      if (!settled) {
+        settled = true;
+        try {
+          URL.revokeObjectURL(objectUrl);
+        } catch {}
+        reject(new Error(`Timed out decoding image "${file.name}".`));
+      }
+    }, 6000);
+
     img.onload = () => {
-      const width = img.naturalWidth || img.width;
-      const height = img.naturalHeight || img.height;
-      URL.revokeObjectURL(objectUrl);
-      resolve({ width, height });
+      if (!settled) {
+        settled = true;
+        clearTimeout(timeout);
+        const width = img.naturalWidth || img.width;
+        const height = img.naturalHeight || img.height;
+        try {
+          URL.revokeObjectURL(objectUrl);
+        } catch {}
+        resolve({ width, height });
+      }
     };
+
     img.onerror = () => {
-      URL.revokeObjectURL(objectUrl);
-      reject(new Error("Failed to load image for dimension inspection"));
+      if (!settled) {
+        settled = true;
+        clearTimeout(timeout);
+        try {
+          URL.revokeObjectURL(objectUrl);
+        } catch {}
+        reject(new Error(`Failed to decode image "${file.name}". File may be corrupted or unsupported.`));
+      }
     };
+
     img.src = objectUrl;
   });
 };
 
 /**
- * Comprehensive client-side image file validator against defined standards
+ * Helper to inspect SVG dimensions if natural dimensions are not directly available from raster rendering
+ */
+export const getSvgDimensions = async (file: File): Promise<{ width: number; height: number }> => {
+  try {
+    const text = await file.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(text, "image/svg+xml");
+    if (doc.querySelector("parsererror")) {
+      return { width: 0, height: 0 };
+    }
+    const svg = doc.querySelector("svg");
+    if (!svg) return { width: 0, height: 0 };
+
+    let w = parseFloat(svg.getAttribute("width") || "0");
+    let h = parseFloat(svg.getAttribute("height") || "0");
+
+    if ((!w || !h) && svg.getAttribute("viewBox")) {
+      const parts = svg.getAttribute("viewBox")!.trim().split(/[\s,]+/);
+      if (parts.length === 4) {
+        w = parseFloat(parts[2]);
+        h = parseFloat(parts[3]);
+      }
+    }
+    return { width: isNaN(w) ? 0 : w, height: isNaN(h) ? 0 : h };
+  } catch {
+    return { width: 0, height: 0 };
+  }
+};
+
+/**
+ * Comprehensive client-side image file validator against defined standards.
+ * Strictly verifies real width and height, minimum resolution, maximum limits,
+ * file size, and file format. Rejects corrupted or dimension-violating files.
  */
 export const validateImageFile = async (
   file: File,
@@ -226,7 +291,7 @@ export const validateImageFile = async (
   if (!isFormatAllowed) {
     return {
       valid: false,
-      error: `Unsupported file format (${file.type || "unknown"}). Allowed formats for ${standard.label}: ${standard.formatLabel}.`,
+      error: `Unsupported format (${file.type || "unknown"}). Allowed: ${standard.formatLabel}.`,
       width: 0,
       height: 0,
       sizeKB,
@@ -237,31 +302,90 @@ export const validateImageFile = async (
   if (sizeKB > standard.maxSizeKB) {
     return {
       valid: false,
-      error: `File "${file.name}" (${formatBytes(file.size)}) exceeds the ${standard.maxSizeKB} KB limit for ${standard.label}. Recommended size is ${standard.recommendedSizeKB}.`,
+      error: `File size (${formatBytes(file.size)}) exceeds ${standard.maxSizeKB} KB limit.`,
       width: 0,
       height: 0,
       sizeKB,
     };
   }
 
-  // 3. Inspect dimensions (browser environment)
+  // 3. Inspect real decoded dimensions (browser environment)
   let dimensions = { width: 0, height: 0 };
-  let warning: string | undefined;
 
-  try {
-    dimensions = await getImageDimensions(file);
-    if (dimensions.width > 0 && dimensions.height > 0) {
-      if (standard.minWidth && dimensions.width < standard.minWidth) {
-        warning = `Image resolution (${dimensions.width}×${dimensions.height}px) is lower than recommended minimum (${standard.minWidth}px width). It may appear blurry on high-resolution displays.`;
+  if (typeof window !== "undefined") {
+    try {
+      if (file.type === "image/svg+xml") {
+        const text = await file.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(text, "image/svg+xml");
+        if (doc.querySelector("parsererror")) {
+          return {
+            valid: false,
+            error: `Corrupted or invalid SVG file.`,
+            width: 0,
+            height: 0,
+            sizeKB,
+          };
+        }
+        dimensions = await getImageDimensions(file);
+        if (dimensions.width === 0 || dimensions.height === 0) {
+          dimensions = await getSvgDimensions(file);
+        }
+      } else {
+        dimensions = await getImageDimensions(file);
       }
+    } catch {
+      return {
+        valid: false,
+        error: `Corrupted or unreadable image file.`,
+        width: 0,
+        height: 0,
+        sizeKB,
+      };
     }
-  } catch {
-    // Non-fatal if dimension check fails in sandbox
+
+    // Corrupted / 0-dimension check for raster images
+    if (file.type !== "image/svg+xml" && (dimensions.width <= 0 || dimensions.height <= 0)) {
+      return {
+        valid: false,
+        error: `Invalid image dimensions (${dimensions.width}×${dimensions.height}px).`,
+        width: dimensions.width,
+        height: dimensions.height,
+        sizeKB,
+      };
+    }
+
+    // 4. Validate minimum resolution (Hard constraint)
+    const isBelowMinWidth = standard.minWidth && dimensions.width > 0 && dimensions.width < standard.minWidth;
+    const isBelowMinHeight = standard.minHeight && dimensions.height > 0 && dimensions.height < standard.minHeight;
+
+    if (isBelowMinWidth || isBelowMinHeight) {
+      return {
+        valid: false,
+        error: `Image is too small (${dimensions.width}×${dimensions.height}px). Min required: ${standard.minWidth || standard.recommendedWidth}×${standard.minHeight || standard.recommendedHeight}px.`,
+        width: dimensions.width,
+        height: dimensions.height,
+        sizeKB,
+      };
+    }
+
+    // 5. Validate maximum dimensions (Hard constraint)
+    const isAboveMaxWidth = standard.maxWidth && dimensions.width > standard.maxWidth;
+    const isAboveMaxHeight = standard.maxHeight && dimensions.height > standard.maxHeight;
+
+    if (isAboveMaxWidth || isAboveMaxHeight) {
+      return {
+        valid: false,
+        error: `Image is too large (${dimensions.width}×${dimensions.height}px). Max allowed: ${standard.maxWidth || standard.recommendedWidth}×${standard.maxHeight || standard.recommendedHeight}px.`,
+        width: dimensions.width,
+        height: dimensions.height,
+        sizeKB,
+      };
+    }
   }
 
   return {
     valid: true,
-    warning,
     width: dimensions.width,
     height: dimensions.height,
     sizeKB,

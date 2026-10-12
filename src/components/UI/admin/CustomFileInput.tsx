@@ -33,6 +33,7 @@ const CustomFileInput: React.FC<AdminCustomFileInputProps> = ({
   uploadType = "single",
   standard = IMAGE_STANDARDS.general,
   onClearError,
+  onError,
 }) => {
   const [files, setFiles] = useState<ExtendedFileItem[]>([
     ...initialUrls.map((url) => ({
@@ -49,6 +50,7 @@ const CustomFileInput: React.FC<AdminCustomFileInputProps> = ({
     })),
   ]);
 
+  const [fileError, setFileError] = useState<string | null>(null);
   const [showGuidelinesModal, setShowGuidelinesModal] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const isView = mode === "view";
@@ -56,6 +58,17 @@ const CustomFileInput: React.FC<AdminCustomFileInputProps> = ({
   const { t } = useTranslation();
 
   const activeStandard: ImageStandard = standard || IMAGE_STANDARDS.general;
+
+  // Resolve active error string across field-level error and Formik error
+  const displayError =
+    fileError ||
+    (typeof error === "string"
+      ? error
+      : Array.isArray(error)
+        ? (error as any[]).filter(Boolean).join(", ")
+        : error
+          ? String(error)
+          : "");
 
   // Simulate upload progress
   const simulateUpload = (index: number) => {
@@ -82,20 +95,15 @@ const CustomFileInput: React.FC<AdminCustomFileInputProps> = ({
     if (selected.length === 0) return;
 
     const validatedItems: ExtendedFileItem[] = [];
+    let lastValidationError: string | null = null;
 
     for (const file of selected) {
       const validation = await validateImageFile(file, activeStandard);
 
       if (!validation.valid) {
-        toast.error(validation.error || t("Invalid image file."));
+        lastValidationError = validation.error || t("Invalid image file.");
+        toast.error(lastValidationError);
         continue;
-      }
-
-      if (validation.warning) {
-        toast(validation.warning, {
-          icon: "⚠️",
-          duration: 4000,
-        });
       }
 
       validatedItems.push({
@@ -110,9 +118,17 @@ const CustomFileInput: React.FC<AdminCustomFileInputProps> = ({
     }
 
     if (validatedItems.length === 0) {
+      if (lastValidationError) {
+        setFileError(lastValidationError);
+        onError?.(lastValidationError);
+      }
       if (inputRef.current) inputRef.current.value = "";
       return;
     }
+
+    // Clear file error when valid items are accepted
+    setFileError(null);
+    onClearError?.();
 
     const updated =
       uploadType === "single"
@@ -129,8 +145,6 @@ const CustomFileInput: React.FC<AdminCustomFileInputProps> = ({
         .map((f) => f.url)
         .filter((u) => typeof u === "string" && !u.startsWith("blob:"))
     );
-
-    onClearError?.();
 
     // Trigger upload animation
     validatedItems.forEach((_, idx) => {
@@ -161,6 +175,7 @@ const CustomFileInput: React.FC<AdminCustomFileInputProps> = ({
   const removeFile = (idx: number) => {
     const updated = files.filter((_, i) => i !== idx);
     setFiles(updated);
+    setFileError(null);
 
     const keptFiles = updated.filter((f) => f.file).map((f) => f.file!);
     const keptUrls = updated
@@ -191,6 +206,11 @@ const CustomFileInput: React.FC<AdminCustomFileInputProps> = ({
               <Icon icon="mdi:ruler-square" className="text-sm text-yellow-600" />
               {activeStandard.recommendedWidth} × {activeStandard.recommendedHeight} px ({activeStandard.aspectRatio})
             </span>
+            {activeStandard.minWidth && activeStandard.minHeight && (
+              <span className="text-gray-500 text-[11px]">
+                (Min: {activeStandard.minWidth} × {activeStandard.minHeight} px)
+              </span>
+            )}
             <span className="text-gray-300">|</span>
             <span className="flex items-center gap-1 text-gray-600">
               <Icon icon="mdi:weight" className="text-sm text-yellow-600" />
@@ -220,8 +240,7 @@ const CustomFileInput: React.FC<AdminCustomFileInputProps> = ({
           onDrop={handleDrop}
           onDragOver={handleDragOver}
           className={`border-2 border-dashed rounded-lg p-5 text-center cursor-pointer transition-colors
-            ${error ? "border-red-500 bg-red/5" : "border-yellow bg-gray-100/70 hover:bg-gray-100"} 
-            relative`}
+            ${displayError ? "border-red" : "border-yellow"} bg-gray-100/70 hover:bg-gray-100 relative`}
         >
           <input
             id={name}
@@ -313,7 +332,12 @@ const CustomFileInput: React.FC<AdminCustomFileInputProps> = ({
         </div>
       )}
 
-      {error && <p className="text-xs text-red mt-1 font-medium">{error}</p>}
+      {displayError && (
+        <p className="flex items-center gap-1.5 text-xs text-red mt-1.5 font-medium">
+          <Icon icon="mdi:alert-circle-outline" className="text-sm shrink-0" />
+          <span>{displayError}</span>
+        </p>
+      )}
 
       {/* Guidelines Modal */}
       <ImageGuidelinesModal

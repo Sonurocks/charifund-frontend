@@ -95,6 +95,7 @@ const BannerForm: React.FC<BannerFormProps> = ({
           values,
           handleChange,
           setFieldValue,
+          setFieldError,
           setTouched,
           errors,
           touched,
@@ -250,6 +251,8 @@ const BannerForm: React.FC<BannerFormProps> = ({
                     ? errors.image
                     : ""
                 }
+                onError={(err) => setFieldError("image", err)}
+                onClearError={() => setFieldError("image", undefined)}
                 onChange={(files, existingUrls) => {
                   if (files.length > 0) {
                     setFieldValue("image", files[0]);

@@ -153,6 +153,10 @@ const EventForm = ({ initialData, onClose, mode, onPreview }: EventFormProps) =>
                 return;
               }
 
+              if (formErrors._combinedImagesGuard || formErrors.images) {
+                return;
+              }
+
               // If English is clean, switch to Hindi and stop
               toggleLanguage("hi");
               return;
@@ -168,6 +172,10 @@ const EventForm = ({ initialData, onClose, mode, onPreview }: EventFormProps) =>
               // Then check for Hindi errors or required date/time fields
               if (hasErrorsForLang(formErrors, "hi") || !dateTimeValid) {
                 // Errors found in Hindi/Date-Time, stop here and show them
+                return;
+              }
+
+              if (formErrors._combinedImagesGuard || formErrors.images) {
                 return;
               }
 

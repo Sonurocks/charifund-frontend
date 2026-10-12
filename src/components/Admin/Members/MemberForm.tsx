@@ -193,11 +193,7 @@ const MemberForm = ({
                                 label={`${lang === "en" ? "Profile Image" : "प्रोफ़ाइल छवि"}*`}
                                 name="image"
                                 standard={IMAGE_STANDARDS.member}
-                                error={touched.image && !values.image && typeof errors.image === "string" ? errors.image : ""}
-                                // onChange={(files, existingUrl) => {
-                                //     setFieldValue("image", files[0], true);
-                                //     setFieldValue("existingImage", existingUrl);
-                                // }}
+                                error={touched.image && typeof errors.image === "string" ? errors.image : ""}
                                 mode={mode}
                                 initialUrls={
                                     initialData?.image

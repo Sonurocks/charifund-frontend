@@ -88,7 +88,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
       }
     }
 
-    if (formErrors.images) return;
+    if (formErrors.images || formErrors._combinedImagesGuard) return;
     submitForm();
   };
 

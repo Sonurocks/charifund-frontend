@@ -135,7 +135,7 @@ const BlogForm = ({
                 return;
               }
 
-              if (formErrors._combinedImagesGuard) {
+              if (formErrors._combinedImagesGuard || formErrors.images) {
                 return;
               }
 
@@ -151,7 +151,7 @@ const BlogForm = ({
                 }
               }
 
-              if (formErrors._combinedImagesGuard) {
+              if (formErrors._combinedImagesGuard || formErrors.images) {
                 return;
               }
               submitForm();
@@ -317,9 +317,16 @@ const BlogForm = ({
                 disabled={isView}
                 mode={mode}
                 error={
-                  touched._combinedImagesGuard && errors._combinedImagesGuard
+                  (touched._combinedImagesGuard && errors._combinedImagesGuard
                     ? String(errors._combinedImagesGuard)
-                    : ""
+                    : "") ||
+                  (errors.images
+                    ? typeof errors.images === "string"
+                      ? errors.images
+                      : Array.isArray(errors.images)
+                        ? (errors.images as any[]).filter(Boolean).join(", ")
+                        : String(errors.images)
+                    : "")
                 }
               />
 
