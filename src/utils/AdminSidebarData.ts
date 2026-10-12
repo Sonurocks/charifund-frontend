@@ -1,5 +1,5 @@
 import { MdOutlineDashboardCustomize, MdNotificationsActive, MdCampaign, MdCategory, MdEvent } from "react-icons/md";
-import { FaBloggerB, FaComments } from "react-icons/fa";
+import { FaBloggerB, FaComments, FaHandshake } from "react-icons/fa";
 import { TbBrandGoogleBigQuery } from "react-icons/tb";
 import { PiFlagBannerFill } from "react-icons/pi";
 import { VscFeedback } from "react-icons/vsc";
@@ -62,6 +62,12 @@ export const sidebarAd = [
     lable: "Members",
     nav: "members",
     link: "/admin/members",
+  },
+  {
+    icon: FaHandshake,
+    lable: "Sponsors",
+    nav: "sponsors",
+    link: "/admin/sponsors",
   },
   {
     icon: VscFeedback,

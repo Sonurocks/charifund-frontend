@@ -8,20 +8,38 @@ import FadeUpCard from "@/src/animations/FadeButtomUp";
 import AnimatedReveal from "@/src/animations/AnimatedReveal";
 import PageBanner from "@/src/helper/PageBanner";
 import { ourcausebanner } from "@/public/assets";
+import { useTranslation } from "react-i18next";
+import { useState } from "react";
 
 interface SponsorDetailsProps {
   sponsor: Sponsor;
 }
 
+const getLocalizedValue = (val: any, lang: string): string => {
+  if (!val) return "";
+  if (typeof val === "string") return val;
+  return val[lang] || val.en || "";
+};
+
 const SponsorDetails = ({ sponsor }: SponsorDetailsProps) => {
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language || "en";
+  const [imgSrc, setImgSrc] = useState(sponsor.logo || "/assets/aboutus.webp");
+
+  const name = getLocalizedValue(sponsor.name, currentLang);
+  const categoryRaw = getLocalizedValue(sponsor.category, currentLang);
+  const category = t(categoryRaw) || categoryRaw;
+  const location = getLocalizedValue(sponsor.location, currentLang);
+  const shortDescription = getLocalizedValue(sponsor.shortDescription, currentLang);
+  const description = getLocalizedValue(sponsor.description, currentLang);
+
   return (
     <div className="min-h-screen bg-white font-nunito">
-
-      {/* ── Reusable Banner (same as Campaign, About, etc.) ── */}
+      {/* ── Reusable Banner ── */}
       <PageBanner
         bgImage={ourcausebanner}
         tagline="Together for a Better Society"
-        title={sponsor.name}
+        title={name}
         smallIcon="mdi:handshake-outline"
         titleClassName="leading-tight xl:leading-[1.1]"
       />
@@ -30,16 +48,16 @@ const SponsorDetails = ({ sponsor }: SponsorDetailsProps) => {
       <section className="container mx-auto px-4 max-w-5xl py-14 md:py-20">
         <AnimatedReveal direction="up" duration={0.7}>
           <div className="flex flex-col md:flex-row gap-10 md:gap-16 items-start">
-
             {/* Left — Logo + Meta */}
             <FadeUpCard delay={0.1} className="w-full md:w-72 flex-shrink-0">
               <div className="bg-gray-50 rounded-2xl border border-gray-100 p-8 flex items-center justify-center mb-5">
                 <Image
-                  src={sponsor.logo}
-                  alt={`${sponsor.name} logo`}
+                  src={imgSrc}
+                  alt={`${name} logo`}
                   width={200}
                   height={100}
                   className="object-contain w-auto h-24"
+                  onError={() => setImgSrc("/assets/aboutus.webp")}
                 />
               </div>
 
@@ -48,17 +66,24 @@ const SponsorDetails = ({ sponsor }: SponsorDetailsProps) => {
                 <div className="flex items-center gap-3 bg-green/5 border border-green/20 rounded-xl px-4 py-3">
                   <Icon icon="mdi:tag-outline" className="text-dark-green text-lg flex-shrink-0" />
                   <div>
-                    <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide">Category</p>
-                    <p className="text-sm text-foreground font-semibold">{sponsor.category}</p>
+                    <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide">
+                      {t("Category")}
+                    </p>
+                    <p className="text-sm text-foreground font-semibold">{category}</p>
                   </div>
                 </div>
 
-                {sponsor.location && (
+                {location && (
                   <div className="flex items-center gap-3 bg-green/5 border border-green/20 rounded-xl px-4 py-3">
-                    <Icon icon="mdi:map-marker-outline" className="text-dark-green text-lg flex-shrink-0" />
+                    <Icon
+                      icon="mdi:map-marker-outline"
+                      className="text-dark-green text-lg flex-shrink-0"
+                    />
                     <div>
-                      <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide">Location</p>
-                      <p className="text-sm text-foreground font-semibold">{sponsor.location}</p>
+                      <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide">
+                        {t("Location")}
+                      </p>
+                      <p className="text-sm text-foreground font-semibold">{location}</p>
                     </div>
                   </div>
                 )}
@@ -72,8 +97,12 @@ const SponsorDetails = ({ sponsor }: SponsorDetailsProps) => {
                   >
                     <Icon icon="mdi:web" className="text-yellow text-lg flex-shrink-0" />
                     <div>
-                      <p className="text-xs text-yellow font-semibold uppercase tracking-wide">Website</p>
-                      <p className="text-sm font-semibold truncate max-w-[160px]">Visit Website</p>
+                      <p className="text-xs text-yellow font-semibold uppercase tracking-wide">
+                        {t("Website")}
+                      </p>
+                      <p className="text-sm font-semibold truncate max-w-[160px]">
+                        {t("Visit Website")}
+                      </p>
                     </div>
                     <Icon
                       icon="mdi:arrow-top-right"
@@ -86,13 +115,17 @@ const SponsorDetails = ({ sponsor }: SponsorDetailsProps) => {
 
             {/* Right — Content */}
             <FadeUpCard delay={0.2} className="flex-1 min-w-0">
-              <p className="text-lg md:text-xl font-semibold text-dark-green leading-snug mb-6 border-l-4 border-yellow pl-4">
-                {sponsor.shortDescription}
-              </p>
+              {shortDescription && (
+                <p className="text-lg md:text-xl font-semibold text-dark-green leading-snug mb-6 border-l-4 border-yellow pl-4">
+                  {shortDescription}
+                </p>
+              )}
               <div className="text-gray-600 leading-relaxed space-y-4">
-                {sponsor.description.split("\n").map((para, i) => (
-                  <p key={i}>{para}</p>
-                ))}
+                {description ? (
+                  description.split("\n").map((para, i) => <p key={i}>{para}</p>)
+                ) : (
+                  <p>{shortDescription}</p>
+                )}
               </div>
             </FadeUpCard>
           </div>
@@ -108,7 +141,7 @@ const SponsorDetails = ({ sponsor }: SponsorDetailsProps) => {
               icon="mdi:arrow-left"
               className="text-xl group-hover:-translate-x-1 transition-transform duration-200"
             />
-            Back to All Sponsors
+            {t("Back to All Sponsors")}
           </Link>
         </div>
       </section>

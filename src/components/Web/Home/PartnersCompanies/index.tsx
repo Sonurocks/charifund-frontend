@@ -1,17 +1,23 @@
 "use client";
+
+import { useMemo } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/autoplay";
 import { Autoplay } from "swiper/modules";
 import Image from "next/image";
 import Link from "next/link";
+import { useFetchPublicSponsors } from "@/src/hooks/web/useSponsors";
 import { getAllSponsors } from "@/src/data/sponsors";
 
-// Duplicate sponsors list for a seamless infinite loop appearance
-const sponsors = getAllSponsors();
-const displaySponsors = [...sponsors, ...sponsors];
-
 const PartnersCompanies = () => {
+  const { data } = useFetchPublicSponsors();
+
+  const displaySponsors = useMemo(() => {
+    const list = data?.sponsors && data.sponsors.length > 0 ? data.sponsors : getAllSponsors();
+    return [...list, ...list];
+  }, [data?.sponsors]);
+
   return (
     <div className="w-full bg-[var(--gray-200)] py-16 overflow-hidden">
       <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-8">
@@ -44,23 +50,26 @@ const PartnersCompanies = () => {
             },
           }}
         >
-          {displaySponsors.map((sponsor, idx) => (
-            <SwiperSlide key={`${sponsor.id}-${idx}`} className="flex justify-center">
-              <Link
-                href={`/sponsors/${sponsor.slug}`}
-                title={sponsor.name}
-                aria-label={`View ${sponsor.name} details`}
-              >
-                <Image
-                  src={sponsor.logo}
-                  alt={sponsor.name}
-                  width={120}
-                  height={80}
-                  className="object-contain opacity-75 hover:opacity-100 transition duration-300 cursor-pointer"
-                />
-              </Link>
-            </SwiperSlide>
-          ))}
+          {displaySponsors.map((sponsor, idx) => {
+            const name = typeof sponsor.name === "string" ? sponsor.name : sponsor.name?.en || "Sponsor";
+            return (
+              <SwiperSlide key={`${sponsor.id || sponsor.slug}-${idx}`} className="flex justify-center">
+                <Link
+                  href={`/sponsors/${sponsor.slug}`}
+                  title={name}
+                  aria-label={`View ${name} details`}
+                >
+                  <Image
+                    src={sponsor.logo || "/assets/aboutus.webp"}
+                    alt={name}
+                    width={120}
+                    height={80}
+                    className="object-contain opacity-75 hover:opacity-100 transition duration-300 cursor-pointer"
+                  />
+                </Link>
+              </SwiperSlide>
+            );
+          })}
         </Swiper>
       </div>
     </div>
@@ -68,4 +77,3 @@ const PartnersCompanies = () => {
 };
 
 export default PartnersCompanies;
-

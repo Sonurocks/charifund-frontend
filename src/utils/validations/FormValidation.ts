@@ -417,3 +417,46 @@ export const feedbackSchema = Yup.object({
 });
 
 export type FeedbackFormValues = Yup.InferType<typeof feedbackSchema>;
+
+// ======================= Sponsor ======================
+export const sponsorSchema = Yup.object({
+  name: Yup.object({
+    en: Yup.string().required("Sponsor name is required in English"),
+    hi: Yup.string().required("प्रायोजक का नाम हिंदी में आवश्यक है"),
+  }),
+  category: Yup.object({
+    en: Yup.string().required("Category is required in English"),
+    hi: Yup.string().required("श्रेणी हिंदी में आवश्यक है"),
+  }),
+  location: Yup.object({
+    en: Yup.string().default(""),
+    hi: Yup.string().default(""),
+  }).optional(),
+  shortDescription: Yup.object({
+    en: Yup.string().required("Short description is required in English"),
+    hi: Yup.string().required("संक्षिप्त विवरण हिंदी में आवश्यक है"),
+  }),
+  description: Yup.object({
+    en: Yup.string().required("Detailed description is required in English"),
+    hi: Yup.string().required("विस्तृत विवरण हिंदी में आवश्यक है"),
+  }),
+  website: Yup.string()
+    .url("Must be a valid URL / मान्य URL होना चाहिए")
+    .optional()
+    .nullable(),
+  logo: Yup.mixed()
+    .test(
+      "fileOrString",
+      "Logo is required / लोगो आवश्यक है",
+      (value) => {
+        if (typeof value === "string" && value.trim() !== "") return true;
+        if (value instanceof File) return true;
+        return false;
+      }
+    )
+    .required("Logo is required / लोगो आवश्यक है"),
+  existingImages: Yup.array().of(Yup.string().nullable()).optional().default([]),
+});
+
+export type SponsorFormValues = Yup.InferType<typeof sponsorSchema>;
+

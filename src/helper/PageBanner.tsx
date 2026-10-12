@@ -355,24 +355,6 @@ const PageBanner: React.FC<ExtendedPageBannerProps> = ({
             </motion.div>
           </div>
         )}
-
-        {/* Carousel Indicators / Dots */}
-        {activeSlides.length > 1 && (
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 z-30">
-            {activeSlides.map((b, i) => (
-              <button
-                key={b.id || i}
-                onClick={() => setIndex(i)}
-                className={`h-2.5 rounded-full transition-all duration-300 ${
-                  i === index
-                    ? "bg-yellow w-7"
-                    : "bg-white/60 hover:bg-white w-2.5"
-                }`}
-                aria-label={`Go to banner ${i + 1}`}
-              />
-            ))}
-          </div>
-        )}
       </div>
     </section>
   );

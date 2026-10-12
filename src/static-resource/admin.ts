@@ -66,3 +66,10 @@ export const memberSearchOptions = [
   { label: "Position", value: "position" },
   { label: "Title", value: "title" },
 ] as const;
+
+export const SponsorSearchOptions = [
+  { label: "Name", value: "name" },
+  { label: "Category", value: "category" },
+  { label: "Location", value: "location" },
+] as const;
+
