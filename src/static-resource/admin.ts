@@ -47,10 +47,10 @@ export const BANNER_PAGES = [
   "Contact Us",
   "Blog",
   "Events",
-  "FAQ",
   "Sponsors",
   "Team",
   "Donate Us",
+  "Services",
 ] as const;
 
 export type BannerPageName = (typeof BANNER_PAGES)[number];
