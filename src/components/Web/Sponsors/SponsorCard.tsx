@@ -7,6 +7,7 @@ import { Icon } from "@iconify/react";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { getOptimizedImageUrl } from "@/src/utils/imageStandards";
 
 interface SponsorCardProps {
   sponsor: Sponsor;
@@ -44,10 +45,11 @@ const SponsorCard = ({ sponsor }: SponsorCardProps) => {
 
           <div className="relative w-full h-full flex justify-center items-center group-hover:scale-105 transition-transform duration-500">
             <Image
-              src={imgSrc}
+              src={getOptimizedImageUrl(imgSrc, { width: 400, quality: "auto", format: "auto" })}
               alt={`${name} logo`}
               width={200}
               height={100}
+              loading="lazy"
               className="object-contain max-h-full opacity-90 group-hover:opacity-100 drop-shadow-sm transition-opacity duration-300"
               onError={() => setImgSrc("/assets/aboutus.webp")}
             />

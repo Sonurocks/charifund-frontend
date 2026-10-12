@@ -15,6 +15,7 @@ import CustomLoader from "../../UI/web/Loader/CustomLoader";
 import PageBanner from "@/src/helper/PageBanner";
 import Sidebar from "../../UI/web/sideBar";
 import { FaRegCheckCircle } from "react-icons/fa";
+import { getOptimizedImageUrl } from "@/src/utils/imageStandards";
 
 const EventDetail = () => {
   const eventTid = useParams().id as string;
@@ -44,11 +45,12 @@ const EventDetail = () => {
               {isLoading ? <CustomLoader /> : <>
                 <div className="relative w-full h-[220px] sm:h-[300px] lg:h-[450px] mb-6 rounded-lg overflow-hidden">
                   <Image
-                    src={event?.images?.[0] || "/default-image.webp"}
+                    src={getOptimizedImageUrl(event?.images?.[0], { width: 1200, quality: "auto", format: "auto" })}
                     alt={event?.title || "Event image"}
                     fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 70vw, 800px"
                     className="object-cover object-center"
-                     loading="lazy"
+                    priority
                   />
                 </div>
 
@@ -91,7 +93,14 @@ const EventDetail = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
                     {event.images.slice(1).map((img, idx) => (
                       <div key={idx} className={`relative w-full rounded-lg overflow-hidden ${idx === 0 ? 'h-[300px]' : 'h-[220px] sm:h-[300px]'}`}>
-                        <Image src={img} alt={`Detail ${idx + 1}`} fill className="object-cover" loading="lazy" />
+                        <Image
+                          src={getOptimizedImageUrl(img, { width: 800, quality: "auto", format: "auto" })}
+                          alt={`Detail ${idx + 1}`}
+                          fill
+                          sizes="(max-width: 640px) 100vw, 400px"
+                          className="object-cover"
+                          loading="lazy"
+                        />
                       </div>
                     ))}
                   </div>

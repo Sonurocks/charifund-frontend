@@ -20,6 +20,7 @@ import { BannerFormProps } from "@/src/types/admin/banner";
 import { submitBannerForm } from "@/src/hooks/admin/useBanner";
 import { useLanguageToggle } from "@/src/hooks/admin/useLanguageToggle";
 import { hasErrorsForLang } from "../../UI/admin/hasErrorsForLang";
+import { IMAGE_STANDARDS } from "@/src/utils/imageStandards";
 
 //  Dynamic Imports
 const CustomInput = dynamic(() => import("../../UI/admin/CustomInput"), { ssr: false });
@@ -235,6 +236,7 @@ const BannerForm: React.FC<BannerFormProps> = ({
                 label={`${lang === "en" ? "Image" : "छवि"}*`}
                 name="image"
                 mode={mode}
+                standard={IMAGE_STANDARDS.banner}
                 initialUrls={
                   initialData?.image
                     ? Array.isArray(initialData.image)

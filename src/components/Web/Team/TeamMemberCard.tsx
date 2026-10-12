@@ -7,6 +7,7 @@ import { motion, useAnimation, useInView } from "framer-motion";
 import { SocialBar } from "../../UI/web/SocialBar";
 import { VolunteerCardProps } from "@/src/types/web/members";
 import { useRouter } from "next/navigation";
+import { getOptimizedImageUrl } from "@/src/utils/imageStandards";
 
 export const VolunteerCard: React.FC<VolunteerCardProps & { isClickable?: boolean }> = ({ member, idx, isClickable = true }) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -51,12 +52,13 @@ export const VolunteerCard: React.FC<VolunteerCardProps & { isClickable?: boolea
         onClick={() => isClickable && router.push(`/team/${member.id}`)}
       >
         <Image
-          src={member.image || "/assets/volunteer1.webp"}
+          src={getOptimizedImageUrl(member.image || "/assets/volunteer1.webp", { width: 600, quality: "auto", format: "auto" })}
           alt={member.name}
           fill
           sizes="(max-width: 768px) 100vw, 
          (max-width: 1200px) 50vw, 
          25vw"
+          loading="lazy"
           className="object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
         />
 

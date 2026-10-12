@@ -12,6 +12,7 @@ import { getInitialSponsorValues } from "../InitialValues/sponsorInitialValues";
 import Button from "../../UI/web/Buttons/Button";
 import CancelButton from "../../UI/web/Buttons/CancelButton";
 import { useLanguageToggle } from "@/src/hooks/admin/useLanguageToggle";
+import { IMAGE_STANDARDS } from "@/src/utils/imageStandards";
 
 const SponsorForm = ({
   initialData,
@@ -184,6 +185,7 @@ const SponsorForm = ({
                 label={`${lang === "en" ? "Sponsor Logo" : "प्रायोजक लोगो"}*`}
                 name="logo"
                 mode={mode}
+                standard={IMAGE_STANDARDS.sponsor}
                 uploadType="single"
                 initialUrls={initialLogoUrl}
                 error={touched.logo && typeof errors.logo === "string" ? errors.logo : ""}

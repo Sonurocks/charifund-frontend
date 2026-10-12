@@ -7,7 +7,7 @@ import { deleteSingleEvent, fetchAllEvent, fetchEventById } from "@/src/services
 import { EventFormProps } from "@/src/types/admin/event";
 import { mergeDateTime } from "@/src/helper/mergeDateTime";
 
-const buildFormData = (values: EventFormValues & { existingImages?: string[] }) => {
+const buildFormData = (values: EventFormValues) => {
   const formData = new FormData();
 
   const appendNestedObject = (key: string, obj: any) => {
@@ -121,7 +121,7 @@ const handleUpdateEvent = (
 
 // ✅ Unified event form submit
 export const submitEventForm = (
-  values: EventFormValues & { existingImages?: string[] },
+  values: EventFormValues,
   initialData: EventFormProps["initialData"],
   createMutation: any,
   updateMutation: any,

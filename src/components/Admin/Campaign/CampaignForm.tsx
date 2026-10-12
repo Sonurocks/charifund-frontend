@@ -15,6 +15,7 @@ import { getInitialCanpaignValues } from "../InitialValues/campaignIntialValues"
 import { hasErrorsForLang } from "../../UI/admin/hasErrorsForLang";
 import { CampaignFormProps } from "@/src/types/admin/campaign";
 import { useLanguageToggle } from "@/src/hooks/admin/useLanguageToggle";
+import { IMAGE_STANDARDS } from "@/src/utils/imageStandards";
 
 //  Dynamic Imports
 const { Formik, Form } = require("formik");
@@ -235,6 +236,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({
               <CustomFileInput
                 label={lang === "en" ? "Campaign Images" : "अभियान की छवियाँ"}
                 name="images"
+                standard={IMAGE_STANDARDS.campaign}
                 error={
                   (errors as any)?.images ||
                   (errors as any)?.existingImages ||

@@ -11,6 +11,7 @@ import { useCreateFeedback, submitFeedbackForm } from '@/src/hooks/web/useFeedba
 import { useTranslation } from 'react-i18next';
 import { FeedbackFormValues, feedbackSchema } from '@/src/utils/validations/FormValidation';
 import Image from "next/image";
+import { IMAGE_STANDARDS, validateImageFile } from '@/src/utils/imageStandards';
 const Formik = lazy(() => import("formik").then(module => ({ default: module.Formik })));
 const Form = lazy(() => import("formik").then(module => ({ default: module.Form })));
 
@@ -279,13 +280,13 @@ const FormComponent = ({ onClose }: { onClose: () => void }) => {
                           <input
                             type="file"
                             name="image"
-                            accept="image/*"
-                            onChange={(e) => {
+                            accept={IMAGE_STANDARDS.feedback.acceptedFormats.join(",")}
+                            onChange={async (e) => {
                               const file = e.target.files?.[0] || null;
                               if (file) {
-                                const maxSize = 5 * 1024 * 1024;
-                                if (file.size > maxSize) {
-                                  setImageSizeError(t('Image size must be less than 5MB.'));
+                                const validation = await validateImageFile(file, IMAGE_STANDARDS.feedback);
+                                if (!validation.valid) {
+                                  setImageSizeError(validation.error || t('Invalid image file.'));
                                   setImagePreview(null);
                                   setImageName('');
                                   setFieldValue('image', null);

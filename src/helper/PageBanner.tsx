@@ -14,6 +14,7 @@ import AnimatedReveal from "@/src/animations/AnimatedReveal";
 
 import { Banner } from "@/src/types/web/banner";
 import { useFetchAllBanners } from "@/src/hooks/web/useBanner";
+import { getOptimizedImageUrl } from "@/src/utils/imageStandards";
 
 export interface ExtendedPageBannerProps extends PageBannerProps {
   pageName?: string;
@@ -206,11 +207,11 @@ const PageBanner: React.FC<ExtendedPageBannerProps> = ({
         >
           {bgUrl && (
             <Image
-              src={bgUrl}
+              src={getOptimizedImageUrl(bgUrl, { width: 1920, quality: "auto", format: "auto" })}
               alt={t(finalTitle || "Page Banner")}
               fill
               priority
-              unoptimized
+              sizes="100vw"
               className="object-cover object-center"
               onError={() => {
                 if (hasBackendBanner && currentBannerId) {

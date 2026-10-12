@@ -13,6 +13,7 @@ import { BlogFormProps } from "@/src/types/admin/blog";
 import { Category } from "@/src/types/admin/category";
 import { hasErrorsForLang } from "../../UI/admin/hasErrorsForLang";
 import { getInitialBlogValues } from "../InitialValues/blogInitialValues";
+import { IMAGE_STANDARDS } from "@/src/utils/imageStandards";
 
 const CustomInput = dynamic(() => import("../../UI/admin/CustomInput"), {
   loading: () => <p>Loading input...</p>,
@@ -306,6 +307,7 @@ const BlogForm = ({
               <CustomFileInput
                 label="Blog Images*"
                 name="images"
+                standard={IMAGE_STANDARDS.blog}
                 onChange={(files, existingUrls) => {
                   setFieldValue("images", files);
                   setFieldValue("existingImages", existingUrls as string[]);

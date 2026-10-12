@@ -1,6 +1,7 @@
 import { BannerFormValues, BlogFormValues, CampaignFormValues, EventFormValues, MemberFormValues } from "@/src/utils/validations/FormValidation";
 import { Comment } from "../web/comments";
 import { JSX } from "react";
+import { ImageStandard } from "@/src/utils/imageStandards";
 
 export interface AdminSideBarTabProps {
   isOpen: boolean;
@@ -206,6 +207,8 @@ export interface AdminCustomFileInputProps {
   initialUrls?: string[];
   initialFiles?: File[];
   uploadType?: "single" | "multiple";
+  standard?: ImageStandard;
+  onClearError?: () => void;
 }
 
 export interface AdminMultiInputListProps {

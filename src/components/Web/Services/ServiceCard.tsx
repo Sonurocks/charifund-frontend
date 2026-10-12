@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { Icon } from "@iconify/react";
 import { useTranslation } from "react-i18next";
 import { ServiceItem } from "@/src/static-resource/services";
+import { getOptimizedImageUrl } from "@/src/utils/imageStandards";
 
 interface ServiceCardProps {
   service: ServiceItem;
@@ -25,9 +26,11 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
       {/* Image Container with subtle zoom on hover */}
       <div className="relative w-full h-48 sm:h-56 overflow-hidden">
         <Image
-          src={imgSrc}
+          src={getOptimizedImageUrl(imgSrc, { width: 600, quality: "auto", format: "auto" })}
           alt={t(service.titleKey)}
           fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
+          loading="lazy"
           className="object-cover transition-transform duration-500 group-hover:scale-105"
           onError={() => setImgSrc("/assets/aboutus.webp")}
         />

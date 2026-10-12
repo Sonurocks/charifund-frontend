@@ -14,6 +14,7 @@ import CancelButton from "../../UI/web/Buttons/CancelButton";
 import { updateFeedback } from "@/src/services/admin/feedbackApi";
 import { FeedbackFormProps } from "@/src/types/admin";
 import Image from "next/image";
+import { getOptimizedImageUrl } from "@/src/utils/imageStandards";
 
 
 
@@ -149,9 +150,10 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ initialData, onClose, mode 
 
             <div className="relative w-[200px] h-[200px] rounded-lg overflow-hidden">
               <Image
-                src={(values.image as string) || "/default-avatar.webp"} // fallback agar image missing ho
+                src={getOptimizedImageUrl(values.image as string, { width: 300, quality: "auto", format: "auto" })}
                 alt="Feedback user"
                 fill
+                sizes="200px"
                 className="object-cover object-center rounded-lg"
                 priority
               />

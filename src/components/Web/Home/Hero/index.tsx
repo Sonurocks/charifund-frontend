@@ -20,6 +20,7 @@ import { pageBannerBackgourndColor } from "@/src/helper/PageBanner";
 import { Banner } from "@/src/types/web/banner";
 import ArrowButton from "@/src/components/UI/web/Buttons/ArrowButton";
 import { useTranslation } from "react-i18next";
+import { getOptimizedImageUrl } from "@/src/utils/imageStandards";
 
 const staticImages = [bannerOne.src, bannerTwo.src];
 
@@ -126,11 +127,11 @@ const HeroStaticSlider = () => {
       >
         {currentImgSrc && (
           <Image
-            src={currentImgSrc}
+            src={getOptimizedImageUrl(currentImgSrc, { width: 1920, quality: "auto", format: "auto" })}
             alt={bannerTitle || "Hero Banner"}
             fill
             priority
-            unoptimized
+            sizes="100vw"
             className="object-cover object-center"
             onError={() => {
               setFailedIndices((prev) => ({ ...prev, [index]: true }));

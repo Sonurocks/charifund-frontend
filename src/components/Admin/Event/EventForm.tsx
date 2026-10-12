@@ -20,6 +20,7 @@ import FieldBox from "../../UI/admin/FieldBox";
 import { FaCalendarAlt } from "react-icons/fa";
 import { IoMdTime } from "react-icons/io";
 import { hasErrorsForLang } from "../../UI/admin/hasErrorsForLang";
+import { IMAGE_STANDARDS } from "@/src/utils/imageStandards";
 
 const EventForm = ({ initialData, onClose, mode, onPreview }: EventFormProps) => {
   const initialValues = getInitialEventValues(initialData);
@@ -132,6 +133,8 @@ const EventForm = ({ initialData, onClose, mode, onPreview }: EventFormProps) =>
               endDate: true,
               endTime: true,
               images: true,
+              existingImages: true,
+              _combinedImagesGuard: true,
               latitude: true,
               longitude: true,
             });
@@ -322,27 +325,50 @@ const EventForm = ({ initialData, onClose, mode, onPreview }: EventFormProps) =>
               <CustomFileInput
                 label={lang === "en" ? "Event Images" : "कार्यक्रम चित्र"}
                 name="images"
+                standard={IMAGE_STANDARDS.event}
                 uploadType="multiple"
                 disabled={isView}
                 mode={mode}
                 initialUrls={
-                  Array.isArray(initialData?.existingImages) && initialData.existingImages.length > 0
+                  Array.isArray(values.existingImages) && values.existingImages.length > 0
+                    ? values.existingImages.filter((img): img is string => typeof img === "string" && !!img)
+                    : Array.isArray(initialData?.existingImages) && initialData.existingImages.length > 0
                     ? initialData.existingImages.filter((img): img is string => typeof img === "string" && !!img)
                     : Array.isArray(initialData?.images)
-                      ? initialData.images.map(img => typeof img === "string" ? img : img instanceof File ? URL.createObjectURL(img) : "").filter(Boolean)
+                      ? initialData.images.filter((img): img is string => typeof img === "string" && !!img)
                       : []
                 }
-                error={touched.images && errors.images ? errors.images : ""}
+                error={
+                  (touched._combinedImagesGuard && errors._combinedImagesGuard
+                    ? String(errors._combinedImagesGuard)
+                    : "") ||
+                  (errors.images
+                    ? typeof errors.images === "string"
+                      ? errors.images
+                      : Array.isArray(errors.images)
+                        ? errors.images.filter(Boolean).join(", ")
+                        : String(errors.images)
+                    : "") ||
+                  (errors.existingImages
+                    ? String(errors.existingImages)
+                    : "")
+                }
                 onChange={(files, existingUrls) => {
                   // Update Formik values
                   setFieldValue("images", files);
-                  setFieldValue("existingImages", existingUrls);
+                  setFieldValue("existingImages", existingUrls || []);
 
                   // Mark the field as touched
-                  setTouched({ ...touched, images: true });
+                  setTouched({
+                    ...touched,
+                    images: true,
+                    existingImages: true,
+                    _combinedImagesGuard: true,
+                  });
 
                   // Immediately clear the error
                   setFieldError("images", "");
+                  setFieldError("_combinedImagesGuard", "");
                 }}
               />
 
