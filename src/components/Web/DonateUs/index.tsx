@@ -2,22 +2,16 @@
 import { donateusbanner, heartLogoIcon, overView } from "@/public/assets";
 import { useState } from "react";
 import DonationSection from "./DonationSection";
-import { useFetchAllCampaigns, useFetchSingleCampaign } from "@/src/hooks/web/useCampaigns";
+import { useFetchSingleCampaign } from "@/src/hooks/web/useCampaigns";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import PageBanner from "@/src/helper/PageBanner";
 import Sidebar from "../../UI/web/sideBar";
 import DonationCard from "../../UI/web/sideBar/DonationCard";
-const page = 1;
 
 const DonateUs = ({ id }: { id?: string }) => {
   const router = useRouter();
   const { t } = useTranslation();
-  const {
-    data: allCampaigns,
-    isLoading: allCampaignsLoading,
-    isError: allCampaignsError,
-  } = useFetchAllCampaigns(page, 10);
 
   const {
     data: singleCampaign,
@@ -25,9 +19,9 @@ const DonateUs = ({ id }: { id?: string }) => {
     isError: singleCampaignError,
   } = useFetchSingleCampaign(id!, { enabled: !!id });
 
-  const isLoading = id ? singleCampaignLoading : allCampaignsLoading;
-  const isError = id ? singleCampaignError : allCampaignsError;
-  const campaigns = id ? singleCampaign : allCampaigns?.campaigns?.[0] || null;
+  const isLoading = id ? singleCampaignLoading : false;
+  const isError = id ? singleCampaignError : false;
+  const campaigns = id ? singleCampaign : null;
 
   return (
     <section>
