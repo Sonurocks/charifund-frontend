@@ -290,7 +290,7 @@ const BannerTable = () => {
                   image: previewData?.image || singleBannerData?.image || "",
                   priority:
                     previewData?.priority || singleBannerData?.priority || 0,
-                  pageName: selectedPage,
+                  pageName: singleBannerData?.pageName || selectedPage,
                 }}
                 onClose={() => {
                   setDrawerOpen(false);

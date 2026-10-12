@@ -19,6 +19,7 @@ import {
 import { BannerFormProps } from "@/src/types/admin/banner";
 import { submitBannerForm } from "@/src/hooks/admin/useBanner";
 import { useLanguageToggle } from "@/src/hooks/admin/useLanguageToggle";
+import { BANNER_PAGES } from "@/src/static-resource/admin";
 import { hasErrorsForLang } from "../../UI/admin/hasErrorsForLang";
 
 //  Dynamic Imports
@@ -201,18 +202,11 @@ const BannerForm: React.FC<BannerFormProps> = ({
                   className="w-full bg-gray-200/60 px-3 py-2 rounded-md border border-transparent outline-none text-[13px] text-foreground/70"
                 >
                   <option value="">{lang === "en" ? "Select Page (Default: General / Home)" : "पृष्ठ चुनें"}</option>
-                  <option value="Home">Home</option>
-                  <option value="About Us">About Us</option>
-                  <option value="Services">Services</option>
-                  <option value="Campaign">Campaign</option>
-                  <option value="Donate Us">Donate Us</option>
-                  <option value="Blog">Blog</option>
-                  <option value="Contact Us">Contact Us</option>
-                  <option value="Volunteer">Volunteer</option>
-                  <option value="Events">Events</option>
-                  <option value="Team">Team</option>
-                  <option value="Sponsors">Sponsors</option>
-                  <option value="FAQ">FAQ</option>
+                  {BANNER_PAGES.map((page) => (
+                    <option key={page} value={page}>
+                      {page}
+                    </option>
+                  ))}
                 </select>
               </div>
 
