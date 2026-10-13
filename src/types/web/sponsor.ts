@@ -1,7 +1,3 @@
-// ============================================================
-// Sponsor Types (Public / Web)
-// ============================================================
-
 export type LocalizedString = string | { en: string; hi: string };
 
 export interface Sponsor {

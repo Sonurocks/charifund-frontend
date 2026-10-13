@@ -88,7 +88,7 @@ const BannerPreview: React.FC<BannerPreviewProps> = ({
             onClick={onBack}
             icon=""
           >
-            {lang === "hi" ? "संपादन पर वापस जाएं" : "Back to Edit"}
+            {lang === "hi" ? "संपादन" : "Edit"}
           </Button>
 
           <Button

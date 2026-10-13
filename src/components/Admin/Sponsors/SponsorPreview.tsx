@@ -79,7 +79,6 @@ const SponsorPreview = ({
         <LanguageToggle language={language} onChange={toggleLanguage} />
       </div>
 
-      {/* Logo container */}
       <div className="w-full h-40 bg-gray-50 border border-gray-200 rounded-2xl flex items-center justify-center p-6 mb-6">
         {logoPreview ? (
           <Image
@@ -94,7 +93,6 @@ const SponsorPreview = ({
         )}
       </div>
 
-      {/* Metadata Badges */}
       <div className="flex flex-wrap items-center gap-2 mb-4">
         {category && (
           <span className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full bg-green/10 text-dark-green">
@@ -110,12 +108,10 @@ const SponsorPreview = ({
         )}
       </div>
 
-      {/* Name */}
       <h2 className="text-2xl font-extrabold text-dark-green mb-3">
         {name || "Untitled Sponsor"}
       </h2>
 
-      {/* Website Link */}
       {data?.website && (
         <div className="mb-6">
           <a
@@ -130,7 +126,6 @@ const SponsorPreview = ({
         </div>
       )}
 
-      {/* Short Description */}
       {shortDescription && (
         <div className="p-4 bg-gray-50 border-l-4 border-yellow rounded-r-lg mb-6">
           <p className="text-sm font-medium text-gray-700 leading-relaxed">
@@ -139,7 +134,6 @@ const SponsorPreview = ({
         </div>
       )}
 
-      {/* Full Description */}
       {description && (
         <div className="space-y-3 text-gray-600 text-sm leading-relaxed mb-8">
           <h4 className="text-xs uppercase tracking-wider text-gray-400 font-bold">
@@ -151,18 +145,18 @@ const SponsorPreview = ({
         </div>
       )}
 
-      {/* Action Buttons for Preview Mode */}
+      {/* Buttons */}
       {showButton && (
-        <div className="mt-8 pt-4 border-t border-gray-100 flex items-center gap-3">
+        <div className="mt-12 flex gap-6 justify-end md:w-fit">
           {onBack && (
             <Button
-              bgColor="bg-gray-400"
+              bgColor="bg-red"
               rounded="rounded-lg"
-              hoverBg="before:bg-gray-500"
+              hoverBg="before:bg-red-50"
               onClick={onBack}
               icon=""
             >
-              {lang === "hi" ? "वापस जाएं" : "Back to Edit"}
+              {lang === "hi" ? "संपादन" : "Edit"}
             </Button>
           )}
           <Button
@@ -176,7 +170,7 @@ const SponsorPreview = ({
             {isSubmitting || createMutation?.isPending || updateMutation?.isPending ? (
               <ButtonLoader />
             ) : (
-              <>{lang === "hi" ? "सहेजें और सबमिट करें" : "Save & Submit"}</>
+              <>{lang === "hi" ? "सबमिट" : "Submit"}</>
             )}
           </Button>
         </div>

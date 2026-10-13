@@ -10,15 +10,13 @@ import {
 } from "@/src/services/admin/sponsorApi";
 import { getApiErrorMessage, getApiSuccessMessage } from "@/src/utils/apiHelpers";
 
-// Convert form values to FormData for multipart upload
-export const buildSponsorFormData = (values: SponsorFormValues): FormData => {
+export const buildSponsorFormData = (values: SponsorFormValues, isUpdate: boolean = false): FormData => {
   const formData = new FormData();
 
   const appendNestedObject = (key: string, obj: any) => {
     formData.append(key, JSON.stringify(obj));
   };
 
-  // Bilingual fields as JSON strings
   appendNestedObject("name", values.name);
   appendNestedObject("category", values.category);
   if (values.location) {
@@ -27,36 +25,27 @@ export const buildSponsorFormData = (values: SponsorFormValues): FormData => {
   appendNestedObject("shortDescription", values.shortDescription);
   appendNestedObject("description", values.description);
 
-  // Website URL
-  if (values.website) {
-    formData.append("website", values.website);
+  formData.append("website", (values.website || "").trim());
+
+  if (values.logo instanceof File) {
+    formData.append("logo", values.logo);
+  } else if (typeof values.logo === "string" && values.logo.trim() !== "") {
+    formData.append("logo", values.logo);
+    formData.append("existingLogo", values.logo);
+    formData.append("existingImages[]", values.logo);
   }
 
-  // Existing Images/Logo URL preservation (supports multiple backend naming patterns)
-  if (Array.isArray(values.existingImages) && values.existingImages.length > 0) {
+  if (Array.isArray(values.existingImages)) {
     values.existingImages.forEach((url) => {
-      if (url) {
+      if (url && typeof url === "string" && url !== values.logo) {
         formData.append("existingImages[]", url);
-        formData.append("existingImage", url);
       }
     });
-  } else if (typeof values.logo === "string" && values.logo.trim() !== "") {
-    formData.append("existingImages[]", values.logo);
-    formData.append("existingImage", values.logo);
-    formData.append("logo", values.logo);
-    formData.append("image", values.logo);
-  }
-
-  // Logo file (supports both 'logo' and 'image' field names)
-  if (values.logo && values.logo instanceof File) {
-    formData.append("logo", values.logo);
-    formData.append("image", values.logo);
   }
 
   return formData;
 };
 
-// Handle create sponsor
 const handleCreateSponsor = (
   values: SponsorFormValues,
   createMutation: any,
@@ -66,7 +55,7 @@ const handleCreateSponsor = (
 ) => {
   toast.dismiss();
   toast.loading("Creating sponsor...");
-  const formData = buildSponsorFormData(values);
+  const formData = buildSponsorFormData(values, false);
 
   createMutation.mutate(formData, {
     onSuccess: (data: any) => {
@@ -84,7 +73,6 @@ const handleCreateSponsor = (
   });
 };
 
-// Handle update sponsor
 const handleUpdateSponsor = (
   id: string,
   values: SponsorFormValues,
@@ -95,7 +83,7 @@ const handleUpdateSponsor = (
 ) => {
   toast.dismiss();
   toast.loading("Updating sponsor...");
-  const formData = buildSponsorFormData(values);
+  const formData = buildSponsorFormData(values, true);
 
   updateMutation.mutate(
     { id, values: formData },
@@ -116,7 +104,6 @@ const handleUpdateSponsor = (
   );
 };
 
-// Unified sponsor form submit
 export const submitSponsorForm = (
   values: SponsorFormValues,
   initialData: any,
@@ -126,14 +113,21 @@ export const submitSponsorForm = (
   setSubmitting: (isSubmitting: boolean) => void,
   onClose: () => void
 ) => {
-  if (initialData?.id) {
-    handleUpdateSponsor(initialData.id.toString(), values, updateMutation, resetForm, setSubmitting, onClose);
+  const targetId =
+    initialData?.id ||
+    initialData?._id ||
+    initialData?.sponsor?.id ||
+    initialData?.sponsor?._id ||
+    initialData?.data?.id ||
+    initialData?.data?._id;
+
+  if (targetId) {
+    handleUpdateSponsor(targetId.toString(), values, updateMutation, resetForm, setSubmitting, onClose);
   } else {
     handleCreateSponsor(values, createMutation, resetForm, setSubmitting, onClose);
   }
 };
 
-// Fetch sponsors with pagination and search
 export const useFetchAllSponsors = (
   page: number = 1,
   limit: number = 10,
@@ -144,10 +138,10 @@ export const useFetchAllSponsors = (
     queryKey: ["admin-sponsors", page, limit, search, searchField],
     queryFn: () => fetchAllSponsors(page, limit, search, searchField),
     placeholderData: keepPreviousData,
+    retry: 1,
   });
 };
 
-// Fetch single sponsor
 export const useFetchSingleSponsor = (id?: string) => {
   return useQuery({
     queryKey: ["admin-sponsor", id],
@@ -158,7 +152,6 @@ export const useFetchSingleSponsor = (id?: string) => {
   });
 };
 
-// Delete sponsor
 export const useDeleteSingleSponsor = () => {
   const queryClient = useQueryClient();
   return useMutation({

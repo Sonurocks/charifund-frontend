@@ -437,7 +437,6 @@ export const feedbackSchema = Yup.object({
 
 export type FeedbackFormValues = Yup.InferType<typeof feedbackSchema>;
 
-// ======================= Sponsor ======================
 export const sponsorSchema = Yup.object({
   name: Yup.object({
     en: Yup.string().required("Sponsor name is required in English"),

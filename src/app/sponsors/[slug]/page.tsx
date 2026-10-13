@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { getSponsorBySlug, getAllSponsors } from "@/src/data/sponsors";
 import SponsorDetails from "@/src/components/Web/Sponsors/SponsorDetails";
 import { Metadata } from "next";
 import { Sponsor } from "@/src/types/web/sponsor";
@@ -9,41 +8,46 @@ interface Props {
 }
 
 async function getSponsor(slug: string): Promise<Sponsor | null> {
-  // First check static baseline
-  const staticSponsor = getSponsorBySlug(slug);
-  if (staticSponsor) return staticSponsor;
-
-  // Try API lookup for newly created sponsors
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-    if (apiUrl) {
-      const res = await fetch(`${apiUrl}/web/sponsor/getSponsorBySlug/${encodeURIComponent(slug)}`, {
-        next: { revalidate: 60 },
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (data && (data.name || data.sponsor?.name)) {
-          return data.sponsor || data;
-        }
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://cherifund-backend-test.onrender.com/api/V1";
+    const res = await fetch(`${apiUrl}/web/sponsor/getSponsorBySlug/${encodeURIComponent(slug)}`, {
+      next: { revalidate: 60 },
+      headers: {
+        Accept: "application/json",
+        "Accept-Language": "en",
+      },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && (data.name || data.sponsor?.name)) {
+        return data.sponsor || data;
       }
     }
-  } catch (e) {
-    // Graceful fallback
-  }
+  } catch {}
 
   return null;
 }
 
-// ── Dynamic params allowed for newly created sponsors ──────────────
 export const dynamicParams = true;
 
-// ── Static params for build-time generation ────────────────────────────────
 export async function generateStaticParams() {
-  const sponsors = getAllSponsors();
-  return sponsors.map((s) => ({ slug: s.slug }));
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://cherifund-backend-test.onrender.com/api/V1";
+    const res = await fetch(`${apiUrl}/web/sponsor/getAllSponsors?page=1&limit=50`, {
+      headers: {
+        Accept: "application/json",
+        "Accept-Language": "en",
+      },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      const list = Array.isArray(data?.sponsors) ? data.sponsors : Array.isArray(data) ? data : [];
+      return list.filter((s: any) => s && s.slug).map((s: any) => ({ slug: s.slug }));
+    }
+  } catch {}
+  return [];
 }
 
-// ── Per-page SEO metadata ──────────────────────────────────────────────────
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const sponsor = await getSponsor(slug);
@@ -64,7 +68,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-// ── Page component ─────────────────────────────────────────────────────────
 const SponsorPage = async ({ params }: Props) => {
   const { slug } = await params;
   const sponsor = await getSponsor(slug);

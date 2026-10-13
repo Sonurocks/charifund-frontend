@@ -1,6 +1,8 @@
 import { SponsorFormValues } from "@/src/utils/validations/FormValidation";
 
-export const getInitialSponsorValues = (initialData: any): SponsorFormValues => {
+export const getInitialSponsorValues = (rawInitialData: any): SponsorFormValues => {
+  const initialData = rawInitialData?.sponsor || rawInitialData?.data || rawInitialData;
+
   const getNestedValue = (obj: any, path: string, fallback: any = "") => {
     if (!obj) return fallback;
     const keys = path.split(".");
@@ -28,7 +30,7 @@ export const getInitialSponsorValues = (initialData: any): SponsorFormValues => 
   };
 
   const initialLogo = initialData?.logo || initialData?.image || "";
-  const existingImages = initialLogo
+  const existingImages = typeof initialLogo === "string" && initialLogo
     ? [initialLogo]
     : Array.isArray(initialData?.existingImages)
     ? initialData.existingImages

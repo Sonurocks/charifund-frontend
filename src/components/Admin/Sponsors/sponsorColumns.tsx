@@ -48,8 +48,9 @@ export const getSponsorColumns = ({
   },
   {
     name: "Category",
+    selector: (row: AdminSponsor) => getLocalizedString(row.category),
     cell: (row: AdminSponsor) => (
-      <span className="inline-block text-xs font-semibold px-2.5 py-1 rounded-full bg-green/10 text-dark-green">
+      <span className="font-bold whitespace-nowrap">
         {getLocalizedString(row.category)}
       </span>
     ),
@@ -61,10 +62,12 @@ export const getSponsorColumns = ({
   },
   {
     name: "Website",
-    cell: (row: AdminSponsor) =>
-      row.website ? (
+    cell: (row: AdminSponsor) => {
+      const url = row.website?.trim();
+      const hasUrl = url && url !== "" && url !== "undefined" && url !== "null";
+      return hasUrl ? (
         <a
-          href={row.website}
+          href={url.startsWith("http") ? url : `https://${url}`}
           target="_blank"
           rel="noopener noreferrer"
           className="text-xs text-blue-600 hover:text-blue-800 flex items-center gap-1.5 font-medium underline"
@@ -74,7 +77,8 @@ export const getSponsorColumns = ({
         </a>
       ) : (
         <span className="text-gray-400 text-xs">-</span>
-      ),
+      );
+    },
   },
   {
     name: "Actions",

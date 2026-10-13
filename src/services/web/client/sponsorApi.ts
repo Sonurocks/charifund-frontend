@@ -1,7 +1,6 @@
 import api from "./api";
 import { Sponsor, SponsorListResponse } from "@/src/types/web/sponsor";
 
-// Fetch all public sponsors with optional pagination and search
 export const fetchPublicSponsors = async (
   page: number = 1,
   limit: number = 20,
@@ -11,12 +10,25 @@ export const fetchPublicSponsors = async (
   if (search && search.trim() !== "") {
     url += `&search=${encodeURIComponent(search)}`;
   }
-  const { data } = await api.get(url);
-  return data;
+  try {
+    const { data } = await api.get(url);
+    return data;
+  } catch (error: any) {
+    if (error?.response?.status === 404) {
+      return { sponsors: [], totalPages: 1, totalCount: 0, page, limit } as any;
+    }
+    throw error;
+  }
 };
 
-// Fetch single public sponsor by slug
 export const fetchPublicSponsorBySlug = async (slug: string): Promise<Sponsor> => {
-  const { data } = await api.get(`/web/sponsor/getSponsorBySlug/${slug}`);
-  return data;
+  try {
+    const { data } = await api.get(`/web/sponsor/getSponsorBySlug/${encodeURIComponent(slug)}`);
+    return data?.sponsor || data;
+  } catch (error: any) {
+    if (error?.response?.status === 404) {
+      return null as any;
+    }
+    throw error;
+  }
 };

@@ -1,7 +1,6 @@
 import api from "./api";
 import { AdminSponsor, AdminSponsorListResponse } from "@/src/types/admin/sponsor";
 
-// Get all sponsors with pagination and search
 export const fetchAllSponsors = async (
   page: number = 1,
   limit: number = 10,
@@ -14,30 +13,57 @@ export const fetchAllSponsors = async (
   } else if (search) {
     url += `&search=${encodeURIComponent(search)}`;
   }
-  const { data } = await api.get(url);
-  return data;
+  try {
+    const { data } = await api.get(url);
+    if (data && Array.isArray(data.sponsors)) {
+      return data;
+    }
+    if (Array.isArray(data)) {
+      return {
+        sponsors: data,
+        totalPages: 1,
+        totalCount: data.length,
+        page,
+        limit,
+      } as any;
+    }
+    return {
+      sponsors: [],
+      totalPages: 1,
+      totalCount: 0,
+      page,
+      limit,
+    } as any;
+  } catch (error: any) {
+    if (error?.response?.status === 404) {
+      return {
+        sponsors: [],
+        totalPages: 1,
+        totalCount: 0,
+        page,
+        limit,
+      } as any;
+    }
+    throw error;
+  }
 };
 
-// Get single sponsor by ID
 export const fetchSponsorById = async (id: string): Promise<AdminSponsor> => {
-  const { data } = await api.get(`/admin/sponsor/getSponsorById/${id}`);
+  const { data } = await api.get(`/admin/sponsor/getSponsorById/${encodeURIComponent(id)}`);
   return data;
 };
 
-// Create a new sponsor (multipart FormData with logo file)
 export const createSponsor = async (formData: FormData): Promise<any> => {
   const { data } = await api.post("/admin/sponsor/add-sponsor", formData);
   return data;
 };
 
-// Update an existing sponsor
 export const updateSponsor = async (id: string, formData: FormData): Promise<any> => {
-  const { data } = await api.put(`/admin/sponsor/update-sponsor/${id}`, formData);
+  const { data } = await api.put(`/admin/sponsor/update-sponsor/${encodeURIComponent(id)}`, formData);
   return data;
 };
 
-// Delete a sponsor by ID
 export const deleteSponsor = async (id: string): Promise<any> => {
-  const { data } = await api.delete(`/admin/sponsor/delete-sponsor/${id}`);
+  const { data } = await api.delete(`/admin/sponsor/delete-sponsor/${encodeURIComponent(id)}`);
   return data;
 };

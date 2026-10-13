@@ -26,8 +26,6 @@ import useDebounce from "@/src/hooks/web/useDebounce";
 import Button from "../../UI/web/Buttons/Button";
 import CustomLoader from "../../UI/web/Loader/CustomLoader";
 import toast from "react-hot-toast";
-import { sponsorsData } from "@/src/data/sponsors";
-import { FaInfoCircle } from "react-icons/fa";
 
 const SponsorTable = () => {
   const [search, setSearch] = useState("");
@@ -36,7 +34,6 @@ const SponsorTable = () => {
   const [editSponsorId, setEditSponsorId] = useState<string | null>(null);
   const [mode, setMode] = useState<"add" | "edit" | "view" | "preview-edit">("add");
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const [showPreview, setShowPreview] = useState<boolean>(false);
   const [previewData, setPreviewData] = useState<SponsorFormValues | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
@@ -46,11 +43,9 @@ const SponsorTable = () => {
 
   const searchedData = useDebounce(search, 500);
 
-  // Queries
   const {
     data: apiSponsorData,
     isLoading,
-    isError,
   } = useFetchAllSponsors(currentPage, itemsPerPage, searchedData, searchField);
 
   const {
@@ -62,7 +57,6 @@ const SponsorTable = () => {
   const deleteSponsorMutation = useDeleteSingleSponsor();
   const queryClient = useQueryClient();
 
-  // Create mutation
   const createMutation = useMutation({
     mutationFn: createSponsor,
     onSuccess: () => {
@@ -71,7 +65,6 @@ const SponsorTable = () => {
     },
   });
 
-  // Update mutation
   const updateMutation = useMutation({
     mutationFn: (data: { id: string; values: FormData }) =>
       updateSponsor(data.id, data.values),
@@ -83,81 +76,33 @@ const SponsorTable = () => {
     },
   });
 
-  // Map static sponsors to AdminSponsor shape for baseline preview when backend is not yet deployed
-  const staticFallbackSponsors: AdminSponsor[] = useMemo(() => {
-    const toStr = (v: any) => (typeof v === "string" ? v : v?.en || "");
-    const toHiStr = (v: any) => (typeof v === "string" ? v : v?.hi || v?.en || "");
-
-    return sponsorsData.map((s) => ({
-      id: s.id,
-      slug: s.slug,
-      name: { en: toStr(s.name), hi: toHiStr(s.name) },
-      category: { en: toStr(s.category), hi: toHiStr(s.category) },
-      location: { en: toStr(s.location || "India"), hi: toHiStr(s.location || "भारत") },
-      shortDescription: { en: toStr(s.shortDescription), hi: toHiStr(s.shortDescription) },
-      description: { en: toStr(s.description), hi: toHiStr(s.description) },
-      website: s.website || undefined,
-      logo: s.logo,
-    }));
-  }, []);
-
-  // Determine active dataset (API data if present, otherwise fallback)
-  const isUsingFallback = isError || !apiSponsorData?.sponsors;
-
   const tableData: AdminSponsor[] = useMemo(() => {
     if (apiSponsorData?.sponsors && Array.isArray(apiSponsorData.sponsors)) {
       return apiSponsorData.sponsors;
     }
-    // Filter fallback data if search query is provided
-    if (searchedData.trim() !== "") {
-      const q = searchedData.toLowerCase();
-      return staticFallbackSponsors.filter((item) => {
-        const val =
-          searchField === "name"
-            ? typeof item.name === "string" ? item.name : item.name.en
-            : searchField === "category"
-            ? typeof item.category === "string" ? item.category : item.category.en
-            : typeof item.location === "string" ? item.location : item.location?.en;
-        return (val || "").toLowerCase().includes(q);
-      });
-    }
-    return staticFallbackSponsors;
-  }, [apiSponsorData, searchedData, searchField, staticFallbackSponsors]);
+    return [];
+  }, [apiSponsorData]);
 
   const totalPages = apiSponsorData?.totalPages || 1;
 
-  // Actions
   const handleEdit = useCallback((sponsor: AdminSponsor) => {
-    setEditSponsorId(sponsor.id);
+    const id = sponsor.id || (sponsor as any)._id;
+    setEditSponsorId(id);
+    setPreviewData(null);
     setMode("edit");
     setDrawerOpen(true);
   }, []);
 
   const handleView = useCallback(
     (sponsor: AdminSponsor) => {
-      setEditSponsorId(sponsor.id);
+      const id = sponsor.id || (sponsor as any)._id;
+      setEditSponsorId(id);
+      setPreviewData(null);
       setMode("view");
       setDrawerOpen(true);
-      setShowPreview(true);
-
-      // If backend single sponsor is available, refetch it
-      if (!isUsingFallback) {
-        setTimeout(async () => {
-          try {
-            const res = await refetchSingle();
-            if (res.data) {
-              setPreviewData(res.data as any);
-            }
-          } catch (e) {
-            console.error("Failed to fetch sponsor details:", e);
-          }
-        }, 50);
-      } else {
-        // Use row data directly for preview
-        setPreviewData(sponsor as any);
-      }
+      refetchSingle();
     },
-    [isUsingFallback, refetchSingle]
+    [refetchSingle]
   );
 
   const handleDelete = useCallback((sponsor: AdminSponsor) => {
@@ -167,11 +112,12 @@ const SponsorTable = () => {
 
   const confirmDelete = useCallback(() => {
     if (!selectedSponsor) return;
+    const id = selectedSponsor.id || (selectedSponsor as any)._id;
     setDeleteLoading(true);
     toast.dismiss();
     toast.loading("Deleting sponsor...");
 
-    deleteSponsorMutation.mutate(selectedSponsor.id, {
+    deleteSponsorMutation.mutate(id, {
       onSuccess: () => {
         setDeleteLoading(false);
         setIsDeleteModalOpen(false);
@@ -194,28 +140,23 @@ const SponsorTable = () => {
     [handleEdit, handleDelete, handleView]
   );
 
-  // Selected item data for form
   const currentFormData = useMemo(() => {
     if (!editSponsorId) return null;
-    if (singleSponsorData) return singleSponsorData;
-    return tableData.find((s) => s.id === editSponsorId) || null;
+    let data = singleSponsorData || tableData.find((s) => s.id === editSponsorId || (s as any)._id === editSponsorId) || null;
+    if (data && (data as any).sponsor) data = (data as any).sponsor;
+    if (data && (data as any).data) data = (data as any).data;
+    return data;
   }, [editSponsorId, singleSponsorData, tableData]);
+
+  const handleDrawerClose = useCallback(() => {
+    setDrawerOpen(false);
+    setEditSponsorId(null);
+    setMode("add");
+    setPreviewData(null);
+  }, []);
 
   return (
     <section>
-      {/* Backend API status notice */}
-      {isUsingFallback && (
-        <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg flex items-center gap-3 text-amber-800 text-sm">
-          <FaInfoCircle className="w-5 h-5 flex-shrink-0 text-amber-600" />
-          <div className="flex-1">
-            <span className="font-semibold">Backend API Integration Ready:</span> Endpoints (
-            <code className="bg-amber-100 px-1 py-0.5 rounded text-xs">/admin/sponsor/*</code>) are not yet live on the server.
-            The frontend UI and service layer are fully configured and showing local preview data until the backend is connected.
-          </div>
-        </div>
-      )}
-
-      {/* Controls Bar */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
         <AnimatedReveal direction="left" delay={0.1}>
           <div className="w-fit flex flex-row gap-2">
@@ -248,7 +189,6 @@ const SponsorTable = () => {
                 setEditSponsorId(null);
                 setMode("add");
                 setPreviewData(null);
-                setShowPreview(false);
               }}
               bgColor="bg-lime-green"
               hoverBg="before:bg-primaryColor"
@@ -262,7 +202,6 @@ const SponsorTable = () => {
         </AnimatedReveal>
       </div>
 
-      {/* Table content */}
       {isLoading ? (
         <div className="flex justify-center py-10">
           <CustomLoader />
@@ -271,7 +210,6 @@ const SponsorTable = () => {
         <DataTableWrapper columns={columns} data={tableData} />
       )}
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-end mt-4">
           <AdminCustomPagination
@@ -282,17 +220,10 @@ const SponsorTable = () => {
         </div>
       )}
 
-      {/* Drawer */}
       {drawerOpen && (
         <Drawer
           isOpen={drawerOpen}
-          onClose={() => {
-            setDrawerOpen(false);
-            setEditSponsorId(null);
-            setMode("add");
-            setPreviewData(null);
-            setShowPreview(false);
-          }}
+          onClose={handleDrawerClose}
           title={
             mode === "edit"
               ? "Edit Sponsor"
@@ -304,7 +235,6 @@ const SponsorTable = () => {
           }
           mode={mode}
         >
-          {/* View or Preview mode */}
           {(mode === "view" || mode === "preview-edit") && (
             <SponsorPreview
               data={previewData || currentFormData}
@@ -313,7 +243,6 @@ const SponsorTable = () => {
               createMutation={createMutation}
               updateMutation={updateMutation}
               onBack={() => {
-                setShowPreview(false);
                 setMode(editSponsorId ? "edit" : "add");
               }}
               onSubmit={() => {
@@ -323,18 +252,14 @@ const SponsorTable = () => {
                   currentFormData,
                   createMutation,
                   updateMutation,
-                  () => {
-                    setPreviewData(null);
-                    setDrawerOpen(false);
-                  },
+                  handleDrawerClose,
                   () => {},
-                  () => setDrawerOpen(false)
+                  handleDrawerClose
                 );
               }}
             />
           )}
 
-          {/* Add or Edit mode */}
           {(mode === "add" || mode === "edit") && (
             isLoadingSingle ? (
               <div className="flex justify-center py-10">
@@ -343,27 +268,19 @@ const SponsorTable = () => {
             ) : (
               <SponsorForm
                 key={`${editSponsorId || "new"}-${mode}`}
-                initialData={currentFormData || previewData || undefined}
-                onClose={() => {
-                  setDrawerOpen(false);
-                  setEditSponsorId(null);
-                  setShowPreview(false);
-                }}
+                initialData={previewData || currentFormData || undefined}
+                onClose={handleDrawerClose}
                 mode={mode}
                 onPreview={(data) => {
                   setPreviewData(data);
-                  setShowPreview(true);
                   setMode("preview-edit");
                 }}
-                createMutation={createMutation}
-                updateMutation={updateMutation}
               />
             )
           )}
         </Drawer>
       )}
 
-      {/* Confirm Delete Modal */}
       <ConfirmModal
         isOpen={isDeleteModalOpen}
         loading={deleteLoading}

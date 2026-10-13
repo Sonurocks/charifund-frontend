@@ -35,7 +35,6 @@ const SponsorDetails = ({ sponsor }: SponsorDetailsProps) => {
 
   return (
     <div className="min-h-screen bg-white font-nunito">
-      {/* ── Reusable Banner ── */}
       <PageBanner
         bgImage={ourcausebanner}
         tagline="Together for a Better Society"
@@ -44,11 +43,9 @@ const SponsorDetails = ({ sponsor }: SponsorDetailsProps) => {
         titleClassName="leading-tight xl:leading-[1.1]"
       />
 
-      {/* ── Main Content ── */}
       <section className="container mx-auto px-4 max-w-5xl py-14 md:py-20">
         <AnimatedReveal direction="up" duration={0.7}>
           <div className="flex flex-col md:flex-row gap-10 md:gap-16 items-start">
-            {/* Left — Logo + Meta */}
             <FadeUpCard delay={0.1} className="w-full md:w-72 flex-shrink-0">
               <div className="bg-gray-50 rounded-2xl border border-gray-100 p-8 flex items-center justify-center mb-5">
                 <Image
@@ -61,7 +58,6 @@ const SponsorDetails = ({ sponsor }: SponsorDetailsProps) => {
                 />
               </div>
 
-              {/* Meta cards */}
               <div className="space-y-3">
                 <div className="flex items-center gap-3 bg-green/5 border border-green/20 rounded-xl px-4 py-3">
                   <Icon icon="mdi:tag-outline" className="text-dark-green text-lg flex-shrink-0" />
@@ -113,7 +109,6 @@ const SponsorDetails = ({ sponsor }: SponsorDetailsProps) => {
               </div>
             </FadeUpCard>
 
-            {/* Right — Content */}
             <FadeUpCard delay={0.2} className="flex-1 min-w-0">
               {shortDescription && (
                 <p className="text-lg md:text-xl font-semibold text-dark-green leading-snug mb-6 border-l-4 border-yellow pl-4">
@@ -131,7 +126,6 @@ const SponsorDetails = ({ sponsor }: SponsorDetailsProps) => {
           </div>
         </AnimatedReveal>
 
-        {/* ── Back Navigation ── */}
         <div className="mt-14 pt-8 border-t border-gray-100">
           <Link
             href="/sponsors"

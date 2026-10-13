@@ -37,9 +37,7 @@ const SponsorCard = ({ sponsor }: SponsorCardProps) => {
         transition={{ duration: 0.3, ease: "easeOut" }}
         className="h-full flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-transparent hover:border-gray-100"
       >
-        {/* Banner Logo Area with Glassmorphic Premium Touch */}
         <div className="relative w-full h-40 sm:h-48 overflow-hidden bg-gray-50 flex items-center justify-center p-6 border-b border-gray-100/50">
-          {/* Subtle background decoration */}
           <div className="absolute top-0 left-0 w-32 h-32 bg-yellow/10 rounded-full blur-3xl" />
           <div className="absolute bottom-0 right-0 w-32 h-32 bg-green/10 rounded-full blur-3xl" />
 
@@ -56,21 +54,17 @@ const SponsorCard = ({ sponsor }: SponsorCardProps) => {
           </div>
         </div>
 
-        {/* Info Area */}
         <div className="p-6 sm:p-7 flex flex-col flex-grow">
-          {/* Top meta */}
           <div className="flex justify-between items-start mb-3">
             <span className="inline-block text-xs font-bold text-dark-green bg-green/10 px-3 py-1 rounded-full font-nunito tracking-wide">
               {category}
             </span>
           </div>
 
-          {/* Title */}
           <h3 className="text-xl font-extrabold text-dark-green font-nunito mb-3 group-hover:text-green transition-colors duration-300 leading-snug">
             {name}
           </h3>
 
-          {/* Description */}
           <p className="text-sm text-gray-500 font-nunito leading-relaxed line-clamp-3 mb-6 flex-grow">
             {shortDescription}
           </p>

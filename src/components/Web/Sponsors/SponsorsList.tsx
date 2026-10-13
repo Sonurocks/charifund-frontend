@@ -40,7 +40,6 @@ const SponsorsList = () => {
   return (
     <section className="relative bg-cover py-16 bg-center w-full bg-[url('/assets/bg-one-volunteer.webp')]">
       <div className="min-h-[80vh] flex flex-col items-center justify-start px-4 pt-8 pb-16">
-        {/* Section heading */}
         <div ref={headerRef} className="flex flex-col items-center text-center mb-10">
           <ComponentLabel
             text="Together for a Better Society"
@@ -60,7 +59,6 @@ const SponsorsList = () => {
           </p>
         </div>
 
-        {/* Sponsor grid */}
         <div className="w-full max-w-7xl px-2">
           {isLoading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -90,7 +88,6 @@ const SponsorsList = () => {
         </div>
       </div>
 
-      {/* Decorative element */}
       <div className="absolute hidden xl:block top-[10%] right-[6%] z-[-1]">
         <Image
           src="/assets/greenspade.webp"

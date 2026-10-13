@@ -8,17 +8,22 @@ import { Autoplay } from "swiper/modules";
 import Image from "next/image";
 import Link from "next/link";
 import { useFetchPublicSponsors } from "@/src/hooks/web/useSponsors";
-import { getAllSponsors } from "@/src/data/sponsors";
 
 const PartnersCompanies = () => {
   const { data } = useFetchPublicSponsors();
 
   const displaySponsors = useMemo(() => {
-    const list = data?.sponsors && data.sponsors.length > 0 ? data.sponsors : getAllSponsors();
+    const list = data?.sponsors && data.sponsors.length > 0 ? data.sponsors : [];
+    if (list.length === 0) return [];
     return [...list, ...list];
   }, [data?.sponsors]);
 
+  if (!displaySponsors || displaySponsors.length === 0) {
+    return null;
+  }
+
   return (
+
     <div className="w-full bg-[var(--gray-200)] py-16 overflow-hidden">
       <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-8">
         <Swiper

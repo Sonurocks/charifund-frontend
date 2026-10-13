@@ -142,7 +142,7 @@ const EventPreview = ({ data, onSubmit, onBack, mode, showButton = true, createM
       )}
 
       {showButton && (
-        <div className="mt-12 flex gap-6 justify-end">
+        <div className="mt-12 flex gap-6 justify-end md:w-fit">
           <Button
             bgColor="bg-red"
             rounded="rounded-lg"
@@ -150,7 +150,7 @@ const EventPreview = ({ data, onSubmit, onBack, mode, showButton = true, createM
             onClick={onBack}
             icon=""
           >
-            {lang === "hi" ? "संपादन पर वापस जाएं" : "Back to Edit"}
+            {lang === "hi" ? "संपादन" : "Edit"}
           </Button>
 
           <Button

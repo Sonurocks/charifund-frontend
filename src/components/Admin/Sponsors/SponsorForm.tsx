@@ -40,13 +40,21 @@ const SponsorForm = ({
     return [];
   }, [initialData]);
 
+  const initialFiles = React.useMemo((): File[] => {
+    if (!initialData) return [];
+    const data = initialData as any;
+    if (data.logo instanceof File) {
+      return [data.logo];
+    }
+    return [];
+  }, [initialData]);
+
   return (
     <div className="w-full pb-10">
-      {/* Bilingual Language Switcher */}
       <LanguageToggle language={language} onChange={toggleLanguage} />
 
       <Formik<SponsorFormValues>
-        key={initialData?.id || "new-sponsor"}
+        key={initialData?.id || initialData?._id || "new-sponsor"}
         enableReinitialize
         initialValues={initialValues}
         validationSchema={sponsorSchema}
@@ -87,14 +95,13 @@ const SponsorForm = ({
             setTouched(touchAllFields(values));
             const formErrors = await validateForm();
 
-            for (const l of ["en", "hi"] as const) {
-              if (hasErrorsForLang(formErrors, l)) {
-                toggleLanguage(l);
-                return;
+            if (Object.keys(formErrors).length > 0) {
+              for (const l of ["en", "hi"] as const) {
+                if (hasErrorsForLang(formErrors, l)) {
+                  toggleLanguage(l);
+                  return;
+                }
               }
-            }
-
-            if (formErrors.logo) {
               return;
             }
 
@@ -108,7 +115,6 @@ const SponsorForm = ({
 
           return (
             <Form className="flex flex-col gap-3.5 mt-2">
-              {/* Sponsor Name */}
               <CustomInput
                 label={`${lang === "en" ? "Sponsor Name" : "प्रायोजक का नाम"}*`}
                 name={`name.${lang}`}
@@ -119,7 +125,6 @@ const SponsorForm = ({
                 disabled={isView}
               />
 
-              {/* Category */}
               <CustomInput
                 label={`${lang === "en" ? "Category" : "श्रेणी"}*`}
                 name={`category.${lang}`}
@@ -130,7 +135,6 @@ const SponsorForm = ({
                 disabled={isView}
               />
 
-              {/* Location */}
               <CustomInput
                 label={`${lang === "en" ? "Location / Region" : "स्थान / क्षेत्र"}`}
                 name={`location.${lang}`}
@@ -141,7 +145,6 @@ const SponsorForm = ({
                 disabled={isView}
               />
 
-              {/* Website URL */}
               <CustomInput
                 label={`${lang === "en" ? "Website URL" : "वेबसाइट लिंक"}`}
                 name="website"
@@ -152,7 +155,6 @@ const SponsorForm = ({
                 disabled={isView}
               />
 
-              {/* Short Description */}
               <CustomInput
                 label={`${lang === "en" ? "Short Description" : "संक्षिप्त विवरण"}*`}
                 name={`shortDescription.${lang}`}
@@ -164,7 +166,6 @@ const SponsorForm = ({
                 disabled={isView}
               />
 
-              {/* Detailed Description */}
               <CustomInput
                 label={`${lang === "en" ? "Detailed Description" : "विस्तृत विवरण"}*`}
                 name={`description.${lang}`}
@@ -180,7 +181,6 @@ const SponsorForm = ({
                 disabled={isView}
               />
 
-              {/* Logo Upload */}
               <CustomFileInput
                 label={`${lang === "en" ? "Sponsor Logo" : "प्रायोजक लोगो"}*`}
                 name="logo"
@@ -188,6 +188,7 @@ const SponsorForm = ({
                 standard={IMAGE_STANDARDS.sponsor}
                 uploadType="single"
                 initialUrls={initialLogoUrl}
+                initialFiles={initialFiles}
                 error={touched.logo && typeof errors.logo === "string" ? errors.logo : ""}
                 onChange={(files, existingUrls) => {
                   if (files.length > 0) {
@@ -202,7 +203,6 @@ const SponsorForm = ({
                 }}
               />
 
-              {/* Action Buttons */}
               <div className="flex gap-2 mt-4 w-fit">
                 {!isView && (
                   <Button
