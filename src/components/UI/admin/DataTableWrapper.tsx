@@ -2,13 +2,21 @@
 
 import React from "react";
 import dynamic from "next/dynamic";
+import { TableProps } from "react-data-table-component";
+import { Icon } from "@iconify/react";
 import AnimatedReveal from "@/src/animations/AnimatedReveal";
 import { AdminDataTableWrapperProps } from "@/src/types/admin";
-import { Icon } from "@iconify/react";
 
-const DataTable = dynamic(() => import("react-data-table-component"), {
-  ssr: false,
-});
+const DataTable = dynamic<TableProps<any>>(
+  () =>
+    import("react-data-table-component").then(
+      (mod: any) => mod?.default?.default || mod?.default || mod
+    ),
+  {
+    ssr: false,
+    loading: () => <TableSpinner />,
+  }
+);
 
 const TableSpinner = () => (
   <div className="flex items-center justify-center p-8 text-primaryColor">

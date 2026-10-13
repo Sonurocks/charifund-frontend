@@ -230,6 +230,8 @@ const PageBanner: React.FC<ExtendedPageBannerProps> = ({
           src={horizontalWhiteShape.src}
           alt="Horizontal White Shape"
           fill
+          priority
+          loading="eager"
           className="object-cover object-end"
         />
       </section>

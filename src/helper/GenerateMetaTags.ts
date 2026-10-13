@@ -5,7 +5,9 @@ export function generateOpenGraphMetadata(data: MetadataData, siteName = "Charif
   const title = data.title.replace(/["',]$/g, '');
   const fullTitle = `${siteName} | ${title}`; 
   const description = data.description || data.summary || '';
-  const url = `${process.env.NEXT_PUBLIC_FRONTEND_URL}${data.path ? `${data.path}/` : '/'}${data.id ? encodeURIComponent(data.id) : ''}`;
+  const frontendUrl = process.env.NEXT_PUBLIC_FRONTEND_URL || "";
+  const url = `${frontendUrl}${data.path ? `${data.path}/` : "/"}${data.id ? encodeURIComponent(data.id) : ""}`;
+  const defaultImage = frontendUrl ? `${frontendUrl}${logo.src}` : logo.src;
 
   return {
     title: fullTitle, 
@@ -17,7 +19,7 @@ export function generateOpenGraphMetadata(data: MetadataData, siteName = "Charif
       type: 'article',
       images: [
         {
-          url: data.images?.[0] || `${process.env.NEXT_PUBLIC_FRONTEND_URL}${logo.src}`,
+          url: data.images?.[0] || defaultImage,
           width: 1200,
           height: 630,
           alt: title,
@@ -28,7 +30,7 @@ export function generateOpenGraphMetadata(data: MetadataData, siteName = "Charif
       card: 'summary_large_image',
       title: fullTitle,
       description,
-      images: [data.images?.[0] || `${process.env.NEXT_PUBLIC_FRONTEND_URL}${logo.src}`],
+      images: [data.images?.[0] || defaultImage],
     },
   };
 }

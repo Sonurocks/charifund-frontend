@@ -4,6 +4,7 @@
 
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 import { IoLocationSharp } from "react-icons/io5";
 import { FaCalendarAlt, FaRegCalendarAlt } from "react-icons/fa";
 import { LuCircleCheckBig } from "react-icons/lu";
@@ -13,7 +14,7 @@ import Comments from "../comments/Comments";
 import { CampaignInfoProps } from "@/src/types/web/campaign";
 import { getOptimizedImageUrl } from "@/src/utils/imageStandards";
 
-const CampaignInfo: React.FC<CampaignInfoProps> = ({ data, formattedDate }) => {
+const CampaignInfo: React.FC<CampaignInfoProps> = ({ data, id, formattedDate }) => {
 
   const requiredFields = ["title", "description", "images", "createdAt", "location"];
   const isDataMissing =
@@ -62,6 +63,15 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({ data, formattedDate }) => {
         <p className="text-gray-green mb-6 sm:mb-8 text-[16px] leading-5  md:leading-6 md:text-[18px] font-nunito">
           {data?.description}
         </p>
+        {/* Donate CTA */}
+        <div className="mb-8">
+          <Link
+            href={`/donate-us/${data?.id || id}`}
+            className="inline-flex items-center gap-2 bg-dark-green text-white font-bold px-8 py-3.5 rounded-full hover:bg-yellow hover:text-foreground transition-all duration-300 shadow-md hover:shadow-lg font-nunito text-base cursor-pointer"
+          >
+            <span>Donate to this Cause →</span>
+          </Link>
+        </div>
         {/* Summary: Conditional, responsive */}
         {data?.summary && (
           <>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import CampaignInfo from "./CampaignInfo";
 import CustomLoader from "../../UI/web/Loader/CustomLoader";
 import { bannerBg, heartLogoIcon, overView } from "@/public/assets";
@@ -14,6 +14,7 @@ import DonationCard from "../../UI/web/sideBar/DonationCard";
 import PageBanner from "@/src/helper/PageBanner";
 
 const CampaignDetails: React.FC = () => {
+  const router = useRouter();
   const params = useParams();
   const id = Array.isArray(params.id) ? params.id[0] : params.id;
 
@@ -77,11 +78,11 @@ const CampaignDetails: React.FC = () => {
                   <DonationCard
                     icon={heartLogoIcon.src}
                     backgroundImage={overView.src}
-                    subtitle="Small Donations Bigger Impact"
-                    title="Education Health For Every Child"
-                    buttonText="Get A Quote"
-                    onButtonClick={() => console.log("Button Clicked!")}
-                    onCardClick={() => {}}
+                    subtitle="Support This Cause"
+                    title={data?.title || "Education Health For Every Child"}
+                    buttonText="Donate Now →"
+                    onButtonClick={() => router.push(`/donate-us/${id}`)}
+                    onCardClick={() => router.push(`/donate-us/${id}`)}
                   />
                 </div>
               </div>

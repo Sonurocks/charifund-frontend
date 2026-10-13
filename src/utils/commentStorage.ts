@@ -35,7 +35,9 @@ export function mergeAndCleanComments(apiComments: CommentType[], blogId: string
 const filteredLocalComments = localComments.filter(
   lc => !apiCommentSet.has(lc.id)
 );
-       localStorage.setItem("LocalComments", JSON.stringify(filteredLocalComments));
+  if (typeof window !== "undefined") {
+    localStorage.setItem("LocalComments", JSON.stringify(filteredLocalComments));
+  }
 
 
   // Merge API comments + pending local comments

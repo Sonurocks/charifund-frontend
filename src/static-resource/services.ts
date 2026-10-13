@@ -63,7 +63,7 @@ export const servicesData: ServiceItem[] = [
     descKey: "Creating opportunities for individuals to develop practical skills, improve employability and build sustainable livelihoods.",
     defaultDesc: "Creating opportunities for individuals to develop practical skills, improve employability and build sustainable livelihoods.",
     icon: "lucide:briefcase",
-    image: "/assets/child.webp",
+    image: "/assets/childrenneedyourhelp.webp",
     highlights: ["Vocational Training", "Career Guidance", "Job Readiness"],
     contentContext: {
       whatWeDo: [
@@ -123,7 +123,7 @@ export const servicesData: ServiceItem[] = [
     descKey: "Working with communities through awareness programs, outreach activities and initiatives that encourage positive social change.",
     defaultDesc: "Working with communities through awareness programs, outreach activities and initiatives that encourage positive social change.",
     icon: "lucide:megaphone",
-    image: "/assets/banner3.webp",
+    image: "/assets/community1.webp",
     highlights: ["Social Outreach", "Public Seminars", "Community Welfare"],
     contentContext: {
       whatWeDo: [
@@ -143,7 +143,7 @@ export const servicesData: ServiceItem[] = [
     descKey: "Helping provide nutritious food and essential support to children, families and communities facing difficult circumstances.",
     defaultDesc: "Helping provide nutritious food and essential support to children, families and communities facing difficult circumstances.",
     icon: "lucide:utensils",
-    image: "/assets/food.webp",
+    image: "/assets/helpforfood.webp",
     highlights: ["Nutritious Meals", "Ration Distribution", "Child Nutrition"],
     contentContext: {
       whatWeDo: [
@@ -163,7 +163,7 @@ export const servicesData: ServiceItem[] = [
     descKey: "Creating opportunities for people to participate in social initiatives, community activities, awareness campaigns and meaningful volunteer work.",
     defaultDesc: "Creating opportunities for people to participate in social initiatives, community activities, awareness campaigns and meaningful volunteer work.",
     icon: "lucide:hand-heart",
-    image: "/assets/event.webp",
+    image: "/assets/events.webp",
     highlights: ["Youth Engagement", "Event Volunteering", "Social Impact"],
     contentContext: {
       whatWeDo: [

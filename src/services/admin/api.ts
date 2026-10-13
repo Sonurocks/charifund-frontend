@@ -15,7 +15,7 @@ api.interceptors.request.use((config) => {
   }
 
   // Add language header
-  const currentLang = localStorage.getItem('lang') || 'en';
+  const currentLang = typeof window !== "undefined" ? localStorage.getItem('lang') || 'en' : 'en';
   if (config.headers) {
     config.headers['Accept-Language'] = currentLang;
     config.headers['X-Language'] = currentLang;

@@ -1,5 +1,5 @@
 import { MdOutlineDashboardCustomize, MdNotificationsActive, MdCampaign, MdCategory, MdEvent } from "react-icons/md";
-import { FaBloggerB, FaComments, FaHandshake } from "react-icons/fa";
+import { FaBloggerB, FaComments, FaHandshake, FaHandHoldingHeart } from "react-icons/fa";
 import { TbBrandGoogleBigQuery } from "react-icons/tb";
 import { PiFlagBannerFill } from "react-icons/pi";
 import { VscFeedback } from "react-icons/vsc";
@@ -25,6 +25,12 @@ export const sidebarAd = [
     lable: "Campaign",
     nav: "campaign",
     link: "/admin/campaign",
+  },
+  {
+    icon: FaHandHoldingHeart,
+    lable: "Donations",
+    nav: "donations",
+    link: "/admin/donations",
   },
   {
     icon: MdEvent,

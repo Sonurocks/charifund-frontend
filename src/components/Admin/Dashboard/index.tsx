@@ -12,7 +12,9 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
-import { FaMoneyBillWave, FaUsers, FaClipboardList, FaRegBell } from "react-icons/fa";
+import Link from "next/link";
+import { FaMoneyBillWave, FaUsers, FaClipboardList, FaRegBell, FaHandHoldingHeart, FaDonate } from "react-icons/fa";
+import { MdCampaign } from "react-icons/md";
 import DonationPieChart from "./DonationPieChart";
 import RecentCampaign from "./RecentCampaign";
 import { useFetchDashboardData } from "@/src/hooks/admin/useDashboard";
@@ -43,13 +45,59 @@ export const Dashboard = () => {
     activeCampaign: dashboardData?.activeCampaign ?? 0,
     totalMembers: dashboardData?.totalMembers ?? 0,
     pendingRequest: dashboardData?.pendingRequest ?? 0,
+    generalFunds: dashboardData?.generalFunds ?? 0,
+    campaignFunds: dashboardData?.campaignFunds ?? 0,
+    onlineFunds: dashboardData?.onlineFunds ?? 0,
+    offlineFunds: dashboardData?.offlineFunds ?? 0,
+    totalDonationsCount: dashboardData?.totalDonationsCount ?? 0,
+    generalDonationsCount: dashboardData?.generalDonationsCount ?? 0,
+    campaignDonationsCount: dashboardData?.campaignDonationsCount ?? 0,
   };
 
   const cards = [
-    { title: "Total Funds", value: `₹${safeDashboardData.totalFunds.toLocaleString()}`, icon: <FaMoneyBillWave size={24} />, color: "from-yellow-400 to-yellow-600" },
+    { title: "Total Funds", value: `₹${safeDashboardData.totalFunds.toLocaleString('en-IN')}`, icon: <FaMoneyBillWave size={24} />, color: "from-yellow-400 to-yellow-600" },
     { title: "Active Campaigns", value: safeDashboardData.activeCampaign.toString(), icon: <FaClipboardList size={24} />, color: "from-green-400 to-green-600" },
     { title: "Members", value: safeDashboardData.totalMembers.toString(), icon: <FaUsers size={24} />, color: "from-yellow-300 to-yellow-500" },
     { title: "Pending Requests", value: safeDashboardData.pendingRequest.toString(), icon: <FaRegBell size={24} />, color: "from-green-300 to-green-500" },
+  ];
+
+  const donationCards = [
+    {
+      title: "General Donations",
+      value: `₹${safeDashboardData.generalFunds.toLocaleString('en-IN')}`,
+      count: `${safeDashboardData.generalDonationsCount} donations`,
+      icon: <FaHandHoldingHeart size={20} className="text-purple-600" />,
+      bg: "bg-[#faf5ff] border-[#e9d5ff]",
+      titleColor: "text-purple-700",
+      countColor: "text-purple-600/80",
+    },
+    {
+      title: "Campaign Donations",
+      value: `₹${safeDashboardData.campaignFunds.toLocaleString('en-IN')}`,
+      count: `${safeDashboardData.campaignDonationsCount} donations`,
+      icon: <MdCampaign size={22} className="text-blue-600" />,
+      bg: "bg-[#f0f7ff] border-[#bfdbfe]",
+      titleColor: "text-blue-700",
+      countColor: "text-blue-600/80",
+    },
+    {
+      title: "Online Collections",
+      value: `₹${safeDashboardData.onlineFunds.toLocaleString('en-IN')}`,
+      count: `${safeDashboardData.totalDonationsCount} total donors`,
+      icon: <FaMoneyBillWave size={20} className="text-emerald-600" />,
+      bg: "bg-emerald-50 border-emerald-200",
+      titleColor: "text-emerald-700",
+      countColor: "text-emerald-600/80",
+    },
+    {
+      title: "Offline Collections",
+      value: `₹${safeDashboardData.offlineFunds.toLocaleString('en-IN')}`,
+      count: "Manual entries",
+      icon: <FaDonate size={20} className="text-amber-600" />,
+      bg: "bg-amber-50 border-amber-200",
+      titleColor: "text-amber-700",
+      countColor: "text-amber-600/80",
+    },
   ];
 
 
@@ -104,6 +152,33 @@ export const Dashboard = () => {
           </motion.div>
         ))}
       </div>
+
+      {/* Unified Donation Metrics Overview */}
+      <div className="mt-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {donationCards.map((dCard, index) => (
+            <motion.div
+              key={index}
+              custom={index}
+              variants={cardVariants}
+              initial="hidden"
+              animate="visible"
+              whileHover={{ y: -3 }}
+              className={`rounded-xl shadow-xs border p-4 flex items-center gap-3 transition-shadow ${dCard.bg}`}
+            >
+              <div className="p-2.5 rounded-lg bg-white shadow-xs border border-gray-100 flex-shrink-0">
+                {dCard.icon}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className={`text-xs font-semibold truncate ${dCard.titleColor}`}>{dCard.title}</p>
+                <p className="text-lg font-bold truncate text-gray-900 mt-0.5">{dCard.value}</p>
+                <p className={`text-[11px] font-medium truncate ${dCard.countColor}`}>{dCard.count}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
       <RecentCampaign />
 
       <motion.div

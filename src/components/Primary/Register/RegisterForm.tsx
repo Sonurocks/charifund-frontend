@@ -38,7 +38,7 @@ const RegisterForm = () => {
             Cookies.set("token", data.token, { expires: 7, path: "/" });
             toast.success("Registration successful 🎉");
             setSubmitting(false);
-            window.location.href = "/dashboard";
+            window.location.href = "/admin/dashboard";
           },
           onError: (err: any) => {
             toast.dismiss();

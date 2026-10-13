@@ -16,7 +16,7 @@ export function middleware(req: NextRequest) {
 
   // Optionally: redirect logged-in users away from login/signup
   if ((pathname === "/login" || pathname === "/signup") && token) {
-    return NextResponse.redirect(new URL("/dashboard", req.url));
+    return NextResponse.redirect(new URL("/admin/dashboard", req.url));
   }
 
   // Continue to requested page

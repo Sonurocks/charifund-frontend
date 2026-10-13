@@ -7,7 +7,7 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const currentLang = localStorage.getItem('lang') || 'en';
+  const currentLang = typeof window !== "undefined" ? localStorage.getItem('lang') || 'en' : 'en';
   if (config.headers) {
     config.headers['Accept-Language'] = currentLang;
     config.headers['X-Language'] = currentLang;

@@ -8,6 +8,7 @@ export interface Campaign {
 
 // Save pending campaign locally
 export function savePendingCampaign(campaign: Campaign) {
+  if (typeof window === "undefined") return;
   const existing = JSON.parse(localStorage.getItem("LocalCampaigns") || "[]");
   const updated = [...existing, { ...campaign, isPending: true }];
   localStorage.setItem("LocalCampaigns", JSON.stringify(updated));
@@ -29,6 +30,7 @@ export function getLocalCampaigns(): Campaign[] {
 
 // Remove a pending campaign (e.g. once approved by API)
 export function removeLocalCampaign(id: string) {
+  if (typeof window === "undefined") return;
   const existing = JSON.parse(localStorage.getItem("LocalCampaigns") || "[]");
   const updated = existing.filter((c: Campaign) => c.id !== id);
   localStorage.setItem("LocalCampaigns", JSON.stringify(updated));

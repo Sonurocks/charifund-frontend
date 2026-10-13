@@ -9,15 +9,12 @@ import PageBanner from "@/src/helper/PageBanner";
 import ComponentLabel from "@/src/components/UI/web/ComponentLabel";
 import ComponentTitle from "@/src/components/UI/web/ComponentTitle";
 import AnimatedReveal from "@/src/animations/AnimatedReveal";
-import Button from "@/src/components/UI/web/Buttons/Button";
-import { useRouter } from "next/navigation";
 import { aboutus, footballhandbg, heartHandbg, spradeBase } from "@/public/assets";
 import { servicesData } from "@/src/static-resource/services";
 import ServiceCard from "./ServiceCard";
 
 const Services: React.FC = () => {
   const { t } = useTranslation();
-  const router = useRouter();
 
   return (
     <div className="w-full bg-white font-nunito overflow-hidden">
@@ -164,56 +161,6 @@ const Services: React.FC = () => {
               </AnimatedReveal>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* --------------------------------------------------
-          SECTION 4 — FINAL CTA
-      -------------------------------------------------- */}
-      <section className="py-16 md:py-24 px-4 sm:px-6 md:px-8 xl:px-28 bg-dark-green text-white relative overflow-hidden">
-        {/* Decorative Background Shapes */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-yellow/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-green/20 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="max-w-5xl mx-auto text-center relative z-10">
-          <AnimatedReveal direction="up" distance={30}>
-            <div className="font-caveat text-xl sm:text-2xl text-yellow mb-3 font-bold flex items-center justify-center gap-2">
-              <Icon icon="mdi:hand-heart" className="w-6 h-6 text-yellow" />
-              <span>{t("Together We Can Make a Difference")}</span>
-            </div>
-
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-6 font-nunito leading-tight">
-              {t("Be a Part of Positive Change")}
-            </h2>
-
-            <p className="text-white/80 text-base sm:text-lg max-w-3xl mx-auto leading-relaxed font-nunito mb-10">
-              {t(
-                "Every initiative begins with people who care. Your support, participation and contribution can help us reach more communities and create meaningful opportunities for those who need them most."
-              )}
-            </p>
-
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
-              <Button
-                text={t("Donate Now →")}
-                bgColor="bg-yellow"
-                textColor="text-foreground text-base font-extrabold"
-                hoverBg="before:bg-white"
-                paddingx="px-8"
-                paddingy="py-4"
-                onClick={() => router.push("/donate-us")}
-              />
-              <Button
-                text={t("Become a Volunteer →")}
-                bgColor="bg-white/10"
-                textColor="text-white text-base font-extrabold"
-                hoverBg="before:bg-yellow"
-                hoverTextColor="group-hover:text-foreground"
-                paddingx="px-8"
-                paddingy="py-4"
-                onClick={() => router.push("/volunteer")}
-              />
-            </div>
-          </AnimatedReveal>
         </div>
       </section>
     </div>

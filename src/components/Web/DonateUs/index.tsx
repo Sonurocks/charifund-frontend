@@ -2,32 +2,31 @@
 import { donateusbanner, heartLogoIcon, overView } from "@/public/assets";
 import { useState } from "react";
 import DonationSection from "./DonationSection";
-import { useFetchAllCampaigns, useFetchSingleCampaign } from "@/src/hooks/web/useCampaigns";
-import { useRouter } from "next/navigation";
+import { useFetchSingleCampaign } from "@/src/hooks/web/useCampaigns";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import PageBanner from "@/src/helper/PageBanner";
 import Sidebar from "../../UI/web/sideBar";
 import DonationCard from "../../UI/web/sideBar/DonationCard";
-const page = 1;
 
-const DonateUs = ({ id }: { id?: string }) => {
+const DonateUs = ({ id: propId }: { id?: string }) => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { t } = useTranslation();
-  const {
-    data: allCampaigns,
-    isLoading: allCampaignsLoading,
-    isError: allCampaignsError,
-  } = useFetchAllCampaigns(page, 10);
+
+  // Determine campaign identifier: prefer route param [id], then searchParams (?campaignId or ?id)
+  const campaignId = propId || searchParams?.get("campaignId") || searchParams?.get("id") || undefined;
 
   const {
     data: singleCampaign,
     isLoading: singleCampaignLoading,
     isError: singleCampaignError,
-  } = useFetchSingleCampaign(id!, { enabled: !!id });
+  } = useFetchSingleCampaign(campaignId!, { enabled: !!campaignId });
 
-  const isLoading = id ? singleCampaignLoading : allCampaignsLoading;
-  const isError = id ? singleCampaignError : allCampaignsError;
-  const campaigns = id ? singleCampaign : allCampaigns?.campaigns?.[0] || null;
+  const isLoading = campaignId ? singleCampaignLoading : false;
+  const isError = campaignId ? singleCampaignError : false;
+  // Never default to first campaign; only select a campaign if a valid campaign identifier was provided
+  const campaign = campaignId ? singleCampaign || null : null;
 
   return (
     <section>
@@ -43,7 +42,7 @@ const DonateUs = ({ id }: { id?: string }) => {
         <div className="w-11/12 xl:w-10/12">
           <div className=" grid grid-cols-1 xl:grid-cols-3 gap-10">
             <div className="xl:col-span-2 relative">
-              <DonationSection data={campaigns} isLoading={isLoading} isError={isError} />
+              <DonationSection data={campaign} isLoading={isLoading} isError={isError} />
 
             </div>
             <div className="xl:col-span-1 space-y-8 clear-both ">

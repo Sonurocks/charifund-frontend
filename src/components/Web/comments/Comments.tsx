@@ -269,9 +269,10 @@ export default function Comments({ CommentId }: CommentsProps) {
                 </span>
               </div>
               {(() => {
-                const localReplies = JSON.parse(
-                  localStorage.getItem("LocalReplies") || "[]"
-                );
+                const localReplies =
+                  typeof window !== "undefined"
+                    ? JSON.parse(localStorage.getItem("LocalReplies") || "[]")
+                    : [];
                 const localReplyCount = localReplies.filter(
                   (r: any) => String(r.commentId) === String(comment.id)
                 ).length;

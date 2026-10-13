@@ -7,6 +7,13 @@ export interface DashboardData {
   totalMembers: number;
   totalFunds: number;
   pendingRequest: number;
+  generalFunds?: number;
+  campaignFunds?: number;
+  onlineFunds?: number;
+  offlineFunds?: number;
+  totalDonationsCount?: number;
+  generalDonationsCount?: number;
+  campaignDonationsCount?: number;
 }
 
 export const dashboardApi = async () => {

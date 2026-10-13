@@ -146,6 +146,7 @@ const HeroStaticSlider = () => {
           alt="Horizontal White Shape"
           fill
           priority
+          loading="eager"
         />
       </section>
 
