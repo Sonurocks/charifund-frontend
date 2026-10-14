@@ -31,34 +31,42 @@ export const DonationSummaryCards: React.FC<DonationSummaryCardsProps> = ({
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5 mb-6">
         {[1, 2, 3, 4].map((idx) => (
           <div
             key={idx}
-            className="bg-gray-200 animate-pulse rounded-xl p-6 h-28"
+            className="bg-gray-200 animate-pulse rounded-xl p-5 h-28"
           />
         ))}
       </div>
     );
   }
 
-  const safeTotalCollected =
-    summary?.totalAmount ?? summary?.totalCollected ?? 0;
-  const safeGeneralDonations =
-    summary?.generalAmount ?? summary?.generalDonations ?? 0;
-  const safeCampaignDonations =
-    summary?.campaignAmount ?? summary?.campaignDonations ?? 0;
-  const safeOfflineCollections =
-    summary?.offlineAmount ?? summary?.offlineCollections ?? 0;
+  const safeTotalCollected = Number(
+    summary?.totalAmount ?? summary?.totalCollected ?? 0
+  );
+  const safeGeneralDonations = Number(
+    summary?.generalAmount ?? summary?.generalDonations ?? 0
+  );
+  const safeCampaignDonations = Number(
+    summary?.campaignAmount ?? summary?.campaignDonations ?? 0
+  );
+  const safeOfflineCollections = Number(
+    summary?.offlineAmount ?? summary?.offlineCollections ?? 0
+  );
 
-  const totalDonationsCount =
-    summary?.totalCount ?? summary?.totalDonationsCount ?? totalCount ?? 0;
-  const generalDonationsCount =
-    summary?.generalCount ?? summary?.generalDonationsCount ?? 0;
-  const campaignDonationsCount =
-    summary?.campaignCount ?? summary?.campaignDonationsCount ?? 0;
-  const offlineCollectionsCount =
-    summary?.offlineCount ?? summary?.offlineDonationsCount ?? 0;
+  const totalDonationsCount = Number(
+    summary?.totalCount ?? summary?.totalDonationsCount ?? totalCount ?? 0
+  );
+  const generalDonationsCount = Number(
+    summary?.generalCount ?? summary?.generalDonationsCount ?? 0
+  );
+  const campaignDonationsCount = Number(
+    summary?.campaignCount ?? summary?.campaignDonationsCount ?? 0
+  );
+  const offlineCollectionsCount = Number(
+    summary?.offlineCount ?? summary?.offlineDonationsCount ?? 0
+  );
 
   const cards = [
     {
@@ -92,7 +100,7 @@ export const DonationSummaryCards: React.FC<DonationSummaryCardsProps> = ({
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5 mb-6">
       {cards.map((card, index) => (
         <motion.div
           key={index}
@@ -100,18 +108,22 @@ export const DonationSummaryCards: React.FC<DonationSummaryCardsProps> = ({
           variants={cardVariants}
           initial="hidden"
           animate="visible"
-          whileHover={{ scale: 1.03, y: -4 }}
-          className={`bg-gradient-to-r ${card.color} text-white rounded-xl shadow-md p-5 flex items-center gap-4 cursor-pointer`}
+          whileHover={{ scale: 1.02, y: -3 }}
+          className={`bg-gradient-to-r ${card.color} text-white rounded-xl shadow-md p-3.5 sm:p-5 flex items-center gap-3 sm:gap-4 cursor-pointer`}
         >
-          <div className="p-3 bg-white/20 rounded-full flex-shrink-0">
+          <div className="p-2 sm:p-3 bg-white/20 rounded-full flex-shrink-0 flex items-center justify-center">
             {card.icon}
           </div>
           <div className="min-w-0 flex-1">
-            <h3 className="text-xs uppercase tracking-wider font-medium text-white/90 truncate">
+            <h3 className="text-[11px] sm:text-xs uppercase tracking-wider font-semibold text-white/90 leading-tight">
               {card.title}
             </h3>
-            <p className="text-2xl font-bold mt-1 truncate">{card.amount}</p>
-            <p className="text-xs text-white/80 mt-0.5">{card.countText}</p>
+            <p className="text-xl sm:text-2xl font-bold mt-0.5 sm:mt-1 text-white whitespace-nowrap">
+              {card.amount}
+            </p>
+            <p className="text-xs text-white/80 mt-0.5 whitespace-nowrap">
+              {card.countText}
+            </p>
           </div>
         </motion.div>
       ))}

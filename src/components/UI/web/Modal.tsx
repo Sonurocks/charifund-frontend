@@ -36,7 +36,7 @@ export default function Modal({
   children,
   size = "lg",
   showCloseButton = true,
-  zIndex = 999999,
+  zIndex = 9000,
   maxWidth,
   className = "",
   noPadding = false,

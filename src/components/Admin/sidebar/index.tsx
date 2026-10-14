@@ -27,7 +27,7 @@ const AdminSideBar = () => {
     <>
       {/* Mobile Header */}
       {isMobile && (
-        <div className="flex justify-between items-center px-4 py-3 bg-white shadow-md md:hidden z-50">
+        <div className="flex justify-between items-center px-4 py-3 bg-white shadow-md md:hidden z-50 shrink-0 w-full">
           <Image src={logo.src} alt="logo" width={120} height={40} priority />
           <button onClick={() => setMobileDrawerOpen(true)} className="text-2xl">
             <MdMenu />
@@ -57,32 +57,36 @@ const AdminSideBar = () => {
             animate={{ x: 0 }}
             exit={{ x: -300 }}
             transition={{ type: "tween", duration: 0.3 }}
-            className="fixed top-0 left-0 h-full w-64 bg-white z-50 shadow-lg rounded-r-3xl flex flex-col"
+            className="fixed top-0 left-0 h-screen max-h-screen w-64 bg-white z-50 shadow-lg rounded-r-3xl flex flex-col overflow-hidden"
           >
-            <div className="flex justify-end p-4">
-              <button onClick={() => setMobileDrawerOpen(false)} className="text-xl">
+            <div className="flex justify-end p-4 flex-shrink-0">
+              <button
+                onClick={() => setMobileDrawerOpen(false)}
+                className="text-xl text-gray-700 hover:text-black cursor-pointer"
+                aria-label="Close sidebar"
+              >
                 <MdClose />
               </button>
             </div>
 
-            <div className="flex justify-center mb-6">
-              <Image src={logo.src} alt="logo" width={140} height={40} />
+            <div className="flex justify-center mb-4 flex-shrink-0">
+              <Image src={logo.src} alt="logo" width={140} height={40} priority />
             </div>
 
-            <div className="flex flex-col">
+            <div className="flex flex-col flex-1 min-h-0 overflow-y-auto pb-8 overscroll-contain touch-pan-y scrollbar-hide">
               {sidebarAd.map((item, i) => {
                 const isActive = isActiveRoute(item.link);
                 return (
                   <Link href={item.link} key={i} onClick={() => setMobileDrawerOpen(false)}>
                     <motion.div
-                      whileHover={{ scale: 1.05 }}
+                      whileHover={{ scale: 1.03 }}
                       transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                      className={`flex items-center gap-3 py-4 px-6 cursor-pointer rounded-r-lg ${
-                        isActive ? "bg-primaryColor text-white" : "text-black"
+                      className={`flex items-center gap-3 py-3.5 px-6 cursor-pointer rounded-r-lg ${
+                        isActive ? "bg-primaryColor text-white font-medium" : "text-black hover:bg-gray-50"
                       }`}
                     >
-                      {item.icon && <item.icon className="w-5 h-5" />}
-                      <span>{item.lable}</span>
+                      {item.icon && <item.icon className="w-5 h-5 flex-shrink-0" />}
+                      <span className="text-sm">{item.lable}</span>
                     </motion.div>
                   </Link>
                 );
@@ -97,9 +101,9 @@ const AdminSideBar = () => {
         <motion.div
           animate={{ width: isOpen ? 260 : 80 }}
           transition={{ duration: 0.3, type: "tween" }}
-          className="bg-white rounded-r-3xl shadow-md sticky top-0 bottom-0 left-0 flex flex-col"
+          className="bg-white rounded-r-3xl shadow-md sticky top-0 bottom-0 left-0 flex flex-col h-screen max-h-screen overflow-hidden shrink-0"
         >
-          <div className="flex flex-col items-center pb-6 pt-10">
+          <div className="flex flex-col items-center pb-6 pt-10 flex-shrink-0">
             {isOpen ? (
               <Image
                 src={logo.src}
@@ -113,7 +117,7 @@ const AdminSideBar = () => {
             )}
           </div>
 
-          <div className="flex flex-col w-full font-medium flex-grow border-t border-gray-200 overflow-y-auto scrollbar-hide relative">
+          <div className="flex flex-col w-full font-medium flex-1 min-h-0 border-t border-gray-200 overflow-y-auto pb-6 overscroll-contain relative scrollbar-hide">
             {sidebarAd.map((item, i) => {
               const isActive = isActiveRoute(item.link);
 

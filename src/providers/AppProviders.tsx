@@ -74,6 +74,7 @@ export default function AppProviders({ children }: { children: ReactNode }) {
                 <GlobalActionCTA />
                 <Toaster
                   position="top-center"
+                  containerStyle={{ zIndex: 99999999 }}
                   toastOptions={{ duration: 3000 }}
                 />
               </QueryClientProvider>

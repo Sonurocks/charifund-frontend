@@ -34,35 +34,38 @@ const DataTableWrapper = <T,>({
   const safeData = Array.isArray(data) ? data : [];
   return (
     <AnimatedReveal>
-      <DataTable
-        columns={safeColumns as any}
-        data={safeData}
-        progressPending={loading}
-        progressComponent={<TableSpinner />}
-        highlightOnHover
-        striped
-        customStyles={{
-          headCells: {
-            style: {
-              fontWeight: 600,
-              fontSize: "13px",
-              backgroundColor: "var(--color-primaryColor)",
-              color: "var(--color-foreground)",
+      <div className="w-full max-w-full overflow-x-auto rounded-xl">
+        <DataTable
+          columns={safeColumns as any}
+          data={safeData}
+          progressPending={loading}
+          progressComponent={<TableSpinner />}
+          highlightOnHover
+          striped
+          responsive
+          customStyles={{
+            headCells: {
+              style: {
+                fontWeight: 600,
+                fontSize: "13px",
+                backgroundColor: "var(--color-primaryColor)",
+                color: "var(--color-foreground)",
+              },
             },
-          },
-          cells: {
-            style: {
-              fontSize: "12px",
-              fontWeight: 500,
+            cells: {
+              style: {
+                fontSize: "12px",
+                fontWeight: 500,
+              },
             },
-          },
-          rows: {
-            style: {
-              minHeight: "40px",
+            rows: {
+              style: {
+                minHeight: "40px",
+              },
             },
-          },
-        }}
-      />
+          }}
+        />
+      </div>
     </AnimatedReveal>
   );
 };

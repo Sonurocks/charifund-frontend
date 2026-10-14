@@ -173,7 +173,7 @@ export const DonationsTable: React.FC<DonationsTableProps> = ({
       {/* Pagination & Controls Bar */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
         {/* Page size limit selector & info */}
-        <div className="flex items-center gap-3 text-xs text-gray-600">
+        <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 text-xs text-gray-600">
           <span>{t("Show") || "Show"}</span>
           <select
             value={limit}

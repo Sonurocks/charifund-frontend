@@ -48,14 +48,7 @@ const Button: React.FC<DynamicButtonProps> = ({
       disabled={disabled}
       onHoverStart={() => iconControls.start({ rotate: 45 })}
       onHoverEnd={() => iconControls.start({ rotate: 0 })}
-      whileHover="hover"
-      variants={{
-        hover: {
-          backgroundSize: "100% 100%",
-          transition: { duration: 0.4, ease: "easeInOut" },
-        },
-      }}
-      className={`w-full relative  cursor-pointer ${fontWeight} font-nunito
+      className={`w-full relative cursor-pointer ${fontWeight} font-nunito
         ${bgColor}   ${rounded} ${paddingx} ${paddingy} 
         overflow-hidden group
         before:content-[''] before:absolute before:inset-0 ${hoverBg}

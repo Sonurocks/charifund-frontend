@@ -123,7 +123,7 @@ export const UnifiedDonations = () => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full min-w-0">
       <Breadcrumb lable="Donations" />
 
       {/* Summary Cards */}

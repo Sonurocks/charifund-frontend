@@ -85,23 +85,10 @@ const PageBanner: React.FC<ExtendedPageBannerProps> = ({
     ? rawBanners
     : [];
 
-  // Build active slides list - clean & no fallback image flash on refresh, guarantees arrows are always shown
+  // Build active slides list - dynamic backend banners first, static fallback only when no banners exist
   const activeSlides = (() => {
-    if (fetchedBanners.length > 1) {
+    if (fetchedBanners.length > 0) {
       return fetchedBanners;
-    }
-    if (fetchedBanners.length === 1) {
-      return [
-        fetchedBanners[0],
-        {
-          id: "static-slide-fallback-2",
-          priority: 2,
-          image: bgImage || "/assets/aboutus.webp",
-          title: title || "Empowering Communities Together",
-          subtitle: tagline || "Join Our Cause",
-          description: description || "Creating a lasting positive impact for those in need.",
-        } as unknown as Banner,
-      ];
     }
     return [
       {
@@ -111,14 +98,6 @@ const PageBanner: React.FC<ExtendedPageBannerProps> = ({
         title: title || "Giving Help To Those Who Need It",
         subtitle: tagline || "Start Donating Poor People",
         description: description || "Support communities and transform lives with YUWA India.",
-      } as unknown as Banner,
-      {
-        id: "static-slide-2",
-        priority: 2,
-        image: "/assets/aboutus.webp",
-        title: title || "Empowering Communities Together",
-        subtitle: tagline || "Join Our Cause",
-        description: description || "Creating a lasting positive impact for those in need.",
       } as unknown as Banner,
     ];
   })();

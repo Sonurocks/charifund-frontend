@@ -25,23 +25,50 @@ export const getDonationColumns = ({
       const full = `${row.firstName || ""} ${row.lastName || ""}`.trim();
       return full || row.donorName || "-";
     },
+    cell: (row: UnifiedDonation) => {
+      if (row.name?.trim()) {
+        return <span className="font-medium text-gray-900">{row.name.trim()}</span>;
+      }
+      const full = `${row.firstName || ""} ${row.lastName || ""}`.trim();
+      const name = full || row.donorName;
+      if (name) {
+        return <span className="font-medium text-gray-900">{name}</span>;
+      }
+      return <span className="text-gray-400">-</span>;
+    },
     sortable: true,
     width: "140px",
   },
   {
     name: "Email",
     selector: (row: UnifiedDonation) => row.email || "-",
+    cell: (row: UnifiedDonation) =>
+      row.email ? (
+        <span className="text-gray-700 truncate" title={row.email}>
+          {row.email}
+        </span>
+      ) : (
+        <span className="text-gray-400">-</span>
+      ),
     width: "160px",
   },
   {
     name: "Phone",
     selector: (row: UnifiedDonation) => row.phone || "-",
+    cell: (row: UnifiedDonation) =>
+      row.phone ? (
+        <span className="text-gray-700">{row.phone}</span>
+      ) : (
+        <span className="text-gray-400">-</span>
+      ),
     width: "130px",
   },
   {
     name: "Type",
     cell: (row: UnifiedDonation) => {
-      const isGeneral = row.type?.toLowerCase() === "general";
+      const isGeneral =
+        row.type?.toLowerCase() === "general" ||
+        (!row.campaignId && !row.campaign);
       return (
         <span
           className={`text-xs font-semibold whitespace-nowrap ${
@@ -56,25 +83,51 @@ export const getDonationColumns = ({
   },
   {
     name: "Campaign",
-    cell: (row: UnifiedDonation) => {
-      if (row.type?.toLowerCase() === "general") {
-        return <span className="text-gray-500 italic">General Donation</span>;
-      }
+    selector: (row: UnifiedDonation) => {
+      if (!row.campaignId && !row.campaign) return "-";
       const titleObj =
         row.campaign?.title ?? row.campaignTitle ?? (row as any).title;
-      let titleStr = "General Donation";
+      if (titleObj) {
+        if (typeof titleObj === "object") {
+          return (
+            (titleObj as any)[lang] ||
+            (titleObj as any).en ||
+            (titleObj as any).hi ||
+            "-"
+          );
+        }
+        return String(titleObj);
+      }
+      return row.campaign?.name || "-";
+    },
+    cell: (row: UnifiedDonation) => {
+      const isGeneral =
+        row.type?.toLowerCase() === "general" ||
+        (!row.campaignId && !row.campaign);
+
+      if (isGeneral || (!row.campaign && !row.campaignId)) {
+        return <span className="text-gray-400">-</span>;
+      }
+
+      const titleObj =
+        row.campaign?.title ?? row.campaignTitle ?? (row as any).title;
+      let titleStr = "";
       if (titleObj) {
         if (typeof titleObj === "object") {
           titleStr =
             (titleObj as any)[lang] ||
             (titleObj as any).en ||
             (titleObj as any).hi ||
-            "General Donation";
+            "";
         } else {
           titleStr = String(titleObj);
         }
       } else if (row.campaign?.name) {
         titleStr = row.campaign.name;
+      }
+
+      if (!titleStr.trim()) {
+        return <span className="text-gray-400">-</span>;
       }
 
       return (
@@ -83,6 +136,7 @@ export const getDonationColumns = ({
         </span>
       );
     },
+    sortable: true,
     width: "160px",
   },
   {
@@ -117,8 +171,14 @@ export const getDonationColumns = ({
     cell: (row: UnifiedDonation) => {
       const statusLower = (row.status || "").toLowerCase();
       let badgeStyle = "bg-gray-100 text-gray-700 border-gray-300";
-      if (statusLower === "completed" || statusLower === "success") {
+      if (
+        statusLower === "completed" ||
+        statusLower === "success" ||
+        statusLower === "paid"
+      ) {
         badgeStyle = "bg-green-100 text-green-700 border-green-200";
+      } else if (statusLower === "offline") {
+        badgeStyle = "bg-emerald-50 text-emerald-700 border-emerald-200";
       } else if (statusLower === "pending") {
         badgeStyle = "bg-yellow-100 text-yellow-800 border-yellow-200";
       } else if (statusLower === "failed") {

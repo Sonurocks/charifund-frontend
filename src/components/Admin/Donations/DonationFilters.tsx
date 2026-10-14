@@ -55,11 +55,23 @@ export const DonationFilters: React.FC<DonationFiltersProps> = ({
 }) => {
   const { t } = useTranslation();
 
-  // Tabs
-  const tabs: { key: DonationTypeTab; label: string }[] = [
-    { key: "all", label: t("All Donations") || "All Donations" },
-    { key: "general", label: t("General Donations") || "General Donations" },
-    { key: "campaign", label: t("Campaign Donations") || "Campaign Donations" },
+  // Tabs with full and short labels for responsive display without scroll
+  const tabs: { key: DonationTypeTab; fullLabel: string; shortLabel: string }[] = [
+    {
+      key: "all",
+      fullLabel: t("All Donations") || "All Donations",
+      shortLabel: t("All") || "All",
+    },
+    {
+      key: "general",
+      fullLabel: t("General Donations") || "General Donations",
+      shortLabel: t("General") || "General",
+    },
+    {
+      key: "campaign",
+      fullLabel: t("Campaign Donations") || "Campaign Donations",
+      shortLabel: t("Campaign") || "Campaign",
+    },
   ];
 
   // Payment Method Options
@@ -96,10 +108,11 @@ export const DonationFilters: React.FC<DonationFiltersProps> = ({
   const isGeneralTab = activeTab === "general";
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
-      {/* Donation Type Tabs */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 pb-4 mb-4">
-        <div className="flex bg-gray-100/80 p-1 rounded-lg gap-1">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-3 sm:p-4 mb-6 min-w-0">
+      {/* Donation Type Tabs & Export CSV */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-100 pb-3 sm:pb-4 mb-4">
+        {/* Tab switch without scroll */}
+        <div className="grid grid-cols-3 w-full sm:w-auto sm:flex bg-gray-100/80 p-1 rounded-lg gap-1">
           {tabs.map((tab) => {
             const isActive = activeTab === tab.key;
             return (
@@ -107,20 +120,21 @@ export const DonationFilters: React.FC<DonationFiltersProps> = ({
                 key={tab.key}
                 type="button"
                 onClick={() => onTabChange(tab.key)}
-                className={`px-4 py-2 text-xs font-semibold rounded-md transition-all duration-200 cursor-pointer ${
+                className={`px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 text-xs font-semibold rounded-md transition-all duration-200 cursor-pointer text-center justify-center flex items-center ${
                   isActive
                     ? "bg-white text-gray-900 shadow-sm"
                     : "text-gray-500 hover:text-gray-900 hover:bg-white/50"
                 }`}
               >
-                {tab.label}
+                <span className="hidden lg:inline whitespace-nowrap">{tab.fullLabel}</span>
+                <span className="lg:hidden whitespace-nowrap">{tab.shortLabel}</span>
               </button>
             );
           })}
         </div>
 
         {/* Action: Export CSV */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 self-start sm:self-auto">
           <Button
             text={isExporting ? "Exporting..." : t("Export CSV") || "Export CSV"}
             icon={isExporting ? "" : "mdi:file-download-outline"}
@@ -130,15 +144,15 @@ export const DonationFilters: React.FC<DonationFiltersProps> = ({
             hoverBg="before:bg-primaryColor"
             textColor="text-white"
             hoverTextColor="group-hover:text-foreground"
-            paddingx="px-4"
-            paddingy="py-2"
+            paddingx="px-3 sm:px-4"
+            paddingy="py-1.5 sm:py-2"
             rounded="rounded-[6px]"
           />
         </div>
       </div>
 
       {/* Filter Controls Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 items-end">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 items-end">
         {/* Search Filter */}
         <div>
           <label className="block mb-1 text-xs font-medium text-gray-600">
@@ -200,17 +214,19 @@ export const DonationFilters: React.FC<DonationFiltersProps> = ({
         </div>
 
         {/* Start Date */}
-        <DateSelect
-          label={t("Start Date") || "Start Date"}
-          value={startDate}
-          onChange={onStartDateChange}
-          placeholder="Select start date"
-          maxDate={endDate ? new Date(endDate) : undefined}
-        />
+        <div>
+          <DateSelect
+            label={t("Start Date") || "Start Date"}
+            value={startDate}
+            onChange={onStartDateChange}
+            placeholder="Select start date"
+            maxDate={endDate ? new Date(endDate) : undefined}
+          />
+        </div>
 
         {/* End Date & Clear Button */}
         <div className="flex items-end gap-2">
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             <DateSelect
               label={t("End Date") || "End Date"}
               value={endDate}
@@ -224,7 +240,7 @@ export const DonationFilters: React.FC<DonationFiltersProps> = ({
             type="button"
             onClick={onClearFilters}
             title="Clear all filters"
-            className="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-900 rounded-md text-xs font-medium transition-colors flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap h-[35px]"
+            className="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-900 rounded-md text-xs font-medium transition-colors flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap h-[35px] flex-shrink-0"
           >
             <FaTimes className="text-[10px]" />
             <span>{t("Clear") || "Clear"}</span>

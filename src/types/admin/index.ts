@@ -120,8 +120,17 @@ export interface LocationPickerProps {
 }
 
 export interface DonationPieChartProps {
-  data: { name: string; value: number }[];
+  data?: {
+    campaignId?: string | null;
+    name: string;
+    value: number;
+    donorCount?: number;
+  }[];
   colors?: string[];
+  total?: number;
+  isLoading?: boolean;
+  isError?: boolean;
+  onRetry?: () => void;
 }
 
 export interface Notification {
