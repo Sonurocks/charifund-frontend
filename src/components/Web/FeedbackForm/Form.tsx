@@ -73,13 +73,13 @@ const FormComponent = ({ onClose }: { onClose: () => void }) => {
         height: '100vh',
         zIndex: 9999,
         transform: 'translateZ(0)',
-        overflow: 'hidden',
+        overflowY: 'auto',
         willChange: 'transform',
         margin: 0,
         padding: '1rem'
       }}
     >
-      <div className="bg-teal-800 rounded-lg shadow-2xl max-w-xl w-full mx-2 sm:mx-4 md:mx-0 relative">
+      <div className="bg-teal-800 rounded-lg shadow-2xl max-w-xl w-full mx-2 sm:mx-4 md:mx-0 relative max-h-[92vh] overflow-y-auto">
         {/* Toast */}
         {toast && (
           <div

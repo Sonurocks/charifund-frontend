@@ -118,7 +118,7 @@ export default function Modal({
           </div>
         )}
 
-        <div className={noPadding ? "" : "p-6"}>{children}</div>
+        <div className={noPadding ? "" : "p-4 sm:p-6"}>{children}</div>
       </div>
     </div>,
     document.body,

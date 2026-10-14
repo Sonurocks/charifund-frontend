@@ -253,7 +253,7 @@ const PageBanner: React.FC<ExtendedPageBannerProps> = ({
       {/* Text Overlay and Controls */}
       <div className="absolute inset-0 flex flex-col justify-center items-center z-20">
         {/* Content */}
-        <div className="relative z-3 text-center w-full px-4 sm:px-6 md:px-8 xl:px-30">
+        <div className="relative z-3 text-center w-full px-14 sm:px-16 md:px-8 xl:px-30">
           <AnimatedReveal
             key={`text-${index}-${currentBanner?.id || index}`}
             direction="up"

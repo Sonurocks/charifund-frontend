@@ -26,14 +26,12 @@ const AdminSideBar = () => {
   return (
     <>
       {/* Mobile Header */}
-      {isMobile && (
-        <div className="flex justify-between items-center px-4 py-3 bg-white shadow-md md:hidden z-50 shrink-0 w-full">
-          <Image src={logo.src} alt="logo" width={120} height={40} priority />
-          <button onClick={() => setMobileDrawerOpen(true)} className="text-2xl">
-            <MdMenu />
-          </button>
-        </div>
-      )}
+      <div className="flex justify-between items-center px-4 py-3 bg-white shadow-md md:hidden z-50 shrink-0 w-full">
+        <Image src={logo.src} alt="logo" width={120} height={40} priority />
+        <button onClick={() => setMobileDrawerOpen(true)} className="text-2xl cursor-pointer">
+          <MdMenu />
+        </button>
+      </div>
 
       {/* Mobile Overlay */}
       <AnimatePresence>
@@ -101,7 +99,7 @@ const AdminSideBar = () => {
         <motion.div
           animate={{ width: isOpen ? 260 : 80 }}
           transition={{ duration: 0.3, type: "tween" }}
-          className="bg-white rounded-r-3xl shadow-md sticky top-0 bottom-0 left-0 flex flex-col h-screen max-h-screen overflow-hidden shrink-0"
+          className="bg-white rounded-r-3xl shadow-md sticky top-0 bottom-0 left-0 hidden md:flex flex-col h-screen max-h-screen overflow-hidden shrink-0"
         >
           <div className="flex flex-col items-center pb-6 pt-10 flex-shrink-0">
             {isOpen ? (

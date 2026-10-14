@@ -471,7 +471,7 @@ export default function HelpingEachOther() {
               </div>
 
               <motion.div
-                className="fixed right-8 top-2/3 transform -translate-y-1/2 pointer-events-none z-50"
+                className="absolute right-4 md:right-8 top-2/3 transform -translate-y-1/2 pointer-events-none z-20 hidden sm:block"
                 animate={{
                   scale: [0.9, 1.1, 0.9],
                   opacity: [0.5, 1, 0.5],

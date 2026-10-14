@@ -62,7 +62,7 @@ export default function ScrollImgSection() {
   }
 
   return (
-    <div className="relative w-full overflow-hidden bg-gray-100">
+    <div className="relative w-full overflow-hidden">
       <motion.div
         animate={controls}
         className="flex whitespace-nowrap relative"

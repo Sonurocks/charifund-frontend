@@ -124,8 +124,8 @@ const  CharityWithDifference  = () =>{
               loop={true}
               breakpoints={{
                 0: {
-                  slidesPerView: 0,
-                  spaceBetween: 4,
+                  slidesPerView: 1,
+                  spaceBetween: 8,
                   centeredSlides: false,
                 },
                 300: {

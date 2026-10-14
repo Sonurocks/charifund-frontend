@@ -46,13 +46,13 @@ const Footer = () => {
         <motion.div
           animate={{ scale: [1, 1.3, 1], opacity: [0.6, 1, 0.6] }}
           transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[25%] left-0 xl:left-8 transform -translate-y-1/2 text-yellow  "
+          className="absolute top-[25%] left-0 xl:left-8 transform -translate-y-1/2 text-yellow w-10 xl:w-14 h-10 xl:h-14"
         >
           <Image
             src={spade2.src}
             alt="Logo"
-            className="w-10 xl:w-14 h-10 xl:h-14"
             fill
+            className="object-contain"
           />
         </motion.div>
 
@@ -65,7 +65,7 @@ const Footer = () => {
         >
           {/* Brand Section */}
           <motion.div variants={item}>
-            <div className="h-18 w-62 md:h-12  md:w-56 lg:h-14  lg:w-64 xl:h-16 xl:w-72 relative -ml-15 md:-ml-22">
+            <div className="h-18 w-62 md:h-12  md:w-56 lg:h-14  lg:w-64 xl:h-16 xl:w-72 relative ml-0 md:-ml-22">
               <Image
                 src={logo}
                 fill

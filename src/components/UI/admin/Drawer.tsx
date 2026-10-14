@@ -32,16 +32,14 @@ const Drawer: React.FC<AdminDrawerProps> = ({
           {/* Drawer panel */}
           <motion.div
             key="drawer"
-            className={`fixed top-0 right-0 h-full bg-white shadow-xl z-50 overflow-auto
-              w-full sm:w-[${width}] ${
+            className={`fixed top-0 right-0 h-full bg-white shadow-xl z-50 overflow-auto w-full ${
               mobileFullScreen
                 ? `sm:w-[400px] md:w-[60%] ${
                     mode === "view" ? "lg:w-[60%]" : "lg:w-[35%]"
-                  } `
+                  }`
                 : ""
-            }
-              ${className}
-              `}
+            } ${className}`}
+            style={!mobileFullScreen && width ? { width } : undefined}
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}

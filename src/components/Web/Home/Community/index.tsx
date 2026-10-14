@@ -33,7 +33,7 @@ const Community = ({ hasFeedback }: { hasFeedback?: boolean | null }) => {
 
     return (
         <section
-            className={`relative w-full py-16 md:py-24 xl:py-32 z-40 text-white flex justify-center items-center overflow-hidden`}
+            className={`relative w-full py-16 md:py-24 xl:py-32  text-white flex justify-center items-center overflow-hidden`}
         >
             <div className="absolute  z-0 inset-0">
                 <Image src={community2.src} alt="bg image" fill className="object-cover" />
@@ -49,9 +49,9 @@ const Community = ({ hasFeedback }: { hasFeedback?: boolean | null }) => {
                     repeat: Infinity,
                     ease: "easeInOut",
                 }}
-                className="hidden md:block absolute top-[37%] xl:top-[32%] right-20 xl:right-58 transform -translate-y-1/2 text-palate-yellow  z-2"
+                className="hidden md:block absolute top-[37%] xl:top-[32%] right-20 xl:right-58 transform -translate-y-1/2 text-palate-yellow z-2 w-20 h-20 xl:w-40 xl:h-40"
             >
-                <Image src={yellowspade.src} alt="decoration" className="size-20 xl:size-40" fill />
+                <Image src={yellowspade.src} alt="decoration" fill className="object-contain" />
             </motion.div>
 
             <div className="inset-0 z-1 absolute"

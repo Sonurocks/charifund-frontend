@@ -37,20 +37,21 @@ const CustomInput: React.FC<AdminCustomInputProps> = ({
         {/* Input / Textarea */}
         {isTextarea ? (
           <textarea
-          ref={ref as React.Ref<HTMLTextAreaElement>}
+            ref={ref as React.Ref<HTMLTextAreaElement>}
             id={name}
             name={name}
             value={value}
             onChange={onChange}
             placeholder={placeholder}
-               className={`w-full bg-transparent outline-none text-[13px] placeholder:text-gray-500  ${readOnly ? "cursor-not-allowed text-blue-50/80": "text-foreground/70"}`}
+            className={`w-full bg-transparent outline-none text-[13px] placeholder:text-gray-500  ${readOnly ? "cursor-not-allowed text-blue-50/80": "text-foreground/70"}`}
             rows={4}
             onKeyDown={onKeyDown}
             disabled={disabled}
+            readOnly={readOnly}
           />
         ) : (
           <input
-          ref={ref as React.Ref<HTMLInputElement>}
+            ref={ref as React.Ref<HTMLInputElement>}
             id={name}
             name={name}
             type={isPassword && showPassword ? "text" : type}
@@ -59,6 +60,7 @@ const CustomInput: React.FC<AdminCustomInputProps> = ({
             placeholder={placeholder}
             onKeyDown={onKeyDown}
             disabled={disabled}
+            readOnly={readOnly}
             className={`w-full bg-transparent outline-none text-[13px] placeholder:text-gray-500  ${readOnly ? "cursor-not-allowed text-blue-50": "text-foreground/70"}`}
           />
         )}

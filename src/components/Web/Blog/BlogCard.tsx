@@ -115,7 +115,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ card }) => {
           initial="idle"
           animate={heartControls}
         >
-          <img src="/assets/heart.webp" alt="heart" className="w-17 h-10" />
+          <img src="/assets/heart.webp" alt="heart" className="w-16 h-10" />
         </motion.div>
       </div>
     </motion.div>

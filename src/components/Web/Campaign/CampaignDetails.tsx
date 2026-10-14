@@ -48,7 +48,7 @@ const CampaignDetails: React.FC = () => {
 
       {/* ✅ The main content area */}
       <section className="bg-white py-16 text-gray-green flex justify-center items-start w-full">
-        <div className="max-w-7xl xl:max-w-[1440px] xl:px-18 px-2 md:px-18 w-full">
+        <div className="max-w-7xl xl:max-w-[1440px] px-4 sm:px-6 md:px-8 lg:px-12 xl:px-18 w-full">
           {isContentLoading ? (
             // ✅ Loader only inside content area
             <div className="flex items-center justify-center h-[400px]">

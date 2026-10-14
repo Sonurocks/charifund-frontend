@@ -156,7 +156,7 @@ const DonateDifferentWay: React.FC = () => {
                   postText={t(" Make a Difference")}
                 />
                 <motion.div
-                  className='flex-shrink-0 absolute top-[70] md:top-[1] md:right-[2] xl:top-[-20] right-[20] xl:right-[-60]  ml-2 sm:ml-4 xl:ml-0 mt-1 sm:mt-2'
+                  className='flex-shrink-0 absolute top-[70] md:top-[1] md:right-[2] xl:top-[-20] right-[20]  ml-2 sm:ml-4 xl:ml-0 mt-1 sm:mt-2'
                   animate={{
                     scale: [0.5, 1.2, 0.5]
                   }}
@@ -166,8 +166,7 @@ const DonateDifferentWay: React.FC = () => {
                     repeat: Infinity
                   }}
                 >
-                  
-                  <div className="relative w-full h-full">
+                  <div className="relative w-10 h-10 md:w-12 md:h-12">
                     <Image
                       src='/assets/spade-green-heart.webp'
                       alt='Green heart'
