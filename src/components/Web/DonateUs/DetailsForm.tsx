@@ -188,14 +188,14 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
                             campaignTitle: receiptPayload?.campaignTitle || campaignTitle || "General Welfare Fund",
                             campaignId: receiptPayload?.campaignId || campaignId,
                             donor: {
-                                name: receiptPayload?.donor?.name || `${values.firstName} ${values.lastName}`.trim(),
-                                email: receiptPayload?.donor?.email || values.email,
-                                phone: receiptPayload?.donor?.phone || values.phone,
-                                address: receiptPayload?.donor?.address || values.address,
+                                name: receiptPayload?.donorName || receiptPayload?.donor?.name || `${values.firstName} ${values.lastName}`.trim() || "Generous Supporter",
+                                email: receiptPayload?.donorEmail || receiptPayload?.donor?.email || values.email,
+                                phone: receiptPayload?.donorPhone || receiptPayload?.donor?.phone || values.phone,
+                                address: receiptPayload?.donorAddress || receiptPayload?.donor?.address || values.address,
                                 pan: receiptPayload?.donor?.pan,
                             },
                             organization: receiptPayload?.organization,
-                            taxNote: receiptPayload?.taxNote,
+                            taxNote: receiptPayload?.organization?.taxExemptNote || receiptPayload?.taxNote,
                             isVerified: true,
                         };
 

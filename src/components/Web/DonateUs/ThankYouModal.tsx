@@ -236,7 +236,7 @@ export default function ThankYouModal({
 
         {/* Certificate Display Area with horizontal scroll on small screens */}
         <div className="w-full mt-4 bg-gray-100/60 p-2 sm:p-4 rounded-2xl border border-gray-200/80 overflow-x-auto shadow-inner">
-          <div className="min-w-[794px] mx-auto flex justify-center">
+          <div className="min-w-[880px] mx-auto flex justify-center">
             <DonationCertificate ref={certificateRef} receipt={normalizedReceipt} />
           </div>
         </div>
