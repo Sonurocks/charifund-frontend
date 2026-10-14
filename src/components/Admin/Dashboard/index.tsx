@@ -19,6 +19,7 @@ import {
   FaRegBell,
   FaHandHoldingHeart,
   FaDonate,
+  FaCalendarAlt,
 } from "react-icons/fa";
 import { MdCampaign } from "react-icons/md";
 import DonationPieChart from "./DonationPieChart";
@@ -53,6 +54,7 @@ export const Dashboard = () => {
 
   const safeDashboardData = {
     totalFunds: dashboardData?.totalFunds ?? 0,
+    liveEvents: dashboardData?.liveEvents ?? dashboardData?.activeCampaign ?? 0,
     activeCampaign: dashboardData?.activeCampaign ?? 0,
     totalMembers: dashboardData?.totalMembers ?? 0,
     pendingRequest: dashboardData?.pendingRequest ?? 0,
@@ -73,9 +75,9 @@ export const Dashboard = () => {
       color: "from-yellow-400 to-yellow-600",
     },
     {
-      title: "Active Campaigns",
-      value: safeDashboardData.activeCampaign.toString(),
-      icon: <FaClipboardList size={24} />,
+      title: "Live Events",
+      value: safeDashboardData.liveEvents.toString(),
+      icon: <FaCalendarAlt size={24} />,
       color: "from-green-400 to-green-600",
     },
     {
