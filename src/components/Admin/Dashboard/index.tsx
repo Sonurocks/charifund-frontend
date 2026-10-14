@@ -75,9 +75,9 @@ export const Dashboard = () => {
       color: "from-yellow-400 to-yellow-600",
     },
     {
-      title: "Live Events",
-      value: safeDashboardData.liveEvents.toString(),
-      icon: <FaCalendarAlt size={24} />,
+      title: "Active Campaigns",
+      value: safeDashboardData.activeCampaign.toString(),
+      icon: <FaClipboardList size={24} />,
       color: "from-green-400 to-green-600",
     },
     {
@@ -87,9 +87,9 @@ export const Dashboard = () => {
       color: "from-yellow-300 to-yellow-500",
     },
     {
-      title: "Pending Requests",
-      value: safeDashboardData.pendingRequest.toString(),
-      icon: <FaRegBell size={24} />,
+      title: "Live Events",
+      value: safeDashboardData.liveEvents.toString(),
+      icon: <FaCalendarAlt size={24} />,
       color: "from-green-300 to-green-500",
     },
   ];
