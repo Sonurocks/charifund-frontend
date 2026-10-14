@@ -1,11 +1,11 @@
 import { StaticImageData } from "next/image";
 
 export interface PageBannerProps {
-  bgImage: StaticImageData | string; 
+  bgImage?: StaticImageData | string; 
   overlayColor?: string; 
   smallIcon?: string; 
   tagline?: string; 
-  title: string; 
+  title?: string; 
   titleClassName?: string;
   decoIcon?: string; 
   decoPosition?: string; 

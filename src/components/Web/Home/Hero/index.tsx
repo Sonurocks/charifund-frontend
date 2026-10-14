@@ -1,12 +1,9 @@
-
 "use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Icon } from "@iconify/react";
 import {
-  bannerOne,
-  bannerTwo,
   horizontalWhiteShape,
   spradeBase,
   verticleYellowShape,
@@ -21,8 +18,6 @@ import { Banner } from "@/src/types/web/banner";
 import ArrowButton from "@/src/components/UI/web/Buttons/ArrowButton";
 import { useTranslation } from "react-i18next";
 import { getOptimizedImageUrl } from "@/src/utils/imageStandards";
-
-const staticImages = [bannerOne.src, bannerTwo.src];
 
 const getLocalizedText = (
   field: any,
@@ -55,19 +50,19 @@ const HeroStaticSlider = () => {
 
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [failedIndices, setFailedIndices] = useState<Record<number, boolean>>({});
 
-  const { data: bannersData } = useFetchAllBanners(1, 10, "Home");
-  const banners: Banner[] = bannersData?.banners || bannersData?.data || (Array.isArray(bannersData) ? bannersData : []);
+  const { data: bannersData, isLoading, isError } = useFetchAllBanners(1, 10, "Home");
 
-  const images =
-    banners.length > 0
-      ? banners
-        .filter((banner: Banner) => banner.image && banner.image.trim() !== "")
-        .map((banner: Banner) => banner.image)
-      : staticImages;
+  const rawBanners: Banner[] = bannersData?.banners || bannersData?.data || (Array.isArray(bannersData) ? bannersData : []);
+  const banners: Banner[] = rawBanners
+    .filter((banner: Banner) => banner.image && banner.image.trim() !== "")
+    .sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999));
 
-  const finalImages = images.length > 0 ? images : staticImages;
+  // Determine active images from API
+  const finalImages = banners.map((b) => b.image);
 
+  // Auto transition for multi-banner carousels (only if more than 1 banner exists)
   useEffect(() => {
     if (finalImages.length > 0 && index >= finalImages.length) {
       setIndex(0);
@@ -84,32 +79,26 @@ const HeroStaticSlider = () => {
     return () => clearInterval(interval);
   }, [paused, finalImages.length]);
 
-  const handlePrev = useCallback(() =>
-    setIndex((prev) => (prev - 1 + finalImages.length) % finalImages.length),
-    [finalImages.length]
-  );
-  const handleNext = useCallback(() =>
-    setIndex((prev) => (prev + 1) % finalImages.length),
-    [finalImages.length]
-  );
+  const handlePrev = useCallback(() => {
+    if (finalImages.length <= 1) return;
+    setIndex((prev) => (prev - 1 + finalImages.length) % finalImages.length);
+  }, [finalImages.length]);
 
-  // Get current banner data
+  const handleNext = useCallback(() => {
+    if (finalImages.length <= 1) return;
+    setIndex((prev) => (prev + 1) % finalImages.length);
+  }, [finalImages.length]);
+
+  // Current banner data
   const currentBanner = banners[index] || null;
-  const rawTitle = currentBanner
-    ? getLocalizedText(currentBanner.title, "Giving Help To Those Who Need It", currentLang)
-    : "Giving Help To Those Who Need It";
-  const rawSubtitle = currentBanner
-    ? getLocalizedText(currentBanner.subtitle, "Start Donating Poor People", currentLang)
-    : "Start Donating Poor People";
+  const rawTitle = currentBanner ? getLocalizedText(currentBanner.title, "", currentLang) : "";
+  const rawSubtitle = currentBanner ? getLocalizedText(currentBanner.subtitle, "", currentLang) : "";
 
-  const bannerTitle = t(rawTitle);
-  const bannerSubtitle = t(rawSubtitle);
+  const bannerTitle = rawTitle ? t(rawTitle) : "";
+  const bannerSubtitle = rawSubtitle ? t(rawSubtitle) : "";
 
-  const [failedIndices, setFailedIndices] = useState<Record<number, boolean>>({});
-
-  const currentImgSrc = failedIndices[index]
-    ? staticImages[index % staticImages.length]
-    : finalImages[index];
+  const isCurrentImgFailed = failedIndices[index];
+  const currentImgSrc = isCurrentImgFailed ? "" : (finalImages[index] || "");
 
   const touchStartX = useRef<number | null>(null);
 
@@ -130,38 +119,44 @@ const HeroStaticSlider = () => {
     touchStartX.current = null;
   };
 
+  const showNavControls = finalImages.length > 1;
+
   return (
     <div
-      className="relative w-full h-[80vh] xl:h-screen overflow-hidden"
+      className="relative w-full h-[80vh] xl:h-screen overflow-hidden bg-foreground/95"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      {/* Background Image */}
-      <motion.div
-        key={index}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 2, ease: "easeInOut" }}
-        className="absolute inset-0 overflow-hidden"
-      >
-        {currentImgSrc && (
-          <Image
-            src={getOptimizedImageUrl(currentImgSrc, { width: 1920, quality: "auto", format: "auto" })}
-            alt={bannerTitle || "Hero Banner"}
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-center"
-            onError={() => {
-              setFailedIndices((prev) => ({ ...prev, [index]: true }));
-            }}
-          />
-        )}
-      </motion.div>
+      {/* Background Image Layer (only if dynamic image exists from API) */}
+      <AnimatePresence mode="sync">
+        {currentImgSrc ? (
+          <motion.div
+            key={`hero-img-${index}-${currentBanner?.id || index}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.2, ease: "easeInOut" }}
+            className="absolute inset-0 overflow-hidden"
+          >
+            <Image
+              src={getOptimizedImageUrl(currentImgSrc, { width: 1920, quality: "auto", format: "auto" })}
+              alt={bannerTitle || "Hero Banner"}
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover object-center"
+              onError={() => {
+                setFailedIndices((prev) => ({ ...prev, [index]: true }));
+              }}
+            />
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
 
-      <section className="relative h-5 w-full z-22">
+      {/* Top horizontal curve shape */}
+      <section className="relative h-5 w-full z-22 pointer-events-none">
         <Image
           src={horizontalWhiteShape.src}
           alt="Horizontal White Shape"
@@ -171,7 +166,8 @@ const HeroStaticSlider = () => {
         />
       </section>
 
-      <section className="relative h-[80vh] xl:h-screen w-20 md:w-30 z-21">
+      {/* Left vertical shape */}
+      <section className="relative h-[80vh] xl:h-screen w-20 md:w-30 z-21 pointer-events-none">
         <motion.div
           animate={{ y: [0, -20, 0, 20, 0] }}
           transition={{
@@ -191,30 +187,34 @@ const HeroStaticSlider = () => {
         </motion.div>
       </section>
 
-      {/*  Text Overlay */}
+      {/* Text Overlay */}
       <div
         className="absolute inset-0 flex flex-col justify-center items-start px-4 sm:px-6 md:px-8 xl:px-30 z-20 font-nunito"
         style={pageBannerBackgourndColor}
       >
         <div className="ml-2 md:ml-4 lg:ml-6 xl:ml-8">
           <AnimatedReveal
-            key={index}
+            key={`hero-text-${index}-${currentBanner?.id || index}`}
             direction="left"
             distance={100}
             duration={1}
             className="space-y-6"
           >
-            <p className="text-yellow text-xl sm:text-2xl font-medium flex items-center gap-2 font-caveat">
-              <Icon
-                icon="mdi:hand-heart"
-                className="text-2xl sm:text-3xl font-medium cursor-pointer"
-              />
-              {bannerSubtitle}
-            </p>
+            {bannerSubtitle && (
+              <p className="text-yellow text-xl sm:text-2xl font-medium flex items-center gap-2 font-caveat">
+                <Icon
+                  icon="mdi:hand-heart"
+                  className="text-2xl sm:text-3xl font-medium cursor-pointer"
+                />
+                {bannerSubtitle}
+              </p>
+            )}
 
-            <h1 className="text-3xl max-w-[17ch] sm:text-4xl sm:max-w-[17ch] md:text-6xl md:max-w-[12ch] lg:text-6xl xl:text-7xl font-extrabold text-white xl:max-w-[12ch] leading-tight">
-              {bannerTitle}
-            </h1>
+            {bannerTitle && (
+              <h1 className="text-3xl max-w-[17ch] sm:text-4xl sm:max-w-[17ch] md:text-6xl md:max-w-[12ch] lg:text-6xl xl:text-7xl font-extrabold text-white xl:max-w-[12ch] leading-tight">
+                {bannerTitle}
+              </h1>
+            )}
 
             <div className="flex flex-col min-[450px]:flex-row md:flex-nowrap gap-2 sm:gap-4 mt-6 w-fit">
               <div className="w-auto sm:w-auto min-w-[50px] sm:min-w-[120px]">
@@ -238,40 +238,42 @@ const HeroStaticSlider = () => {
           </AnimatedReveal>
         </div>
 
-        <div className="absolute right-4 md:right-22 top-1/2 -translate-y-1/2 hidden min-[800px]:flex flex-col gap-4 z-30">
-          <ArrowButton
-            direction="left"
-            onClick={handlePrev}
-            size={60}
-            className="shadow-md hover:scale-105"
-          />
-          <ArrowButton
-            direction="right"
-            onClick={handleNext}
-            size={60}
-            className="shadow-md hover:scale-105"
-          />
+        {/* Carousel controls rendered only when multiple banners exist */}
+        {showNavControls && (
+          <div className="absolute right-4 md:right-22 top-1/2 -translate-y-1/2 hidden min-[800px]:flex flex-col gap-4 z-30">
+            <ArrowButton
+              direction="left"
+              onClick={handlePrev}
+              size={60}
+              className="shadow-md hover:scale-105"
+            />
+            <ArrowButton
+              direction="right"
+              onClick={handleNext}
+              size={60}
+              className="shadow-md hover:scale-105"
+            />
 
-          {/* Floating Decorative Icon */}
-          <motion.div
-            animate={{
-              scale: [1, 1.3, 1],
-              opacity: [0.6, 1, 0.6],
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-            className="absolute top-[29%] xl:top-[82%] right-38 xl:right-40 transform -translate-y-1/2 text-yellow size-20"
-          >
-            <Image src={spradeBase.src} alt="decoration" width={28} height={28} />
-          </motion.div>
-        </div>
+            {/* Floating Decorative Icon */}
+            <motion.div
+              animate={{
+                scale: [1, 1.3, 1],
+                opacity: [0.6, 1, 0.6],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="absolute top-[29%] xl:top-[82%] right-38 xl:right-40 transform -translate-y-1/2 text-yellow size-20 pointer-events-none"
+            >
+              <Image src={spradeBase.src} alt="decoration" width={28} height={28} />
+            </motion.div>
+          </div>
+        )}
       </div>
     </div>
   );
-}
+};
 
-
-export default HeroStaticSlider
+export default HeroStaticSlider;

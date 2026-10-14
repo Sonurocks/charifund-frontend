@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import CampaignInfo from "./CampaignInfo";
 import CustomLoader from "../../UI/web/Loader/CustomLoader";
-import { bannerBg, heartLogoIcon, overView } from "@/public/assets";
+import { heartLogoIcon, overView } from "@/public/assets";
 import {
   useFetchAllCampaigns,
   useFetchSingleCampaign,
@@ -21,7 +21,7 @@ const CampaignDetails: React.FC = () => {
   if (!id) {
     return (
       <>
-        <PageBanner bgImage={bannerBg} title="Cause Details" />
+        <PageBanner pageName="Campaign" title="Cause Details" />
         <div className="flex items-center justify-center h-[60vh] text-red font-semibold">
           No campaign Found.
         </div>
@@ -43,8 +43,8 @@ const CampaignDetails: React.FC = () => {
 
   return (
     <section>
-      {/* ✅ Banner always rendered */}
-      <PageBanner bgImage={bannerBg} title="Cause Details" />
+      {/* ✅ Dynamic Banner rendered from API */}
+      <PageBanner pageName="Campaign" title="Cause Details" />
 
       {/* ✅ The main content area */}
       <section className="bg-white py-16 text-gray-green flex justify-center items-start w-full">

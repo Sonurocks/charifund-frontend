@@ -1,6 +1,5 @@
 'use client'
 import React from 'react'
-import { ourcausebanner } from '@/public/assets'
 import { useTranslation } from 'react-i18next';
 import SendMsg from '../About/SendMsg';
 import ChildrenNeed from '../About/ChildrenNeed';
@@ -13,7 +12,6 @@ const Campaign = () => {
   return (
     <div>
       <PageBanner pageName="Campaign"
-        bgImage={ourcausebanner}
         tagline="Together for a Better Society"
         title="Our Campaigns for Social Change"
         titleClassName="mx-auto max-w-[17ch] sm:max-w-[18ch] leading-tight xl:leading-[1.1]"

@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from "next/image";
@@ -7,7 +8,6 @@ import { Icon } from "@iconify/react";
 import FadeUpCard from "@/src/animations/FadeButtomUp";
 import AnimatedReveal from "@/src/animations/AnimatedReveal";
 import PageBanner from "@/src/helper/PageBanner";
-import { ourcausebanner } from "@/public/assets";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 
@@ -36,7 +36,7 @@ const SponsorDetails = ({ sponsor }: SponsorDetailsProps) => {
   return (
     <div className="min-h-screen bg-white font-nunito">
       <PageBanner
-        bgImage={ourcausebanner}
+        pageName="Sponsors"
         tagline="Together for a Better Society"
         title={name}
         smallIcon="mdi:handshake-outline"

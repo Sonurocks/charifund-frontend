@@ -1,7 +1,6 @@
 'use client'
 import React from 'react'
 import FadeInUp from '@/src/animations/FadeInUp'
-import { bannerBg } from '@/public/assets'
 import VolunteerForm from './VolunteerForm'
 
 import { Icon } from "@iconify/react";
@@ -16,7 +15,6 @@ const Volunteer = () => {
   return (
     <section>
       <PageBanner pageName="Volunteer"
-        bgImage={bannerBg}
         tagline="Together, We Can Make a Difference"
         title="Become a Volunteer"
         description="Join Us in Creating Positive Change"

@@ -9,7 +9,7 @@ import PageBanner from "@/src/helper/PageBanner";
 import ComponentLabel from "@/src/components/UI/web/ComponentLabel";
 import ComponentTitle from "@/src/components/UI/web/ComponentTitle";
 import AnimatedReveal from "@/src/animations/AnimatedReveal";
-import { aboutus, footballhandbg, heartHandbg, spradeBase } from "@/public/assets";
+import { footballhandbg, heartHandbg, spradeBase } from "@/public/assets";
 import { servicesData } from "@/src/static-resource/services";
 import ServiceCard from "./ServiceCard";
 
@@ -23,7 +23,6 @@ const Services: React.FC = () => {
       -------------------------------------------------- */}
       <PageBanner
         pageName="Services"
-        bgImage={aboutus}
         title="Our Services"
         tagline="Making a Difference, Together"
         description="Creating meaningful change through education, empowerment, healthcare, community support and sustainable development."

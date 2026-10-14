@@ -4,7 +4,6 @@ import Image from "next/image";
 import { IoLocationSharp, IoCalendarSharp } from "react-icons/io5";
 import {
   eventdetail1,
-  oureventbanner,
 } from "@/public/assets";
 import Comments from "../comments/Comments";
 import LeaveComment from "../comments/LeaveComment";
@@ -29,7 +28,7 @@ const EventDetail = () => {
   return (
     <>
       <PageBanner
-        bgImage={oureventbanner}
+        pageName="Events"
         title="Our Events & Activities" 
         tagline="Making a Difference Together"
         description="We organize meaningful events and community activities to create positive change and support those in need."

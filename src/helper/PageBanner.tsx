@@ -1,10 +1,9 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Icon } from "@iconify/react";
 import { PageBannerProps } from "@/src/types/web/hero";
 import { horizontalWhiteShape, spradeBase } from "@/public/assets";
 import { useTranslation } from "react-i18next";
-import PulsingImage from "../components/UI/web/PulsingImage";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Button from "../components/UI/web/Buttons/Button";
@@ -58,10 +57,12 @@ const getLocalizedText = (
   return typeof parsed === "string" ? parsed : fallback;
 };
 
+import PulsingImage from "../components/UI/web/PulsingImage";
+
 const PageBanner: React.FC<ExtendedPageBannerProps> = ({
   bgImage,
   smallIcon = "mdi:hand-heart-outline",
-  tagline = "Start Donating Poor People",
+  tagline,
   title,
   titleClassName = "",
   description,
@@ -75,30 +76,50 @@ const PageBanner: React.FC<ExtendedPageBannerProps> = ({
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [failedImageKeys, setFailedImageKeys] = useState<Record<string, boolean>>({});
-  const [staticImgFailed, setStaticImgFailed] = useState(false);
 
-  // Fetch dynamic banners if pageName is provided (up to 10 for carousels)
-  const { data: bannerData } = useFetchAllBanners(1, 10, pageName);
+  // Fetch dynamic banners only when pageName is provided
+  const { data: bannerData, isLoading, isError } = useFetchAllBanners(1, 10, pageName);
 
-  const rawBanners = bannerData?.banners || bannerData?.data || (Array.isArray(bannerData) ? bannerData : []);
-  const fetchedBanners: Banner[] = pageName && Array.isArray(rawBanners) && rawBanners.length > 0
-    ? rawBanners
+  // Parse raw banners if pageName is defined
+  // Note: API already filters by pageName server-side, so all returned banners belong to this page
+  const rawBanners: Banner[] = bannerData?.banners || bannerData?.data || (Array.isArray(bannerData) ? bannerData : []);
+  const pageBanners: Banner[] = pageName
+    ? [...rawBanners].sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999))
     : [];
 
-  // Build active slides list - dynamic backend banners first, static fallback only when no banners exist
-  const activeSlides = (() => {
-    if (fetchedBanners.length > 0) {
-      return fetchedBanners;
+  // Determine active slides list
+  // 1. Dynamic banners from API if pageName is provided and banners exist
+  // 2. Static banner if pageName is NOT provided (e.g., FAQ, policy pages, static detail pages)
+  // 3. Neutral empty slide if pageName is provided but 0 banners found in API or API failed
+  const isDynamicMode = Boolean(pageName);
+  const hasDynamicBanners = isDynamicMode && pageBanners.length > 0;
+
+  const activeSlides: Banner[] = (() => {
+    if (hasDynamicBanners) {
+      return pageBanners;
     }
+    if (!isDynamicMode && bgImage) {
+      return [
+        {
+          id: "static-page-slide",
+          priority: 1,
+          image: typeof bgImage === "string" ? bgImage : bgImage?.src || "",
+          title: title || "",
+          subtitle: tagline || "",
+          description: description || "",
+        } as Banner,
+      ];
+    }
+    // Neutral empty/error state when no API banner exists: single neutral slide (no static image fallback)
     return [
       {
-        id: "static-slide-1",
+        id: "neutral-empty-slide",
         priority: 1,
-        image: bgImage || "/assets/aboutus.webp",
-        title: title || "Giving Help To Those Who Need It",
-        subtitle: tagline || "Start Donating Poor People",
-        description: description || "Support communities and transform lives with YUWA India.",
-      } as unknown as Banner,
+        image: "",
+        title: title || pageName || "",
+        subtitle: tagline || "",
+        description: description || "",
+      } as Banner,
     ];
   })();
 
@@ -109,7 +130,7 @@ const PageBanner: React.FC<ExtendedPageBannerProps> = ({
     }
   }, [activeSlides.length, index]);
 
-  // Auto transition for multi-banner carousels
+  // Auto transition for multi-banner carousels (only when more than 1 banner exists)
   useEffect(() => {
     if (paused || activeSlides.length <= 1) return;
 
@@ -121,12 +142,12 @@ const PageBanner: React.FC<ExtendedPageBannerProps> = ({
   }, [paused, activeSlides.length]);
 
   const handlePrev = useCallback(() => {
-    if (activeSlides.length === 0) return;
+    if (activeSlides.length <= 1) return;
     setIndex((prev) => (prev - 1 + activeSlides.length) % activeSlides.length);
   }, [activeSlides.length]);
 
   const handleNext = useCallback(() => {
-    if (activeSlides.length === 0) return;
+    if (activeSlides.length <= 1) return;
     setIndex((prev) => (prev + 1) % activeSlides.length);
   }, [activeSlides.length]);
 
@@ -137,54 +158,43 @@ const PageBanner: React.FC<ExtendedPageBannerProps> = ({
   const currentBannerId = currentBanner?.id || `banner-idx-${index}`;
   const isCurrentImgFailed = failedImageKeys[currentBannerId];
 
-  const hasBackendBanner = currentBanner !== null && Boolean(currentBanner.image) && !isCurrentImgFailed;
+  // In dynamic mode, banner image MUST come from valid API data; no static dummy images allowed
+  const hasValidImage = Boolean(currentBanner?.image && currentBanner.image.trim() !== "" && !isCurrentImgFailed);
+  const bgUrl = hasValidImage ? currentBanner!.image : "";
 
-  // Determine active fields (Backend / active slide first if present and not failed, static fallback if not)
-  const finalBgImage = hasBackendBanner ? currentBanner.image : (staticImgFailed ? "/assets/aboutus.webp" : bgImage);
+  // Extract localized content
+  const finalTitle = currentBanner
+    ? getLocalizedText(currentBanner.title, title, currentLang) || title || pageName
+    : title || pageName;
 
-  const rawTitle = currentBanner
-    ? getLocalizedText(currentBanner.title, title, currentLang)
-    : title;
-
-  const rawSubtitle = currentBanner
-    ? getLocalizedText(currentBanner.subtitle, tagline, currentLang)
+  const finalSubtitle = currentBanner
+    ? getLocalizedText(currentBanner.subtitle, tagline, currentLang) || tagline
     : tagline;
 
-  const rawDescription = currentBanner
-    ? getLocalizedText((currentBanner as any).description, description, currentLang)
+  const finalDescription = currentBanner
+    ? getLocalizedText((currentBanner as any).description, description, currentLang) || description
     : description;
 
-  const finalTitle = rawTitle || title;
-  const finalSubtitle = rawSubtitle || tagline;
-  const finalDescription = rawDescription || description;
-
-  // Helper to extract image URL string
-  const getImgSrc = (img: any): string => {
-    if (!img) return "/assets/aboutus.webp";
-    if (typeof img === "string") return img;
-    if (typeof img === "object") return img.src || img.default?.src || "/assets/aboutus.webp";
-    return "/assets/aboutus.webp";
-  };
-
-  const bgUrl = getImgSrc(finalBgImage);
+  // Navigation controls only render when multiple valid banners exist
+  const showNavControls = activeSlides.length > 1;
 
   return (
     <section
-      className="relative w-full h-[50vh] md:h-[80vh] md:w-full overflow-hidden"
+      className="relative w-full h-[50vh] md:h-[80vh] overflow-hidden bg-foreground/95"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {/* Background Image Carousel */}
+      {/* Background Image Layer (only if a valid banner image exists) */}
       <AnimatePresence mode="sync">
-        <motion.div
-          key={`banner-${index}-${currentBanner?.id || index}`}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 1.2, ease: "easeInOut" }}
-          className="absolute inset-0 z-1 overflow-hidden"
-        >
-          {bgUrl && (
+        {bgUrl ? (
+          <motion.div
+            key={`banner-${index}-${currentBanner?.id || index}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.2, ease: "easeInOut" }}
+            className="absolute inset-0 z-1 overflow-hidden"
+          >
             <Image
               src={getOptimizedImageUrl(bgUrl, { width: 1920, quality: "auto", format: "auto" })}
               alt={t(finalTitle || "Page Banner")}
@@ -193,18 +203,17 @@ const PageBanner: React.FC<ExtendedPageBannerProps> = ({
               sizes="100vw"
               className="object-cover object-center"
               onError={() => {
-                if (hasBackendBanner && currentBannerId) {
+                if (currentBannerId) {
                   setFailedImageKeys((prev) => ({ ...prev, [currentBannerId]: true }));
-                } else if (!staticImgFailed) {
-                  setStaticImgFailed(true);
                 }
               }}
             />
-          )}
-        </motion.div>
+          </motion.div>
+        ) : null}
       </AnimatePresence>
 
-      <section className="absolute top-0 left-0 h-10 w-full z-3">
+      {/* Top Wave Curve */}
+      <section className="absolute top-0 left-0 h-10 w-full z-3 pointer-events-none">
         <Image
           src={horizontalWhiteShape.src}
           alt="Horizontal White Shape"
@@ -229,7 +238,7 @@ const PageBanner: React.FC<ExtendedPageBannerProps> = ({
       </div>
 
       {/* Mobile Floating Overlay Left/Right Arrows (< 800px) */}
-      {activeSlides.length > 1 && (
+      {showNavControls && (
         <>
           <div className="absolute left-3 top-1/2 -translate-y-1/2 z-30 min-[800px]:hidden">
             <ArrowButton
@@ -305,7 +314,7 @@ const PageBanner: React.FC<ExtendedPageBannerProps> = ({
         </div>
 
         {/* Desktop Carousel Arrows (>= 800px) */}
-        {activeSlides.length > 1 && (
+        {showNavControls && (
           <div className="absolute right-4 md:right-22 top-1/2 -translate-y-1/2 hidden min-[800px]:flex flex-col gap-4 z-30">
             <ArrowButton
               direction="left"
@@ -343,4 +352,3 @@ const PageBanner: React.FC<ExtendedPageBannerProps> = ({
 };
 
 export default PageBanner;
-

@@ -1,5 +1,5 @@
 "use client";
-import { donateusbanner, heartLogoIcon, overView } from "@/public/assets";
+import { heartLogoIcon, overView } from "@/public/assets";
 import { useState } from "react";
 import DonationSection from "./DonationSection";
 import { useFetchSingleCampaign } from "@/src/hooks/web/useCampaigns";
@@ -31,7 +31,6 @@ const DonateUs = ({ id: propId }: { id?: string }) => {
   return (
     <section>
       <PageBanner pageName="Donate Us"
-        bgImage={donateusbanner}
         tagline={t("Start Donating Poor People")}
         title={t("Donate Us")}
         smallIcon="mdi:hand-heart"

@@ -2,7 +2,6 @@
 import React, { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import EventList from "./EventList";
-import { oureventbanner } from "@/public/assets";
 import { Trans, useTranslation } from "react-i18next";
 import PageBanner from "@/src/helper/PageBanner";
 import ComponentLabel from "../../UI/web/ComponentLabel";
@@ -18,7 +17,6 @@ export const Event = () => {
   return (
     <>
       <PageBanner pageName="Events" 
-        bgImage={oureventbanner} 
         title="Our Events & Activities" 
         tagline="Making a Difference Together"
         description="We organize meaningful events and community activities to create positive change and support those in need."
