@@ -195,6 +195,11 @@ export const verifyPaymentOrder = async (verifyData: { razorpay_order_id: string
     return data;
 }
 
+export const fetchDonationReceipt = async (identifier: string) => {
+    const { data } = await api.get(`/web/payment/receipt/${encodeURIComponent(identifier)}`);
+    return data;
+}
+
 export const ContactUsForm = async (values:ContactFormValues) => {
   const { data } = await api.post(`/web/form/contact-query`, values);
   return data;

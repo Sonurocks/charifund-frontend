@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "postinstall": "node scripts/patch-html2canvas.js"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -23,8 +24,10 @@
     "formik": "^2.4.6",
     "framer-motion": "^12.23.12",
     "gsap": "^3.13.0",
+    "html2canvas": "^1.4.1",
     "i18next": "^25.5.3",
     "js-cookie": "^3.0.5",
+    "jspdf": "^4.2.1",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.542.0",
     "next": "^16.4.0",

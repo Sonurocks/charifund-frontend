@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 
 
 
-import { CreatePaymentOrderResponse, createPaymentOrder, verifyPaymentOrder, CreatePaymentOrderPayload } from "@/src/services/web/client/clientServices";
+import { CreatePaymentOrderResponse, createPaymentOrder, verifyPaymentOrder, fetchDonationReceipt, CreatePaymentOrderPayload } from "@/src/services/web/client/clientServices";
 import { RootState } from "@/src/store";
 import { loadRazorpayScript } from "@/src/utils/razorpay";
 import { DetailsFormValues, DetailsformSchema } from "@/src/utils/validations/FormValidation";
@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 import Button from "../../UI/web/Buttons/Button";
 import InputField from "../../UI/web/InputField";
 import ThankYouModal from "./ThankYouModal";
+import { DonationReceipt } from "@/src/types/web/receipt";
 const Formik = lazy(() => import("formik").then((m) => ({ default: m.Formik }))) as typeof import("formik").Formik;
 const Form = lazy(() => import("formik").then((m) => ({ default: m.Form }))) as typeof import("formik").Form;
 const initialValues: DetailsFormValues = {
@@ -29,7 +30,8 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
     const { t } = useTranslation();
     const { method, amount } = useSelector((state: RootState) => state.donation);
     const [paymentStep, setPaymentStep] = React.useState<"idle" | "details" | "creating" | "verifying">("idle");
-    const [paymentReceipt, setPaymentReceipt] = React.useState<{ amount: number; paymentId: string; orderId: string; status: string; date: string } | null>(null);
+    const [verifiedReceipt, setVerifiedReceipt] = React.useState<DonationReceipt | null>(null);
+    const isVerifyingRef = React.useRef(false);
     
     const createOrderMutation = useMutation<CreatePaymentOrderResponse, AxiosError<{ message: string }>, CreatePaymentOrderPayload>({
         mutationFn: createPaymentOrder,
@@ -136,6 +138,8 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
                 description: t("Donation for Charifund"),
                 order_id: razorpayOrderId,
                 handler: async function (response: Record<string, string>) {
+                    if (isVerifyingRef.current) return;
+                    isVerifyingRef.current = true;
                     setPaymentStep("verifying");
                     try {
                         const verified = await verifyMutation.mutateAsync({
@@ -147,17 +151,60 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
                         toastModule.default.success(verified?.msg || verified?.message || t("Payment Verification Success"));
                         resetForm();
 
-                        setPaymentReceipt({
-                            amount: backendAmount / 100,
-                            paymentId: response.razorpay_payment_id,
+                        // Extract receipt payload from verified response if present
+                        let receiptPayload = verified?.receipt || verified?.data?.receipt || verified?.data;
+
+                        // If receipt payload is missing from verification response, retrieve via receipt endpoint
+                        if (!receiptPayload?.receiptNumber && !receiptPayload?.id) {
+                            const identifier = response.razorpay_payment_id || response.razorpay_order_id;
+                            if (identifier) {
+                                try {
+                                    const fetched = await fetchDonationReceipt(identifier);
+                                    if (fetched?.receipt) {
+                                        receiptPayload = fetched.receipt;
+                                    } else if (fetched?.data) {
+                                        receiptPayload = fetched.data;
+                                    }
+                                } catch (fetchErr) {
+                                    console.warn("Could not retrieve receipt via dedicated endpoint, using verified response:", fetchErr);
+                                }
+                            }
+                        }
+
+                        const donationAmount = receiptPayload?.amount || (backendAmount ? backendAmount / 100 : parsedAmount);
+
+                        const receiptObj: DonationReceipt = {
+                            receiptNumber:
+                                receiptPayload?.receiptNumber ||
+                                receiptPayload?.receiptNo ||
+                                `RCP-${response.razorpay_payment_id.slice(-8).toUpperCase()}`,
                             orderId: response.razorpay_order_id,
-                            status: "Successful",
-                            date: new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })
-                        });
+                            paymentId: response.razorpay_payment_id,
+                            paymentMethod: receiptPayload?.paymentMethod || "Online (Razorpay)",
+                            paymentStatus: receiptPayload?.paymentStatus || "Completed",
+                            paymentDate: receiptPayload?.createdAt || receiptPayload?.date || new Date().toISOString(),
+                            amount: donationAmount,
+                            amountInWords: receiptPayload?.amountInWords,
+                            campaignTitle: receiptPayload?.campaignTitle || campaignTitle || "General Welfare Fund",
+                            campaignId: receiptPayload?.campaignId || campaignId,
+                            donor: {
+                                name: receiptPayload?.donor?.name || `${values.firstName} ${values.lastName}`.trim(),
+                                email: receiptPayload?.donor?.email || values.email,
+                                phone: receiptPayload?.donor?.phone || values.phone,
+                                address: receiptPayload?.donor?.address || values.address,
+                                pan: receiptPayload?.donor?.pan,
+                            },
+                            organization: receiptPayload?.organization,
+                            taxNote: receiptPayload?.taxNote,
+                            isVerified: true,
+                        };
+
+                        setVerifiedReceipt(receiptObj);
                     } catch (e: any) {
-                         const toastModule = await import("react-hot-toast");
-                         toastModule.default.error(e?.response?.data?.msg || e?.response?.data?.message || t("Payment Verification Failed"));
+                        const toastModule = await import("react-hot-toast");
+                        toastModule.default.error(e?.response?.data?.msg || e?.response?.data?.message || t("Payment Verification Failed"));
                     } finally {
+                        isVerifyingRef.current = false;
                         setPaymentStep("idle");
                     }
                 },
@@ -246,13 +293,13 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
             </Suspense>
             
             <ThankYouModal 
-                isOpen={!!paymentReceipt} 
-                onClose={() => setPaymentReceipt(null)}
+                isOpen={!!verifiedReceipt} 
+                onClose={() => setVerifiedReceipt(null)}
                 onResetDonation={() => {
-                    setPaymentReceipt(null);
+                    setVerifiedReceipt(null);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                paymentData={paymentReceipt}
+                receipt={verifiedReceipt}
             />
         </div>
     );
