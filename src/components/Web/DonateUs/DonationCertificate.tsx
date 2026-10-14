@@ -94,30 +94,17 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
             <div className="flex items-start justify-between gap-2 pb-2 border-b border-gray-300">
               {/* Left Column: Logo, Hindi Tagline, Serial Box & Receipt No */}
               <div className="w-[185px] shrink-0 flex flex-col items-start">
-                <div className="flex items-center gap-1.5">
-                  <div className="relative w-16 h-14 shrink-0 flex items-center justify-center">
-                    <Image
-                      src="/assets/LogoO.webp"
-                      alt="YUWA INDIA Logo"
-                      width={64}
-                      height={56}
-                      className="object-contain max-h-14"
-                      priority
-                      unoptimized
-                    />
-                  </div>
-                  <div>
-                    <div className="font-extrabold text-[#e65100] text-sm tracking-tight leading-none">
-                      YUWA
-                    </div>
-                    <div className="font-black text-[#00897b] text-base tracking-widest leading-tight">
-                      INDIA
-                    </div>
-                  </div>
+                <div className="relative w-28 h-14 shrink-0 flex items-center justify-start">
+                  <Image
+                    src="/assets/LogoO.webp"
+                    alt="YUWA INDIA Logo"
+                    width={110}
+                    height={56}
+                    className="object-contain max-h-14 w-auto"
+                    priority
+                    unoptimized
+                  />
                 </div>
-                <p className="text-[8.5px] font-semibold text-[#d84315] mt-0.5 tracking-tight">
-                  मानवता में ही पूर्णता निहित है
-                </p>
 
                 {/* Big Serial Number Box */}
                 <div className="mt-1 flex items-baseline gap-1">
