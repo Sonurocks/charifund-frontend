@@ -40,7 +40,8 @@ export default function ThankYouModal({
   paymentData,
 }: ThankYouModalProps) {
   const { t } = useTranslation();
-  const certificateRef = useRef<HTMLDivElement>(null);
+  // exportRef points to an unscaled (scale=1) off-screen certificate so html2canvas never suffers from CSS transform text baseline bugs
+  const exportCertificateRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
   const [isExportingPdf, setIsExportingPdf] = useState(false);
@@ -103,6 +104,8 @@ export default function ThankYouModal({
 
     return html2canvas(element, {
       scale: 3, // Crisp 3x print quality
+      width: NATIVE_CERT_WIDTH,
+      height: NATIVE_CERT_HEIGHT,
       useCORS: true,
       allowTaint: false,
       backgroundColor: "#ffffff",
@@ -121,6 +124,13 @@ export default function ThankYouModal({
               .replace(/oklch\([^)]+\)/gi, "rgba(17, 24, 39, 0.8)");
           }
         });
+
+        // CRITICAL: Prevent Tailwind preflight "img { display: block; }" from breaking html2canvas FontMetrics baseline measurement
+        const imgReset = clonedDoc.createElement("style");
+        imgReset.textContent = `
+          img { display: inline !important; }
+        `;
+        clonedDoc.head.appendChild(imgReset);
       },
     });
   }, []);
@@ -129,7 +139,8 @@ export default function ThankYouModal({
 
   const handleDownloadPdf = async () => {
     if (isExportingPdf || isExportingPng) return;
-    if (!certificateRef.current) {
+    const exportEl = exportCertificateRef.current;
+    if (!exportEl) {
       toast.error(t("Certificate element not ready for export. Please try again."));
       return;
     }
@@ -139,9 +150,7 @@ export default function ThankYouModal({
 
     try {
       const { jsPDF } = await import("jspdf");
-      const element = certificateRef.current;
-
-      const canvas = await captureCertificateCanvas(element);
+      const canvas = await captureCertificateCanvas(exportEl);
       const imgData = canvas.toDataURL("image/png");
 
       // Landscape A5 dimensions in mm: 210 x 148
@@ -171,7 +180,8 @@ export default function ThankYouModal({
 
   const handleDownloadPng = async () => {
     if (isExportingPdf || isExportingPng) return;
-    if (!certificateRef.current) {
+    const exportEl = exportCertificateRef.current;
+    if (!exportEl) {
       toast.error(t("Certificate element not ready for export. Please try again."));
       return;
     }
@@ -180,8 +190,7 @@ export default function ThankYouModal({
     const toastId = toast.loading(t("Generating donation receipt image..."));
 
     try {
-      const element = certificateRef.current;
-      const canvas = await captureCertificateCanvas(element);
+      const canvas = await captureCertificateCanvas(exportEl);
 
       canvas.toBlob(
         (blob) => {
@@ -266,7 +275,7 @@ export default function ThankYouModal({
           </button>
         </div>
 
-        {/* Certificate Display Area with Responsive Auto-Scaling (No scrollbars on desktop or mobile) */}
+        {/* Certificate Display Area with Responsive Auto-Scaling (Visually fits screen perfectly) */}
         <div
           ref={containerRef}
           className="w-full mt-3 bg-gray-50/80 p-1 sm:p-2.5 rounded-2xl border border-gray-200/80 flex justify-center items-center overflow-hidden"
@@ -284,8 +293,24 @@ export default function ThankYouModal({
               transition: "transform 0.1s ease-out",
             }}
           >
-            <DonationCertificate ref={certificateRef} receipt={normalizedReceipt} />
+            <DonationCertificate receipt={normalizedReceipt} />
           </div>
+        </div>
+
+        {/* Dedicated Unscaled Off-Screen Certificate for High-Res 1:1 Export (Immune to CSS transform scale) */}
+        <div
+          style={{
+            position: "fixed",
+            left: "-9999px",
+            top: 0,
+            width: `${NATIVE_CERT_WIDTH}px`,
+            height: `${NATIVE_CERT_HEIGHT}px`,
+            pointerEvents: "none",
+            opacity: 1,
+            zIndex: -9999,
+          }}
+        >
+          <DonationCertificate ref={exportCertificateRef} receipt={normalizedReceipt} />
         </div>
       </div>
     </Modal>

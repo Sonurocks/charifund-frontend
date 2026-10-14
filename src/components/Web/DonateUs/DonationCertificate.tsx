@@ -112,16 +112,15 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
 
                 {/* Serial Number Box with perfect vertical centering */}
                 <div className="mt-1 flex items-center gap-1.5">
-                  <span className="text-[13px] font-bold text-gray-800 leading-none">
+                  <span className="text-[13px] font-bold text-gray-800">
                     №
                   </span>
                   <div
-                    className="flex items-center justify-center bg-gray-50 border border-gray-300 rounded shadow-2xs px-2 py-0.5"
-                    style={{ minHeight: "34px", minWidth: "70px" }}
+                    className="flex items-center justify-center bg-gray-50 border border-gray-300 rounded shadow-2xs px-2"
+                    style={{ height: "32px", minWidth: "68px" }}
                   >
                     <span
-                      className="text-2xl font-black tracking-wider text-gray-900 leading-none inline-block"
-                      style={{ transform: "translateY(-1px)" }}
+                      className="text-2xl font-black tracking-wider text-gray-900 leading-none text-center"
                     >
                       {serialNumber}
                     </span>
@@ -145,17 +144,17 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
                   {orgName}
                 </h1>
 
-                <div className="text-[11px] font-bold text-[#003366] mt-0.5 leading-none">
+                <div className="text-[11px] font-bold text-[#003366] mt-0.5 leading-normal">
                   Registered Under 12AA/80G
                 </div>
 
                 {/* Registration Number Pill */}
                 <div className="flex items-center justify-center my-1">
                   <div
-                    className="bg-[#003366] text-white text-[9.5px] font-black px-3 py-1 rounded-full tracking-wide uppercase flex items-center justify-center leading-none"
-                    style={{ minHeight: "18px" }}
+                    className="bg-[#003366] text-white text-[9.5px] font-black px-3.5 py-1 rounded-full tracking-wide uppercase flex items-center justify-center leading-normal"
+                    style={{ minHeight: "20px" }}
                   >
-                    <span style={{ transform: "translateY(-0.5px)" }}>
+                    <span>
                       Registration No. : {regNumber}
                     </span>
                   </div>
@@ -183,10 +182,10 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
               <div className="w-[175px] shrink-0 flex flex-col items-end text-right">
                 <div className="flex justify-end w-full">
                   <div
-                    className="text-white text-[10.5px] font-extrabold px-3.5 py-1.5 rounded-full uppercase tracking-wider shadow-2xs flex items-center justify-center leading-none"
+                    className="text-white text-[10.5px] font-extrabold px-3.5 py-1 rounded-full uppercase tracking-wider shadow-2xs flex items-center justify-center leading-normal"
                     style={{ backgroundColor: "#002244", minHeight: "22px" }}
                   >
-                    <span style={{ transform: "translateY(-0.5px)" }}>
+                    <span>
                       DONATION RECEIPT
                     </span>
                   </div>
@@ -194,7 +193,7 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
 
                 <div className="mt-2 text-[11px] font-bold text-gray-800 flex items-center justify-end gap-1">
                   <span>Date :</span>
-                  <span className="font-bold text-gray-900 border-b border-dotted border-gray-500 pb-0.5 min-w-[85px] text-center leading-none">
+                  <span className="font-bold text-gray-900 border-b border-dotted border-gray-600 pb-0.5 min-w-[85px] text-center leading-normal">
                     {formattedDate}
                   </span>
                 </div>
@@ -209,103 +208,103 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
             {/* ===================== BODY (TRADITIONAL CHECK/RECEIPT DOTTED LINES) ===================== */}
             <div className="py-2.5 space-y-2.5 text-[12px] text-gray-900">
               {/* Row 1: Received with thanks from */}
-              <div className="flex items-center w-full">
+              <div className="flex items-end w-full">
                 <span
-                  className="font-bold text-gray-800 shrink-0 italic"
+                  className="font-bold text-gray-800 shrink-0 italic pb-1"
                   style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", serif' }}
                 >
                   Received with thanks from :
                 </span>
-                <span className="flex-1 font-bold text-[13px] text-gray-900 px-2 border-b-2 border-dotted border-gray-500 pb-0.5 truncate uppercase tracking-wide leading-none">
+                <span className="flex-1 font-bold text-[13px] text-gray-900 px-2 border-b border-dotted border-gray-600 pb-1 truncate uppercase tracking-wide leading-normal">
                   {receipt.donor?.name || "Generous Donor"}
                 </span>
               </div>
 
               {/* Row 2: Address & Mobile */}
-              <div className="flex items-center w-full gap-2">
-                <div className="flex items-center flex-1 min-w-0">
+              <div className="flex items-end w-full gap-2">
+                <div className="flex items-end flex-1 min-w-0">
                   <span
-                    className="font-bold text-gray-800 shrink-0 italic"
+                    className="font-bold text-gray-800 shrink-0 italic pb-1"
                     style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", serif' }}
                   >
                     Address :
                   </span>
-                  <span className="flex-1 font-medium text-[11.5px] text-gray-800 px-2 border-b-2 border-dotted border-gray-500 pb-0.5 truncate leading-none">
+                  <span className="flex-1 font-medium text-[11.5px] text-gray-800 px-2 border-b border-dotted border-gray-600 pb-1 truncate leading-normal">
                     {receipt.donor?.address || "—"}
                   </span>
                 </div>
-                <div className="flex items-center w-[250px] shrink-0">
+                <div className="flex items-end w-[250px] shrink-0">
                   <span
-                    className="font-bold text-gray-800 shrink-0 italic"
+                    className="font-bold text-gray-800 shrink-0 italic pb-1"
                     style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", serif' }}
                   >
                     Mobile :
                   </span>
-                  <span className="flex-1 font-bold text-[12px] text-gray-900 px-2 border-b-2 border-dotted border-gray-500 pb-0.5 text-center leading-none">
+                  <span className="flex-1 font-bold text-[12px] text-gray-900 px-2 border-b border-dotted border-gray-600 pb-1 text-center leading-normal">
                     {receipt.donor?.phone || "—"}
                   </span>
                 </div>
               </div>
 
               {/* Row 3: The sum of Rupees (in words) */}
-              <div className="flex items-center w-full">
+              <div className="flex items-end w-full">
                 <span
-                  className="font-bold text-gray-800 shrink-0 italic"
+                  className="font-bold text-gray-800 shrink-0 italic pb-1"
                   style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", serif' }}
                 >
                   The sum of Rupees (in words) :
                 </span>
-                <span className="flex-1 font-bold text-[12px] text-gray-900 px-2 border-b-2 border-dotted border-gray-500 pb-0.5 italic leading-none">
+                <span className="flex-1 font-bold text-[12px] text-gray-900 px-2 border-b border-dotted border-gray-600 pb-1 italic leading-normal">
                   {amountInWords}
                 </span>
               </div>
 
               {/* Row 4: Mode / Transaction No, Dated & ₹ Amount Box */}
-              <div className="flex items-center justify-between w-full gap-2">
+              <div className="flex items-end justify-between w-full gap-2">
                 <div className="flex-1 flex flex-col gap-2">
-                  <div className="flex items-center w-full gap-2">
+                  <div className="flex items-end w-full gap-2">
                     <span
-                      className="font-bold text-gray-800 shrink-0 text-[11px] italic"
+                      className="font-bold text-gray-800 shrink-0 text-[11px] italic pb-1"
                       style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", serif' }}
                     >
                       Cash / Cheque / UPI / NEFT No. :
                     </span>
-                    <span className="flex-1 font-mono font-bold text-[11px] text-[#003366] px-1.5 border-b-2 border-dotted border-gray-500 pb-0.5 truncate leading-none">
+                    <span className="flex-1 font-mono font-bold text-[11px] text-[#003366] px-1.5 border-b border-dotted border-gray-600 pb-1 truncate leading-normal">
                       {receipt.paymentId || receipt.orderId || "ONLINE"}
                     </span>
                     <span
-                      className="font-bold text-gray-800 shrink-0 text-[11px] ml-1 italic"
+                      className="font-bold text-gray-800 shrink-0 text-[11px] ml-1 italic pb-1"
                       style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", serif' }}
                     >
                       Dated :
                     </span>
-                    <span className="w-24 font-medium text-[11px] text-gray-800 px-1 border-b-2 border-dotted border-gray-500 pb-0.5 text-center leading-none">
+                    <span className="w-24 font-medium text-[11px] text-gray-800 px-1 border-b border-dotted border-gray-600 pb-1 text-center leading-normal">
                       {formattedDate}
                     </span>
                   </div>
 
                   {/* Row 5: Purpose of Donation */}
-                  <div className="flex items-center w-full">
+                  <div className="flex items-end w-full">
                     <span
-                      className="font-bold text-gray-800 shrink-0 italic"
+                      className="font-bold text-gray-800 shrink-0 italic pb-1"
                       style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", serif' }}
                     >
                       On account of / Purpose of Donation :
                     </span>
-                    <span className="flex-1 font-bold text-[12px] text-gray-900 px-2 border-b-2 border-dotted border-gray-500 pb-0.5 truncate leading-none">
+                    <span className="flex-1 font-bold text-[12px] text-gray-900 px-2 border-b border-dotted border-gray-600 pb-1 truncate leading-normal">
                       {receipt.campaignTitle || "General Welfare Fund"}
                     </span>
                   </div>
 
                   {/* Row 6: Donor PAN (if Applicable) */}
-                  <div className="flex items-center w-full">
+                  <div className="flex items-end w-full">
                     <span
-                      className="font-bold text-gray-800 shrink-0 italic"
+                      className="font-bold text-gray-800 shrink-0 italic pb-1"
                       style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", serif' }}
                     >
                       Donor PAN (if Applicable) :
                     </span>
-                    <span className="flex-1 font-mono font-bold text-[12px] text-gray-800 px-2 border-b-2 border-dotted border-gray-500 pb-0.5 leading-none">
+                    <span className="flex-1 font-mono font-bold text-[12px] text-gray-800 px-2 border-b border-dotted border-gray-600 pb-1 leading-normal">
                       {receipt.donor?.pan || "—"}
                     </span>
                   </div>
@@ -331,14 +330,14 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
               {/* Left: DONOR COPY Badge with absolute vertical centering */}
               <div className="w-[140px] shrink-0">
                 <div
-                  className="text-white text-[10px] font-black px-3 py-1.5 rounded-sm uppercase tracking-wider shadow-2xs flex items-center justify-center leading-none"
+                  className="text-white text-[10px] font-black px-3.5 py-1 rounded-sm uppercase tracking-wider shadow-2xs flex items-center justify-center leading-normal"
                   style={{
                     backgroundColor: "#5a1818",
                     minHeight: "22px",
                     width: "fit-content",
                   }}
                 >
-                  <span style={{ transform: "translateY(-0.5px)" }}>
+                  <span>
                     DONOR COPY
                   </span>
                 </div>
@@ -347,39 +346,39 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
               {/* Center: Oval Gratitude Banner & Terms */}
               <div className="flex-1 text-center px-2 flex flex-col items-center">
                 <div
-                  className="text-[#fbc531] text-[12px] font-black px-6 py-1 rounded-full border border-[#003366] shadow-2xs flex items-center justify-center leading-none"
+                  className="text-[#fbc531] text-[12px] font-black px-6 py-1 rounded-full border border-[#003366] shadow-2xs flex items-center justify-center leading-normal"
                   style={{
                     backgroundColor: "#002244",
                     boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
                     fontFamily: 'Georgia, Cambria, "Times New Roman", serif',
-                    minHeight: "22px",
+                    minHeight: "24px",
                   }}
                 >
-                  <span style={{ transform: "translateY(-0.5px)" }}>
+                  <span>
                     Thanks You for Your Generous Donation
                   </span>
                 </div>
                 <p
-                  className="text-[10px] italic text-gray-700 mt-1 font-medium leading-none"
+                  className="text-[10px] italic text-gray-700 mt-1 font-medium leading-tight"
                   style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", serif' }}
                 >
                   Your contribution helps us serve humanity.
                 </p>
-                <p className="text-[8px] text-gray-500 mt-1 leading-none">
+                <p className="text-[8px] text-gray-500 mt-0.5 leading-tight">
                   All donations are accepted subject to the rules and regulations of the Association.*
                 </p>
               </div>
 
               {/* Right: Signature Space */}
               <div className="w-[200px] shrink-0 text-center flex flex-col items-center">
-                <h4 className="text-[9.5px] font-black uppercase text-[#003366] tracking-tight leading-none">
+                <h4 className="text-[9.5px] font-black uppercase text-[#003366] tracking-tight leading-normal">
                   {orgName}
                 </h4>
                 {/* Empty digital signature reserved space */}
-                <div className="h-7 w-full flex items-center justify-center"></div>
+                <div className="h-6 w-full flex items-center justify-center"></div>
                 <div className="w-40 border-t border-gray-700 pt-0.5">
                   <p
-                    className="text-[10.5px] font-bold text-gray-800 italic leading-none"
+                    className="text-[10.5px] font-bold text-gray-800 italic leading-normal"
                     style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", serif' }}
                   >
                     Authorised Signatory

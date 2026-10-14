@@ -40,7 +40,8 @@ var parseFallbackColor = function (value) {
 };
 `;
 
-let patchedCount = 0;
+let patchedColorCount = 0;
+let patchedBaselineCount = 0;
 
 targetFiles.forEach((filePath) => {
   if (!fs.existsSync(filePath)) {
@@ -48,26 +49,51 @@ targetFiles.forEach((filePath) => {
   }
 
   let content = fs.readFileSync(filePath, 'utf8');
+  let modified = false;
 
-  // Check if already patched
-  if (content.includes('parseFallbackColor')) {
-    patchedCount++;
-    return;
-  }
-
-  // Find the throw error statement
-  const targetPattern = /var colorFunction = SUPPORTED_COLOR_FUNCTIONS\[value\.name\];\s*if \(typeof colorFunction === ['"]undefined['"]\) \{\s*throw new Error\([^)]+\);\s*\}/g;
-
-  if (targetPattern.test(content)) {
-    const replacement = `var colorFunction = SUPPORTED_COLOR_FUNCTIONS[value.name];
+  // 1. Color Parser Patch (lab/oklch support)
+  if (!content.includes('parseFallbackColor')) {
+    const targetPattern = /var colorFunction = SUPPORTED_COLOR_FUNCTIONS\[value\.name\];\s*if \(typeof colorFunction === ['"]undefined['"]\) \{\s*throw new Error\([^)]+\);\s*\}/g;
+    if (targetPattern.test(content)) {
+      const replacement = `var colorFunction = SUPPORTED_COLOR_FUNCTIONS[value.name];
             if (typeof colorFunction === 'undefined') {
                 return parseFallbackColor(value);
             }`;
+      content = fallbackFunction + '\n' + content.replace(targetPattern, replacement);
+      modified = true;
+      patchedColorCount++;
+    }
+  } else {
+    patchedColorCount++;
+  }
 
-    content = fallbackFunction + '\n' + content.replace(targetPattern, replacement);
+  // 2. FontMetrics Baseline Patch (Prevent Tailwind "img { display: block; }" from breaking html2canvas font baselines)
+  if (!content.includes("img.style.display = 'inline'")) {
+    const verticalAlignPattern = /img\.style\.verticalAlign\s*=\s*['"]baseline['"];/g;
+    if (verticalAlignPattern.test(content)) {
+      content = content.replace(
+        verticalAlignPattern,
+        "img.style.verticalAlign = 'baseline';\n            img.style.display = 'inline';"
+      );
+      modified = true;
+      patchedBaselineCount++;
+    }
+  } else {
+    patchedBaselineCount++;
+  }
+
+  // 3. Remove legacy hardcoded "+ 2" from baseline measurement
+  if (content.includes("img.offsetTop - span.offsetTop + 2")) {
+    content = content.replace(
+      /img\.offsetTop\s*-\s*span\.offsetTop\s*\+\s*2/g,
+      "img.offsetTop - span.offsetTop"
+    );
+    modified = true;
+  }
+
+  if (modified) {
     fs.writeFileSync(filePath, content, 'utf8');
-    patchedCount++;
   }
 });
 
-console.log(`[patch-html2canvas] Successfully verified/patched ${patchedCount} html2canvas distribution files.`);
+console.log(`[patch-html2canvas] Successfully verified/patched ${patchedColorCount} color parsers and ${patchedBaselineCount} font baseline measurements.`);
