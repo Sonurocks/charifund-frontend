@@ -257,7 +257,8 @@ export interface AdminDataTableWrapperProps<T> {
 }
 
 export interface DashboardData {
-  activeCampaign: number;
+  activeCampaign?: number;
+  liveEvents?: number;
   totalMembers: number;
   totalFunds: number;
   pendingRequest: number;
