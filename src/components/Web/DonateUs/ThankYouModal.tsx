@@ -30,7 +30,7 @@ interface ThankYouModalProps {
 }
 
 const NATIVE_CERT_WIDTH = 880;
-const NATIVE_CERT_HEIGHT = 440;
+const NATIVE_CERT_HEIGHT = 520;
 
 export default function ThankYouModal({
   isOpen,
@@ -47,29 +47,36 @@ export default function ThankYouModal({
   const [isExportingPdf, setIsExportingPdf] = useState(false);
   const [isExportingPng, setIsExportingPng] = useState(false);
 
-  // Dynamically compute responsive scale to eliminate horizontal scrollbars on all screens
+  // Dynamically compute responsive scale to fill available width seamlessly on all screens
   useEffect(() => {
     if (!isOpen) return;
 
     const updateScale = () => {
-      if (containerRef.current) {
-        const containerWidth = containerRef.current.clientWidth;
-        if (containerWidth > 0) {
-          const calculatedScale = Math.min(1, containerWidth / NATIVE_CERT_WIDTH);
-          setScale(calculatedScale);
-        }
-      }
+      const container = containerRef.current;
+      if (!container) return;
+
+      const containerWidth = container.clientWidth;
+      if (containerWidth <= 0) return;
+
+      // Proportional scale to fill full available width (capped at 1 to preserve crisp native 1:1 resolution on large screens)
+      const calculatedScale = Math.min(1, containerWidth / NATIVE_CERT_WIDTH);
+      setScale(Math.max(0.2, calculatedScale));
     };
 
     updateScale();
-    const resizeObserver = new ResizeObserver(updateScale);
-    if (containerRef.current) {
+    const rafId = requestAnimationFrame(updateScale);
+
+    let resizeObserver: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== "undefined" && containerRef.current) {
+      resizeObserver = new ResizeObserver(updateScale);
       resizeObserver.observe(containerRef.current);
     }
+
     window.addEventListener("resize", updateScale);
 
     return () => {
-      resizeObserver.disconnect();
+      cancelAnimationFrame(rafId);
+      if (resizeObserver) resizeObserver.disconnect();
       window.removeEventListener("resize", updateScale);
     };
   }, [isOpen]);
@@ -100,6 +107,27 @@ export default function ThankYouModal({
   }, [receipt, paymentData]);
 
   const captureCertificateCanvas = useCallback(async (element: HTMLElement) => {
+    // Wait for fonts to be ready
+    if (typeof document !== "undefined" && document.fonts) {
+      await document.fonts.ready;
+    }
+
+    // Wait for images inside the element to be fully loaded
+    const images = Array.from(element.querySelectorAll("img"));
+    await Promise.all(
+      images.map(
+        (img) =>
+          new Promise<void>((resolve) => {
+            if (img.complete) {
+              resolve();
+            } else {
+              img.onload = () => resolve();
+              img.onerror = () => resolve();
+            }
+          })
+      )
+    );
+
     const html2canvas = (await import("html2canvas")).default;
 
     return html2canvas(element, {
@@ -163,8 +191,25 @@ export default function ThankYouModal({
 
       const pdfWidth = 210;
       const pdfHeight = 148;
+      const certRatio = canvas.width / canvas.height;
 
-      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight, undefined, "FAST");
+      // Fit within A5 landscape while preserving aspect ratio with clean 5mm margins
+      const margin = 5;
+      const maxW = pdfWidth - 2 * margin;
+      const maxH = pdfHeight - 2 * margin;
+
+      let renderW = maxW;
+      let renderH = maxW / certRatio;
+
+      if (renderH > maxH) {
+        renderH = maxH;
+        renderW = maxH * certRatio;
+      }
+
+      const posX = (pdfWidth - renderW) / 2;
+      const posY = (pdfHeight - renderH) / 2;
+
+      pdf.addImage(imgData, "PNG", posX, posY, renderW, renderH, undefined, "FAST");
 
       const filename = `YUWA-India-Donation-Receipt-${normalizedReceipt.receiptNumber || normalizedReceipt.paymentId}.pdf`;
       pdf.save(filename);
@@ -228,11 +273,15 @@ export default function ThankYouModal({
     onResetDonation();
   };
 
+  const scaledWidth = Math.round(NATIVE_CERT_WIDTH * scale);
+  const scaledHeight = Math.round(NATIVE_CERT_HEIGHT * scale);
+
   return (
     <Modal
       isOpen={isOpen}
       onClose={handleFinish}
-      maxWidth="max-w-5xl"
+      size="md"
+      // maxWidth="max-w-5xl"
       showCloseButton={true}
       className="rounded-3xl"
     >
@@ -252,13 +301,13 @@ export default function ThankYouModal({
           )}
         </p>
 
-        {/* Action Controls for Download */}
-        <div className="w-full flex flex-wrap items-center justify-center gap-2.5 pt-1">
+        {/* Action Controls for Download - side by side on desktop, stacked on small mobile */}
+        <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-2.5 pt-1">
           <button
             type="button"
             onClick={handleDownloadPdf}
             disabled={isExportingPdf || isExportingPng}
-            className="flex items-center gap-1.5 px-4 py-2 bg-[#0f3460] hover:bg-[#1a4a84] text-white text-xs font-semibold rounded-xl shadow-2xs transition transform hover:scale-[1.02] disabled:bg-gray-300 disabled:cursor-not-allowed cursor-pointer"
+            className="w-full sm:w-auto flex items-center justify-center gap-1.5 px-4 py-2 bg-[#0f3460] hover:bg-[#1a4a84] text-white text-xs font-semibold rounded-xl shadow-2xs transition transform hover:scale-[1.02] disabled:bg-gray-300 disabled:cursor-not-allowed cursor-pointer"
           >
             <FileText className="w-3.5 h-3.5" />
             <span>{isExportingPdf ? t("Generating PDF...") : t("Download PDF")}</span>
@@ -268,32 +317,42 @@ export default function ThankYouModal({
             type="button"
             onClick={handleDownloadPng}
             disabled={isExportingPdf || isExportingPng}
-            className="flex items-center gap-1.5 px-4 py-2 bg-lime-green hover:bg-green text-white text-xs font-semibold rounded-xl shadow-2xs transition transform hover:scale-[1.02] disabled:bg-gray-300 disabled:cursor-not-allowed cursor-pointer"
+            className="w-full sm:w-auto flex items-center justify-center gap-1.5 px-4 py-2 bg-lime-green hover:bg-green text-white text-xs font-semibold rounded-xl shadow-2xs transition transform hover:scale-[1.02] disabled:bg-gray-300 disabled:cursor-not-allowed cursor-pointer"
           >
             <ImageIcon className="w-3.5 h-3.5" />
             <span>{isExportingPng ? t("Generating PNG...") : t("Download PNG")}</span>
           </button>
         </div>
 
-        {/* Certificate Display Area with Responsive Auto-Scaling (Visually fits screen perfectly) */}
+        {/* Certificate Display Area with Full-Width Responsive Scaling */}
         <div
           ref={containerRef}
-          className="w-full mt-3 bg-gray-50/80 p-1 sm:p-2.5 rounded-2xl border border-gray-200/80 flex justify-center items-center overflow-hidden"
-          style={{
-            height: `${Math.round(NATIVE_CERT_HEIGHT * scale + 16)}px`,
-            minHeight: "150px",
-          }}
+          className="w-full mt-3 flex justify-center items-center"
         >
+          {/* Layout-sized box: matches exact scaled dimensions to prevent horizontal/vertical layout distortion */}
           <div
+            className="rounded shadow-sm"
             style={{
-              width: `${NATIVE_CERT_WIDTH}px`,
-              height: `${NATIVE_CERT_HEIGHT}px`,
-              transform: `scale(${scale})`,
-              transformOrigin: "top center",
-              transition: "transform 0.1s ease-out",
+              width: `${scaledWidth}px`,
+              height: `${scaledHeight}px`,
+              position: "relative",
+              overflow: "hidden",
             }}
           >
-            <DonationCertificate receipt={normalizedReceipt} />
+            <div
+              style={{
+                width: `${NATIVE_CERT_WIDTH}px`,
+                height: `${NATIVE_CERT_HEIGHT}px`,
+                transform: `scale(${scale})`,
+                transformOrigin: "top left",
+                position: "absolute",
+                top: 0,
+                left: 0,
+                transition: "transform 0.1s ease-out",
+              }}
+            >
+              <DonationCertificate receipt={normalizedReceipt} />
+            </div>
           </div>
         </div>
 
