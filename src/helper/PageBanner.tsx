@@ -263,54 +263,56 @@ const PageBanner: React.FC<ExtendedPageBannerProps> = ({
       <div className="absolute inset-0 flex flex-col justify-center items-center z-20">
         {/* Content */}
         <div className="relative z-3 text-center w-full px-14 sm:px-16 md:px-8 xl:px-30">
-          <AnimatedReveal
-            key={`text-${index}-${currentBanner?.id || index}`}
-            direction="up"
-            distance={40}
-            duration={0.8}
-            className="w-full"
-          >
-            {finalSubtitle && (
-              <div className="font-caveat text-lg sm:text-xl md:text-2xl flex items-center justify-center gap-2 text-yellow mb-3 sm:mb-4">
-                <Icon
-                  icon={smallIcon}
-                  width={16}
-                  height={16}
-                  className="sm:w-5 sm:h-5"
-                />
-                <span className="font-semibold">{t(finalSubtitle)}</span>
-              </div>
-            )}
-
-            {/* Title */}
-            {finalTitle && (
-              <h1 className={`text-3xl sm:text-3xl md:text-4xl xl:text-[80px] font-extrabold text-white font-nunito ${titleClassName}`}>
-                {t(finalTitle)}
-              </h1>
-            )}
-
-            {/* Description */}
-            {finalDescription && (
-              <p className="mt-4 text-white/90 text-sm sm:text-base md:text-lg max-w-2xl mx-auto font-nunito">
-                {t(finalDescription)}
-              </p>
-            )}
-
-            {/* Action Button */}
-            {buttonText && buttonRoute && (
-              <div className="mt-8 flex justify-center w-full">
-                <div className="w-fit">
-                  <Button
-                    text={t(buttonText)}
-                    onClick={() => router.push(buttonRoute)}
-                    icon="mdi:arrow-right"
-                    paddingx="px-8"
-                    paddingy="py-3"
+          {Boolean(finalTitle || finalSubtitle || !isDynamicMode) && (
+            <AnimatedReveal
+              key={`text-${index}-${currentBanner?.id || index}`}
+              direction="up"
+              distance={40}
+              duration={0.8}
+              className="w-full"
+            >
+              {finalSubtitle && (
+                <div className="font-caveat text-lg sm:text-xl md:text-2xl flex items-center justify-center gap-2 text-yellow mb-3 sm:mb-4">
+                  <Icon
+                    icon={smallIcon}
+                    width={16}
+                    height={16}
+                    className="sm:w-5 sm:h-5"
                   />
+                  <span className="font-semibold">{t(finalSubtitle)}</span>
                 </div>
-              </div>
-            )}
-          </AnimatedReveal>
+              )}
+
+              {/* Title */}
+              {finalTitle && (
+                <h1 className={`text-3xl sm:text-3xl md:text-4xl xl:text-[80px] font-extrabold text-white font-nunito ${titleClassName}`}>
+                  {t(finalTitle)}
+                </h1>
+              )}
+
+              {/* Description */}
+              {finalDescription && (
+                <p className="mt-4 text-white/90 text-sm sm:text-base md:text-lg max-w-2xl mx-auto font-nunito">
+                  {t(finalDescription)}
+                </p>
+              )}
+
+              {/* Action Button - only rendered together with content */}
+              {buttonText && buttonRoute && (
+                <div className="mt-8 flex justify-center w-full">
+                  <div className="w-fit">
+                    <Button
+                      text={t(buttonText)}
+                      onClick={() => router.push(buttonRoute)}
+                      icon="mdi:arrow-right"
+                      paddingx="px-8"
+                      paddingy="py-3"
+                    />
+                  </div>
+                </div>
+              )}
+            </AnimatedReveal>
+          )}
         </div>
 
         {/* Desktop Carousel Arrows (>= 800px) */}

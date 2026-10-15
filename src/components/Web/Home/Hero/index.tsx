@@ -193,49 +193,51 @@ const HeroStaticSlider = () => {
         style={pageBannerBackgourndColor}
       >
         <div className="ml-2 md:ml-4 lg:ml-6 xl:ml-8">
-          <AnimatedReveal
-            key={`hero-text-${index}-${currentBanner?.id || index}`}
-            direction="left"
-            distance={100}
-            duration={1}
-            className="space-y-6"
-          >
-            {bannerSubtitle && (
-              <p className="text-yellow text-xl sm:text-2xl font-medium flex items-center gap-2 font-caveat">
-                <Icon
-                  icon="mdi:hand-heart"
-                  className="text-2xl sm:text-3xl font-medium cursor-pointer"
-                />
-                {bannerSubtitle}
-              </p>
-            )}
-
-            {bannerTitle && (
-              <h1 className="text-3xl max-w-[17ch] sm:text-4xl sm:max-w-[17ch] md:text-6xl md:max-w-[12ch] lg:text-6xl xl:text-7xl font-extrabold text-white xl:max-w-[12ch] leading-tight">
-                {bannerTitle}
-              </h1>
-            )}
-
-            <div className="flex flex-col min-[450px]:flex-row md:flex-nowrap gap-2 sm:gap-4 mt-6 w-fit">
-              <div className="w-auto sm:w-auto min-w-[50px] sm:min-w-[120px]">
-                <Link href="/campaign">
-                  <Button
-                    text="Know more"
-                    textColor="text-white"
-                    bgColor="bg-black/30"
-                    hoverBg="before:bg-yellow"
-                    hoverTextColor="group-hover:text-foreground"
-                    paddingy="py-5"
+          {Boolean(bannerTitle || bannerSubtitle) && (
+            <AnimatedReveal
+              key={`hero-text-${index}-${currentBanner?.id || index}`}
+              direction="left"
+              distance={100}
+              duration={1}
+              className="space-y-6"
+            >
+              {bannerSubtitle && (
+                <p className="text-yellow text-xl sm:text-2xl font-medium flex items-center gap-2 font-caveat">
+                  <Icon
+                    icon="mdi:hand-heart"
+                    className="text-2xl sm:text-3xl font-medium cursor-pointer"
                   />
-                </Link>
+                  {bannerSubtitle}
+                </p>
+              )}
+
+              {bannerTitle && (
+                <h1 className="text-3xl max-w-[17ch] sm:text-4xl sm:max-w-[17ch] md:text-6xl md:max-w-[12ch] lg:text-6xl xl:text-7xl font-extrabold text-white xl:max-w-[12ch] leading-tight">
+                  {bannerTitle}
+                </h1>
+              )}
+
+              <div className="flex flex-col min-[450px]:flex-row md:flex-nowrap gap-2 sm:gap-4 mt-6 w-fit">
+                <div className="w-auto sm:w-auto min-w-[50px] sm:min-w-[120px]">
+                  <Link href="/campaign">
+                    <Button
+                      text="Know more"
+                      textColor="text-white"
+                      bgColor="bg-black/30"
+                      hoverBg="before:bg-yellow"
+                      hoverTextColor="group-hover:text-foreground"
+                      paddingy="py-5"
+                    />
+                  </Link>
+                </div>
+                <div className="sm:w-auto min-w-[50px] sm:min-w-[120px]">
+                  <Link href="/contact">
+                    <Button text="Join us" paddingy="py-5" />
+                  </Link>
+                </div>
               </div>
-              <div className="sm:w-auto min-w-[50px] sm:min-w-[120px]">
-                <Link href="/contact">
-                  <Button text="Join us" paddingy="py-5" />
-                </Link>
-              </div>
-            </div>
-          </AnimatedReveal>
+            </AnimatedReveal>
+          )}
         </div>
 
         {/* Carousel controls rendered only when multiple banners exist */}
