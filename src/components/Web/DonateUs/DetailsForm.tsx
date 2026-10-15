@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 
 
 
+import { useSearchParams } from "next/navigation";
 import { CreatePaymentOrderResponse, createPaymentOrder, verifyPaymentOrder, fetchDonationReceipt, CreatePaymentOrderPayload } from "@/src/services/web/client/clientServices";
 import { RootState } from "@/src/store";
 import { loadRazorpayScript } from "@/src/utils/razorpay";
@@ -28,10 +29,35 @@ const initialValues: DetailsFormValues = {
 };
 const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campaignTitle?: string }) => {
     const { t } = useTranslation();
+    const searchParams = useSearchParams();
     const { method, amount } = useSelector((state: RootState) => state.donation);
     const [paymentStep, setPaymentStep] = React.useState<"idle" | "details" | "creating" | "verifying">("idle");
     const [verifiedReceipt, setVerifiedReceipt] = React.useState<DonationReceipt | null>(null);
     const isVerifyingRef = React.useRef(false);
+
+    React.useEffect(() => {
+        if (searchParams?.get("preview") === "true" && !verifiedReceipt) {
+            setVerifiedReceipt({
+                receiptNumber: "YUWA-2026-0007-8e307c61",
+                orderId: "order_mock12345",
+                paymentId: "pay_mock12345",
+                amount: 5000,
+                amountInWords: "Five Thousand Rupees Only",
+                paymentDate: new Date().toISOString(),
+                paymentStatus: "PAID",
+                paymentMethod: "UPI",
+                campaignTitle: campaignTitle || "Education Health For Every Child",
+                donor: {
+                    name: "Ashish Kumar",
+                    email: "ashish@example.com",
+                    phone: "+91 98765 43210",
+                    address: "New Delhi, India",
+                    pan: "ABCDE1234F"
+                },
+                isVerified: true
+            });
+        }
+    }, [searchParams, verifiedReceipt, campaignTitle]);
     
     const createOrderMutation = useMutation<CreatePaymentOrderResponse, AxiosError<{ message: string }>, CreatePaymentOrderPayload>({
         mutationFn: createPaymentOrder,
