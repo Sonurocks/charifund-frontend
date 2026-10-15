@@ -12,29 +12,22 @@ interface DonationCertificateProps {
 
 const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>(
   ({ receipt, className = "" }, ref) => {
-    // Format date safely
+    // Format date safely as DD / MM / YYYY
     const formattedDate = React.useMemo(() => {
-      if (!receipt.paymentDate) {
-        return new Date().toLocaleDateString("en-IN", {
-          day: "numeric",
-          month: "short",
-          year: "numeric",
-        });
-      }
+      const rawDate = receipt.paymentDate || new Date().toISOString();
       try {
-        const d = new Date(receipt.paymentDate);
-        if (isNaN(d.getTime())) return receipt.paymentDate;
-        return d.toLocaleDateString("en-IN", {
-          day: "numeric",
-          month: "short",
-          year: "numeric",
-        });
+        const d = new Date(rawDate);
+        if (isNaN(d.getTime())) return rawDate;
+        const day = String(d.getDate()).padStart(2, "0");
+        const month = String(d.getMonth() + 1).padStart(2, "0");
+        const year = d.getFullYear();
+        return `${day} / ${month} / ${year}`;
       } catch {
-        return receipt.paymentDate;
+        return rawDate;
       }
     }, [receipt.paymentDate]);
 
-    // Format currency
+    // Format currency (e.g. 5,000)
     const formattedAmount = React.useMemo(() => {
       try {
         return new Intl.NumberFormat("en-IN", {
@@ -51,405 +44,344 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
       return receipt.amountInWords || numberToWordsINR(receipt.amount);
     }, [receipt.amount, receipt.amountInWords]);
 
+    // Extract serial number (e.g. 0007 from YUWA-2026-0007-8e307c61)
+    const serialNumber = React.useMemo(() => {
+      if (!receipt.receiptNumber) return "0001";
+      const parts = receipt.receiptNumber.split("-");
+      if (parts.length >= 3) {
+        return parts[2];
+      }
+      return receipt.receiptNumber.slice(-4);
+    }, [receipt.receiptNumber]);
+
     const org: Partial<ReceiptOrgInfo> = receipt.organization || {};
-    const orgName = org.name || "Youth Util Welfare Association (YUWA INDIA)";
-    const orgTagline =
-      org.tagline ||
-      "मानवता में ही पूर्णता निहित है | Empowering lives, building a better society";
-    const orgAddress =
+    const orgName = org.name || "YOUTH UTIL WELFARE ASSOCIATION";
+    const headOffice =
       org.address ||
-      "H. No. RZC-13, Nihal Vihar, Nangloi, New Delhi – 110041, India";
+      "H.No. RZC-13, KH. No. 72/23, 78/3, Nihal Vihar, Nangloi, New Delhi-110041";
+    const branchOffice = "393i, Rajiv Nagar, West Basharatpur, Gorakhpur (U.P.)-273001";
     const orgEmail = org.email || "yuwaaindia@gmail.com";
-    const orgPhone = org.phone || "+91 85650 06669";
-    const orgWeb = org.website || "www.yuwaindia.org";
-    const orgReg = org.regNumber || "Regd. Under Society Reg. Act XXI of 1860";
+    const orgPhone = org.phone || "9450886855, 7394886855";
+    const orgWeb = org.website || "yuwaindia.org";
+    const regNumber = org.regNumber || "SOCIETY/WEST/ 2016/8902080";
 
     return (
       <div
         ref={ref}
         id="donation-certificate"
         data-testid="donation-certificate"
-        className={`w-[794px] min-h-[560px] select-text font-sans p-3 box-border relative mx-auto ${className}`}
+        className={`w-[880px] min-h-[460px] select-text p-2.5 box-border relative mx-auto bg-white text-gray-900 ${className}`}
         style={{
           boxSizing: "border-box",
-          backgroundColor: "#ffffff",
-          color: "#111827",
+          fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+          lineHeight: "1.2",
         }}
       >
-        {/* Outer Blue Border */}
+        {/* Outer Frame with Double Classic Blue Border */}
         <div
-          className="w-full h-full p-1.5 rounded-lg box-border"
+          className="w-full h-full p-2 box-border relative"
           style={{
-            border: "3px solid #0f3460",
+            border: "4px solid #003366",
+            borderRadius: "4px",
             backgroundColor: "#ffffff",
           }}
         >
-          {/* Inner Blue Border */}
+          {/* Inner Thin Border */}
           <div
-            className="w-full h-full rounded-md p-5 flex flex-col justify-between box-border"
+            className="w-full h-full p-4 flex flex-col justify-between box-border"
             style={{
-              border: "1.5px solid #2563eb",
+              border: "1.5px solid #003366",
               backgroundColor: "#ffffff",
             }}
           >
-            {/* Header Section */}
-            <div>
-              <div
-                className="flex items-center justify-between gap-4 pb-3"
-                style={{ borderBottom: "2px solid #1e40af" }}
-              >
-                {/* Logo */}
-                <div className="relative w-20 h-20 shrink-0 flex items-center justify-center">
+            {/* ===================== HEADER ===================== */}
+            <div className="flex items-start justify-between gap-2 pb-2 border-b border-gray-300">
+              {/* Left Column: Official Logo, Serial Box & Receipt No */}
+              <div className="w-[185px] shrink-0 flex flex-col items-start">
+                <div className="relative w-28 h-14 shrink-0 flex items-center justify-start">
                   <Image
                     src="/assets/LogoO.webp"
-                    alt="Youth Util Welfare Association Official Logo"
-                    width={80}
-                    height={80}
-                    className="object-contain max-h-20"
+                    alt="YUWA INDIA Official Logo"
+                    width={110}
+                    height={56}
+                    className="object-contain max-h-14 w-auto"
                     priority
                     unoptimized
                   />
                 </div>
 
-                {/* Organization Details */}
-                <div className="flex-1 text-center px-2">
-                  <h1
-                    className="text-xl font-extrabold tracking-wide uppercase leading-tight"
-                    style={{ color: "#0f3460" }}
-                  >
-                    {orgName}
-                  </h1>
-                  <p
-                    className="text-[11px] font-medium mt-0.5 italic"
-                    style={{ color: "#4b5563" }}
-                  >
-                    {orgTagline}
-                  </p>
-                  <p className="text-[10px] mt-1" style={{ color: "#6b7280" }}>
-                    {orgReg} | {orgAddress}
-                  </p>
-                  <p
-                    className="text-[10px] font-medium"
-                    style={{ color: "#6b7280" }}
-                  >
-                    Email: {orgEmail} | Phone: {orgPhone} | Web: {orgWeb}
-                  </p>
-                </div>
-
-                {/* Receipt Tag & Meta */}
-                <div className="shrink-0 text-right min-w-[140px]">
+                {/* Serial Number Box with perfect vertical centering */}
+                <div className="mt-1 flex items-center gap-1.5">
+                  <span className="text-[13px] font-bold text-gray-800">
+                    №
+                  </span>
                   <div
-                    className="inline-block text-white text-[11px] font-bold px-3 py-1 rounded-sm uppercase tracking-wider"
-                    style={{ backgroundColor: "#0f3460" }}
+                    className="flex items-center justify-center bg-gray-50 border border-gray-300 rounded shadow-2xs px-2"
+                    style={{ height: "32px", minWidth: "68px" }}
                   >
-                    Donation Receipt
-                  </div>
-                  <div className="mt-2 text-[11px] space-y-0.5">
-                    <div>
-                      <span style={{ color: "#6b7280" }} className="font-medium">
-                        Receipt:{" "}
-                      </span>
-                      <span
-                        className="font-bold font-mono"
-                        style={{ color: "#0f3460" }}
-                      >
-                        {receipt.receiptNumber ||
-                          "RCP-" + receipt.paymentId.slice(-8).toUpperCase()}
-                      </span>
-                    </div>
-                    <div>
-                      <span style={{ color: "#6b7280" }} className="font-medium">
-                        Date:{" "}
-                      </span>
-                      <span
-                        className="font-semibold"
-                        style={{ color: "#1f2937" }}
-                      >
-                        {formattedDate}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Main Information Grid */}
-              <div className="grid grid-cols-2 gap-4 mt-3 text-xs">
-                {/* Left: Donor Details */}
-                <div
-                  className="rounded-md p-3 flex flex-col justify-between"
-                  style={{
-                    backgroundColor: "#f8fafc",
-                    border: "1px solid #e2e8f0",
-                  }}
-                >
-                  <div>
-                    <h3
-                      className="text-[11px] font-bold uppercase tracking-wider pb-1 mb-2 flex items-center justify-between"
-                      style={{
-                        color: "#0f3460",
-                        borderBottom: "1px solid #e2e8f0",
-                      }}
-                    >
-                      <span>Donor Details</span>
-                      <span
-                        className="text-[9px] px-1.5 py-0.5 rounded font-semibold"
-                        style={{
-                          color: "#047857",
-                          backgroundColor: "#ecfdf5",
-                        }}
-                      >
-                        Verified Donor
-                      </span>
-                    </h3>
-                    <div className="space-y-1.5">
-                      <div className="flex items-start">
-                        <span
-                          className="w-20 shrink-0 font-medium"
-                          style={{ color: "#6b7280" }}
-                        >
-                          Name:
-                        </span>
-                        <span
-                          className="font-bold break-words flex-1"
-                          style={{ color: "#111827" }}
-                        >
-                          {receipt.donor.name || "Generous Supporter"}
-                        </span>
-                      </div>
-                      {receipt.donor.email && (
-                        <div className="flex items-start">
-                          <span
-                            className="w-20 shrink-0 font-medium"
-                            style={{ color: "#6b7280" }}
-                          >
-                            Email:
-                          </span>
-                          <span
-                            className="break-words flex-1 font-mono text-[11px]"
-                            style={{ color: "#1f2937" }}
-                          >
-                            {receipt.donor.email}
-                          </span>
-                        </div>
-                      )}
-                      {receipt.donor.phone && (
-                        <div className="flex items-start">
-                          <span
-                            className="w-20 shrink-0 font-medium"
-                            style={{ color: "#6b7280" }}
-                          >
-                            Phone:
-                          </span>
-                          <span className="flex-1" style={{ color: "#1f2937" }}>
-                            {receipt.donor.phone}
-                          </span>
-                        </div>
-                      )}
-                      {receipt.donor.address && (
-                        <div className="flex items-start">
-                          <span
-                            className="w-20 shrink-0 font-medium"
-                            style={{ color: "#6b7280" }}
-                          >
-                            Address:
-                          </span>
-                          <span
-                            className="flex-1 line-clamp-2 leading-relaxed"
-                            style={{ color: "#374151" }}
-                          >
-                            {receipt.donor.address}
-                          </span>
-                        </div>
-                      )}
-                      {receipt.donor.pan && (
-                        <div className="flex items-start">
-                          <span
-                            className="w-20 shrink-0 font-medium"
-                            style={{ color: "#6b7280" }}
-                          >
-                            PAN:
-                          </span>
-                          <span
-                            className="font-mono font-semibold flex-1"
-                            style={{ color: "#111827" }}
-                          >
-                            {receipt.donor.pan}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Right: Payment & Contribution Details */}
-                <div
-                  className="rounded-md p-3 flex flex-col justify-between"
-                  style={{
-                    backgroundColor: "#f8fafc",
-                    border: "1px solid #e2e8f0",
-                  }}
-                >
-                  <div>
-                    <h3
-                      className="text-[11px] font-bold uppercase tracking-wider pb-1 mb-2 flex items-center justify-between"
-                      style={{
-                        color: "#0f3460",
-                        borderBottom: "1px solid #e2e8f0",
-                      }}
-                    >
-                      <span>Payment & Campaign</span>
-                      <span
-                        className="text-[9px] px-1.5 py-0.5 rounded font-semibold"
-                        style={{
-                          color: "#047857",
-                          backgroundColor: "#ecfdf5",
-                        }}
-                      >
-                        {receipt.paymentStatus || "Completed"}
-                      </span>
-                    </h3>
-                    <div className="space-y-1.5">
-                      <div className="flex items-start">
-                        <span
-                          className="w-24 shrink-0 font-medium"
-                          style={{ color: "#6b7280" }}
-                        >
-                          Campaign:
-                        </span>
-                        <span
-                          className="font-semibold break-words flex-1"
-                          style={{ color: "#111827" }}
-                        >
-                          {receipt.campaignTitle || "General Welfare Fund"}
-                        </span>
-                      </div>
-                      <div className="flex items-start">
-                        <span
-                          className="w-24 shrink-0 font-medium"
-                          style={{ color: "#6b7280" }}
-                        >
-                          Payment Mode:
-                        </span>
-                        <span className="flex-1" style={{ color: "#1f2937" }}>
-                          {receipt.paymentMethod || "Online (Razorpay)"}
-                        </span>
-                      </div>
-                      <div className="flex items-start">
-                        <span
-                          className="w-24 shrink-0 font-medium"
-                          style={{ color: "#6b7280" }}
-                        >
-                          Payment ID:
-                        </span>
-                        <span
-                          className="font-mono text-[10.5px] break-all flex-1"
-                          style={{ color: "#1f2937" }}
-                        >
-                          {receipt.paymentId || "N/A"}
-                        </span>
-                      </div>
-                      <div className="flex items-start">
-                        <span
-                          className="w-24 shrink-0 font-medium"
-                          style={{ color: "#6b7280" }}
-                        >
-                          Order ID:
-                        </span>
-                        <span
-                          className="font-mono text-[10.5px] break-all flex-1"
-                          style={{ color: "#1f2937" }}
-                        >
-                          {receipt.orderId || "N/A"}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Amount Highlight Banner */}
-              <div
-                className="mt-3 rounded-md p-3 flex items-center justify-between"
-                style={{
-                  backgroundColor: "#eff6ff",
-                  border: "1px solid #bfdbfe",
-                }}
-              >
-                <div>
-                  <span
-                    className="text-[10px] uppercase font-bold tracking-wider block mb-0.5"
-                    style={{ color: "#1e3a8a" }}
-                  >
-                    Donation Amount Received
-                  </span>
-                  <p
-                    className="text-xl font-extrabold"
-                    style={{ color: "#0f3460" }}
-                  >
-                    ₹ {formattedAmount}{" "}
                     <span
-                      className="text-xs font-semibold"
-                      style={{ color: "#1e40af" }}
+                      className="text-2xl font-black tracking-wider text-gray-900 leading-none text-center"
                     >
-                      INR
+                      {serialNumber}
                     </span>
-                  </p>
+                  </div>
                 </div>
-                <div className="text-right max-w-sm pl-4">
-                  <span
-                    className="text-[10px] uppercase font-bold tracking-wider block mb-0.5"
-                    style={{ color: "#6b7280" }}
-                  >
-                    Amount In Words
+
+                <div className="text-[9.5px] font-bold text-gray-700 mt-1 truncate max-w-full leading-normal">
+                  Receipt No.:{" "}
+                  <span className="font-mono text-[9px] text-[#003366] font-extrabold">
+                    {receipt.receiptNumber || "PENDING"}
                   </span>
-                  <p
-                    className="text-[11px] font-semibold italic leading-snug"
-                    style={{ color: "#1f2937" }}
+                </div>
+              </div>
+
+              {/* Center Column: Organization Name & Registered Office Details */}
+              <div className="flex-1 text-center px-1">
+                <h1
+                  className="text-[21px] font-black tracking-tight leading-tight uppercase"
+                  style={{ color: "#003366", letterSpacing: "0.5px" }}
+                >
+                  {orgName}
+                </h1>
+
+                <div className="text-[11px] font-bold text-[#003366] mt-0.5 leading-normal">
+                  Registered Under 12AA/80G
+                </div>
+
+                {/* Registration Number Pill */}
+                <div className="flex items-center justify-center my-1">
+                  <div
+                    className="bg-[#003366] text-white text-[9.5px] font-black px-3.5 py-1 rounded-full tracking-wide uppercase flex items-center justify-center leading-normal"
+                    style={{ minHeight: "20px" }}
                   >
-                    {amountInWords}
-                  </p>
+                    <span>
+                      Registration No. : {regNumber}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="text-[10px] font-bold text-gray-800 leading-tight">
+                  Mob. No. : <span className="font-semibold">{orgPhone}</span>
+                </div>
+
+                <div className="text-[9.5px] text-gray-700 leading-tight">
+                  website: <span className="font-medium text-[#003366]">{orgWeb}</span> •
+                  E-mail: <span className="font-medium text-[#003366]">{orgEmail}</span>
+                </div>
+
+                <div className="text-[8.5px] text-gray-600 mt-0.5 leading-tight">
+                  <span className="font-bold text-gray-700">Head Off.:</span> {headOffice}
+                </div>
+
+                <div className="text-[8.5px] text-gray-600 leading-tight">
+                  <span className="font-bold text-gray-700">Branch Off.:</span> {branchOffice}
+                </div>
+              </div>
+
+              {/* Right Column: Donation Receipt Pill, Date & 80G Box */}
+              <div className="w-[175px] shrink-0 flex flex-col items-end text-right">
+                <div className="flex justify-end w-full">
+                  <div
+                    className="text-white text-[10.5px] font-extrabold px-3.5 py-1 rounded-full uppercase tracking-wider shadow-2xs flex items-center justify-center leading-normal"
+                    style={{ backgroundColor: "#002244", minHeight: "22px" }}
+                  >
+                    <span>
+                      DONATION RECEIPT
+                    </span>
+                  </div>
+                </div>
+
+                <div className="mt-2 text-[11px] font-bold text-gray-800 flex items-center justify-end gap-1">
+                  <span>Date :</span>
+                  <span className="font-bold text-gray-900 border-b border-dotted border-gray-600 pb-0.5 min-w-[85px] text-center leading-normal">
+                    {formattedDate}
+                  </span>
+                </div>
+
+                {/* 80G Tax Exemption Framed Note */}
+                <div className="mt-2.5 p-1.5 border border-gray-400 rounded text-[8px] font-semibold text-gray-700 text-center leading-tight bg-gray-50/60 max-w-[170px]">
+                  Donations are eligible for tax exemption under Section 80G of the Income Tax Act.
                 </div>
               </div>
             </div>
 
-            {/* Footer Section: Tax Note & Signatory */}
-            <div
-              className="pt-3 flex items-end justify-between gap-6 text-xs mt-2"
-              style={{ borderTop: "1px solid #e5e7eb" }}
-            >
-              {/* Tax Note */}
-              <div className="flex-1 max-w-md">
-                <p
-                  className="text-[9.5px] leading-relaxed"
-                  style={{ color: "#6b7280" }}
+            {/* ===================== BODY (TRADITIONAL CHECK/RECEIPT DOTTED LINES) ===================== */}
+            <div className="py-2.5 space-y-2.5 text-[12px] text-gray-900">
+              {/* Row 1: Received with thanks from */}
+              <div className="flex items-end w-full">
+                <span
+                  className="font-bold text-gray-800 shrink-0 italic pb-1"
+                  style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", serif' }}
                 >
-                  {receipt.taxNote ||
-                    "Thank you for your valuable contribution. This is a computer-generated receipt issued following verified electronic payment. Please retain this receipt for your records."}
+                  Received with thanks from :
+                </span>
+                <span className="flex-1 font-bold text-[13px] text-gray-900 px-2 border-b border-dotted border-gray-600 pb-1 truncate uppercase tracking-wide leading-normal">
+                  {receipt.donor?.name || "Generous Donor"}
+                </span>
+              </div>
+
+              {/* Row 2: Address & Mobile */}
+              <div className="flex items-end w-full gap-2">
+                <div className="flex items-end flex-1 min-w-0">
+                  <span
+                    className="font-bold text-gray-800 shrink-0 italic pb-1"
+                    style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", serif' }}
+                  >
+                    Address :
+                  </span>
+                  <span className="flex-1 font-medium text-[11.5px] text-gray-800 px-2 border-b border-dotted border-gray-600 pb-1 truncate leading-normal">
+                    {receipt.donor?.address || "—"}
+                  </span>
+                </div>
+                <div className="flex items-end w-[250px] shrink-0">
+                  <span
+                    className="font-bold text-gray-800 shrink-0 italic pb-1"
+                    style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", serif' }}
+                  >
+                    Mobile :
+                  </span>
+                  <span className="flex-1 font-bold text-[12px] text-gray-900 px-2 border-b border-dotted border-gray-600 pb-1 text-center leading-normal">
+                    {receipt.donor?.phone || "—"}
+                  </span>
+                </div>
+              </div>
+
+              {/* Row 3: The sum of Rupees (in words) */}
+              <div className="flex items-end w-full">
+                <span
+                  className="font-bold text-gray-800 shrink-0 italic pb-1"
+                  style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", serif' }}
+                >
+                  The sum of Rupees (in words) :
+                </span>
+                <span className="flex-1 font-bold text-[12px] text-gray-900 px-2 border-b border-dotted border-gray-600 pb-1 italic leading-normal">
+                  {amountInWords}
+                </span>
+              </div>
+
+              {/* Row 4: Mode / Transaction No, Dated & ₹ Amount Box */}
+              <div className="flex items-end justify-between w-full gap-2">
+                <div className="flex-1 flex flex-col gap-2">
+                  <div className="flex items-end w-full gap-2">
+                    <span
+                      className="font-bold text-gray-800 shrink-0 text-[11px] italic pb-1"
+                      style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", serif' }}
+                    >
+                      Cash / Cheque / UPI / NEFT No. :
+                    </span>
+                    <span className="flex-1 font-mono font-bold text-[11px] text-[#003366] px-1.5 border-b border-dotted border-gray-600 pb-1 truncate leading-normal">
+                      {receipt.paymentId || receipt.orderId || "ONLINE"}
+                    </span>
+                    <span
+                      className="font-bold text-gray-800 shrink-0 text-[11px] ml-1 italic pb-1"
+                      style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", serif' }}
+                    >
+                      Dated :
+                    </span>
+                    <span className="w-24 font-medium text-[11px] text-gray-800 px-1 border-b border-dotted border-gray-600 pb-1 text-center leading-normal">
+                      {formattedDate}
+                    </span>
+                  </div>
+
+                  {/* Row 5: Purpose of Donation */}
+                  <div className="flex items-end w-full">
+                    <span
+                      className="font-bold text-gray-800 shrink-0 italic pb-1"
+                      style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", serif' }}
+                    >
+                      On account of / Purpose of Donation :
+                    </span>
+                    <span className="flex-1 font-bold text-[12px] text-gray-900 px-2 border-b border-dotted border-gray-600 pb-1 truncate leading-normal">
+                      {receipt.campaignTitle || "General Welfare Fund"}
+                    </span>
+                  </div>
+
+                  {/* Row 6: Donor PAN (if Applicable) */}
+                  <div className="flex items-end w-full">
+                    <span
+                      className="font-bold text-gray-800 shrink-0 italic pb-1"
+                      style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", serif' }}
+                    >
+                      Donor PAN (if Applicable) :
+                    </span>
+                    <span className="flex-1 font-mono font-bold text-[12px] text-gray-800 px-2 border-b border-dotted border-gray-600 pb-1 leading-normal">
+                      {receipt.donor?.pan || "—"}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Distinctive Currency Box on Right */}
+                <div
+                  className="w-36 h-12 shrink-0 border-2 border-[#a3704c] rounded-md flex items-center justify-center px-3 bg-amber-50/20 shadow-2xs"
+                  style={{ borderColor: "#a3704c" }}
+                >
+                  <span className="text-2xl font-black text-gray-900 mr-1.5 leading-none">
+                    ₹
+                  </span>
+                  <span className="text-xl font-extrabold text-gray-900 tracking-wide leading-none">
+                    {formattedAmount} /-
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* ===================== FOOTER ===================== */}
+            <div className="pt-2 border-t border-gray-300 flex items-end justify-between gap-2">
+              {/* Left: DONOR COPY Badge with absolute vertical centering */}
+              <div className="w-[140px] shrink-0">
+                <div
+                  className="text-white text-[10px] font-black px-3.5 py-1 rounded-sm uppercase tracking-wider shadow-2xs flex items-center justify-center leading-normal"
+                  style={{
+                    backgroundColor: "#5a1818",
+                    minHeight: "22px",
+                    width: "fit-content",
+                  }}
+                >
+                  <span>
+                    DONOR COPY
+                  </span>
+                </div>
+              </div>
+
+              {/* Center: Oval Gratitude Banner & Terms */}
+              <div className="flex-1 text-center px-2 flex flex-col items-center">
+                <div
+                  className="text-[#fbc531] text-[12px] font-black px-6 py-1 rounded-full border border-[#003366] shadow-2xs flex items-center justify-center leading-normal"
+                  style={{
+                    backgroundColor: "#002244",
+                    boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
+                    fontFamily: 'Georgia, Cambria, "Times New Roman", serif',
+                    minHeight: "24px",
+                  }}
+                >
+                  <span>
+                    Thanks You for Your Generous Donation
+                  </span>
+                </div>
+                <p
+                  className="text-[10px] italic text-gray-700 mt-1 font-medium leading-tight"
+                  style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", serif' }}
+                >
+                  Your contribution helps us serve humanity.
+                </p>
+                <p className="text-[8px] text-gray-500 mt-0.5 leading-tight">
+                  All donations are accepted subject to the rules and regulations of the Association.*
                 </p>
               </div>
 
-              {/* Authorized Signatory */}
-              <div className="shrink-0 text-center min-w-[160px]">
-                <div className="h-10 flex items-center justify-center">
-                  <span
-                    className="font-serif italic font-bold text-sm tracking-wider"
-                    style={{ color: "#0f3460" }}
-                  >
-                    YUWA India
-                  </span>
-                </div>
-                <div
-                  className="w-36 mx-auto pt-1"
-                  style={{ borderTop: "1px solid #9ca3af" }}
-                >
+              {/* Right: Signature Space */}
+              <div className="w-[200px] shrink-0 text-center flex flex-col items-center">
+                <h4 className="text-[9.5px] font-black uppercase text-[#003366] tracking-tight leading-normal">
+                  {orgName}
+                </h4>
+                {/* Empty digital signature reserved space */}
+                <div className="h-6 w-full flex items-center justify-center"></div>
+                <div className="w-40 border-t border-gray-700 pt-0.5">
                   <p
-                    className="text-[10px] font-bold uppercase tracking-wider"
-                    style={{ color: "#1f2937" }}
+                    className="text-[10.5px] font-bold text-gray-800 italic leading-normal"
+                    style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", serif' }}
                   >
                     Authorised Signatory
-                  </p>
-                  <p className="text-[8.5px]" style={{ color: "#6b7280" }}>
-                    Youth Util Welfare Association
                   </p>
                 </div>
               </div>

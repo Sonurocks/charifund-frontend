@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useRef, useState, useCallback } from "react";
-import { CheckCircle2, FileText, Image as ImageIcon, ArrowRight } from "lucide-react";
+import React, { useRef, useState, useCallback, useEffect } from "react";
+import { CheckCircle2, FileText, Image as ImageIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
 import Modal from "../../UI/web/Modal";
@@ -29,6 +29,9 @@ interface ThankYouModalProps {
   paymentData?: LegacyPaymentData | null;
 }
 
+const NATIVE_CERT_WIDTH = 880;
+const NATIVE_CERT_HEIGHT = 440;
+
 export default function ThankYouModal({
   isOpen,
   onClose,
@@ -37,9 +40,39 @@ export default function ThankYouModal({
   paymentData,
 }: ThankYouModalProps) {
   const { t } = useTranslation();
-  const certificateRef = useRef<HTMLDivElement>(null);
+  // exportRef points to an unscaled (scale=1) off-screen certificate so html2canvas never suffers from CSS transform text baseline bugs
+  const exportCertificateRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
   const [isExportingPdf, setIsExportingPdf] = useState(false);
   const [isExportingPng, setIsExportingPng] = useState(false);
+
+  // Dynamically compute responsive scale to eliminate horizontal scrollbars on all screens
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const updateScale = () => {
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.clientWidth;
+        if (containerWidth > 0) {
+          const calculatedScale = Math.min(1, containerWidth / NATIVE_CERT_WIDTH);
+          setScale(calculatedScale);
+        }
+      }
+    };
+
+    updateScale();
+    const resizeObserver = new ResizeObserver(updateScale);
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+    window.addEventListener("resize", updateScale);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener("resize", updateScale);
+    };
+  }, [isOpen]);
 
   // Normalise receipt data
   const normalizedReceipt: DonationReceipt | null = React.useMemo(() => {
@@ -70,7 +103,9 @@ export default function ThankYouModal({
     const html2canvas = (await import("html2canvas")).default;
 
     return html2canvas(element, {
-      scale: 2,
+      scale: 3, // Crisp 3x print quality
+      width: NATIVE_CERT_WIDTH,
+      height: NATIVE_CERT_HEIGHT,
       useCORS: true,
       allowTaint: false,
       backgroundColor: "#ffffff",
@@ -89,6 +124,13 @@ export default function ThankYouModal({
               .replace(/oklch\([^)]+\)/gi, "rgba(17, 24, 39, 0.8)");
           }
         });
+
+        // CRITICAL: Prevent Tailwind preflight "img { display: block; }" from breaking html2canvas FontMetrics baseline measurement
+        const imgReset = clonedDoc.createElement("style");
+        imgReset.textContent = `
+          img { display: inline !important; }
+        `;
+        clonedDoc.head.appendChild(imgReset);
       },
     });
   }, []);
@@ -97,7 +139,8 @@ export default function ThankYouModal({
 
   const handleDownloadPdf = async () => {
     if (isExportingPdf || isExportingPng) return;
-    if (!certificateRef.current) {
+    const exportEl = exportCertificateRef.current;
+    if (!exportEl) {
       toast.error(t("Certificate element not ready for export. Please try again."));
       return;
     }
@@ -107,9 +150,7 @@ export default function ThankYouModal({
 
     try {
       const { jsPDF } = await import("jspdf");
-      const element = certificateRef.current;
-
-      const canvas = await captureCertificateCanvas(element);
+      const canvas = await captureCertificateCanvas(exportEl);
       const imgData = canvas.toDataURL("image/png");
 
       // Landscape A5 dimensions in mm: 210 x 148
@@ -139,7 +180,8 @@ export default function ThankYouModal({
 
   const handleDownloadPng = async () => {
     if (isExportingPdf || isExportingPng) return;
-    if (!certificateRef.current) {
+    const exportEl = exportCertificateRef.current;
+    if (!exportEl) {
       toast.error(t("Certificate element not ready for export. Please try again."));
       return;
     }
@@ -148,8 +190,7 @@ export default function ThankYouModal({
     const toastId = toast.loading(t("Generating donation receipt image..."));
 
     try {
-      const element = certificateRef.current;
-      const canvas = await captureCertificateCanvas(element);
+      const canvas = await captureCertificateCanvas(exportEl);
 
       canvas.toBlob(
         (blob) => {
@@ -191,35 +232,35 @@ export default function ThankYouModal({
     <Modal
       isOpen={isOpen}
       onClose={handleFinish}
-      maxWidth="max-w-4xl"
+      maxWidth="max-w-5xl"
       showCloseButton={true}
       className="rounded-3xl"
     >
-      <div className="flex flex-col items-center text-center space-y-3 pb-2">
+      <div className="flex flex-col items-center text-center space-y-2 pb-1">
         {/* Success Header Icon */}
-        <div className="flex items-center justify-center w-14 h-14 bg-green/10 rounded-full mt-1">
-          <CheckCircle2 className="w-8 h-8 text-green" />
+        <div className="flex items-center justify-center w-11 h-11 bg-green/10 rounded-full mt-0.5">
+          <CheckCircle2 className="w-6 h-6 text-green" />
         </div>
 
-        <h2 className="text-xl sm:text-2xl font-bold text-dark-green font-nunito">
+        <h2 className="text-lg sm:text-xl font-bold text-dark-green font-nunito leading-tight">
           {t("Thank You for Your Donation!")}
         </h2>
 
-        <p className="text-gray-600 text-xs sm:text-sm max-w-xl mx-auto px-4">
+        <p className="text-gray-600 text-xs max-w-xl mx-auto px-4 leading-normal">
           {t(
             "Your generous contribution has been securely received and verified. An official donation receipt has been generated below for your records."
           )}
         </p>
 
         {/* Action Controls for Download */}
-        <div className="w-full flex flex-wrap items-center justify-center gap-3 pt-2">
+        <div className="w-full flex flex-wrap items-center justify-center gap-2.5 pt-1">
           <button
             type="button"
             onClick={handleDownloadPdf}
             disabled={isExportingPdf || isExportingPng}
-            className="flex items-center gap-2 px-5 py-2.5 bg-[#0f3460] hover:bg-[#1a4a84] text-white text-xs font-semibold rounded-xl shadow-xs transition transform hover:scale-[1.02] disabled:bg-gray-300 disabled:cursor-not-allowed cursor-pointer"
+            className="flex items-center gap-1.5 px-4 py-2 bg-[#0f3460] hover:bg-[#1a4a84] text-white text-xs font-semibold rounded-xl shadow-2xs transition transform hover:scale-[1.02] disabled:bg-gray-300 disabled:cursor-not-allowed cursor-pointer"
           >
-            <FileText className="w-4 h-4" />
+            <FileText className="w-3.5 h-3.5" />
             <span>{isExportingPdf ? t("Generating PDF...") : t("Download PDF")}</span>
           </button>
 
@@ -227,34 +268,50 @@ export default function ThankYouModal({
             type="button"
             onClick={handleDownloadPng}
             disabled={isExportingPdf || isExportingPng}
-            className="flex items-center gap-2 px-5 py-2.5 bg-lime-green hover:bg-green text-white text-xs font-semibold rounded-xl shadow-xs transition transform hover:scale-[1.02] disabled:bg-gray-300 disabled:cursor-not-allowed cursor-pointer"
+            className="flex items-center gap-1.5 px-4 py-2 bg-lime-green hover:bg-green text-white text-xs font-semibold rounded-xl shadow-2xs transition transform hover:scale-[1.02] disabled:bg-gray-300 disabled:cursor-not-allowed cursor-pointer"
           >
-            <ImageIcon className="w-4 h-4" />
+            <ImageIcon className="w-3.5 h-3.5" />
             <span>{isExportingPng ? t("Generating PNG...") : t("Download PNG")}</span>
           </button>
         </div>
 
-        {/* Certificate Display Area with horizontal scroll on small screens */}
-        <div className="w-full mt-4 bg-gray-100/60 p-2 sm:p-4 rounded-2xl border border-gray-200/80 overflow-x-auto shadow-inner">
-          <div className="min-w-[794px] mx-auto flex justify-center">
-            <DonationCertificate ref={certificateRef} receipt={normalizedReceipt} />
+        {/* Certificate Display Area with Responsive Auto-Scaling (Visually fits screen perfectly) */}
+        <div
+          ref={containerRef}
+          className="w-full mt-3 bg-gray-50/80 p-1 sm:p-2.5 rounded-2xl border border-gray-200/80 flex justify-center items-center overflow-hidden"
+          style={{
+            height: `${Math.round(NATIVE_CERT_HEIGHT * scale + 16)}px`,
+            minHeight: "150px",
+          }}
+        >
+          <div
+            style={{
+              width: `${NATIVE_CERT_WIDTH}px`,
+              height: `${NATIVE_CERT_HEIGHT}px`,
+              transform: `scale(${scale})`,
+              transformOrigin: "top center",
+              transition: "transform 0.1s ease-out",
+            }}
+          >
+            <DonationCertificate receipt={normalizedReceipt} />
           </div>
         </div>
-        <p className="text-[11px] text-gray-500 sm:hidden flex items-center justify-center gap-1">
-          <span>⇄</span> <span>{t("Swipe horizontally to view full certificate")}</span>
-        </p>
 
-        {/* Done Button
-        <div className="flex justify-center w-full pt-4">
-          <button
-            type="button"
-            onClick={handleFinish}
-            className="w-full sm:w-1/2 cursor-pointer py-3 px-6 bg-green hover:bg-dark-green text-white font-semibold rounded-xl transition-colors duration-200 text-sm shadow-xs flex items-center justify-center gap-2"
-          >
-            <span>{t("Done & Return to Homepage")}</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        </div> */}
+        {/* Dedicated Unscaled Off-Screen Certificate for High-Res 1:1 Export (Immune to CSS transform scale) */}
+        <div
+          style={{
+            position: "fixed",
+            left: "-9999px",
+            top: 0,
+            width: `${NATIVE_CERT_WIDTH}px`,
+            height: `${NATIVE_CERT_HEIGHT}px`,
+            pointerEvents: "none",
+            opacity: 1,
+            zIndex: -9999,
+          }}
+        >
+          <DonationCertificate ref={exportCertificateRef} receipt={normalizedReceipt} />
+        </div>
       </div>
     </Modal>
   );
