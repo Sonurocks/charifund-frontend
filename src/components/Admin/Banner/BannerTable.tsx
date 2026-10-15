@@ -131,6 +131,8 @@ const BannerTable = () => {
 
   const handleEdit = useCallback((b: Banner) => {
     setBannerId(b.id?.toString() ?? null);
+    setSelectedBanner(b);
+    setEditBannerId(b.id?.toString() ?? null);
     setMode("edit");
     setDrawerOpen(true);
   }, []);
@@ -184,6 +186,8 @@ const BannerTable = () => {
             <Button
               text="Add Banner"
               onClick={() => {
+                setBannerId(null);
+                setSelectedBanner(null);
                 setEditBannerId(null);
                 setMode("add");
                 setDrawerOpen(true);
@@ -227,6 +231,8 @@ const BannerTable = () => {
           onClose={() => {
             setDrawerOpen(false);
             setEditBannerId(null);
+            setBannerId(null);
+            setSelectedBanner(null);
             setMode("add");
             setPreviewData(null);
             setShowPreview(false);
@@ -258,7 +264,7 @@ const BannerTable = () => {
                 updateMutation={updateMutation}
                 onSubmit={() => {
                   if (!previewData) return;
-                  const editBannerData = singleBannerData ?? null;
+                  const editBannerData = (singleBannerData || selectedBanner) ?? null;
 
                   submitBannerForm(
                     previewData,
@@ -285,12 +291,23 @@ const BannerTable = () => {
             ) : (
               <BannerForm
                 initialData={{
+                  ...(selectedBanner || {}),
                   ...(singleBannerData || {}),
                   ...(previewData || {}),
-                  image: previewData?.image || singleBannerData?.image || "",
+                  image:
+                    previewData?.image ||
+                    singleBannerData?.image ||
+                    selectedBanner?.image ||
+                    "",
                   priority:
-                    previewData?.priority || singleBannerData?.priority || 0,
-                  pageName: singleBannerData?.pageName || selectedPage,
+                    previewData?.priority ??
+                    singleBannerData?.priority ??
+                    selectedBanner?.priority ??
+                    0,
+                  pageName:
+                    mode === "edit"
+                      ? singleBannerData?.pageName || selectedBanner?.pageName || ""
+                      : selectedPage,
                 }}
                 onClose={() => {
                   setDrawerOpen(false);

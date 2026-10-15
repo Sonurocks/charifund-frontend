@@ -12,7 +12,6 @@ interface DonationCertificateProps {
 
 const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>(
   ({ receipt, className = "" }, ref) => {
-    // Format date safely as DD / MM / YYYY
     const formattedDate = React.useMemo(() => {
       const rawDate = receipt.paymentDate || new Date().toISOString();
       try {
@@ -27,7 +26,6 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
       }
     }, [receipt.paymentDate]);
 
-    // Format currency (e.g. 5,000)
     const formattedAmount = React.useMemo(() => {
       try {
         return new Intl.NumberFormat("en-IN", {
@@ -39,12 +37,10 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
       }
     }, [receipt.amount]);
 
-    // Amount in words
     const amountInWords = React.useMemo(() => {
       return receipt.amountInWords || numberToWordsINR(receipt.amount);
     }, [receipt.amount, receipt.amountInWords]);
 
-    // Extract serial number (e.g. 0007 from YUWA-2026-0007-8e307c61)
     const serialNumber = React.useMemo(() => {
       if (!receipt.receiptNumber) return "0001";
       const parts = receipt.receiptNumber.split("-");
@@ -77,7 +73,6 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
           lineHeight: "1.2",
         }}
       >
-        {/* Outer Frame with Double Classic Blue Border */}
         <div
           className="w-full h-full p-2 box-border relative"
           style={{
@@ -86,7 +81,6 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
             backgroundColor: "#ffffff",
           }}
         >
-          {/* Inner Thin Border */}
           <div
             className="w-full h-full p-4 flex flex-col justify-between box-border"
             style={{
@@ -94,9 +88,7 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
               backgroundColor: "#ffffff",
             }}
           >
-            {/* ===================== HEADER ===================== */}
             <div className="flex items-start justify-between gap-2 pb-2 border-b border-gray-300">
-              {/* Left Column: Official Logo, Serial Box & Receipt No */}
               <div className="w-[185px] shrink-0 flex flex-col items-start">
                 <div className="relative w-28 h-14 shrink-0 flex items-center justify-start">
                   <Image
@@ -110,7 +102,6 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
                   />
                 </div>
 
-                {/* Serial Number Box with perfect vertical centering */}
                 <div className="mt-1 flex items-center gap-1.5">
                   <span className="text-[13px] font-bold text-gray-800">
                     №
@@ -135,7 +126,6 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
                 </div>
               </div>
 
-              {/* Center Column: Organization Name & Registered Office Details */}
               <div className="flex-1 text-center px-1">
                 <h1
                   className="text-[21px] font-black tracking-tight leading-tight uppercase"
@@ -148,7 +138,6 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
                   Registered Under 12AA/80G
                 </div>
 
-                {/* Registration Number Pill */}
                 <div className="flex items-center justify-center my-1">
                   <div
                     className="bg-[#003366] text-white text-[9.5px] font-black px-3.5 h-[20px] rounded-full tracking-wide uppercase inline-flex items-center justify-center leading-none text-center"
@@ -177,7 +166,6 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
                 </div>
               </div>
 
-              {/* Right Column: Donation Receipt Pill, Date & 80G Box */}
               <div className="w-[175px] shrink-0 flex flex-col items-end text-right">
                 <div className="flex justify-end w-full">
                   <div
@@ -197,16 +185,13 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
                   </span>
                 </div>
 
-                {/* 80G Tax Exemption Framed Note */}
                 <div className="mt-2.5 p-1.5 border border-gray-400 rounded text-[8px] font-semibold text-gray-700 text-center leading-tight bg-gray-50/60 max-w-[170px]">
                   Donations are eligible for tax exemption under Section 80G of the Income Tax Act.
                 </div>
               </div>
             </div>
 
-            {/* ===================== BODY (TRADITIONAL CHECK/RECEIPT DOTTED LINES) ===================== */}
             <div className="py-2.5 space-y-2.5 text-[12px] text-gray-900">
-              {/* Row 1: Received with thanks from */}
               <div className="flex items-end w-full min-w-0">
                 <span
                   className="font-bold text-gray-800 shrink-0 italic pb-1"
@@ -219,7 +204,6 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
                 </span>
               </div>
 
-              {/* Row 2: Address & Mobile */}
               <div className="flex items-end w-full gap-2 min-w-0">
                 <div className="flex items-end flex-1 min-w-0">
                   <span
@@ -245,7 +229,6 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
                 </div>
               </div>
 
-              {/* Row 3: The sum of Rupees (in words) */}
               <div className="flex items-end w-full min-w-0">
                 <span
                   className="font-bold text-gray-800 shrink-0 italic pb-1"
@@ -261,7 +244,6 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
                 </span>
               </div>
 
-              {/* Row 4: Mode / Transaction No, Dated & ₹ Amount Box */}
               <div className="flex items-end justify-between w-full gap-2 min-w-0">
                 <div className="flex-1 flex flex-col gap-2 min-w-0">
                   <div className="flex items-end w-full gap-2 min-w-0">
@@ -285,7 +267,6 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
                     </span>
                   </div>
 
-                  {/* Row 5: Purpose of Donation */}
                   <div className="flex items-end w-full min-w-0">
                     <span
                       className="font-bold text-gray-800 shrink-0 italic pb-1"
@@ -298,7 +279,6 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
                     </span>
                   </div>
 
-                  {/* Row 6: Donor PAN (if Applicable) */}
                   <div className="flex items-end w-full min-w-0">
                     <span
                       className="font-bold text-gray-800 shrink-0 italic pb-1"
@@ -312,7 +292,6 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
                   </div>
                 </div>
 
-                {/* Distinctive Currency Box on Right */}
                 <div
                   className="w-36 h-12 shrink-0 border-2 border-[#a3704c] rounded-md flex items-center justify-center px-3 bg-amber-50/20 shadow-2xs"
                   style={{ borderColor: "#a3704c" }}
@@ -327,9 +306,7 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
               </div>
             </div>
 
-            {/* ===================== FOOTER ===================== */}
             <div className="pt-2 border-t border-gray-300 flex items-end justify-between gap-2">
-              {/* Left: DONOR COPY Badge with absolute vertical centering */}
               <div className="w-[140px] shrink-0">
                 <div
                   className="text-white text-[10px] font-black px-3.5 h-[22px] rounded-sm uppercase tracking-wider shadow-2xs inline-flex items-center justify-center leading-none text-center"
@@ -344,7 +321,6 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
                 </div>
               </div>
 
-              {/* Center: Oval Gratitude Banner & Terms */}
               <div className="flex-1 text-center px-2 flex flex-col items-center">
                 <div
                   className="text-[#fbc531] text-[12px] font-black px-6 h-[26px] rounded-full border border-[#003366] shadow-2xs inline-flex items-center justify-center leading-none text-center"
@@ -369,12 +345,10 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
                 </p>
               </div>
 
-              {/* Right: Signature Space */}
               <div className="w-[200px] shrink-0 text-center flex flex-col items-center">
                 <h4 className="text-[9.5px] font-black uppercase text-[#003366] tracking-tight leading-normal">
                   {orgName}
                 </h4>
-                {/* Empty digital signature reserved space */}
                 <div className="h-6 w-full flex items-center justify-center"></div>
                 <div className="w-40 border-t border-gray-700 pt-0.5">
                   <p

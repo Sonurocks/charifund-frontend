@@ -42,6 +42,7 @@ const BannerForm: React.FC<BannerFormProps> = ({
 }) => {
   const { language, toggleLanguage } = useLanguageToggle();
   const isView = mode === "view";
+  const isEdit = mode === "edit" || Boolean(initialData?.id);
 
   //Typed initial values
   const initialValues: BannerFormValues & { existingImage?: string } = {
@@ -70,8 +71,11 @@ const BannerForm: React.FC<BannerFormProps> = ({
     formikHelpers: FormikHelpers<BannerFormValues>
   ) => {
     const { setSubmitting, resetForm } = formikHelpers;
+    const finalValues = isEdit
+      ? { ...values, pageName: (initialData as any)?.pageName || values.pageName }
+      : values;
     submitBannerForm(
-      values,
+      finalValues,
       initialData,
       createMutation,
       updateMutation,
@@ -193,23 +197,34 @@ const BannerForm: React.FC<BannerFormProps> = ({
               />
 
               {/* Page Name */}
-              <Dropdown
-                id="pageName"
-                name="pageName"
-                label={lang === "en" ? "Page Name" : "पृष्ठ का नाम"}
-                options={BannerPageOptions}
-                value={values.pageName || ""}
-                onChange={(val: any) => setFieldValue("pageName", val)}
-                placeholder={
-                  lang === "en"
-                    ? "Select Page (Default: General / Home)"
-                    : "पृष्ठ चुनें (डिफ़ॉल्ट: सामान्य / होम)"
-                }
-                clearable
-                disabled={isView}
-                width="w-full"
-                error={touched.pageName && errors.pageName ? errors.pageName : ""}
-              />
+              {isEdit || isView ? (
+                <CustomInput
+                  label={lang === "en" ? "Page Name" : "पृष्ठ का नाम"}
+                  name="pageName"
+                  value={values.pageName || (initialData as any)?.pageName || ""}
+                  readOnly
+                  disabled
+                  className="w-full"
+                />
+              ) : (
+                <Dropdown
+                  id="pageName"
+                  name="pageName"
+                  label={lang === "en" ? "Page Name" : "पृष्ठ का नाम"}
+                  options={BannerPageOptions}
+                  value={values.pageName || ""}
+                  onChange={(val: any) => setFieldValue("pageName", val)}
+                  placeholder={
+                    lang === "en"
+                      ? "Select Page (Default: General / Home)"
+                      : "पृष्ठ चुनें (डिफ़ॉल्ट: सामान्य / होम)"
+                  }
+                  clearable
+                  disabled={isView}
+                  width="w-full"
+                  error={touched.pageName && errors.pageName ? errors.pageName : ""}
+                />
+              )}
 
               {/* Priority */}
               <CustomInput
