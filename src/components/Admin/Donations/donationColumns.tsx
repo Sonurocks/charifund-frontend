@@ -281,17 +281,17 @@ export const getDonationColumns = ({
             </button>
           )}
 
-          {/* Download Receipt Action - For confirmed / verified donations */}
+          {/* Download Certificate Action - For confirmed / verified donations */}
           {isConfirmed && onDownloadReceipt && (
             <button
               type="button"
               onClick={() => onDownloadReceipt(row)}
               className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-[#0284c7] hover:bg-[#0369a1] text-white transition-colors cursor-pointer text-[11px] font-semibold whitespace-nowrap shadow-xs"
-              title="Download 80G Receipt"
-              aria-label="Download donation receipt"
+              title="Download 80G Certificate"
+              aria-label="Download donation certificate"
             >
               <FaFileDownload className="w-2.5 h-2.5 text-white" />
-              <span>Receipt</span>
+              <span>Certificate</span>
             </button>
           )}
         </div>

@@ -136,8 +136,8 @@ export const DonationDetailModal: React.FC<DonationDetailModalProps> = ({
               <FaFileDownload className="text-xs" />
               <span>
                 {isDownloadingReceipt
-                  ? t("Downloading Receipt...")
-                  : t("Download 80G Receipt")}
+                  ? t("Downloading Certificate...")
+                  : t("Download 80G Certificate")}
               </span>
             </button>
           )}

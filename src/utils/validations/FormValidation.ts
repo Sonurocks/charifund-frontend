@@ -38,6 +38,14 @@ export const DetailsformSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Email is required"),
   phone: Yup.string().matches(/^\d{10}$/, "Phone must be exactly 10 digits").required(),
   address: Yup.string().min(5, "Address is required").required(),
+  pan: Yup.string()
+    .trim()
+    .test(
+      "valid-pan",
+      "Please enter a valid 10-character PAN (e.g. ABCDE1234F) or leave blank",
+      (val) => !val || /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/i.test(val)
+    )
+    .notRequired(),
   message: Yup.string().required("Message is required"),
 });
 export type DetailsFormValues = Yup.InferType<typeof DetailsformSchema>;

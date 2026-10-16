@@ -173,6 +173,7 @@ export interface CreatePaymentOrderPayload {
   email: string;
   phone: string;
   address: string;
+  pan?: string;
   message?: string;
 }
 

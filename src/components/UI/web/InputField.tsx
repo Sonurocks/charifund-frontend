@@ -13,6 +13,7 @@ const InputField: React.FC<InputFieldProps & FieldHookConfig<string>> = ({
   type = "text",
   as = "input",
   placeholder,
+  uppercase = false,
   className='flex gap-2 bg-gray-200/60 px-3 py-4 rounded-md  relative',
   iconClassName="text-gray-500/60 text-lg font-bold size-5 mt-[2px]",
   placeholderClassName='',
@@ -77,7 +78,13 @@ const InputField: React.FC<InputFieldProps & FieldHookConfig<string>> = ({
             {...field}
             type={isPassword && showPassword ? "text" : type}
             placeholder={placeholder}
-            className={`w-full bg-transparent outline-none ${textSize} ${placeholderClassName} ${icon ? 'pr-10' : ''}`}
+            onChange={(e) => {
+              if (uppercase) {
+                e.target.value = e.target.value.toUpperCase();
+              }
+              field.onChange(e);
+            }}
+            className={`w-full bg-transparent outline-none ${textSize} ${placeholderClassName} ${uppercase ? 'uppercase' : ''} ${icon ? 'pr-10' : ''}`}
           />
         )}
 

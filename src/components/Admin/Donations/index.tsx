@@ -240,6 +240,7 @@ export const UnifiedDonations = () => {
           email: donation.email,
           phone: donation.phone,
           address: donation.address,
+          pan: donation.pan || (donation as any).donorPan || receiptData?.donor?.pan,
         },
         organization: receiptData?.organization,
         isVerified: true,
