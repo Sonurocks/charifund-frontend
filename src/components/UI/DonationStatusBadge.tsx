@@ -27,6 +27,7 @@ export { getCanonicalDonationStatus, getStatusConfig };
 export interface DonationStatusBadgeProps {
   status?: string;
   paymentMethod?: string;
+  receiptNumber?: string | null;
   context?: "donor" | "admin";
   size?: "sm" | "md";
   interactive?: boolean;
@@ -41,6 +42,7 @@ export interface DonationStatusBadgeProps {
 export default function DonationStatusBadge({
   status,
   paymentMethod,
+  receiptNumber,
   context = "donor",
   size = "md",
   interactive = false,
@@ -53,7 +55,7 @@ export default function DonationStatusBadge({
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
-  const config = getStatusConfig(status, paymentMethod, context, t);
+  const config = getStatusConfig(status, paymentMethod, context, t, receiptNumber);
   const StatusIcon = config.icon;
   const displayLabel = customLabel || config.label;
 

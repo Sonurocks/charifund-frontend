@@ -3,7 +3,7 @@
 import React, { useMemo } from "react";
 import dynamic from "next/dynamic";
 import { UnifiedDonation } from "@/src/types/admin/donation";
-import { getDonationColumns } from "./donationColumns";
+import { getDonationColumns, isDonationConfirmed } from "./donationColumns";
 import { useTranslation } from "react-i18next";
 import { FaExclamationTriangle, FaFolderOpen, FaRedo, FaEye, FaCheck, FaFileDownload } from "react-icons/fa";
 
@@ -174,19 +174,9 @@ export const DonationsTable: React.FC<DonationsTableProps> = ({
             `${donation.firstName || ""} ${donation.lastName || ""}`.trim() ||
             donation.donorName ||
             "—";
-          const statusLower = (donation.status || "").toLowerCase();
+          const isConfirmed = isDonationConfirmed(donation);
           const isOffline = donation.paymentMethod?.toLowerCase() === "offline";
-          const isConfirmed =
-            statusLower === "completed" ||
-            statusLower === "success" ||
-            statusLower === "paid" ||
-            statusLower === "verified";
-          const isPendingOffline =
-            isOffline &&
-            (statusLower === "offline" ||
-              statusLower === "pending" ||
-              statusLower === "unverified" ||
-              statusLower === "pledged");
+          const isPendingOffline = isOffline && !isConfirmed;
 
           return (
             <div
@@ -237,15 +227,17 @@ export const DonationsTable: React.FC<DonationsTableProps> = ({
                     className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold capitalize border shadow-xs ${
                       isConfirmed
                         ? "bg-[#ecfdf5] text-[#065f46] border-[#a7f3d0]"
-                        : isPendingOffline
+                        : isOffline
                         ? "bg-[#fef3c7] text-[#92400e] border-[#fcd34d]"
                         : "bg-gray-100 text-gray-700 border-gray-300"
                     }`}
                   >
                     {isConfirmed
-                      ? "Paid"
-                      : isPendingOffline
-                      ? "Offline"
+                      ? isOffline
+                        ? "Verified"
+                        : "Paid"
+                      : isOffline
+                      ? "Unverified"
                       : donation.status || "—"}
                   </span>
                 </div>

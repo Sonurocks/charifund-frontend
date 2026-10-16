@@ -30,13 +30,21 @@ export interface StatusConfig {
 export function getCanonicalDonationStatus(
   status?: string,
   paymentMethod?: string,
-  context: "donor" | "admin" = "donor"
+  context: "donor" | "admin" = "donor",
+  receiptNumber?: string | null
 ): CanonicalDonationStatus {
   const s = (status || "").toLowerCase().trim();
   const m = (paymentMethod || "").toLowerCase().trim();
   const isOffline = m === "offline";
+  const hasReceipt = Boolean(receiptNumber && String(receiptNumber).trim());
 
-  if (s === "completed" || s === "success" || s === "paid" || s === "verified") {
+  if (
+    s === "completed" ||
+    s === "success" ||
+    s === "paid" ||
+    s === "verified" ||
+    (isOffline && hasReceipt)
+  ) {
     return "confirmed";
   }
 
@@ -65,15 +73,17 @@ export function getStatusConfig(
   status?: string,
   paymentMethod?: string,
   context: "donor" | "admin" = "donor",
-  t: (key: string) => string = (k) => k
+  t: (key: string) => string = (k) => k,
+  receiptNumber?: string | null
 ): StatusConfig {
-  const canonical = getCanonicalDonationStatus(status, paymentMethod, context);
+  const canonical = getCanonicalDonationStatus(status, paymentMethod, context, receiptNumber);
+  const isOffline = (paymentMethod || "").toLowerCase().trim() === "offline";
 
   switch (canonical) {
     case "pending_payment":
       return {
         canonical,
-        label: context === "admin" ? t("Offline") : t("Pending Payment"),
+        label: context === "admin" ? (isOffline ? t("Unverified") : t("Pending")) : t("Pending Payment"),
         badgeClasses:
           "bg-amber-50 text-amber-900 border-amber-300 hover:bg-amber-100 hover:border-amber-400 focus:ring-amber-400",
         dotClass: "bg-amber-500",
@@ -87,7 +97,7 @@ export function getStatusConfig(
     case "pending_verification":
       return {
         canonical,
-        label: context === "admin" ? t("Offline") : t("Pending Verification"),
+        label: context === "admin" ? t("Unverified") : t("Pending Verification"),
         badgeClasses:
           "bg-amber-50 text-amber-900 border-amber-300 hover:bg-amber-100 hover:border-amber-400 focus:ring-amber-400",
         dotClass: "bg-amber-500",
@@ -101,7 +111,7 @@ export function getStatusConfig(
     case "confirmed":
       return {
         canonical,
-        label: context === "admin" ? t("Paid") : t("Paid & Verified"),
+        label: context === "admin" ? (isOffline ? t("Verified") : t("Paid")) : t("Paid & Verified"),
         badgeClasses:
           "bg-emerald-50 text-emerald-900 border-emerald-300 hover:bg-emerald-100 hover:border-emerald-400 focus:ring-emerald-400",
         dotClass: "bg-emerald-500",
