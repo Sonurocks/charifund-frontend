@@ -15,6 +15,8 @@ export interface DashboardData {
   totalDonationsCount?: number;
   generalDonationsCount?: number;
   campaignDonationsCount?: number;
+  offlineDonationsCount?: number;
+  pendingDonationsCount?: number;
 }
 
 export const dashboardApi = async (): Promise<DashboardData> => {

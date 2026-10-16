@@ -2,8 +2,7 @@
 
 import React from "react";
 import Dropdown from "@/src/components/UI/admin/Dropdown";
-import DateSelect from "@/src/components/UI/admin/DateSelect";
-import Button from "@/src/components/UI/web/Buttons/Button";
+import DatePicker from "@/src/components/UI/admin/DatePicker";
 import { Campaign } from "@/src/types/admin/campaign";
 import { useTranslation } from "react-i18next";
 import { Icon } from "@iconify/react";
@@ -19,6 +18,8 @@ interface DonationFiltersProps {
   onSearchChange: (val: string) => void;
   paymentMethod: PaymentMethodFilter;
   onPaymentMethodChange: (method: PaymentMethodFilter) => void;
+  status: string;
+  onStatusChange: (status: string) => void;
   campaignId: string;
   onCampaignChange: (id: string) => void;
   startDate: string;
@@ -26,8 +27,6 @@ interface DonationFiltersProps {
   endDate: string;
   onEndDateChange: (date: string) => void;
   onClearFilters: () => void;
-  onExportCsv: () => void;
-  isExporting: boolean;
   campaigns: Campaign[];
   isLoadingCampaigns: boolean;
   currentLang?: string;
@@ -40,6 +39,8 @@ export const DonationFilters: React.FC<DonationFiltersProps> = ({
   onSearchChange,
   paymentMethod,
   onPaymentMethodChange,
+  status,
+  onStatusChange,
   campaignId,
   onCampaignChange,
   startDate,
@@ -47,15 +48,13 @@ export const DonationFilters: React.FC<DonationFiltersProps> = ({
   endDate,
   onEndDateChange,
   onClearFilters,
-  onExportCsv,
-  isExporting,
   campaigns = [],
   isLoadingCampaigns = false,
   currentLang = "en",
 }) => {
   const { t } = useTranslation();
 
-  // Tabs with full and short labels for responsive display without scroll
+  // Tabs with full and short labels for responsive display without horizontal scroll
   const tabs: { key: DonationTypeTab; fullLabel: string; shortLabel: string }[] = [
     {
       key: "all",
@@ -79,6 +78,13 @@ export const DonationFilters: React.FC<DonationFiltersProps> = ({
     { label: t("All Methods") || "All Methods", value: "all" },
     { label: t("Online") || "Online", value: "online" },
     { label: t("Offline") || "Offline", value: "offline" },
+  ];
+
+  // Status Options
+  const statusOptions = [
+    { label: t("All Statuses") || "All Statuses", value: "all" },
+    { label: t("Pending Verification") || "Pending Verification", value: "pending" },
+    { label: t("Confirmed / Paid") || "Confirmed / Paid", value: "completed" },
   ];
 
   // Campaign Options
@@ -106,13 +112,20 @@ export const DonationFilters: React.FC<DonationFiltersProps> = ({
   ];
 
   const isGeneralTab = activeTab === "general";
+  const hasActiveFilters = Boolean(
+    search ||
+      paymentMethod !== "all" ||
+      status !== "all" ||
+      (campaignId !== "all" && !isGeneralTab) ||
+      startDate ||
+      endDate
+  );
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-3 sm:p-4 mb-6 min-w-0">
-      {/* Donation Type Tabs & Export CSV */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-100 pb-3 sm:pb-4 mb-4">
-        {/* Tab switch without scroll */}
-        <div className="grid grid-cols-3 w-full sm:w-auto sm:flex bg-gray-100/80 p-1 rounded-lg gap-1">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 min-w-0">
+      {/* Category Tabs Header */}
+      <div className="border-b border-gray-100 pb-3 mb-4 flex items-center justify-between">
+        <div className="inline-flex bg-gray-100/90 p-1 rounded-lg gap-1 max-w-full overflow-x-auto">
           {tabs.map((tab) => {
             const isActive = activeTab === tab.key;
             return (
@@ -120,58 +133,53 @@ export const DonationFilters: React.FC<DonationFiltersProps> = ({
                 key={tab.key}
                 type="button"
                 onClick={() => onTabChange(tab.key)}
-                className={`px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 text-xs font-semibold rounded-md transition-all duration-200 cursor-pointer text-center justify-center flex items-center ${
+                className={`px-3 sm:px-4 py-1.5 text-xs font-bold rounded-md transition-all duration-150 cursor-pointer text-center flex items-center whitespace-nowrap ${
                   isActive
-                    ? "bg-white text-gray-900 shadow-sm"
+                    ? "bg-white text-gray-900 shadow-xs"
                     : "text-gray-500 hover:text-gray-900 hover:bg-white/50"
                 }`}
               >
-                <span className="hidden lg:inline whitespace-nowrap">{tab.fullLabel}</span>
-                <span className="lg:hidden whitespace-nowrap">{tab.shortLabel}</span>
+                <span className="hidden sm:inline">{tab.fullLabel}</span>
+                <span className="sm:hidden">{tab.shortLabel}</span>
               </button>
             );
           })}
         </div>
 
-        {/* Action: Export CSV */}
-        <div className="flex items-center gap-2 self-start sm:self-auto">
-          <Button
-            text={isExporting ? "Exporting..." : t("Export CSV") || "Export CSV"}
-            icon={isExporting ? "" : "mdi:file-download-outline"}
-            onClick={onExportCsv}
-            disabled={isExporting}
-            bgColor="bg-lime-green"
-            hoverBg="before:bg-primaryColor"
-            textColor="text-white"
-            hoverTextColor="group-hover:text-foreground"
-            paddingx="px-3 sm:px-4"
-            paddingy="py-1.5 sm:py-2"
-            rounded="rounded-[6px]"
-          />
-        </div>
+        {hasActiveFilters && (
+          <button
+            type="button"
+            onClick={onClearFilters}
+            className="hidden sm:inline-flex items-center gap-1 text-xs font-semibold text-gray-500 hover:text-red-600 transition-colors cursor-pointer"
+          >
+            <FaTimes className="text-[10px]" />
+            <span>{t("Reset Filters") || "Reset Filters"}</span>
+          </button>
+        )}
       </div>
 
       {/* Filter Controls Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 items-end">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-3 items-end">
         {/* Search Filter */}
-        <div>
-          <label className="block mb-1 text-xs font-medium text-gray-600">
+        <div className="sm:col-span-2 md:col-span-1 xl:col-span-1">
+          <label className="block mb-1 text-xs font-semibold text-gray-900">
             {t("Search Donor") || "Search Donor"}
           </label>
-          <div className="flex items-center gap-2 bg-gray-100/70 px-3 py-2 rounded-md border border-gray-200 focus-within:border-primaryColor transition-colors">
+          <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-lg border border-gray-300 focus-within:border-primaryColor focus-within:ring-1 focus-within:ring-primaryColor/20 transition-all h-[38px]">
             <Icon icon="mdi:magnify" className="text-gray-400 text-lg flex-shrink-0" />
             <input
               type="text"
               placeholder={t("Name, email or phone...") || "Name, email or phone..."}
               value={search}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="w-full bg-transparent outline-none text-xs text-gray-800 placeholder:text-gray-400"
+              className="w-full bg-transparent outline-none text-xs text-gray-800 placeholder:text-gray-400 font-medium"
             />
             {search && (
               <button
                 type="button"
                 onClick={() => onSearchChange("")}
-                className="text-gray-400 hover:text-gray-600 text-xs"
+                className="text-gray-400 hover:text-gray-600 text-xs p-0.5"
+                title="Clear search"
               >
                 <FaTimes />
               </button>
@@ -186,6 +194,16 @@ export const DonationFilters: React.FC<DonationFiltersProps> = ({
             options={paymentMethodOptions}
             value={paymentMethod}
             onChange={(val) => onPaymentMethodChange(val as PaymentMethodFilter)}
+          />
+        </div>
+
+        {/* Status Dropdown */}
+        <div>
+          <Dropdown
+            label={t("Status") || "Status"}
+            options={statusOptions}
+            value={status}
+            onChange={(val) => onStatusChange(String(val))}
           />
         </div>
 
@@ -215,35 +233,36 @@ export const DonationFilters: React.FC<DonationFiltersProps> = ({
 
         {/* Start Date */}
         <div>
-          <DateSelect
+          <DatePicker
             label={t("Start Date") || "Start Date"}
             value={startDate}
             onChange={onStartDateChange}
-            placeholder="Select start date"
+            placeholder="Start Date"
             maxDate={endDate ? new Date(endDate) : undefined}
           />
         </div>
 
-        {/* End Date & Clear Button */}
-        <div className="flex items-end gap-2">
-          <div className="flex-1 min-w-0">
-            <DateSelect
-              label={t("End Date") || "End Date"}
-              value={endDate}
-              onChange={onEndDateChange}
-              placeholder="Select end date"
-              minDate={startDate ? new Date(startDate) : undefined}
-            />
-          </div>
+        {/* End Date */}
+        <div>
+          <DatePicker
+            label={t("End Date") || "End Date"}
+            value={endDate}
+            onChange={onEndDateChange}
+            placeholder="End Date"
+            minDate={startDate ? new Date(startDate) : undefined}
+          />
+        </div>
 
+        {/* Clear Filters Action */}
+        <div>
           <button
             type="button"
             onClick={onClearFilters}
             title="Clear all filters"
-            className="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-900 rounded-md text-xs font-medium transition-colors flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap h-[35px] flex-shrink-0"
+            className="w-full px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900 rounded-lg text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap h-[38px] border border-gray-200 shadow-xs"
           >
-            <FaTimes className="text-[10px]" />
-            <span>{t("Clear") || "Clear"}</span>
+            <FaTimes className="text-[11px] text-gray-500" />
+            <span>{t("Clear Filters") || "Clear Filters"}</span>
           </button>
         </div>
       </div>

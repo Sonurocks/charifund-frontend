@@ -29,8 +29,14 @@ const DataTableWrapper = <T,>({
   data,
   loading = false,
 }: AdminDataTableWrapperProps<T>) => {
-  // Defensive check
-  const safeColumns = Array.isArray(columns) ? columns : [];
+  // Defensive check & stripping of properties that React 19 forwards to DOM elements
+  const safeColumns = Array.isArray(columns)
+    ? columns.map((col: any) => {
+        if (!col || typeof col !== "object") return col;
+        const { allowOverflow, ignoreRowClick, button, ...rest } = col;
+        return rest;
+      })
+    : [];
   const safeData = Array.isArray(data) ? data : [];
   return (
     <AnimatedReveal>

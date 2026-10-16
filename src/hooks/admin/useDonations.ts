@@ -11,6 +11,7 @@ export const useFetchDonations = (params: DonationFilterParams) => {
       params.search,
       params.type,
       params.paymentMethod,
+      params.status,
       params.campaignId,
       params.startDate,
       params.endDate,

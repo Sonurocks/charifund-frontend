@@ -65,6 +65,7 @@ export const Dashboard = () => {
     totalDonationsCount: dashboardData?.totalDonationsCount ?? 0,
     generalDonationsCount: dashboardData?.generalDonationsCount ?? 0,
     campaignDonationsCount: dashboardData?.campaignDonationsCount ?? 0,
+    offlineDonationsCount: dashboardData?.offlineDonationsCount ?? 0,
   };
 
   const cards = [
@@ -125,7 +126,10 @@ export const Dashboard = () => {
     {
       title: "Offline Collections",
       value: `₹${safeDashboardData.offlineFunds.toLocaleString("en-IN")}`,
-      count: "Manual entries",
+      count:
+        safeDashboardData.offlineDonationsCount > 0
+          ? `${safeDashboardData.offlineDonationsCount} verified collections`
+          : "Verified collections",
       icon: <FaDonate size={20} className="text-amber-600" />,
       bg: "bg-amber-50 border-amber-200",
       titleColor: "text-amber-700",

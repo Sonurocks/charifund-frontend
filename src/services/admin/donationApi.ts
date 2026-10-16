@@ -1,5 +1,11 @@
 import api from "./api";
-import { DonationFilterParams, DonationListResponse } from "../../types/admin/donation";
+import {
+  DonationFilterParams,
+  DonationListResponse,
+  CreateOfflineDonationPayload,
+  VerifyOfflineDonationPayload,
+  UnifiedDonation,
+} from "../../types/admin/donation";
 
 /**
  * Builds query string from DonationFilterParams according to API specs
@@ -21,6 +27,9 @@ const buildDonationQueryParams = (params: DonationFilterParams = {}): string => 
   }
   if (params.paymentMethod && params.paymentMethod !== "all") {
     query.set("paymentMethod", params.paymentMethod);
+  }
+  if (params.status && params.status !== "all") {
+    query.set("status", params.status);
   }
   if (params.campaignId && params.campaignId !== "all" && params.campaignId.trim()) {
     query.set("campaignId", params.campaignId.trim());
@@ -44,6 +53,30 @@ export const fetchDonations = async (
 ): Promise<DonationListResponse> => {
   const queryStr = buildDonationQueryParams(params);
   const { data } = await api.get<DonationListResponse>(`/admin/donation${queryStr}`);
+  return data;
+};
+
+/**
+ * Create a direct offline donation by authorized admin
+ */
+export const createOfflineDonation = async (
+  payload: CreateOfflineDonationPayload
+): Promise<{ success?: boolean; message?: string; donation?: UnifiedDonation }> => {
+  const { data } = await api.post("/admin/donation/create-offline", payload);
+  return data;
+};
+
+/**
+ * Verify an offline donation by admin (record received payment, receipt, status)
+ */
+export const verifyOfflineDonation = async (
+  id: string,
+  payload: VerifyOfflineDonationPayload = {}
+): Promise<{ success?: boolean; message?: string; donation?: UnifiedDonation }> => {
+  const { data } = await api.put(
+    `/admin/donation/verify-offline/${encodeURIComponent(id)}`,
+    payload
+  );
   return data;
 };
 

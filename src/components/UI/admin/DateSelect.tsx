@@ -135,6 +135,9 @@ export const DateSelect: React.FC<DateSelectProps> = ({
               onChange(formatDateString(date));
             }
           }}
+          onClickOutside={() => {
+            datePickerRef.current?.setOpen(false);
+          }}
           showYearPicker={showYearPicker}
           minDate={minDate}
           maxDate={maxDate}
@@ -144,10 +147,13 @@ export const DateSelect: React.FC<DateSelectProps> = ({
           autoComplete="off"
           className="w-full bg-transparent outline-none text-xs text-gray-800 placeholder:text-gray-400 cursor-pointer"
           wrapperClassName="w-full flex-1 flex items-center"
-          popperClassName={`z-50 ${showYearPicker ? "year-picker-popper" : ""}`}
+          popperClassName={`!z-[99999] ${showYearPicker ? "year-picker-popper" : ""}`}
           popperPlacement={
             popperPlacement || (showYearPicker ? "bottom-end" : "bottom-start")
           }
+          popperProps={{
+            strategy: "fixed",
+          } as any}
           renderCustomHeader={
             showYearPicker
               ? ({

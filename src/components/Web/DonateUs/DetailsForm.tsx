@@ -3,11 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 import React, { Suspense, lazy } from "react";
 import { useTranslation } from "react-i18next";
-
-
-
-
-import { useSearchParams } from "next/navigation";
+import toast from "react-hot-toast";
 import { CreatePaymentOrderResponse, createPaymentOrder, verifyPaymentOrder, fetchDonationReceipt, CreatePaymentOrderPayload } from "@/src/services/web/client/clientServices";
 import { RootState } from "@/src/store";
 import { loadRazorpayScript } from "@/src/utils/razorpay";
@@ -16,7 +12,10 @@ import { useSelector } from "react-redux";
 import Button from "../../UI/web/Buttons/Button";
 import InputField from "../../UI/web/InputField";
 import ThankYouModal from "./ThankYouModal";
+import OfflineConfirmationModal from "./OfflineConfirmationModal";
+import { getApiErrorMessage } from "@/src/utils/apiHelpers";
 import { DonationReceipt } from "@/src/types/web/receipt";
+import { OfflinePledgeData } from "@/src/types/admin/donation";
 const Formik = lazy(() => import("formik").then((m) => ({ default: m.Formik }))) as typeof import("formik").Formik;
 const Form = lazy(() => import("formik").then((m) => ({ default: m.Form }))) as typeof import("formik").Form;
 const initialValues: DetailsFormValues = {
@@ -29,46 +28,21 @@ const initialValues: DetailsFormValues = {
 };
 const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campaignTitle?: string }) => {
     const { t } = useTranslation();
-    const searchParams = useSearchParams();
     const { method, amount } = useSelector((state: RootState) => state.donation);
     const [paymentStep, setPaymentStep] = React.useState<"idle" | "details" | "creating" | "verifying">("idle");
     const [verifiedReceipt, setVerifiedReceipt] = React.useState<DonationReceipt | null>(null);
+    const [offlinePledgeData, setOfflinePledgeData] = React.useState<OfflinePledgeData | null>(null);
     const isVerifyingRef = React.useRef(false);
 
-    React.useEffect(() => {
-        if (searchParams?.get("preview") === "true" && !verifiedReceipt) {
-            setVerifiedReceipt({
-                receiptNumber: "YUWA-2026-0007-8e307c61",
-                orderId: "order_mock12345",
-                paymentId: "pay_mock12345",
-                amount: 5000,
-                amountInWords: "Five Thousand Rupees Only",
-                paymentDate: new Date().toISOString(),
-                paymentStatus: "PAID",
-                paymentMethod: "UPI",
-                campaignTitle: campaignTitle || "Education Health For Every Child",
-                donor: {
-                    name: "Ashish Kumar",
-                    email: "ashish@example.com",
-                    phone: "+91 98765 43210",
-                    address: "New Delhi, India",
-                    pan: "ABCDE1234F"
-                },
-                isVerified: true
-            });
-        }
-    }, [searchParams, verifiedReceipt, campaignTitle]);
-    
-    const createOrderMutation = useMutation<CreatePaymentOrderResponse, AxiosError<{ message: string }>, CreatePaymentOrderPayload>({
+    const createOrderMutation = useMutation<CreatePaymentOrderResponse, AxiosError<{ message: string; msg?: string }>, CreatePaymentOrderPayload>({
         mutationFn: createPaymentOrder,
-        onError: async (error: any) => {
-            const toastModule = await import("react-hot-toast");
-            toastModule.default.error(error?.response?.data?.msg || error?.response?.data?.message);
+        onError: (error) => {
             setPaymentStep("idle");
+            toast.error(getApiErrorMessage(error, t("Failed to initiate donation order. Please try again.")));
         }
     });
 
-    const verifyMutation = useMutation<any, AxiosError<{ message: string }>, { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }>({
+    const verifyMutation = useMutation<any, AxiosError<{ message: string; msg?: string }>, { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }>({
         mutationFn: verifyPaymentOrder,
     });
 
@@ -77,10 +51,16 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
         { resetForm }: { resetForm: () => void }
     ) => {
         if (paymentStep !== "idle") return; // Prevent duplicate payments
-        const parsedAmount = parseFloat(amount);
-        if (isNaN(parsedAmount) || parsedAmount <= 0) {
-            const toastModule = await import("react-hot-toast");
-            toastModule.default.error(t("Please enter a valid donation amount."));
+        const rawAmount = parseFloat(amount);
+        if (isNaN(rawAmount) || rawAmount <= 0) {
+            toast.error(t("Please enter a valid donation amount."));
+            return;
+        }
+
+        // Limit decimal precision to 2 decimal places for financial integrity
+        const parsedAmount = Math.round(rawAmount * 100) / 100;
+        if (parsedAmount > 100000000) {
+            toast.error(t("Donation amount exceeds the maximum allowed limit."));
             return;
         }
 
@@ -89,12 +69,12 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
         const orderPayload: CreatePaymentOrderPayload = {
             amount: parsedAmount,
             paymentMethod: method as "online" | "offline",
-            firstName: values.firstName,
-            lastName: values.lastName,
-            email: values.email,
-            phone: values.phone,
-            address: values.address,
-            message: values.message,
+            firstName: values.firstName.trim(),
+            lastName: values.lastName.trim(),
+            email: values.email.trim(),
+            phone: values.phone.trim(),
+            address: values.address.trim(),
+            message: values.message?.trim(),
         };
 
         if (campaignId) {
@@ -106,25 +86,50 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
         if (method === "offline") {
             try {
                 const response = await createOrderMutation.mutateAsync(orderPayload);
-                const toastModule = await import("react-hot-toast");
-                toastModule.default.success(response?.msg || response?.message || t("Donation details submitted successfully."));
+                const donationRefId =
+                    response?.donationId ||
+                    response?.orderId ||
+                    (response as any)?.id ||
+                    (response as any)?._id ||
+                    `OFFLINE-${Date.now()}`;
+                
+                toast.success(
+                    response?.msg || response?.message || t("Donation details submitted successfully.")
+                );
+
+                setOfflinePledgeData({
+                    donationId: donationRefId,
+                    amount: response?.amount || parsedAmount,
+                    status: response?.status || "pending",
+                    paymentMethod: "offline",
+                    donorName: `${values.firstName} ${values.lastName}`.trim(),
+                    donorEmail: values.email.trim(),
+                    donorPhone: values.phone.trim(),
+                    donorAddress: values.address.trim(),
+                    campaignTitle: campaignTitle || t("General Welfare Fund"),
+                    message: values.message?.trim(),
+                    createdAt: new Date().toISOString(),
+                });
+
                 resetForm();
-            } catch (error) {
-                console.error("Offline Donated Failed:", error);
+            } catch (error: any) {
+                console.error("Offline Donation Failed:", error);
+                toast.error(
+                    getApiErrorMessage(error, t("Failed to register offline donation. Please try again."))
+                );
             } finally {
                 setPaymentStep("idle");
             }
             return;
         }
 
-        // 3. Online Razorpay flow
+        // Online Razorpay flow
         setPaymentStep("creating");
         
         // Load razorpay script
         const isLoaded = await loadRazorpayScript();
         if (!isLoaded) {
-            const toastModule = await import("react-hot-toast");
-            toastModule.default.error(t("Razorpay SDK failed to load. Check your connection."));
+            toast.error(t("Razorpay SDK failed to load. Check your connection."));
             setPaymentStep("idle");
             return;
         }
@@ -150,8 +155,7 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
             const rzpKey = backendKey || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
             if (!rzpKey) {
                 console.error("Critical Error: NEXT_PUBLIC_RAZORPAY_KEY_ID is missing.");
-                const toastModule = await import("react-hot-toast");
-                toastModule.default.error(t("Payment gateway is temporarily unavailable. Please contact support."));
+                toast.error(t("Payment gateway is temporarily unavailable. Please contact support."));
                 setPaymentStep("idle");
                 return;
             }
@@ -173,8 +177,7 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
                             razorpay_payment_id: response.razorpay_payment_id,
                             razorpay_signature: response.razorpay_signature
                         });
-                        const toastModule = await import("react-hot-toast");
-                        toastModule.default.success(verified?.msg || verified?.message || t("Payment Verification Success"));
+                        toast.success(verified?.msg || verified?.message || t("Payment Verification Success"));
                         resetForm();
 
                         // Extract receipt payload from verified response if present
@@ -227,8 +230,7 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
 
                         setVerifiedReceipt(receiptObj);
                     } catch (e: any) {
-                        const toastModule = await import("react-hot-toast");
-                        toastModule.default.error(e?.response?.data?.msg || e?.response?.data?.message || t("Payment Verification Failed"));
+                        toast.error(e?.response?.data?.msg || e?.response?.data?.message || t("Payment Verification Failed"));
                     } finally {
                         isVerifyingRef.current = false;
                         setPaymentStep("idle");
@@ -248,12 +250,12 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
                 }
             };
 
+
             const rzp = new (window as any).Razorpay(options);
             
-            rzp.on("payment.failed", async function (response: any) {
-                const toastModule = await import("react-hot-toast");
+            rzp.on("payment.failed", function (response: any) {
                 const errorMsg = response?.error?.description || response?.error?.message || t("Payment Failed. Your payment could not be completed.");
-                toastModule.default.error(errorMsg);
+                toast.error(errorMsg);
                 setPaymentStep("idle");
             });
 
@@ -308,9 +310,13 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
                             {paymentStep === "details"
                               ? t("Saving Details...") 
                               : paymentStep === "creating"
-                              ? t("Creating Order...")
+                              ? method === "offline"
+                                ? t("Submitting Request...")
+                                : t("Creating Order...")
                               : paymentStep === "verifying"
                               ? t("Verifying Payment...")
+                              : method === "offline"
+                              ? t("Submit Offline Donation")
                               : t("Donate Now")}
                         </Button>
                     </Form>
@@ -326,6 +332,15 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
                 receipt={verifiedReceipt}
+            />
+
+            <OfflineConfirmationModal
+                isOpen={!!offlinePledgeData}
+                onClose={() => {
+                    setOfflinePledgeData(null);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                pledgeData={offlinePledgeData}
             />
         </div>
     );

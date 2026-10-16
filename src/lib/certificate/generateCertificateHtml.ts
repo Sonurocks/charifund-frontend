@@ -19,8 +19,9 @@ function getLogoBase64(): string {
   return "";
 }
 
-function escapeHtml(str: string): string {
-  return str
+function escapeHtml(str: any): string {
+  if (str === null || str === undefined) return "";
+  return String(str)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
@@ -83,8 +84,17 @@ export function generateCertificateHtml(receipt: DonationReceipt): string {
   const donorAddress = escapeHtml(receipt.donor?.address || "—");
   const donorPhone = escapeHtml(receipt.donor?.phone || "—");
   const donorPan = escapeHtml(receipt.donor?.pan || "—");
+
+  const isOffline =
+    typeof receipt.paymentMethod === "string" &&
+    (receipt.paymentMethod.toLowerCase().includes("offline") ||
+      receipt.paymentMethod.toLowerCase().includes("cash") ||
+      receipt.paymentMethod.toLowerCase().includes("cheque") ||
+      receipt.paymentMethod.toLowerCase().includes("bank"));
+
+  const defaultId = isOffline ? "Direct Offline" : "ONLINE";
   const paymentIdentifier = escapeHtml(
-    receipt.paymentId || receipt.orderId || "ONLINE"
+    receipt.paymentId || receipt.orderId || defaultId
   );
   const receiptNum = escapeHtml(receipt.receiptNumber || "PENDING");
   const campaignTitle = escapeHtml(

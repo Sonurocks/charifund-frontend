@@ -1,5 +1,5 @@
 
-import { DetailsFormValues, SendMsgFormValues, VolunteerValues } from "@/src/utils/validations/FormValidation";
+import { SendMsgFormValues, VolunteerValues } from "@/src/utils/validations/FormValidation";
 
 //  Get all banners 
 export const fetchAllBanners = async (page: number = 1, limit: number = 10, pageName?: string) => {
@@ -178,6 +178,9 @@ export interface CreatePaymentOrderPayload {
 
 export interface CreatePaymentOrderResponse {
   orderId?: string; 
+  donationId?: string;
+  status?: string;
+  paymentMethod?: string;
   key?: string;
   amount?: number;
   currency?: string;
