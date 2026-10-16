@@ -3,6 +3,7 @@
 import React from "react";
 import Modal from "@/src/components/UI/web/Modal";
 import { UnifiedDonation } from "@/src/types/admin/donation";
+import { isDonationConfirmed } from "./donationColumns";
 import { useTranslation } from "react-i18next";
 import DonationStatusBadge from "@/src/components/UI/DonationStatusBadge";
 import {
@@ -71,20 +72,9 @@ export const DonationDetailModal: React.FC<DonationDetailModalProps> = ({
     return donation.campaign?.name || "—";
   };
 
-  const statusLower = (donation.status || "").toLowerCase();
-  const isConfirmed =
-    statusLower === "completed" ||
-    statusLower === "success" ||
-    statusLower === "paid" ||
-    statusLower === "verified";
-
+  const isConfirmed = isDonationConfirmed(donation);
   const isOffline = donation.paymentMethod?.toLowerCase() === "offline";
-  const isPendingOffline =
-    isOffline &&
-    (statusLower === "offline" ||
-      statusLower === "pending" ||
-      statusLower === "unverified" ||
-      statusLower === "pledged");
+  const isPendingOffline = isOffline && !isConfirmed;
 
   const formatDate = (dateStr?: string): string => {
     if (!dateStr) return "—";
@@ -184,6 +174,7 @@ export const DonationDetailModal: React.FC<DonationDetailModalProps> = ({
               <DonationStatusBadge
                 status={donation.status}
                 paymentMethod={donation.paymentMethod}
+                receiptNumber={donation.receiptNumber}
                 context="admin"
                 interactive={true}
                 align="left"

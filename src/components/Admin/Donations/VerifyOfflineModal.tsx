@@ -72,12 +72,14 @@ export const VerifyOfflineModal: React.FC<VerifyOfflineModalProps> = ({
     }
   }, [donation]);
 
-  const statusLower = (donation?.status || "").toLowerCase();
+  const statusLower = (donation?.status || "").toLowerCase().trim();
+  const hasReceipt = Boolean(donation?.receiptNumber && String(donation.receiptNumber).trim());
   const isAlreadyConfirmed =
     statusLower === "completed" ||
     statusLower === "success" ||
     statusLower === "paid" ||
-    statusLower === "verified";
+    statusLower === "verified" ||
+    hasReceipt;
 
   const verifyMutation = useMutation({
     mutationFn: async (payload: VerifyOfflineDonationPayload) => {
@@ -172,7 +174,8 @@ export const VerifyOfflineModal: React.FC<VerifyOfflineModalProps> = ({
       referenceNumber: referenceNumber.trim() || undefined,
       paymentSubMethod,
       notes: notes.trim() || undefined,
-    });
+      message: notes.trim() || undefined,
+    } as any);
   };
 
   const modalTitle =
@@ -290,7 +293,7 @@ export const VerifyOfflineModal: React.FC<VerifyOfflineModalProps> = ({
               {t("Ref ID")}: <span className="font-mono font-bold text-gray-900">{donation.id}</span>
             </span>
             <span className={`font-bold ${isAlreadyConfirmed ? "text-emerald-700" : "text-amber-600"}`}>
-              {isAlreadyConfirmed ? t("Paid") : t("Offline")}
+              {isAlreadyConfirmed ? t("Verified") : t("Unverified")}
             </span>
           </div>
         </div>

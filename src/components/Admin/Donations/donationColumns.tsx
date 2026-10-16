@@ -11,6 +11,22 @@ interface ColumnOptions {
   onDownloadReceipt?: (row: UnifiedDonation) => void;
 }
 
+export const isDonationConfirmed = (row: UnifiedDonation): boolean => {
+  const statusLower = (row.status || "").toLowerCase().trim();
+  if (
+    statusLower === "completed" ||
+    statusLower === "success" ||
+    statusLower === "paid" ||
+    statusLower === "verified"
+  ) {
+    return true;
+  }
+  if (row.receiptNumber && String(row.receiptNumber).trim()) {
+    return true;
+  }
+  return false;
+};
+
 export const getDonationColumns = ({
   lang = "en",
   currentPage = 1,
@@ -23,7 +39,7 @@ export const getDonationColumns = ({
     name: "SNo",
     cell: (_row: UnifiedDonation, index: number) =>
       (currentPage - 1) * limit + index + 1,
-    width: "50px",
+    width: "55px",
   },
   {
     name: "Donor Name",
@@ -34,17 +50,18 @@ export const getDonationColumns = ({
     },
     cell: (row: UnifiedDonation) => {
       if (row.name?.trim()) {
-        return <span className="font-semibold text-gray-900">{row.name.trim()}</span>;
+        return <span className="font-semibold text-gray-900 truncate block max-w-full">{row.name.trim()}</span>;
       }
       const full = `${row.firstName || ""} ${row.lastName || ""}`.trim();
       const name = full || row.donorName;
       if (name) {
-        return <span className="font-semibold text-gray-900">{name}</span>;
+        return <span className="font-semibold text-gray-900 truncate block max-w-full">{name}</span>;
       }
       return <span className="text-gray-400">-</span>;
     },
     sortable: true,
-    width: "130px",
+    minWidth: "140px",
+    grow: 1.2,
   },
   {
     name: "Email",
@@ -57,7 +74,8 @@ export const getDonationColumns = ({
       ) : (
         <span className="text-gray-400">-</span>
       ),
-    width: "140px",
+    minWidth: "150px",
+    grow: 1.2,
   },
   {
     name: "Phone",
@@ -68,7 +86,7 @@ export const getDonationColumns = ({
       ) : (
         <span className="text-gray-400">-</span>
       ),
-    width: "110px",
+    minWidth: "115px",
   },
   {
     name: "Type",
@@ -86,7 +104,7 @@ export const getDonationColumns = ({
         </span>
       );
     },
-    width: "85px",
+    minWidth: "90px",
   },
   {
     name: "Campaign",
@@ -144,7 +162,8 @@ export const getDonationColumns = ({
       );
     },
     sortable: true,
-    width: "130px",
+    minWidth: "150px",
+    grow: 1.2,
   },
   {
     name: "Method",
@@ -160,7 +179,7 @@ export const getDonationColumns = ({
         </span>
       );
     },
-    width: "95px",
+    minWidth: "95px",
   },
   {
     name: "Amount",
@@ -171,28 +190,25 @@ export const getDonationColumns = ({
       </span>
     ),
     sortable: true,
-    width: "95px",
+    minWidth: "95px",
   },
   {
     name: "Status",
     cell: (row: UnifiedDonation) => {
-      const statusLower = (row.status || "").toLowerCase();
-      const isConfirmed =
-        statusLower === "completed" ||
-        statusLower === "success" ||
-        statusLower === "paid" ||
-        statusLower === "verified";
+      const isConfirmed = isDonationConfirmed(row);
+      const isOffline = row.paymentMethod?.toLowerCase() === "offline";
+      const statusLower = (row.status || "").toLowerCase().trim();
       const isFailed =
         statusLower === "failed" ||
         statusLower === "rejected" ||
         statusLower === "cancelled";
 
       let badgeClasses = "bg-[#fef3c7] text-[#92400e] border-[#fcd34d]";
-      let displayLabel = "Offline";
+      let displayLabel = isOffline ? "Unverified" : "Pending";
 
       if (isConfirmed) {
         badgeClasses = "bg-[#ecfdf5] text-[#065f46] border-[#a7f3d0]";
-        displayLabel = "Paid";
+        displayLabel = isOffline ? "Verified" : "Paid";
       } else if (isFailed) {
         badgeClasses = "bg-[#fef2f2] text-[#991b1b] border-[#fecaca]";
         displayLabel = "Failed";
@@ -206,7 +222,7 @@ export const getDonationColumns = ({
         </span>
       );
     },
-    width: "115px",
+    minWidth: "115px",
   },
   {
     name: "Date",
@@ -227,24 +243,14 @@ export const getDonationColumns = ({
       }
     },
     sortable: true,
-    width: "100px",
+    minWidth: "105px",
   },
   {
     name: "Actions",
     cell: (row: UnifiedDonation) => {
-      const statusLower = (row.status || "").toLowerCase();
+      const isConfirmed = isDonationConfirmed(row);
       const isOffline = row.paymentMethod?.toLowerCase() === "offline";
-      const isConfirmed =
-        statusLower === "completed" ||
-        statusLower === "success" ||
-        statusLower === "paid" ||
-        statusLower === "verified";
-      const isPendingOffline =
-        isOffline &&
-        (statusLower === "offline" ||
-          statusLower === "pending" ||
-          statusLower === "unverified" ||
-          statusLower === "pledged");
+      const isPendingOffline = isOffline && !isConfirmed;
 
       return (
         <div className="flex items-center gap-1.5 py-1">
@@ -261,7 +267,7 @@ export const getDonationColumns = ({
             </button>
           )}
 
-          {/* Verify Offline Donation Action - Rendered for pending offline donations */}
+          {/* Verify Offline Action - Only for unverified offline donations */}
           {isPendingOffline && onVerifyOffline && (
             <button
               type="button"
@@ -275,7 +281,7 @@ export const getDonationColumns = ({
             </button>
           )}
 
-          {/* Download Receipt Action - ONLY for confirmed / completed donations */}
+          {/* Download Receipt Action - For confirmed / verified donations */}
           {isConfirmed && onDownloadReceipt && (
             <button
               type="button"
@@ -291,7 +297,7 @@ export const getDonationColumns = ({
         </div>
       );
     },
-    width: "130px",
+    minWidth: "135px",
   },
 ];
 
