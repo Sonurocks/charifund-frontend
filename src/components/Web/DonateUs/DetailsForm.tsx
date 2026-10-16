@@ -24,6 +24,7 @@ const initialValues: DetailsFormValues = {
     email: "",
     phone: "",
     address: "",
+    pan: "",
     message: "",
 };
 const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campaignTitle?: string }) => {
@@ -66,6 +67,8 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
 
         setPaymentStep("creating");
 
+        const cleanPan = values.pan?.trim() ? values.pan.trim().toUpperCase() : undefined;
+
         const orderPayload: CreatePaymentOrderPayload = {
             amount: parsedAmount,
             paymentMethod: method as "online" | "offline",
@@ -74,6 +77,7 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
             email: values.email.trim(),
             phone: values.phone.trim(),
             address: values.address.trim(),
+            pan: cleanPan,
             message: values.message?.trim(),
         };
 
@@ -106,6 +110,7 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
                     donorEmail: values.email.trim(),
                     donorPhone: values.phone.trim(),
                     donorAddress: values.address.trim(),
+                    donorPan: cleanPan,
                     campaignTitle: campaignTitle || t("General Welfare Fund"),
                     message: values.message?.trim(),
                     createdAt: new Date().toISOString(),
@@ -221,7 +226,7 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
                                 email: receiptPayload?.donorEmail || receiptPayload?.donor?.email || values.email,
                                 phone: receiptPayload?.donorPhone || receiptPayload?.donor?.phone || values.phone,
                                 address: receiptPayload?.donorAddress || receiptPayload?.donor?.address || values.address,
-                                pan: receiptPayload?.donor?.pan,
+                                pan: receiptPayload?.donor?.pan || receiptPayload?.donorPan || cleanPan,
                             },
                             organization: receiptPayload?.organization,
                             taxNote: receiptPayload?.organization?.taxExemptNote || receiptPayload?.taxNote,
@@ -296,6 +301,11 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
                             <InputField name="phone" placeholder={t("Your Number")} icon="mdi:phone" />
                         </div>
                         <InputField name="address" placeholder={t("Your Address")} icon="mdi:map-marker" />
+                        <InputField
+                            name="pan"
+                            placeholder={t("PAN Number (Optional, for 80G tax exemption)")}
+                            icon="mdi:card-account-details-outline"
+                        />
                         <InputField
                             name="message"
                             placeholder={t("Your message...")}

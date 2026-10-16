@@ -29,6 +29,7 @@ interface FormValues {
   email: string;
   phone: string;
   address: string;
+  pan: string;
   amount: number | "";
   type: "general" | "campaign";
   campaignId: string;
@@ -47,6 +48,14 @@ const validationSchema = Yup.object().shape({
     .matches(/^[0-9+\s-]{8,16}$/, "Enter a valid phone number (min 8 digits)")
     .required("Phone number is required"),
   address: Yup.string().trim(),
+  pan: Yup.string()
+    .trim()
+    .test(
+      "valid-pan",
+      "Please enter a valid 10-character PAN (e.g. ABCDE1234F) or leave blank",
+      (val) => !val || /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/i.test(val)
+    )
+    .notRequired(),
   amount: Yup.number()
     .typeError("Amount must be a number")
     .positive("Amount must be greater than 0")
@@ -92,6 +101,7 @@ export const CreateOfflineDonationModal: React.FC<CreateOfflineDonationModalProp
     email: "",
     phone: "",
     address: "",
+    pan: "",
     amount: "",
     type: "general",
     campaignId: "",
@@ -182,6 +192,7 @@ export const CreateOfflineDonationModal: React.FC<CreateOfflineDonationModalProp
             email: values.email.trim(),
             phone: values.phone.trim(),
             address: values.address.trim() || undefined,
+            pan: values.pan.trim() ? values.pan.trim().toUpperCase() : undefined,
             amount: sanitizedAmount,
             type: values.type,
             campaignId: values.type === "campaign" ? values.campaignId : undefined,
@@ -342,16 +353,29 @@ export const CreateOfflineDonationModal: React.FC<CreateOfflineDonationModalProp
               </div>
             </div>
 
-            {/* Address with CustomInput */}
-            <div>
-              <CustomInput
-                label={`${t("Address")} (${t("Optional")})`}
-                name="address"
-                placeholder="City, State, Postal Code"
-                value={values.address}
-                onChange={(e) => setFieldValue("address", e.target.value)}
-                icon="mdi:map-marker-outline"
-              />
+            {/* Address & Optional PAN */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
+              <div>
+                <CustomInput
+                  label={`${t("Address")} (${t("Optional")})`}
+                  name="address"
+                  placeholder="City, State, Postal Code"
+                  value={values.address}
+                  onChange={(e) => setFieldValue("address", e.target.value)}
+                  icon="mdi:map-marker-outline"
+                />
+              </div>
+              <div>
+                <CustomInput
+                  label={`${t("PAN Number")} (${t("Optional")})`}
+                  name="pan"
+                  placeholder="e.g. ABCDE1234F"
+                  value={values.pan}
+                  onChange={(e) => setFieldValue("pan", e.target.value.toUpperCase())}
+                  error={touched.pan && errors.pan ? errors.pan : ""}
+                  icon="mdi:card-account-details-outline"
+                />
+              </div>
             </div>
 
             {/* Amount & Mode with CustomInput and Dropdown */}

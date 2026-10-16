@@ -32,6 +32,7 @@ export interface UnifiedDonation {
   email?: string;
   phone?: string;
   address?: string;
+  pan?: string;
   message?: string;
   amount: number;
   receivedAmount?: number;
@@ -86,6 +87,7 @@ export interface CreateOfflineDonationPayload {
   email: string;
   phone: string;
   address?: string;
+  pan?: string;
   amount: number;
   type: "general" | "campaign";
   campaignId?: string;
@@ -102,6 +104,7 @@ export interface VerifyOfflineDonationPayload {
   receivedDate?: string;
   referenceNumber?: string;
   paymentSubMethod?: string;
+  pan?: string;
   notes?: string;
 }
 
@@ -114,6 +117,7 @@ export interface OfflinePledgeData {
   donorEmail?: string;
   donorPhone?: string;
   donorAddress?: string;
+  donorPan?: string;
   campaignTitle?: string;
   message?: string;
   createdAt?: string;

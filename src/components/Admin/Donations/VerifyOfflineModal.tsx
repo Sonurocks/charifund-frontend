@@ -269,6 +269,13 @@ export const VerifyOfflineModal: React.FC<VerifyOfflineModalProps> = ({
                   </div>
                 )}
 
+                {donation.pan && (
+                  <div className="flex items-center gap-2 text-gray-700">
+                    <span className="font-bold text-[10px] text-gray-500 uppercase tracking-wider">PAN:</span>
+                    <span className="font-mono font-bold text-gray-900 text-xs bg-gray-100 px-1.5 py-0.5 rounded">{donation.pan}</span>
+                  </div>
+                )}
+
                 <div className="flex items-center gap-2 text-gray-700 pt-1 border-t border-gray-100">
                   <FaBullhorn className="text-[#00715D] text-xs shrink-0" />
                   <span className="font-semibold text-gray-800 truncate" title={campaignTitle}>

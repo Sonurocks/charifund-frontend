@@ -50,6 +50,23 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
       return receipt.receiptNumber.slice(-4);
     }, [receipt.receiptNumber]);
 
+    const isOffline = React.useMemo(() => {
+      const method = String(receipt.paymentMethod || "").toLowerCase();
+      return (
+        method.includes("offline") ||
+        method.includes("cash") ||
+        method.includes("cheque") ||
+        method.includes("bank") ||
+        method.includes("neft") ||
+        method.includes("rtgs") ||
+        method.includes("dd")
+      );
+    }, [receipt.paymentMethod]);
+
+    const modeTag = isOffline ? "(Offline Mode)" : "(Online Mode)";
+    const paymentId = receipt.paymentId || receipt.orderId || (isOffline ? "Direct Offline" : "ONLINE");
+    const hasPan = Boolean(receipt.donor?.pan && String(receipt.donor.pan).trim() && String(receipt.donor.pan).trim() !== "—");
+
     const org: Partial<ReceiptOrgInfo> = receipt.organization || {};
     const orgName = org.name || "YOUTH UTIL WELFARE ASSOCIATION";
     const headOffice =
@@ -254,7 +271,7 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
                       Cash / Cheque / UPI / NEFT No. :
                     </span>
                     <span className="flex-1 font-mono font-bold text-[11px] text-[#003366] px-1.5 border-b border-dotted border-gray-600 pb-1 truncate leading-normal min-w-0">
-                      {receipt.paymentId || receipt.orderId || "ONLINE"}
+                      {paymentId} {modeTag}
                     </span>
                     <span
                       className="font-bold text-gray-800 shrink-0 text-[11px] ml-1 italic pb-1"
@@ -279,17 +296,19 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
                     </span>
                   </div>
 
-                  <div className="flex items-end w-full min-w-0">
-                    <span
-                      className="font-bold text-gray-800 shrink-0 italic pb-1"
-                      style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", serif' }}
-                    >
-                      Donor PAN (if Applicable) :
-                    </span>
-                    <span className="flex-1 font-mono font-bold text-[12px] text-gray-800 px-2 border-b border-dotted border-gray-600 pb-1 leading-normal truncate min-w-0">
-                      {receipt.donor?.pan || "—"}
-                    </span>
-                  </div>
+                  {hasPan && (
+                    <div className="flex items-end w-full min-w-0">
+                      <span
+                        className="font-bold text-gray-800 shrink-0 italic pb-1"
+                        style={{ fontFamily: 'Georgia, Cambria, "Times New Roman", serif' }}
+                      >
+                        Donor PAN (if Applicable) :
+                      </span>
+                      <span className="flex-1 font-mono font-bold text-[12px] text-gray-800 px-2 border-b border-dotted border-gray-600 pb-1 leading-normal truncate min-w-0">
+                        {receipt.donor?.pan}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 <div

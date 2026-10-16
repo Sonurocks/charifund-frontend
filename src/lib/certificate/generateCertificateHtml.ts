@@ -83,19 +83,25 @@ export function generateCertificateHtml(receipt: DonationReceipt): string {
   const donorName = escapeHtml(receipt.donor?.name || "Generous Donor");
   const donorAddress = escapeHtml(receipt.donor?.address || "—");
   const donorPhone = escapeHtml(receipt.donor?.phone || "—");
-  const donorPan = escapeHtml(receipt.donor?.pan || "—");
+  const rawPan = receipt.donor?.pan && String(receipt.donor.pan).trim() !== "" && String(receipt.donor.pan).trim() !== "—"
+    ? String(receipt.donor.pan).trim()
+    : null;
+  const donorPan = rawPan ? escapeHtml(rawPan) : null;
 
   const isOffline =
     typeof receipt.paymentMethod === "string" &&
     (receipt.paymentMethod.toLowerCase().includes("offline") ||
       receipt.paymentMethod.toLowerCase().includes("cash") ||
       receipt.paymentMethod.toLowerCase().includes("cheque") ||
-      receipt.paymentMethod.toLowerCase().includes("bank"));
+      receipt.paymentMethod.toLowerCase().includes("bank") ||
+      receipt.paymentMethod.toLowerCase().includes("neft") ||
+      receipt.paymentMethod.toLowerCase().includes("rtgs") ||
+      receipt.paymentMethod.toLowerCase().includes("dd"));
 
+  const modeTag = isOffline ? " (Offline Mode)" : " (Online Mode)";
   const defaultId = isOffline ? "Direct Offline" : "ONLINE";
-  const paymentIdentifier = escapeHtml(
-    receipt.paymentId || receipt.orderId || defaultId
-  );
+  const rawId = receipt.paymentId || receipt.orderId || defaultId;
+  const paymentIdentifier = escapeHtml(`${rawId}${modeTag}`);
   const receiptNum = escapeHtml(receipt.receiptNumber || "PENDING");
   const campaignTitle = escapeHtml(
     receipt.campaignTitle || "General Welfare Fund"
@@ -618,10 +624,11 @@ export function generateCertificateHtml(receipt: DonationReceipt): string {
                 <span class="field-label">On account of / Purpose of Donation :</span>
                 <span class="dotted-line campaign-val">${campaignTitle}</span>
               </div>
+              ${donorPan ? `
               <div class="form-row">
                 <span class="field-label">Donor PAN (if Applicable) :</span>
                 <span class="dotted-line pan-val">${donorPan}</span>
-              </div>
+              </div>` : ''}
             </div>
 
             <div class="currency-box">

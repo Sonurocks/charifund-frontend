@@ -273,10 +273,10 @@ export const DonationsTable: React.FC<DonationsTableProps> = ({
                       type="button"
                       onClick={() => onDownloadReceipt(donation)}
                       className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-[#0284c7] text-white text-[11px] font-bold shadow-xs cursor-pointer"
-                      title="Download receipt"
+                      title="Download certificate"
                     >
                       <FaFileDownload className="w-2.5 h-2.5 text-white" />
-                      <span>Receipt</span>
+                      <span>Certificate</span>
                     </button>
                   )}
                 </div>
