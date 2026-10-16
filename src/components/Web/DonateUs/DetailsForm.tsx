@@ -305,6 +305,7 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
                             name="pan"
                             placeholder={t("PAN Number (Optional, for 80G tax exemption)")}
                             icon="mdi:card-account-details-outline"
+                            uppercase
                         />
                         <InputField
                             name="message"

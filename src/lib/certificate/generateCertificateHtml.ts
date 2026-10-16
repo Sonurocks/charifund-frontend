@@ -98,7 +98,7 @@ export function generateCertificateHtml(receipt: DonationReceipt): string {
       receipt.paymentMethod.toLowerCase().includes("rtgs") ||
       receipt.paymentMethod.toLowerCase().includes("dd"));
 
-  const modeTag = isOffline ? " (Offline Mode)" : " (Online Mode)";
+  const modeTag = isOffline ? " (Offline)" : " (Online)";
   const defaultId = isOffline ? "Direct Offline" : "ONLINE";
   const rawId = receipt.paymentId || receipt.orderId || defaultId;
   const paymentIdentifier = escapeHtml(`${rawId}${modeTag}`);
@@ -406,7 +406,8 @@ export function generateCertificateHtml(receipt: DonationReceipt): string {
     }
     .payment-id-val {
       font-family: monospace;
-      font-size: 11px;
+      font-size: 10px;
+      letter-spacing: -0.2px;
       font-weight: 700;
       color: #003366;
     }

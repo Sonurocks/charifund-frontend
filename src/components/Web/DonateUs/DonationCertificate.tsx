@@ -63,7 +63,7 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
       );
     }, [receipt.paymentMethod]);
 
-    const modeTag = isOffline ? "(Offline Mode)" : "(Online Mode)";
+    const modeTag = isOffline ? "(Offline)" : "(Online)";
     const paymentId = receipt.paymentId || receipt.orderId || (isOffline ? "Direct Offline" : "ONLINE");
     const hasPan = Boolean(receipt.donor?.pan && String(receipt.donor.pan).trim() && String(receipt.donor.pan).trim() !== "—");
 
@@ -270,7 +270,7 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
                     >
                       Cash / Cheque / UPI / NEFT No. :
                     </span>
-                    <span className="flex-1 font-mono font-bold text-[11px] text-[#003366] px-1.5 border-b border-dotted border-gray-600 pb-1 truncate leading-normal min-w-0">
+                    <span className="flex-1 font-mono font-bold text-[10px] tracking-tight text-[#003366] px-1.5 border-b border-dotted border-gray-600 pb-1 truncate leading-normal min-w-0" title={`${paymentId} ${modeTag}`}>
                       {paymentId} {modeTag}
                     </span>
                     <span
