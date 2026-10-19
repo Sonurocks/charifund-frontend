@@ -13,21 +13,23 @@ const nunito = Nunito({
   variable: "--font-nunito",
 });
 
+import AdminLayoutClient from "./AdminLayoutClient";
+
 export const metadata: Metadata = {
-  title: "charifund-frontend",
-  description: "development environment for charifund",
+  title: "charifund-frontend | Admin",
+  description: "development environment for charifund admin panel",
 };
 
-export default function RootLayout({
+export default function AdminRootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
     <section
-      className={`${caveat.variable} ${nunito.variable} antialiased min-h-screen flex flex-col`}
+      className={`${caveat.variable} ${nunito.variable} antialiased min-h-screen bg-gray-50`}
     >
-      <main>{children}</main>
-    </section >
+      <AdminLayoutClient>{children}</AdminLayoutClient>
+    </section>
   );
 }

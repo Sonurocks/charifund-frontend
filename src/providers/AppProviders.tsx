@@ -33,12 +33,15 @@ export default function AppProviders({ children }: { children: ReactNode }) {
   ];
   const hideHeaderFooter = noHeaderFooterRoutes.includes(pathname);
 
-  // Show loader on route change
+  const isAdminRoute = pathname.startsWith("/admin");
+
+  // Show loader on route change (skip for admin routes to keep sidebar persistent)
   useEffect(() => {
+    if (isAdminRoute) return;
     setLoading(true);
     const timer = setTimeout(() => setLoading(false), 400);
     return () => clearTimeout(timer);
-  }, [pathname]);
+  }, [pathname, isAdminRoute]);
 
   const showLayout = !token;
 
@@ -65,12 +68,13 @@ export default function AppProviders({ children }: { children: ReactNode }) {
                     )}
                   </>
                 ) : (
-                  loading ? <Loader /> : children
+                  children
                 )}
                 <CustomCursor />
                 <GlobalActionCTA />
                 <Toaster
                   position="top-center"
+                  containerStyle={{ zIndex: 99999999 }}
                   toastOptions={{ duration: 3000 }}
                 />
               </QueryClientProvider>

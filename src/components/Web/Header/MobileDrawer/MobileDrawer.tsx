@@ -7,6 +7,7 @@ import { logo } from "@/public/assets";
 import { MobileDrawerProps } from "@/src/types/web/navbar";
 import LanguageSwitcher from "@/src/components/UI/web/LanguageSwitcher";
 import Button from "@/src/components/UI/web/Buttons/Button";
+import Link from "next/link";
 
 
 export const MobileDrawer = ({
@@ -65,9 +66,10 @@ export const MobileDrawer = ({
        
         <LanguageSwitcher rounded="rounded-md" />
         <div className="w-fit">
-
-        <Button text="Donate Now" rounded="rounded-md" />
-        </ div>
+          <Link href="/donate-us" onClick={() => setMobileMenuOpen(false)}>
+            <Button text="Donate Now" rounded="rounded-md" />
+          </Link>
+        </div>
       </div>
       <div className="flex  items-center justify-center space-x-4 mt-10 ">
 

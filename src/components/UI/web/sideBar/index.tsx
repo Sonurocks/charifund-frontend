@@ -1,6 +1,7 @@
 'use client'
 import Recent from "./Recent";
 import SearchBox from "./SearchBox";
+import TagList from "./TagList";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useTranslation } from 'react-i18next';
@@ -28,10 +29,22 @@ export default function Sidebar({pathName,as='Recent Cause',bgColor='bg-white'}:
 
     const {data}=routeName==='donate-us'?useFetchAllCampaigns(1, 4,debounceValue): routeName === 'campaign'? useFetchAllCampaigns(1,4,debounceValue):routeName==='events'?useFetchAllEvent(1,4,debounceValue):useFetchAllBlogs(1, 4,debounceValue);
     
+    const tags = [
+      "Child Education & Welfare",
+      "Women Empowerment",
+      "Skill Development & Livelihood",
+      "Health & Blood Donation",
+      "Environment Protection",
+      "Community Awareness & Support",
+      "Food & Nutrition Support",
+      "Volunteer Activities & Events"
+    ];
+
     return(
         <div className="space-y-6">
             <SearchBox bgColor={bgColor} setSearchtext={setSearchtext} searchText={searchText}/>
             <Recent bgColor={bgColor} name={as} causes={data} route={routeName} />
+            <TagList tags={tags} bgColor={bgColor} title="Our Latest Updates" />
         </div>
     )
 }

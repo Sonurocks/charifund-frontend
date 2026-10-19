@@ -11,6 +11,7 @@ export interface Banner {
   priority: number;
   image: string;
   link?: string;
+  pageName?: string;
 }
 // Banner Form Props - used in <BannerForm />
 export interface BannerFormProps {

@@ -49,7 +49,7 @@ const QueriesTable = () => {
     itemsPerPage,
     filterValue,
     filterField
-  ) as { data: { queries: Query[]; totalPages: number }, isLoading: boolean };
+  ) as { data: { forms: Query[]; totalPages: number }, isLoading: boolean };
 
   const totalPages = allData?.totalPages ?? 1;
 
@@ -149,7 +149,7 @@ const QueriesTable = () => {
           <CustomLoader />
         </div>
       ) : (
-        <DataTableWrapper columns={columns as any} data={allData?.queries || []} />
+        <DataTableWrapper columns={columns as any} data={allData?.forms || []} />
       )}
 
       {/* Pagination */}

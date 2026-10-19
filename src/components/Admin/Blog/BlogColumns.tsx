@@ -1,18 +1,9 @@
 'use client';
 
 import React from "react";
-import dynamic from "next/dynamic";
 import { Blog, BlogColumnCallbacks } from "@/src/types/admin/blog";
-
-//  Dynamically import TableRowActions
-const TableRowActions = dynamic(() => import("../Campaign/CampaignActions"), {
-  loading: () => <span>Loading actions...</span>,
-});
-
-//  Dynamically import icons
-const FaEye = dynamic(() => import("react-icons/fa").then((mod) => mod.FaEye));
-const FaEdit = dynamic(() => import("react-icons/fa").then((mod) => mod.FaEdit));
-const FaTrash = dynamic(() => import("react-icons/fa").then((mod) => mod.FaTrash));
+import TableRowActions from "../Campaign/CampaignActions";
+import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 
 export const getBlogColumns = ({
   onEdit,
@@ -63,5 +54,3 @@ export const getBlogColumns = ({
     ),
   },
 ];
-
-

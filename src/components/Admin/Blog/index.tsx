@@ -1,15 +1,8 @@
-
 "use client";
 
 import React from "react";
-import dynamic from "next/dynamic";
 import Breadcrumb from "../Breadcrumb";
-
-//  Dynamically import BlogTable with a fallback loader
-const BlogTable = dynamic(() => import("./BlogTable"), {
-  loading: () => <p className="text-center py-10">Loading Blog Table...</p>,
-  ssr: false, 
-});
+import BlogTable from "./BlogTable";
 
 const BlogPage = () => {
   return (

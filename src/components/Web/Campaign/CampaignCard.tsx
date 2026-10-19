@@ -7,6 +7,8 @@ import AnimatedProgressBar from "../../UI/web/AnimatedProgressBar";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 import { CampaignCardProps } from "@/src/types/web/campaign";
+import Image from "next/image";
+import { getOptimizedImageUrl } from "@/src/utils/imageStandards";
 
 const CampaignCard: React.FC<CampaignCardProps> = ({
   card,
@@ -36,18 +38,20 @@ const CampaignCard: React.FC<CampaignCardProps> = ({
       onMouseLeave={onMouseLeave}
     >
       {/* Image with White Border */}
-      <div className="relative w-full h-[200px] 2xl:h-[205px] rounded-2xl overflow-hidden cursor-pointer  border-white">
+      <div
+        className="relative w-full h-[200px] 2xl:h-[205px] rounded-2xl overflow-hidden cursor-pointer border-white"
+        onClick={() => onCardClick(card.id)}
+      >
         {card.image ? (
-          <motion.img
-            src={card.image}
+          <Image
+            src={getOptimizedImageUrl(card.image, { width: 600, quality: "auto", format: "auto" })}
             alt={card.title || "Campaign Image"}
-            onClick={() => onCardClick(card.id)}
-            className="absolute top-0 left-0 w-full h-full object-cover"
-            animate={{ 
-              scale: hoveredCard === card.id ? 1.1 : 1,
-              rotate: hoveredCard === card.id ? 3 : 0
-            }}
-            transition={{ duration: 0.5 }}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
+            className={`object-cover transition-transform duration-500 ease-out ${
+              hoveredCard === card.id ? "scale-110 rotate-1" : "scale-100 rotate-0"
+            }`}
+            loading="lazy"
           />
         ) : (
           <div className="w-full h-full bg-gray-200 flex items-center justify-center">
@@ -85,7 +89,7 @@ const CampaignCard: React.FC<CampaignCardProps> = ({
                 hoveredCard === card.id ? 'text-white' : 'text-dark-green group-hover:text-white'
               }`}>
                 <span className="leading-none text-sm">
-                  {('actionText' in card && card.actionText) ? ((card as any).actionText as string) : t("Support This Initiative →")}
+                  {('actionText' in card && card.actionText) ? ((card as any).actionText as string) : t("Donate Now →")}
                 </span>
               </div>
             </Link>

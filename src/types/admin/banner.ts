@@ -9,6 +9,7 @@ export interface Banner {
     subtitle: string;
     image: string;
     priority: number;
+    pageName?: string;
 }
 // Banner Form Props - used in <BannerForm />
 export interface BannerFormProps {

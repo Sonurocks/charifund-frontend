@@ -1,16 +1,8 @@
-
 'use client';
 
 import React from "react";
-import dynamic from "next/dynamic";
-
-const Breadcrumb = dynamic(() => import("../Breadcrumb"), {
-  loading: () => <p>Loading breadcrumb...</p>,
-});
-
-const BannerTable = dynamic(() => import("./BannerTable"), {
-  loading: () => <p>Loading banner table...</p>,
-});
+import Breadcrumb from "../Breadcrumb";
+import BannerTable from "./BannerTable";
 
 const Banner = () => {
   return (

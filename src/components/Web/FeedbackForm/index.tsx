@@ -45,7 +45,7 @@ const FeedbackForm = () => {
             animate={isHeadingInView ? { opacity: 1, transform: 'translateZ(0)' } : { opacity: 0, transform: 'translateZ(0)' }}
             transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
           >
-                   <span className="whitespace-nowrap">{t("Our Supporters &")} <span className="text-yellow">{t("Community")}</span></span> <br /> {t("Voices")}
+                   <span className="sm:whitespace-nowrap">{t("Our Supporters &")} <span className="text-yellow">{t("Community")}</span></span> <br /> {t("Voices")}
           </motion.h1>
           <motion.p
             className="text-white text-base sm:text-lg md:text-xl font-nunito mt-4 mx-auto w-full max-w-[90%] md:max-w-2xl px-2 leading-relaxed"

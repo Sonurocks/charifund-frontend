@@ -19,17 +19,20 @@ import {
 import toast from "react-hot-toast";
 import ButtonLoader from "../../UI/web/Loader/ButtonLoader";
 import { NewsletterEmailForm } from "@/src/services/web/client/clientServices";
+import { getApiErrorMessage, getApiSuccessMessage } from "@/src/utils/apiHelpers";
 
 const Newsletter = () => {
   const { t} = useTranslation();
 
   const mutation = useMutation({
     mutationFn: (email: string) => NewsletterEmailForm(email),
-    onSuccess: () => {
-      toast.success("Email subscribed successfully!");
+    onSuccess: (data: any) => {
+      const message = getApiSuccessMessage(data, t("Email subscribed successfully!"));
+      toast.success(message);
     },
     onError: (error: unknown) => {
-      toast.error("Something went wrong. Try again.");
+      const message = getApiErrorMessage(error, t("Something went wrong. Try again."));
+      toast.error(message);
       console.error("Newsletter subscription error:", error);
     },
   });
@@ -50,10 +53,10 @@ const Newsletter = () => {
         {/* Text Section */}
         <SlideinFromLeft>
           <div>
-            <h2 className="text-[30px] sm:text-[24px] md:text-[30px] xl:text-[40px]  2xl:text-[40px] flex font-nunito font-extrabold sm:my-[-8px] ">
+            <h2 className="text-2xl sm:text-2xl md:text-3xl xl:text-4xl flex font-nunito font-extrabold sm:-my-1">
               {t("Subscribe To Our Newsletter")}
             </h2>
-            <p className="text-[18px] opacity-70 sm:text-[18px] xl:text-[18px] md:text-[18px] 2xl:text-[18px] mt-2 xl:leading-8 2xl:mt-8px lg:pr-10 xl:pr-24">
+            <p className="text-base sm:text-base md:text-lg opacity-70 mt-2 xl:leading-8 lg:pr-10 xl:pr-24">
               {t("Regular Inspections And Feedback Mechanisms")}
             </p>
           </div>

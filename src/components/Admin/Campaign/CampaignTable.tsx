@@ -37,8 +37,10 @@ import { useLanguageToggle } from "@/src/hooks/web/useLanguageToggle";
 import useDebounce from "@/src/hooks/web/useDebounce";
 import { useFetchCategory } from "@/src/hooks/admin/useCategory";
 import { Category } from "@/src/types/admin/category";
+import { useRouter } from "next/navigation";
 
 const CampaignTable = () => {
+  const router = useRouter();
   const [search, setSearch] = useState("");
   const [searchField, setSearchField] = useState<"title" | "category" | "status">("title");
   const [statusField, setStatusField] = useState<"active" | "completed" | "inactive" | "status">("active");
@@ -173,11 +175,19 @@ const CampaignTable = () => {
     }
   }, [selectedCampaign, deleteMutation]);
 
-  const columns = useMemo(() => getCampaignColumns({
-    onEdit: handleEdit,
-    onDelete: handleDelete,
-    onView: handleView,
-  }), [handleEdit, handleDelete, handleView]);
+  const handleViewDonors = useCallback((c: Campaign) => {
+    router.push(`/admin/campaign/${c.id}/donors`);
+  }, [router]);
+
+  const handleDeleteClick = useCallback((c: Campaign) => {
+    setSelectedCampaign(c);
+    setIsOpen(true);
+  }, []);
+
+  const columns = useMemo(
+    () => getCampaignColumns({ onEdit: handleEdit, onDelete: handleDeleteClick, onView: handleView, onDonors: handleViewDonors }),
+    [handleEdit, handleDeleteClick, handleView, handleViewDonors]
+  );
 
   const paginatedData = useMemo(() => {
     if (!campaignData?.campaigns) return [];

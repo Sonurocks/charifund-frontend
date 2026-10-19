@@ -50,13 +50,13 @@ const ChildrenNeed = () => {
             >
               <i className="text-xl mr-2 text-[#ffc107] hand-icon"></i>
               <span className="text-yellow font-caveat text-xl md:text-2xl font-semibold">
-                {t("Together for a Better Society")}
+                {t("Support Children. Build Brighter Futures")}
               </span>
               <p className="text-3xl sm:text-3xl md:text-[40px] max-w-2xl xl:max-w-3xl mx-auto xl:text-[55px] font-extrabold text-white mb-3 sm:mb-4 font-nunito leading-snug">
                 {t("Every Child Deserves a Better Future")}
               </p>
               <p className="text-[17px] sm:text-[19px] md:text-[20px] text-white/80 w-full max-w-[580px] mx-auto font-nunito font-normal leading-[1]">
-                {t("Support education, nutrition, healthcare, and opportunities for children in need.")}
+                {t("Support education, nutrition, healthcare and opportunities for children in need.")}
               </p>
             </motion.div>
 
@@ -65,7 +65,8 @@ const ChildrenNeed = () => {
                 <div className="text-white bg-black/30 transparent  rounded-full  ">
                 <Link href="/campaign">
                   <Button
-                    text={t("Know More")}
+                    text={t("Learn More")}
+                    icon="mdi:arrow-right"
                     bgColor="bg-transparent"
                     textColor="text-white"
                     hoverTextColor="group-hover:text-black"
@@ -76,13 +77,14 @@ const ChildrenNeed = () => {
 
                 <div className="">
                   <Button
-                    text={t("Join Us")}
+                    text={t("Donate Now")}
+                    icon="mdi:arrow-right"
                     bgColor="bg-[#FFC107]"
                     textColor="text-black"
                     hoverTextColor="group-hover:text-white"
                     hoverBg="before:bg-[#046b59]"
                     // className="w-[100px] h-[60px]"
-                    onClick={() => router.push("/contact")}
+                    onClick={() => router.push("/donate-us")}
                   />
                 </div>
               </div>

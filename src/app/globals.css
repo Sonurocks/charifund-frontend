@@ -1030,6 +1030,78 @@ body {
   }
 }
 
+/* Custom Year Picker Popper Styling */
+.year-picker-popper {
+  margin-left: 20px;
+}
+
+@media (max-width: 640px) {
+  .year-picker-popper {
+    margin-left: 0;
+  }
+}
+
+.year-picker-popper .react-datepicker {
+  font-family: inherit;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  width: 220px;
+}
+
+.year-picker-popper .react-datepicker__header {
+  padding: 0;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.year-picker-popper .react-datepicker__year-wrapper {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 4px !important;
+  padding: 8px !important;
+  max-width: 220px !important;
+}
+
+.year-picker-popper .react-datepicker__year-text {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: auto !important;
+  padding: 6px 4px !important;
+  margin: 0 !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+.year-picker-popper .react-datepicker__year-text:hover {
+  background-color: #f3f4f6 !important;
+}
+
+.year-picker-popper .react-datepicker__year-text--selected {
+  background-color: var(--primaryColor, #ffc107) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+/* Remove default browser focus outline on Recharts charts */
+.recharts-wrapper,
+.recharts-wrapper:focus,
+.recharts-wrapper:focus-visible,
+.recharts-surface,
+.recharts-surface:focus,
+.recharts-surface:focus-visible,
+.recharts-layer:focus,
+.recharts-sector:focus,
+.recharts-responsive-container:focus,
+.recharts-wrapper * {
+  outline: none !important;
+}
+
 
 
 

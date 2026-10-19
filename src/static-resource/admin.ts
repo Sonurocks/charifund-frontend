@@ -38,10 +38,38 @@ export const BannerSearchOptions = [
   { label: "Priority", value: "priority" },
 ] as const satisfies readonly DropdownOption<BannerSearchField>[];
 
+// Centralized page names for dynamic banner system
+export const BANNER_PAGES = [
+  "Home",
+  "About Us",
+  "Campaign",
+  "Volunteer",
+  "Contact Us",
+  "Blog",
+  "Events",
+  "Sponsors",
+  "Team",
+  "Donate Us",
+  "Services",
+] as const;
+
+export type BannerPageName = (typeof BANNER_PAGES)[number];
+
+export const BannerPageOptions = BANNER_PAGES.map((page) => ({
+  label: page,
+  value: page,
+}));
+
 
 export const memberSearchOptions = [
   { label: "Name", value: "name" },
   { label: "Position", value: "position" },
   { label: "Title", value: "title" },
+] as const;
+
+export const SponsorSearchOptions = [
+  { label: "Name", value: "name" },
+  { label: "Category", value: "category" },
+  { label: "Location", value: "location" },
 ] as const;
 

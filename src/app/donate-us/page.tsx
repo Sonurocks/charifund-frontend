@@ -1,14 +1,16 @@
 import DonateUs from '@/src/components/Web/DonateUs'
-import React from 'react';
+import React, { Suspense } from 'react';
 
 export const metadata = {
-  title:"charifund | Donate us"
+  title: "charifund | Donate us"
 }
 
 const page = () => {
   return (
     <div>
-      <DonateUs />
+      <Suspense fallback={null}>
+        <DonateUs />
+      </Suspense>
     </div>
   )
 }

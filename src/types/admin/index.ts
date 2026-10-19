@@ -1,12 +1,11 @@
 import { BannerFormValues, BlogFormValues, CampaignFormValues, EventFormValues, MemberFormValues } from "@/src/utils/validations/FormValidation";
 import { Comment } from "../web/comments";
 import { JSX } from "react";
+import { ImageStandard } from "@/src/utils/imageStandards";
 
 export interface AdminSideBarTabProps {
   isOpen: boolean;
-  setIsOpen: (state: boolean) => void;
-  activeTab: string;
-  setActiveTab: (tab: string) => void;
+  setIsOpen: (val: boolean) => void;
 }
 
 export interface BannerPreviewProps {
@@ -121,8 +120,17 @@ export interface LocationPickerProps {
 }
 
 export interface DonationPieChartProps {
-  data: { name: string; value: number }[];
+  data?: {
+    campaignId?: string | null;
+    name: string;
+    value: number;
+    donorCount?: number;
+  }[];
   colors?: string[];
+  total?: number;
+  isLoading?: boolean;
+  isError?: boolean;
+  onRetry?: () => void;
 }
 
 export interface Notification {
@@ -152,7 +160,7 @@ import { Query } from "./query";
 import { Feedback } from "./feedback";
 
 
-export interface DropdownOption<T> {
+export interface DropdownOption<T = any> {
   label: string;
   value: T;
   disabled?: boolean; 
@@ -160,18 +168,26 @@ export interface DropdownOption<T> {
 }
 
 
-export interface AdminDropdownProps<T> {
+export interface AdminDropdownProps<T = any> {
+  id?: string;
+  name?: string;
   options: readonly DropdownOption<T>[];
-  value: T;
+  value?: T;
   onChange: (value: T) => void;
   label?: string;
+  required?: boolean;
   icon?: string;
   placeholder?: string;
   error?: string;
   className?: string;
   disabled?: boolean;
   readOnly?: boolean;
-  width?: string
+  width?: string;
+  searchable?: boolean;
+  searchPlaceholder?: string;
+  loading?: boolean;
+  clearable?: boolean;
+  emptyText?: string;
 }
 
 export interface AdminCustomInputProps {
@@ -202,12 +218,15 @@ export interface AdminCustomFileInputProps {
   label?: string;
   name: string;
   onChange: (files: File[], updatedImageUrls?: string[]) => void;
-  error?: string;
+  error?: string | string[] | any;
   disabled?: boolean;
   mode?: "add" | "edit" | "view" | "preview-edit";
   initialUrls?: string[];
   initialFiles?: File[];
   uploadType?: "single" | "multiple";
+  standard?: ImageStandard;
+  onClearError?: () => void;
+  onError?: (error: string) => void;
 }
 
 export interface AdminMultiInputListProps {
@@ -238,8 +257,18 @@ export interface AdminDataTableWrapperProps<T> {
 }
 
 export interface DashboardData {
-  activeCampaign: number;
+  activeCampaign?: number;
+  liveEvents?: number;
   totalMembers: number;
   totalFunds: number;
   pendingRequest: number;
+  generalFunds?: number;
+  campaignFunds?: number;
+  onlineFunds?: number;
+  offlineFunds?: number;
+  totalDonationsCount?: number;
+  generalDonationsCount?: number;
+  campaignDonationsCount?: number;
+  offlineDonationsCount?: number;
+  pendingDonationsCount?: number;
 }

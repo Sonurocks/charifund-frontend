@@ -18,24 +18,24 @@ const FAQSection = () => {
   const isHeaderInView = useInView(headerRef, { once: true });
 
   return (
-    <div className="w-full lg:flex relative lg:h-[800px] xl:h-[900px]  md:gap-8 items-start bg-white  overflow-hidden">
+    <div className="w-full lg:flex relative lg:min-h-[800px] xl:min-h-[900px]  md:gap-0 items-stretch bg-white  overflow-hidden">
       {/* Left Side - FAQ */}
-      <div className="lg:w-2/3 px-3 py-5 md:px-10 lg:px-0 xl:px-16  xl:mb-50 mx-auto 2xl:max-w-2xl lg:pl-15  ">
+      <div className="w-full lg:w-[55%] xl:w-[55%] px-3 py-5 md:px-10 lg:px-0 xl:px-16 xl:mb-10 mx-auto 2xl:max-w-3xl lg:pl-10 xl:pl-15">
         <div ref={headerRef} >
           <ComponentLabel
             className='md:justify-center'
-            text="Start Donating Poor People"
+            text="Empowering Lives, Building a Better Society"
             isVisible={isHeaderInView}
           />
           <ComponentTitle
             className='lg:justify-center'
             preText="Frequently "
             highlightText="Asked"
-            postText="Questions"
+            postText="Questions (FAQs)"
           />
         </div>
         <FadeInUp>
-          <div className="lg:absolute  lg:z-20 xl:z-0 lg:max-w-2xl">
+          <div className="w-full lg:max-w-[100%] xl:max-w-[700px] pt-4 lg:z-20">
             <FAQList openIndex={openIndex} setOpenIndex={setOpenIndex} />
           </div>
         </FadeInUp>

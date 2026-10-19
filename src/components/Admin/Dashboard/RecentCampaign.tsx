@@ -23,15 +23,15 @@ function RecentCampaign() {
     <div className="bg-white rounded-xl my-6 w-full">
       <h2 className="text-gray-700 font-semibold mb-4">Recent Campaigns</h2>
       {/* Scrollable table container */}
-      <div className=" overflow-y-auto">
-        <table className="w-full table-auto border-collapse ">
+      <div className="overflow-x-auto scrollbar-hide">
+        <table className="w-full min-w-[550px] table-auto border-collapse text-xs sm:text-sm">
           <thead className="sticky top-0 bg-primaryColor/20 z-10">
             <tr>
-              <th className="p-3 border border-foreground/30 text-left">ID</th>
-              <th className="p-3 border border-foreground/30 text-left">Title</th>
-              <th className="p-3 border border-foreground/30 text-left">Goal Amount</th>
-              <th className="p-3 border border-foreground/30 text-left">Funds Raised</th>
-              <th className="p-3 border border-foreground/30 text-left">Status</th>
+              <th className="p-2.5 sm:p-3 border border-foreground/30 text-left whitespace-nowrap">ID</th>
+              <th className="p-2.5 sm:p-3 border border-foreground/30 text-left">Title</th>
+              <th className="p-2.5 sm:p-3 border border-foreground/30 text-left whitespace-nowrap">Goal Amount</th>
+              <th className="p-2.5 sm:p-3 border border-foreground/30 text-left whitespace-nowrap">Funds Raised</th>
+              <th className="p-2.5 sm:p-3 border border-foreground/30 text-left whitespace-nowrap">Status</th>
             </tr>
           </thead>
           <tbody>

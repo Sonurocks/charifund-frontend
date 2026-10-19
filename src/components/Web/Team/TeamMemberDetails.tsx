@@ -69,7 +69,12 @@ const TeamMemberDetails: React.FC = () => {
 
   return (
     <section>
-      <PageBanner bgImage="/assets/banner-bg.webp" title="Team Details" />
+      <PageBanner 
+        pageName="Team" 
+        title="Our Dedicated Team"
+        tagline="Supporting People • Empowering Communities"
+        description="Our dedicated team of volunteers, professionals, and social workers works together to create positive change in society. With compassion, commitment, and teamwork, we strive to support children, women, families, and communities in need. Together, We Serve. Together, We Create Change."
+      />
 
     <motion.section
       ref={ref}

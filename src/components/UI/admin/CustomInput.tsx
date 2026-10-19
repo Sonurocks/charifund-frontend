@@ -28,29 +28,30 @@ const CustomInput: React.FC<AdminCustomInputProps> = ({
       {label && <label htmlFor={name} className="block mb-1 font-medium text-blue-50 text-[14px]">{label}</label>}
 
       <div
-        className={`flex gap-2 bg-gray-200/60 px-3 py-2 rounded-md border relative
+        className={`flex gap-2 px-3 py-2 rounded-md border relative
         ${error ? "border-red" : "border-transparent"}
         ${isTextarea ? "items-start" : "items-center"}
-        ${readOnly ? "bg-gray-50": "bg-gray-200/60"}
+        ${readOnly || disabled ? "bg-gray-200/40" : "bg-gray-200/60"}
         `}
       >
         {/* Input / Textarea */}
         {isTextarea ? (
           <textarea
-          ref={ref as React.Ref<HTMLTextAreaElement>}
+            ref={ref as React.Ref<HTMLTextAreaElement>}
             id={name}
             name={name}
             value={value}
             onChange={onChange}
             placeholder={placeholder}
-               className={`w-full bg-transparent outline-none text-[13px] placeholder:text-gray-500  ${readOnly ? "cursor-not-allowed text-blue-50/80": "text-foreground/70"}`}
+            className={`w-full bg-transparent outline-none text-[13px] placeholder:text-gray-500  ${readOnly ? "cursor-not-allowed text-blue-50/80": "text-foreground/70"}`}
             rows={4}
             onKeyDown={onKeyDown}
             disabled={disabled}
+            readOnly={readOnly}
           />
         ) : (
           <input
-          ref={ref as React.Ref<HTMLInputElement>}
+            ref={ref as React.Ref<HTMLInputElement>}
             id={name}
             name={name}
             type={isPassword && showPassword ? "text" : type}
@@ -59,6 +60,7 @@ const CustomInput: React.FC<AdminCustomInputProps> = ({
             placeholder={placeholder}
             onKeyDown={onKeyDown}
             disabled={disabled}
+            readOnly={readOnly}
             className={`w-full bg-transparent outline-none text-[13px] placeholder:text-gray-500  ${readOnly ? "cursor-not-allowed text-blue-50": "text-foreground/70"}`}
           />
         )}

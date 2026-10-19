@@ -1,9 +1,13 @@
 
-import { DetailsFormValues, SendMsgFormValues, VolunteerValues } from "@/src/utils/validations/FormValidation";
+import { SendMsgFormValues, VolunteerValues } from "@/src/utils/validations/FormValidation";
 
 //  Get all banners 
-export const fetchAllBanners = async (page: number = 1, limit: number = 10) => {
-  const { data } = await api.get(`/web/banner/getAllBanners?page=${page}&limit=${limit}`);
+export const fetchAllBanners = async (page: number = 1, limit: number = 10, pageName?: string) => {
+  let url = `/web/banner/getAllBanners?page=${page}&limit=${limit}`;
+  if (pageName) {
+    url += `&pageName=${encodeURIComponent(pageName)}`;
+  }
+  const { data } = await api.get(url);
   return data;
 };
 
@@ -158,25 +162,45 @@ export const SendMsgInformationForm = async (values: SendMsgFormValues) => {
   return data;
 };
 
-export const DetailsInformationForm = async (values:DetailsFormValues) =>{
-    const { data } = await api.post(`/web/form/detail-information`, values);
-    return data;
+
+export interface CreatePaymentOrderPayload {
+  amount: number;
+  campaignId?: string;
+  campaignTitle?: string;
+  paymentMethod: "online" | "offline";
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  address: string;
+  pan?: string;
+  message?: string;
 }
 
 export interface CreatePaymentOrderResponse {
-  orderId: string;
+  orderId?: string; 
+  donationId?: string;
+  status?: string;
+  paymentMethod?: string;
   key?: string;
-  amount: number;
-  currency: string;
+  amount?: number;
+  currency?: string;
+  msg?: string;
+  message?: string;
 }
 
-export const createPaymentOrder = async (orderData: { amount: number; campaignId?: string }): Promise<CreatePaymentOrderResponse> => {
+export const createPaymentOrder = async (orderData: CreatePaymentOrderPayload): Promise<CreatePaymentOrderResponse> => {
     const { data } = await api.post<CreatePaymentOrderResponse>(`/web/payment/create-order`, orderData);
     return data;
 }
 
 export const verifyPaymentOrder = async (verifyData: { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }) => {
     const { data } = await api.post(`/web/payment/verify-payment`, verifyData);
+    return data;
+}
+
+export const fetchDonationReceipt = async (identifier: string) => {
+    const { data } = await api.get(`/web/payment/receipt/${encodeURIComponent(identifier)}`);
     return data;
 }
 

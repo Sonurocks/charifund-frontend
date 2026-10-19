@@ -1,12 +1,10 @@
 'use client'
 import React from 'react'
 import FadeInUp from '@/src/animations/FadeInUp'
-import { bannerBg } from '@/public/assets'
 import VolunteerForm from './VolunteerForm'
 
 import { Icon } from "@iconify/react";
-import Notice from "../../UI/web/Notice";
-import { VolunteerFeatures, VolunteerNotice, VolunteerPage, VolunteerProgress } from "@/src/static-resource/web";
+import { VolunteerFeatures, VolunteerPage, VolunteerProgress } from "@/src/static-resource/web";
 import { useTranslation } from 'react-i18next'
 import PageBanner from '@/src/helper/PageBanner'
 
@@ -16,15 +14,17 @@ const Volunteer = () => {
   const language = i18n.language;
   return (
     <section>
-      <PageBanner
-        bgImage={bannerBg}
-        tagline="Start Donating Poor People"
-        title="Become A Volunteer"
+      <PageBanner pageName="Volunteer"
+        tagline="Together, We Can Make a Difference"
+        title="Become a Volunteer"
+        description="Join Us in Creating Positive Change"
+        buttonText="Join Us"
+        buttonRoute="#join-us"
         smallIcon="mdi:hand-heart"
         decoIcon="mdi:ribbon"
         decoPosition="absolute bottom-10 left-10"
       />
-      <div className='flex justify-center items-center py-8 xl:py-16 '>
+      <div id="join-us" className='flex justify-center items-center py-8 xl:py-16 '>
         <section className='w-11/12 md:w-10/11 grid grid-cols-1 lg:grid-cols-2 lg:gap-x-20 gap-y-10'>
           <section className="font-nunito">
             {/* Header */}
@@ -41,29 +41,58 @@ const Volunteer = () => {
               </p>
             </div>
 
-            {/* Notice */}
-            <Notice message={VolunteerNotice.message} />
+            <div className="mt-8 space-y-8">
+              {/* Volunteer Eligibility */}
+              <div>
+                <h3 className="text-xl font-bold text-foreground mb-4">{t("Volunteer Eligibility")}</h3>
+                <ul className="space-y-3">
+                  <li className="flex gap-2 text-gray-500 text-[15px]">
+                    <span className="font-bold text-green">{t("Age")}:</span> {t("18 years and above")}
+                  </li>
+                  <li className="flex gap-2 text-gray-500 text-[15px]">
+                    <span className="font-bold text-green">{t("Commitment")}:</span> {t("Willingness to volunteer regularly and responsibly")}
+                  </li>
+                  <li className="flex gap-2 text-gray-500 text-[15px]">
+                    <span className="font-bold text-green">{t("Skills")}:</span> {t("Any useful skill, professional expertise or willingness to learn")}
+                  </li>
+                  <li className="flex gap-2 text-gray-500 text-[15px]">
+                    <span className="font-bold text-green">{t("Teamwork")}:</span> {t("Ability to work respectfully with our team and community")}
+                  </li>
+                  <li className="flex gap-2 text-gray-500 text-[15px]">
+                    <span className="font-bold text-green">{t("Purpose")}:</span> {t("Commitment to social welfare and community development")}
+                  </li>
+                </ul>
+              </div>
 
-            {/* Progress Bars */}
-            <div className="space-y-3 xl:space-y-6 mb-6 xl:mb-10 mt-5 xl:mt-10">
-              {VolunteerProgress.map((item, idx) => (
-                <div key={idx}>
-                  {/* Label */}
-                  <div className="flex justify-between text-[15px] font-bold mb-2">
-                    <span>{item.label}</span>
+              {/* What You Can Contribute */}
+              <div>
+                <h3 className="text-xl font-bold text-foreground mb-4">{t("What You Can Contribute")}</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="bg-yellow/10 p-4 rounded-xl border border-yellow/20">
+                    <h4 className="font-bold text-foreground mb-1">{t("Education & Child Welfare")}</h4>
+                    <p className="text-gray-500 text-sm">{t("Support educational activities and child-focused initiatives.")}</p>
                   </div>
-
-                  {/* Progress Bar */}
-                  <div className="relative w-full bg-gray-200 rounded-full h-[5px]">
-                    <div
-                      className="bg-green h-[5px] rounded-full relative"
-                      style={{ width: `${item.value}%` }}
-                    >
-                      {/* Percentage text */}
-                      <span className="absolute -top-6 right-0 text-[15px] font-semibold ">
-                        {item.value}%
-                      </span>
-                    </div>
+                  <div className="bg-green/10 p-4 rounded-xl border border-green/20">
+                    <h4 className="font-bold text-foreground mb-1">{t("Women Empowerment")}</h4>
+                    <p className="text-gray-500 text-sm">{t("Support skill development and livelihood programs for women and girls.")}</p>
+                  </div>
+                  <div className="bg-yellow/10 p-4 rounded-xl border border-yellow/20">
+                    <h4 className="font-bold text-foreground mb-1">{t("Health & Blood Donation")}</h4>
+                    <p className="text-gray-500 text-sm">{t("Assist in health awareness and blood donation initiatives.")}</p>
+                  </div>
+                  <div className="bg-green/10 p-4 rounded-xl border border-green/20">
+                    <h4 className="font-bold text-foreground mb-1">{t("Environment")}</h4>
+                    <p className="text-gray-500 text-sm">{t("Participate in cleanliness, plantation and environmental awareness activities.")}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="space-y-2 mb-6 xl:mb-10 mt-5 xl:mt-10">
+              {VolunteerProgress.map((item, idx) => (
+                <div key={idx} className="flex items-center gap-2">
+                  <Icon icon="mdi:hand-heart" className="text-yellow text-xl" />
+                  <div className="text-[16px] font-bold text-foreground">
+                    <span>{t(item.label)}</span>
                   </div>
                 </div>
               ))}

@@ -1,5 +1,4 @@
 "use client";
-import { bannerBg } from "@/public/assets";
 import { useTranslation } from "react-i18next";
 import SingleBlogDetails from "@/src/components/Web/Blog/SingleBlogDetails";
 import { useParams } from "next/navigation";
@@ -27,7 +26,7 @@ export default function Blogdetail() {
   }
   return (
     <div>
-      <PageBanner bgImage={bannerBg} title={t("Blog Details")} />
+      <PageBanner pageName="Blog" title={t("Blog Details")} />
       <section className="bg-white py-16  text-gray-green flex justify-center items-center w-full">
         <div className="full md:w-11/12 px-3">
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">

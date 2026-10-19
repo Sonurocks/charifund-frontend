@@ -143,30 +143,32 @@ const MemberPreview = ({ data, onSubmit, onBack, mode,showButton=true,createMuta
       )}
 
       {/* Buttons */}
-      {showButton&&(
-      <div className="mt-12 flex justify-baseline gap-6 w-fit ">
-        <Button
-          bgColor="bg-red"
-          rounded="rounded-lg"
-          hoverBg="before:bg-red-50"
-          onClick={onBack}
-          icon=""
-        >
-          {lang === "hi" ? "संपादन पर वापस जाएं" : "Back to Edit"}
-        </Button>
-        <Button
-          rounded="rounded-lg"
-          onClick={handleSubmit}
-          bgColor="bg-lime-green"
-          hoverBg="before:bg-green"
-          icon=""
-          disabled={isSubmitting}
-        >
-          {isSubmitting||createMutation?.isPending || updateMutation?.isPending ? (
-                      <ButtonLoader />
-                    ) : <>{lang === "hi" ? "सबमिट" : "Submit"}</>}
-                  </Button>
-      </div>
+      {showButton && (
+        <div className="mt-12 flex justify-baseline gap-6 w-fit">
+          <Button
+            bgColor="bg-red"
+            rounded="rounded-lg"
+            hoverBg="before:bg-red-50"
+            onClick={onBack}
+            icon=""
+          >
+            {lang === "hi" ? "संपादन" : "Edit"}
+          </Button>
+          <Button
+            rounded="rounded-lg"
+            onClick={handleSubmit}
+            bgColor="bg-lime-green"
+            hoverBg="before:bg-green"
+            icon=""
+            disabled={isSubmitting}
+          >
+            {isSubmitting || createMutation?.isPending || updateMutation?.isPending ? (
+              <ButtonLoader />
+            ) : (
+              <>{lang === "hi" ? "सबमिट" : "Submit"}</>
+            )}
+          </Button>
+        </div>
       )}
     </motion.div>
   );

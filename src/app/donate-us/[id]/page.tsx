@@ -7,7 +7,7 @@ interface Props {
 }
 
 export const metadata = {
-  title:"charifund | Doante us"
+  title: "charifund | Donate us"
 }
 
 const page = async({params}:Props) => {

@@ -19,11 +19,14 @@ import {
 import { BannerFormProps } from "@/src/types/admin/banner";
 import { submitBannerForm } from "@/src/hooks/admin/useBanner";
 import { useLanguageToggle } from "@/src/hooks/admin/useLanguageToggle";
+import { BANNER_PAGES, BannerPageOptions } from "@/src/static-resource/admin";
 import { hasErrorsForLang } from "../../UI/admin/hasErrorsForLang";
+import { IMAGE_STANDARDS } from "@/src/utils/imageStandards";
 
 //  Dynamic Imports
 const CustomInput = dynamic(() => import("../../UI/admin/CustomInput"), { ssr: false });
 const CustomFileInput = dynamic(() => import("../../UI/admin/CustomFileInput"), { ssr: false });
+const Dropdown = dynamic(() => import("../../UI/admin/Dropdown"), { ssr: false });
 const LanguageToggle = dynamic(() => import("../../UI/admin/LanguageToggle"), { ssr: false });
 const CancelButton = dynamic(() => import("../../UI/web/Buttons/CancelButton"), { ssr: false });
 const ButtonLoader = dynamic(() => import("../../UI/web/Loader/ButtonLoader"), { ssr: false });
@@ -39,6 +42,7 @@ const BannerForm: React.FC<BannerFormProps> = ({
 }) => {
   const { language, toggleLanguage } = useLanguageToggle();
   const isView = mode === "view";
+  const isEdit = mode === "edit" || Boolean(initialData?.id);
 
   //Typed initial values
   const initialValues: BannerFormValues & { existingImage?: string } = {
@@ -50,10 +54,15 @@ const BannerForm: React.FC<BannerFormProps> = ({
       en: initialData?.subtitle?.en ?? "",
       hi: initialData?.subtitle?.hi ?? "",
     },
+    description: {
+      en: (initialData as any)?.description?.en ?? "",
+      hi: (initialData as any)?.description?.hi ?? "",
+    },
     image: initialData?.image || "",
     existingImage:
       typeof initialData?.image === "string" ? initialData.image : undefined,
     priority: initialData?.priority ?? 0,
+    pageName: (initialData as any)?.pageName ?? "",
   };
 
   // Typed handleSubmit
@@ -62,8 +71,11 @@ const BannerForm: React.FC<BannerFormProps> = ({
     formikHelpers: FormikHelpers<BannerFormValues>
   ) => {
     const { setSubmitting, resetForm } = formikHelpers;
+    const finalValues = isEdit
+      ? { ...values, pageName: (initialData as any)?.pageName || values.pageName }
+      : values;
     submitBannerForm(
-      values,
+      finalValues,
       initialData,
       createMutation,
       updateMutation,
@@ -87,6 +99,7 @@ const BannerForm: React.FC<BannerFormProps> = ({
           values,
           handleChange,
           setFieldValue,
+          setFieldError,
           setTouched,
           errors,
           touched,
@@ -164,6 +177,55 @@ const BannerForm: React.FC<BannerFormProps> = ({
                 }
               />
 
+              {/* Description (optional) */}
+              <CustomInput
+                label={`${lang === "en" ? "Description (optional)" : "विवरण (वैकल्पिक)"}`}
+                as="textarea"
+                placeholder={
+                  lang === "en"
+                    ? "Enter banner description (max 60 words)"
+                    : "बैनर विवरण दर्ज करें (अधिकतम 60 शब्द)"
+                }
+                name={`description.${lang}`}
+                value={(values as any).description?.[lang] || ""}
+                onChange={handleChange}
+                error={
+                  (touched as any)?.description?.[lang]
+                    ? (errors as any)?.description?.[lang]
+                    : ""
+                }
+              />
+
+              {/* Page Name */}
+              {isEdit || isView ? (
+                <CustomInput
+                  label={lang === "en" ? "Page Name" : "पृष्ठ का नाम"}
+                  name="pageName"
+                  value={values.pageName || (initialData as any)?.pageName || ""}
+                  readOnly
+                  disabled
+                  className="w-full"
+                />
+              ) : (
+                <Dropdown
+                  id="pageName"
+                  name="pageName"
+                  label={lang === "en" ? "Page Name" : "पृष्ठ का नाम"}
+                  options={BannerPageOptions}
+                  value={values.pageName || ""}
+                  onChange={(val: any) => setFieldValue("pageName", val)}
+                  placeholder={
+                    lang === "en"
+                      ? "Select Page (Default: General / Home)"
+                      : "पृष्ठ चुनें (डिफ़ॉल्ट: सामान्य / होम)"
+                  }
+                  clearable
+                  disabled={isView}
+                  width="w-full"
+                  error={touched.pageName && errors.pageName ? errors.pageName : ""}
+                />
+              )}
+
               {/* Priority */}
               <CustomInput
                 label={`${lang === "en" ? "Priority" : "प्राथमिकता"}*`}
@@ -183,6 +245,7 @@ const BannerForm: React.FC<BannerFormProps> = ({
                 label={`${lang === "en" ? "Image" : "छवि"}*`}
                 name="image"
                 mode={mode}
+                standard={IMAGE_STANDARDS.banner}
                 initialUrls={
                   initialData?.image
                     ? Array.isArray(initialData.image)
@@ -203,6 +266,8 @@ const BannerForm: React.FC<BannerFormProps> = ({
                     ? errors.image
                     : ""
                 }
+                onError={(err) => setFieldError("image", err)}
+                onClearError={() => setFieldError("image", undefined)}
                 onChange={(files, existingUrls) => {
                   if (files.length > 0) {
                     setFieldValue("image", files[0]);

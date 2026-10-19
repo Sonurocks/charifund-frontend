@@ -1,5 +1,5 @@
 import { MdOutlineDashboardCustomize, MdNotificationsActive, MdCampaign, MdCategory, MdEvent } from "react-icons/md";
-import { FaBloggerB, FaComments } from "react-icons/fa";
+import { FaBloggerB, FaComments, FaHandshake, FaHandHoldingHeart, FaImages } from "react-icons/fa";
 import { TbBrandGoogleBigQuery } from "react-icons/tb";
 import { PiFlagBannerFill } from "react-icons/pi";
 import { VscFeedback } from "react-icons/vsc";
@@ -25,6 +25,12 @@ export const sidebarAd = [
     lable: "Campaign",
     nav: "campaign",
     link: "/admin/campaign",
+  },
+  {
+    icon: FaHandHoldingHeart,
+    lable: "Donations",
+    nav: "donations",
+    link: "/admin/donations",
   },
   {
     icon: MdEvent,
@@ -64,10 +70,22 @@ export const sidebarAd = [
     link: "/admin/members",
   },
   {
+    icon: FaHandshake,
+    lable: "Sponsors",
+    nav: "sponsors",
+    link: "/admin/sponsors",
+  },
+  {
     icon: VscFeedback,
     lable: "Feedback",
     nav: "feedback",
     link: "/admin/feedback",
+  },
+  {
+    icon: FaImages,
+    lable: "Gallery",
+    nav: "gallery",
+    link: "/admin/gallery",
   },
   // {
   //   icon: MdNotificationsActive,

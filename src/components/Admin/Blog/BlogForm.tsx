@@ -13,6 +13,7 @@ import { BlogFormProps } from "@/src/types/admin/blog";
 import { Category } from "@/src/types/admin/category";
 import { hasErrorsForLang } from "../../UI/admin/hasErrorsForLang";
 import { getInitialBlogValues } from "../InitialValues/blogInitialValues";
+import { IMAGE_STANDARDS } from "@/src/utils/imageStandards";
 
 const CustomInput = dynamic(() => import("../../UI/admin/CustomInput"), {
   loading: () => <p>Loading input...</p>,
@@ -134,7 +135,7 @@ const BlogForm = ({
                 return;
               }
 
-              if (formErrors._combinedImagesGuard) {
+              if (formErrors._combinedImagesGuard || formErrors.images) {
                 return;
               }
 
@@ -150,7 +151,7 @@ const BlogForm = ({
                 }
               }
 
-              if (formErrors._combinedImagesGuard) {
+              if (formErrors._combinedImagesGuard || formErrors.images) {
                 return;
               }
               submitForm();
@@ -306,6 +307,7 @@ const BlogForm = ({
               <CustomFileInput
                 label="Blog Images*"
                 name="images"
+                standard={IMAGE_STANDARDS.blog}
                 onChange={(files, existingUrls) => {
                   setFieldValue("images", files);
                   setFieldValue("existingImages", existingUrls as string[]);
@@ -315,9 +317,16 @@ const BlogForm = ({
                 disabled={isView}
                 mode={mode}
                 error={
-                  touched._combinedImagesGuard && errors._combinedImagesGuard
+                  (touched._combinedImagesGuard && errors._combinedImagesGuard
                     ? String(errors._combinedImagesGuard)
-                    : ""
+                    : "") ||
+                  (errors.images
+                    ? typeof errors.images === "string"
+                      ? errors.images
+                      : Array.isArray(errors.images)
+                        ? (errors.images as any[]).filter(Boolean).join(", ")
+                        : String(errors.images)
+                    : "")
                 }
               />
 

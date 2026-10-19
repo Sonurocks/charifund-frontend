@@ -13,6 +13,7 @@ import { getInitialMemberValues } from "../InitialValues/memberInitialValues";
 import Button from "../../UI/web/Buttons/Button";
 import CancelButton from "../../UI/web/Buttons/CancelButton";
 import { useLanguageToggle } from "@/src/hooks/admin/useLanguageToggle";
+import { IMAGE_STANDARDS } from "@/src/utils/imageStandards";
 
 const MemberForm = ({
     initialData,
@@ -191,11 +192,8 @@ const MemberForm = ({
                             <CustomFileInput
                                 label={`${lang === "en" ? "Profile Image" : "प्रोफ़ाइल छवि"}*`}
                                 name="image"
-                                error={touched.image && !values.image && typeof errors.image === "string" ? errors.image : ""}
-                                // onChange={(files, existingUrl) => {
-                                //     setFieldValue("image", files[0], true);
-                                //     setFieldValue("existingImage", existingUrl);
-                                // }}
+                                standard={IMAGE_STANDARDS.member}
+                                error={touched.image && typeof errors.image === "string" ? errors.image : ""}
                                 mode={mode}
                                 initialUrls={
                                     initialData?.image

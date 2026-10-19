@@ -10,7 +10,7 @@ const FAQ = () => {
     <div >
       <PageBanner
         bgImage={bannerBg}
-        tagline="Start Donating Poor People"
+        tagline="Empowering Lives, Building a Better Society"
         title="Frequently Asked Questions"
         smallIcon="mdi:hand-heart"
         decoIcon="mdi:ribbon"

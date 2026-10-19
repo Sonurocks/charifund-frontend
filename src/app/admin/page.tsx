@@ -1,13 +1,9 @@
-import AdminTab from '@/src/components/Admin/AdminTab'
-import React from 'react'
+import { redirect } from 'next/navigation';
 
 export const metadata = {
-  title:"charifund | Admin"
-}
-const page = () => {
-  return (
-    <AdminTab/>
-  )
-}
+  title: "charifund | Admin"
+};
 
-export default page
+export default function AdminPage() {
+  redirect('/admin/dashboard');
+}

@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import CampaignInfo from "./CampaignInfo";
 import CustomLoader from "../../UI/web/Loader/CustomLoader";
-import { bannerBg, heartLogoIcon, overView } from "@/public/assets";
+import { heartLogoIcon, overView } from "@/public/assets";
 import {
   useFetchAllCampaigns,
   useFetchSingleCampaign,
@@ -14,13 +14,14 @@ import DonationCard from "../../UI/web/sideBar/DonationCard";
 import PageBanner from "@/src/helper/PageBanner";
 
 const CampaignDetails: React.FC = () => {
+  const router = useRouter();
   const params = useParams();
   const id = Array.isArray(params.id) ? params.id[0] : params.id;
 
   if (!id) {
     return (
       <>
-        <PageBanner bgImage={bannerBg} title="Cause Details" />
+        <PageBanner pageName="Campaign" title="Cause Details" />
         <div className="flex items-center justify-center h-[60vh] text-red font-semibold">
           No campaign Found.
         </div>
@@ -42,12 +43,12 @@ const CampaignDetails: React.FC = () => {
 
   return (
     <section>
-      {/* ✅ Banner always rendered */}
-      <PageBanner bgImage={bannerBg} title="Cause Details" />
+      {/* ✅ Dynamic Banner rendered from API */}
+      <PageBanner pageName="Campaign" title="Cause Details" />
 
       {/* ✅ The main content area */}
       <section className="bg-white py-16 text-gray-green flex justify-center items-start w-full">
-        <div className="max-w-7xl xl:max-w-[1440px] xl:px-18 px-2 md:px-18 w-full">
+        <div className="max-w-7xl xl:max-w-[1440px] px-4 sm:px-6 md:px-8 lg:px-12 xl:px-18 w-full">
           {isContentLoading ? (
             // ✅ Loader only inside content area
             <div className="flex items-center justify-center h-[400px]">
@@ -77,11 +78,11 @@ const CampaignDetails: React.FC = () => {
                   <DonationCard
                     icon={heartLogoIcon.src}
                     backgroundImage={overView.src}
-                    subtitle="Small Donations Bigger Impact"
-                    title="Education Health For Every Child"
-                    buttonText="Get A Quote"
-                    onButtonClick={() => console.log("Button Clicked!")}
-                    onCardClick={() => {}}
+                    subtitle="Support This Cause"
+                    title={data?.title || "Education Health For Every Child"}
+                    buttonText="Donate Now →"
+                    onButtonClick={() => router.push(`/donate-us/${id}`)}
+                    onCardClick={() => router.push(`/donate-us/${id}`)}
                   />
                 </div>
               </div>

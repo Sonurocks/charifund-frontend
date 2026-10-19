@@ -118,6 +118,7 @@ export interface InputFieldProps {
   placeholderClassName?:string;
   textSize?:string;
   errorTextSize?:string;
+  uppercase?: boolean;
 }
 
 export interface NoticeProps {

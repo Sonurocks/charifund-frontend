@@ -57,14 +57,14 @@ const HelpAndDonate: React.FC = () => {
             ? Math.round((campaign.raisedAmount / campaign.goalAmount) * 100)
             : 0;
         return {
-          id: campaign.id?.toString() || Math.random().toString(),
+          id: (campaign._id || campaign.id)?.toString() || "",
           image: campaign.images?.[0] || "/assets/helpforeducation.webp",
           category: campaign.category || "General",
           title: campaign.title || "Campaign Title",
           description: campaign.description || "No description available",
           progress: Math.min(progress, 100),
-          raised: `$${campaign.raisedAmount || 0}`,
-          goal: `$${campaign.goalAmount || 0}`,
+          raised: `₹${campaign.raisedAmount || 0}`,
+          goal: `₹${campaign.goalAmount || 0}`,
         };
       });
     }
@@ -124,7 +124,7 @@ const HelpAndDonate: React.FC = () => {
               isVisible={isHeaderInView}
             />
             <ComponentTitle
-              preText={t("Together, We Can Create Positive Change")}
+              preText={t("Be the Reason for Someone’s Smile")}
               highlightText=""
               postText=""
             />

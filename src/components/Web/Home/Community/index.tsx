@@ -33,7 +33,7 @@ const Community = ({ hasFeedback }: { hasFeedback?: boolean | null }) => {
 
     return (
         <section
-            className={`relative ${hasFeedback ? 'h-[800px]' : 'h-[990px]'}  z-40 text-white flex justify-center items-cente overflow-hidde`}
+            className={`relative w-full py-16 md:py-24 xl:py-32  text-white flex justify-center items-center overflow-hidden`}
         >
             <div className="absolute  z-0 inset-0">
                 <Image src={community2.src} alt="bg image" fill className="object-cover" />
@@ -49,9 +49,9 @@ const Community = ({ hasFeedback }: { hasFeedback?: boolean | null }) => {
                     repeat: Infinity,
                     ease: "easeInOut",
                 }}
-                className="hidden md:block absolute top-[37%] xl:top-[32%] right-20 xl:right-58 transform -translate-y-1/2 text-palate-yellow  z-2"
+                className="hidden md:block absolute top-[37%] xl:top-[32%] right-20 xl:right-58 transform -translate-y-1/2 text-palate-yellow z-2 w-20 h-20 xl:w-40 xl:h-40"
             >
-                <Image src={yellowspade.src} alt="decoration" className="size-20 xl:size-40" fill />
+                <Image src={yellowspade.src} alt="decoration" fill className="object-contain" />
             </motion.div>
 
             <div className="inset-0 z-1 absolute"
@@ -79,7 +79,7 @@ const Community = ({ hasFeedback }: { hasFeedback?: boolean | null }) => {
 
                 </motion.div>
                 <AnimatedReveal
-                    className="max-w-7xl h-[650px] bg-white   rounded-2xl overflow-hidden mx-auto grid lg:grid-cols-8 xl:grid-cols-5 relative bottom-[-50px] z-5 mb-15">
+                    className="max-w-7xl bg-white rounded-2xl overflow-hidden mx-auto grid lg:grid-cols-8 xl:grid-cols-5 relative z-5 mt-10 shadow-lg">
 
                     <div className="bg-white text-foreground rounded-xl  py-4 px-4 md:p-12 w-full lg:col-span-5 xl:col-span-3  relative z-10">
                         <h2 className="md:text-3xl font-bold mb-3 md:mb-6">{t("Support Where It Matters")}</h2>

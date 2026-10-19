@@ -1,15 +1,51 @@
 import * as Yup from "yup";
 import i18n from "i18next";
+import { IMAGE_STANDARDS, ImageStandard, validateImageFile } from "../imageStandards";
 
-// Existing schemas here...
+/**
+ * Validates an individual image File or URL against standard constraints (dimensions, resolution, size & type)
+ */
+export const createImageFileValidation = (
+  standard: ImageStandard,
+  isRequired = false,
+  requiredMessage = "Image is required"
+) => {
+  return Yup.mixed().test("imageValidation", async function (value) {
+    if (!value) {
+      if (isRequired) return this.createError({ message: requiredMessage });
+      return true;
+    }
+    if (typeof value === "string") {
+      if (isRequired && !value.trim()) return this.createError({ message: requiredMessage });
+      return true;
+    }
+    if (typeof window !== "undefined" && value instanceof File) {
+      const validation = await validateImageFile(value, standard);
+      if (!validation.valid) {
+        return this.createError({
+          message: validation.error || `Invalid image file for ${standard.label}`,
+        });
+      }
+    }
+    return true;
+  });
+};
 
 
 export const DetailsformSchema = Yup.object().shape({
-  firstName: Yup.string().min(2, "First name is required").required(),
-  lastName: Yup.string().min(2, "Last name is required").required(),
-  email: Yup.string().email("Invalid email").required("Email is required"),
-  phone: Yup.string().matches(/^\d{10}$/, "Phone must be exactly 10 digits").required(),
-  address: Yup.string().min(5, "Address is required").required(),
+  firstName: Yup.string().trim().min(2, "First name is required").required("First name is required"),
+  lastName: Yup.string().trim().min(2, "Last name is required").required("Last name is required"),
+  email: Yup.string().trim().email("Invalid email").required("Email is required"),
+  phone: Yup.string().trim().matches(/^\d{10}$/, "Phone must be exactly 10 digits").required("Phone number is required"),
+  address: Yup.string().trim().min(5, "Address is required").required("Address is required"),
+  pan: Yup.string()
+    .trim()
+    .required("PAN number is required")
+    .test(
+      "valid-pan",
+      "Please enter a valid 10-character PAN (e.g. ABCDE1234F)",
+      (val) => !!val && /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/i.test(val)
+    ),
   message: Yup.string().required("Message is required"),
 });
 export type DetailsFormValues = Yup.InferType<typeof DetailsformSchema>;
@@ -119,7 +155,7 @@ export const campaignSchema = Yup.object({
       .required("हिंदी मुख्य बिंदु आवश्यक हैं"),
   }).required("मुख्य बिंदु दोनों भाषाओं में आवश्यक हैं"),
   images: Yup.array()
-    .of(Yup.mixed())
+    .of(createImageFileValidation(IMAGE_STANDARDS.campaign))
     .default([]),
   existingImages: Yup.array().of(Yup.string().nullable()).default([]),
   _combinedImagesGuard: Yup.mixed().test(
@@ -173,8 +209,19 @@ export const EventSchema = Yup.object({
       .required("हिंदी मुख्य बिंदु आवश्यक हैं"),
   }).required("मुख्य बिंदु दोनों भाषाओं में आवश्यक हैं"),
   images: Yup.array()
-    .of(Yup.mixed().required("Image is required"))
-    .min(1, "At least one image is required"),
+    .of(createImageFileValidation(IMAGE_STANDARDS.event))
+    .default([]),
+  existingImages: Yup.array().of(Yup.string().nullable()).default([]),
+  _combinedImagesGuard: Yup.mixed().test(
+    "at-least-one-image",
+    "At least one image is required",
+    function () {
+      const { images, existingImages } = this.parent as any;
+      const hasFiles = Array.isArray(images) && images.length > 0;
+      const hasUrls = Array.isArray(existingImages) && existingImages.filter(Boolean).length > 0;
+      return hasFiles || hasUrls;
+    }
+  ),
   location: Yup.object({
     en: Yup.string().required("Location is required"),
     hi: Yup.string().required("स्थान आवश्यक है"),
@@ -257,7 +304,7 @@ export const blogSchema = Yup.object({
     hi: Yup.string().required("Category is required in Hindi"),
   }).required("Category is required"),
   images: Yup.array()
-    .of(Yup.mixed())
+    .of(createImageFileValidation(IMAGE_STANDARDS.blog))
     .default([]),
   existingImages: Yup.array().of(Yup.string().nullable()).default([]),
   _combinedImagesGuard: Yup.mixed().test(
@@ -289,6 +336,12 @@ export type CommentFormValues = Yup.InferType<typeof commentSchema>;
 
 // ======================= Banner ======================
 
+const wordCountMax = (max: number, msg: string) =>
+  Yup.string().test("word-count", msg, (value) => {
+    if (!value) return true;
+    return value.trim().split(/\s+/).length <= max;
+  });
+
 export const bannerSchema = Yup.object().shape({
   title: Yup.object({
     en: Yup.string().required("Title is required in English"),
@@ -298,18 +351,13 @@ export const bannerSchema = Yup.object().shape({
     en: Yup.string().required("subtitle is required in English"),
     hi: Yup.string().required("उपशीर्षक हिंदी में होना आवश्यक है"),
   }),
-  image: Yup.mixed()
-    .test(
-      "fileOrString",
-      "Banner image is required",
-      value => {
-        if (typeof value === "string" && value.trim() !== "") return true;
-        if (value instanceof File) return true;
-        return false;
-      }
-    )
-    .required("Banner image is required"),
+  description: Yup.object({
+    en: wordCountMax(60, "Description must be 60 words or less"),
+    hi: wordCountMax(60, "विवरण 60 शब्दों या उससे कम होना चाहिए"),
+  }).optional().default(undefined),
+  image: createImageFileValidation(IMAGE_STANDARDS.banner, true, "Banner image is required"),
   priority: Yup.number().required("priority is required"),
+  pageName: Yup.string().optional(),
 });
 
 //  Inferred type from the schema
@@ -349,17 +397,7 @@ export const memberSchema = Yup.object({
       .min(1, "कम से कम एक मुख्य बिंदु हिंदी में आवश्यक है")
       .required("मुख्य बिंदु हिंदी में आवश्यक हैं"),
   }),
-  image: Yup.mixed()
-    .test(
-      "fileOrString",
-      "Image is required / छवि आवश्यक है",
-      (value) => {
-        if (typeof value === "string" && value.trim() !== "") return true;
-        if (value instanceof File) return true;
-        return false;
-      }
-    )
-    .required("Image is required / छवि आवश्यक है"),
+  image: createImageFileValidation(IMAGE_STANDARDS.member, true, "Image is required / छवि आवश्यक है"),
   facebookUrl: Yup.string()
     .url("Must be a valid URL / मान्य URL होना चाहिए")
     .optional()
@@ -397,7 +435,7 @@ export type QueryFormValues = Yup.InferType<typeof QueryFormSchema>;
 export const feedbackSchema = Yup.object({
   name: Yup.string().required(i18n.t("Name is required")),
   designation: Yup.string().required(i18n.t("Designation is required")),
-  image: Yup.mixed().nullable().notRequired(),
+  image: createImageFileValidation(IMAGE_STANDARDS.feedback, false).nullable(),
   feedback: Yup.string().max(500, "Feedback must be 500 characters or less").required(i18n.t("Feedback is required")),
   rating: Yup.number()
     .min(1, "Please select a rating")
@@ -406,3 +444,35 @@ export const feedbackSchema = Yup.object({
 });
 
 export type FeedbackFormValues = Yup.InferType<typeof feedbackSchema>;
+
+export const sponsorSchema = Yup.object({
+  name: Yup.object({
+    en: Yup.string().required("Sponsor name is required in English"),
+    hi: Yup.string().required("प्रायोजक का नाम हिंदी में आवश्यक है"),
+  }),
+  category: Yup.object({
+    en: Yup.string().required("Category is required in English"),
+    hi: Yup.string().required("श्रेणी हिंदी में आवश्यक है"),
+  }),
+  location: Yup.object({
+    en: Yup.string().default(""),
+    hi: Yup.string().default(""),
+  }).optional(),
+  shortDescription: Yup.object({
+    en: Yup.string().required("Short description is required in English"),
+    hi: Yup.string().required("संक्षिप्त विवरण हिंदी में आवश्यक है"),
+  }),
+  description: Yup.object({
+    en: Yup.string().required("Detailed description is required in English"),
+    hi: Yup.string().required("विस्तृत विवरण हिंदी में आवश्यक है"),
+  }),
+  website: Yup.string()
+    .url("Must be a valid URL / मान्य URL होना चाहिए")
+    .optional()
+    .nullable(),
+  logo: createImageFileValidation(IMAGE_STANDARDS.sponsor, true, "Logo is required / लोगो आवश्यक है"),
+  existingImages: Yup.array().of(Yup.string().nullable()).optional().default([]),
+});
+
+export type SponsorFormValues = Yup.InferType<typeof sponsorSchema>;
+

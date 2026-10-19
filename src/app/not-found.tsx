@@ -1,11 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { MdHome } from "react-icons/md";
 
 export default function NotFoundPage() {
-     const router = useRouter();
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-gray-50 to-gray-200">
       <div className="flex gap-4 text-8xl font-bold text-primaryColor">
@@ -51,13 +50,13 @@ export default function NotFoundPage() {
         transition={{ delay: 2, type: "spring", stiffness: 200 }}
         className="mt-8"
       >
-        <button
-         onClick={()=>router.back()}
+        <Link
+          href="/"
           className="flex cursor-pointer items-center gap-2 px-6 py-3 bg-primaryColor text-white rounded-xl shadow-md hover:bg-primaryColor/90 transition-all"
         >
           <MdHome className="w-5 h-5 " />
           Back to Home
-        </button>
+        </Link>
       </motion.div>
     </div>
   );

@@ -3,7 +3,7 @@ import { generateOpenGraphMetadata } from '@/src/helper/GenerateMetaTags';
 import { fetchBlogByIdServerSide } from '@/src/services/web/server/serverServices';
 import { MetadataData } from '@/src/types';
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const data = await fetchBlogByIdServerSide(id);

@@ -15,7 +15,7 @@ api.interceptors.request.use((config) => {
   }
 
   // Add language header
-  const currentLang = localStorage.getItem('lang') || 'en';
+  const currentLang = typeof window !== "undefined" ? localStorage.getItem('lang') || 'en' : 'en';
   if (config.headers) {
     config.headers['Accept-Language'] = currentLang;
     config.headers['X-Language'] = currentLang;
@@ -30,5 +30,25 @@ api.interceptors.request.use((config) => {
 
   return config;
 }, (error) => Promise.reject(error));
+
+// Add global response interceptor to handle auth failures
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (
+      error.response?.status === 401 ||
+      error.response?.status === 403 ||
+      error.response?.data?.message === "invalid signature" ||
+      error.response?.data?.message === "jwt expired"
+    ) {
+      Cookies.remove("token");
+      localStorage.removeItem("user");
+      if (typeof window !== "undefined") {
+        window.location.href = "/login";
+      }
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default api;

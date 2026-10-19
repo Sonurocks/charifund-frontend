@@ -84,6 +84,11 @@ const EventTable = () => {
       endTime: end,
       location: data.location ?? { en: "", hi: "" },
       images: Array.isArray(data.images) ? data.images.filter(Boolean) : [],
+      existingImages: Array.isArray(data.existingImages)
+        ? data.existingImages.filter(Boolean)
+        : Array.isArray(data.images)
+          ? data.images.filter((img: any) => typeof img === "string")
+          : [],
       latitude: data?.latitude ?? null,
       longitude: data?.longitude ?? null,
     };

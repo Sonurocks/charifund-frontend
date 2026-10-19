@@ -4,6 +4,7 @@
 
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 import { IoLocationSharp } from "react-icons/io5";
 import { FaCalendarAlt, FaRegCalendarAlt } from "react-icons/fa";
 import { LuCircleCheckBig } from "react-icons/lu";
@@ -11,8 +12,9 @@ import { motion } from "framer-motion";
 import LeaveComment from "../comments/LeaveComment";
 import Comments from "../comments/Comments";
 import { CampaignInfoProps } from "@/src/types/web/campaign";
+import { getOptimizedImageUrl } from "@/src/utils/imageStandards";
 
-const CampaignInfo: React.FC<CampaignInfoProps> = ({ data, formattedDate }) => {
+const CampaignInfo: React.FC<CampaignInfoProps> = ({ data, id, formattedDate }) => {
 
   const requiredFields = ["title", "description", "images", "createdAt", "location"];
   const isDataMissing =
@@ -33,9 +35,10 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({ data, formattedDate }) => {
       <div className="w-full "> 
         <div className="relative w-full h-[250px] sm:h-[300px] md:h-[400px] lg:h-[450px] mb-4 sm:mb-6 rounded-3xl overflow-hidden shadow-md">
           <Image
-            src={data?.images?.[0] || "/default-image.webp"}
+            src={getOptimizedImageUrl(data?.images?.[0], { width: 1200, quality: "auto", format: "auto" })}
             alt={data?.title || "Campaign"}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 70vw, 850px"
             priority
             className="object-cover object-center"
           />
@@ -60,6 +63,15 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({ data, formattedDate }) => {
         <p className="text-gray-green mb-6 sm:mb-8 text-[16px] leading-5  md:leading-6 md:text-[18px] font-nunito">
           {data?.description}
         </p>
+        {/* Donate CTA */}
+        <div className="mb-8">
+          <Link
+            href={`/donate-us/${data?.id || id}`}
+            className="inline-flex items-center gap-2 bg-dark-green text-white font-bold px-8 py-3.5 rounded-full hover:bg-yellow hover:text-foreground transition-all duration-300 shadow-md hover:shadow-lg font-nunito text-base cursor-pointer"
+          >
+            <span>Donate to this Cause →</span>
+          </Link>
+        </div>
         {/* Summary: Conditional, responsive */}
         {data?.summary && (
           <>
@@ -85,22 +97,24 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({ data, formattedDate }) => {
         {/* Additional Images: Responsive grid/heights */}
         {data?.images?.length > 2 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-6 sm:mt-8 mb-6 sm:mb-8">
-            <div className="relative w-full h-[200px]  lg:h-[300px] rounded-md overflow-hidden">
+            <div className="relative w-full h-[200px] lg:h-[300px] rounded-md overflow-hidden">
               <Image
-                src={data.images[1]}
+                src={getOptimizedImageUrl(data.images[1], { width: 800, quality: "auto", format: "auto" })}
                 alt="Additional Image 1"
                 fill
+                sizes="(max-width: 640px) 100vw, 400px"
                 className="object-cover"
-                 loading="lazy"
+                loading="lazy"
               />
             </div>
-            <div className="relative w-full h-[200px]  lg:h-[300px] rounded-lg overflow-hidden">
+            <div className="relative w-full h-[200px] lg:h-[300px] rounded-lg overflow-hidden">
               <Image
-                src={data.images[2]}
+                src={getOptimizedImageUrl(data.images[2], { width: 800, quality: "auto", format: "auto" })}
                 alt="Additional Image 2"
                 fill
+                sizes="(max-width: 640px) 100vw, 400px"
                 className="object-cover"
-                 loading="lazy"
+                loading="lazy"
               />
             </div>
           </div>

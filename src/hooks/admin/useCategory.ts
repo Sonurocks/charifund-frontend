@@ -2,6 +2,7 @@
 import { createCategory, deleteCategory, fetchCategory, fetchCategoryById, updateCategory } from "@/src/services/admin/categoryApi";
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { getApiErrorMessage, getApiSuccessMessage } from "@/src/utils/apiHelpers";
 
 
 // ======================= Fetch Categories ======================= //
@@ -28,12 +29,12 @@ export const useCreateCategory = () => {
 
   return useMutation({
     mutationFn: createCategory,
-    onSuccess: () => {
+    onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ["categories"] });
-      toast.success("Category created successfully");
+      toast.success(getApiSuccessMessage(data, "Category created successfully"));
     },
     onError: (err: any) => {
-      toast.error(err?.response.data.message || "Failed to create category");
+      toast.error(getApiErrorMessage(err, "Failed to create category"));
     },
   });
 };
@@ -45,12 +46,12 @@ export const useUpdateCategory = () => {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: { name: { en: string; hi: string } } }) =>
       updateCategory(id, data),
-    onSuccess: () => {
+    onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ["categories"] });
-      toast.success("Category updated successfully");
+      toast.success(getApiSuccessMessage(data, "Category updated successfully"));
     },
     onError: (err: any) => {
-      toast.error(err?.response?.data?.message || "Failed to update category");
+      toast.error(getApiErrorMessage(err, "Failed to update category"));
     },
   });
 
@@ -62,13 +63,13 @@ export const useDeleteCategory = () => {
 
   return useMutation({
     mutationFn: deleteCategory,
-    onSuccess: () => {
+    onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ["categories"] });
       toast.dismiss()
-      toast.success("Category deleted successfully");
+      toast.success(getApiSuccessMessage(data, "Category deleted successfully"));
     },
     onError: (err: any) => {
-      toast.error(err?.response.data.message || "Failed to delete category");
+      toast.error(getApiErrorMessage(err, "Failed to delete category"));
     },
   });
 };

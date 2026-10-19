@@ -7,6 +7,8 @@ import { Icon } from "@iconify/react";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/navigation";
 import { BlogCardProps } from "@/src/types/web/blog";
+import Image from "next/image";
+import { getOptimizedImageUrl } from "@/src/utils/imageStandards";
 
 
 const heartVariants = {
@@ -60,15 +62,13 @@ const BlogCard: React.FC<BlogCardProps> = ({ card }) => {
     >
       {/* Image */}
       <div className="relative mb-4 rounded-xl overflow-hidden w-full h-[230px] md:h-[400px] lg:h-[250px] xl:h-[260px]">
-        <motion.img
-          src={images?.[0] || "/default-image.webp"}
+        <Image
+          src={getOptimizedImageUrl(images?.[0], { width: 600, quality: "auto", format: "auto" })}
           alt={title || "Blog Image"}
-          className="absolute top-0 left-0 w-full h-full object-cover"
-          variants={{
-            hover: { scale: 1.2, rotate: 6 },
-            initial: { scale: 1, rotate: 0 },
-          }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
+          className="object-cover transition-transform duration-500 ease-out group-hover:scale-110 group-hover:rotate-1"
+          loading="lazy"
         />
 
         {category && (
@@ -115,7 +115,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ card }) => {
           initial="idle"
           animate={heartControls}
         >
-          <img src="/assets/heart.webp" alt="heart" className="w-17 h-10" />
+          <img src="/assets/heart.webp" alt="heart" className="w-16 h-10" />
         </motion.div>
       </div>
     </motion.div>

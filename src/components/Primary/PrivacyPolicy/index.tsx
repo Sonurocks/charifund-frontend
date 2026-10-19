@@ -1,7 +1,6 @@
 // pages/privacy-policy.tsx
 'use client'
 import React from 'react';
-import Head from 'next/head';
 import { useTranslation } from 'react-i18next'
 import { privacyPolicySections } from '@/src/static-resource/web';
 

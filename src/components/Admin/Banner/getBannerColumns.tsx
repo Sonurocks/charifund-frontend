@@ -1,14 +1,12 @@
-
-
 "use client";
 
 import React from "react";
-import dynamic from "next/dynamic";
 import { BannerColumnCallbacks } from "@/src/types/admin";
-
 import { Banner } from "@/src/types/admin/banner";
+import TableRowActions from "../Campaign/CampaignActions";
+import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 
-//  Reusable prop type for dynamic component
+// Reusable prop type for actions component
 export type TableRowActionsProps<T> = {
   row: T;
   actions: {
@@ -19,18 +17,7 @@ export type TableRowActionsProps<T> = {
   }[];
 };
 
-//  Dynamic import (type-casted)
-const TableRowActions = dynamic(
-  () => import("../Campaign/CampaignActions"),
-  { loading: () => <span>Loading...</span>, ssr: false }
-) as React.ComponentType<TableRowActionsProps<Banner>>;
-
-//  Icons dynamic imports
-const FaEye = dynamic(() => import("react-icons/fa").then((mod) => mod.FaEye), { ssr: false });
-const FaEdit = dynamic(() => import("react-icons/fa").then((mod) => mod.FaEdit), { ssr: false });
-const FaTrash = dynamic(() => import("react-icons/fa").then((mod) => mod.FaTrash), { ssr: false });
-
-//  Column configuration
+// Column configuration
 export const getBannerColumns = ({
   onEdit,
   onDelete,
@@ -69,7 +56,7 @@ export const getBannerColumns = ({
     name: "Actions",
     cell: (row: Banner) => (
       <TableRowActions
-        row={row}
+        row={row as any}
         actions={[
           {
             label: "View Banner",

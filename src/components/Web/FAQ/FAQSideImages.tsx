@@ -7,14 +7,14 @@ import Image from "next/image";
 const FAQSideImages = () => {
 
   return (
-    <div className="hidden lg:flex lg:w-1/2  xl:mt-0 h-full  relative pl-4 items-center bg-green overflow-hidden">
+    <div className="hidden lg:flex lg:w-[45%] xl:w-[45%] xl:mt-0 h-full relative pl-4 lg:pl-10 items-center bg-green overflow-hidden">
       {/* Vertical Shape */}
       <div className="absolute top-0 left-0 w-10 h-full z-10">
         <Image src={verticalShape.src} fill alt="shape" />
       </div>
 
       {/* Man with Children */}
-      <FadeInUp className="w-full lg:w-3/4 h-[90%] right-[-160] xl:right-[-50] relative rounded-2xl border-10 border-white shadow-lg">
+      <FadeInUp className="w-full lg:w-[90%] xl:w-3/4 h-[720px] xl:h-[810px] right-[-160] xl:right-[-50] relative rounded-2xl border-10 border-white shadow-lg">
         <div className="relative w-full h-full">
           <Image
             src={askedquestion.src}

@@ -31,6 +31,11 @@ export const getInitialEventValues = (initialData: any): EventFormValues =>( {
     hi: initialData?.keyPoints?.hi ?? [],
   },
   images: initialData?.images ?? [],
+  existingImages: Array.isArray(initialData?.existingImages)
+    ? initialData.existingImages
+    : Array.isArray(initialData?.images)
+      ? initialData.images.filter((img: any) => typeof img === "string")
+      : [],
 
    location: {
     en: initialData?.location?.en ?? "",

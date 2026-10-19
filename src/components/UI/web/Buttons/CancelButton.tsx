@@ -14,16 +14,6 @@ const CancelButton: React.FC<CancelButtonProps> = ({ text, onClose, icon,padding
       disabled={false}
       onHoverStart={() => iconControls.start({ rotate: 90 })}
       onHoverEnd={() => iconControls.start({ rotate: 0 })}
-      initial="rest"
-      whileHover="hover"
-      animate="rest"
-      variants={{
-        rest: { backgroundSize: "0% 100%", backgroundPosition: "center" },
-        hover: {
-          backgroundSize: "100% 100%",
-          transition: { duration: 0.4, ease: "easeInOut" },
-        },
-      }}
       className={`
         w-full  relative cursor-pointer font-semibold font-nunito
         bg-red text-white overflow-hidden group

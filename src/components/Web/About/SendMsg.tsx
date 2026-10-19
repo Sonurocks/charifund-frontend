@@ -14,6 +14,8 @@ import FadeUpCard from "@/src/animations/FadeButtomUp";
 import { useMutation } from "@tanstack/react-query";
 import ButtonLoader from "../../UI/web/Loader/ButtonLoader";
 import { SendMsgInformationForm } from "@/src/services/web/client/clientServices";
+import { getApiErrorMessage, getApiSuccessMessage } from "@/src/utils/apiHelpers";
+import toast from "react-hot-toast";
 
 // Dynamic imports for Formik components
 const Formik = lazy(() => import("formik").then(module => ({ default: module.Formik })));
@@ -36,13 +38,13 @@ const SendMsg: React.FC = () => {
 
   const mutation = useMutation({
     mutationFn: SendMsgInformationForm,
-    onSuccess: async () => {
-      const toastModule = await import("react-hot-toast");
-      toastModule.default.success("Message sent successfully!");
+    onSuccess: (data: any) => {
+      const message = getApiSuccessMessage(data, t("Message sent successfully!"));
+      toast.success(message);
     },
-    onError: async (error: any) => {
-      const toastModule = await import("react-hot-toast");
-      toastModule.default.error("Something went wrong. Try again.");
+    onError: (error: any) => {
+      const message = getApiErrorMessage(error, t("Something went wrong. Try again."));
+      toast.error(message);
       console.error("Submission error:", error);
     },
   });
@@ -212,7 +214,7 @@ const SendMsg: React.FC = () => {
                       {isSubmitting || mutation.isPending ? (
                         <ButtonLoader />
                       ) : (
-                        t("Get A Quote")
+                        t("Send Message")
                       )}
                     </Button>
                   </div>

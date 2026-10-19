@@ -1,3 +1,4 @@
+import { getApiErrorMessage, getApiSuccessMessage } from "@/src/utils/apiHelpers";
 // src/hooks/useBlogs.ts
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 
@@ -66,16 +67,16 @@ const handleCreateBlog = (
   toast.loading("Creating blog...");
   const formData = buildFormData(values);
   createMutation.mutate(formData, {
-    onSuccess: () => {
+    onSuccess: (data: any) => {
       toast.dismiss();
-      toast.success("Blog created successfully");
+      toast.success(getApiSuccessMessage(data, "Blog created successfully"));
       resetForm();
       setSubmitting(false);
       onClose();
     },
     onError: (err: any) => {
       toast.dismiss();
-      toast.error(err?.response?.data?.message || "Failed to create blog");
+      toast.error(getApiErrorMessage(err, "Failed to create blog"));
       setSubmitting(false);
     },
   });
@@ -96,9 +97,9 @@ const handleUpdateBlog = (
   updateMutation.mutate(
     { id, values: formData },
     {
-      onSuccess: () => {
+      onSuccess: (data: any) => {
         toast.dismiss();
-        toast.success("Blog updated successfully");
+        toast.success(getApiSuccessMessage(data, "Blog updated successfully"));
         resetForm();
         setSubmitting(false);
         onClose();
@@ -106,7 +107,7 @@ const handleUpdateBlog = (
       onError: (err: any) => {
         toast.dismiss();
         console.log("error check", err)
-        toast.error(err?.response?.data?.message || "Failed to update blog");
+        toast.error(getApiErrorMessage(err, "Failed to update blog"));
         setSubmitting(false);
       },
     }
@@ -153,13 +154,13 @@ export const useDeleteSingleBlog = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteSingleBlog,
-    onSuccess: () => {
+    onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ["blogs"] });
       toast.dismiss();
-      toast.success("Blog deleted successfully");
+      toast.success(getApiSuccessMessage(data, "Blog deleted successfully"));
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "Failed to delete blog");
+      toast.error(getApiErrorMessage(error, "Failed to delete blog"));
     },
   });
 };

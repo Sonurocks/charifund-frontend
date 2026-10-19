@@ -4,6 +4,7 @@ import React, { Suspense, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, useInView } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import Button from '../../../UI/web/Buttons/Button';
 import FadeUpCard from '@/src/animations/FadeButtomUp';
 import CustomLoader from '../../../UI/web/Loader/CustomLoader';
@@ -13,6 +14,7 @@ import ComponentLabel from '@/src/components/UI/web/ComponentLabel';
 import ComponentTitle from '@/src/components/UI/web/ComponentTitle';
 
 const LatestNewsArticle: React.FC = () => {
+  const { t } = useTranslation();
   const { data, isLoading, isError } = useFetchAllBlogs(1, 3, 'All');
 
   const headerRef = useRef(null);
@@ -39,13 +41,13 @@ const LatestNewsArticle: React.FC = () => {
           <div className="lg:max-w-[830px]">
             <ComponentLabel
               className='md:justify-center'
-              text="Start Donating Poor People"
+              text={t("Creating Awareness • Inspiring Change")}
               isVisible={isHeaderInView}
             />
             <ComponentTitle
               className='lg:justify-center'
-              preText="Start Donating Poor People"
-              highlightText=""
+              preText={t("Our Latest ")}
+              highlightText={t("Updates")}
             />
           </div>
 

@@ -9,7 +9,7 @@ import { RootState } from "@/src/store";
 import { setAmount, setMethod } from "@/src/store/slice/donationSlice";
 import { useTranslation } from "react-i18next";
 
-const Donation = ({ campaignId }: { campaignId?: string }) => {
+const Donation = ({ campaignId, campaignTitle }: { campaignId?: string; campaignTitle?: string }) => {
   const dispatch=useDispatch();
   const { amount, method } = useSelector((state: RootState) => state.donation);
   const { t } = useTranslation();
@@ -45,7 +45,7 @@ const Donation = ({ campaignId }: { campaignId?: string }) => {
       </div>
 
       <div className="bg-gray-200 h-[3px]" />
-      <DetailsForm campaignId={campaignId} />
+      <DetailsForm campaignId={campaignId} campaignTitle={campaignTitle} />
     </div>
   );
 };

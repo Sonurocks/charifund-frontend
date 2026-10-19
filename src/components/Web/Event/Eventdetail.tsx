@@ -4,7 +4,6 @@ import Image from "next/image";
 import { IoLocationSharp, IoCalendarSharp } from "react-icons/io5";
 import {
   eventdetail1,
-  oureventbanner,
 } from "@/public/assets";
 import Comments from "../comments/Comments";
 import LeaveComment from "../comments/LeaveComment";
@@ -15,6 +14,7 @@ import CustomLoader from "../../UI/web/Loader/CustomLoader";
 import PageBanner from "@/src/helper/PageBanner";
 import Sidebar from "../../UI/web/sideBar";
 import { FaRegCheckCircle } from "react-icons/fa";
+import { getOptimizedImageUrl } from "@/src/utils/imageStandards";
 
 const EventDetail = () => {
   const eventTid = useParams().id as string;
@@ -28,9 +28,10 @@ const EventDetail = () => {
   return (
     <>
       <PageBanner
-        bgImage={oureventbanner}
-        title="Event Details"
-        tagline="Start Donating Poor People"
+        pageName="Events"
+        title="Our Events & Activities" 
+        tagline="Making a Difference Together"
+        description="We organize meaningful events and community activities to create positive change and support those in need."
         smallIcon="mdi:calendar-heart"
       />
 
@@ -43,18 +44,19 @@ const EventDetail = () => {
               {isLoading ? <CustomLoader /> : <>
                 <div className="relative w-full h-[220px] sm:h-[300px] lg:h-[450px] mb-6 rounded-lg overflow-hidden">
                   <Image
-                    src={event?.images?.[0] || "/default-image.webp"}
+                    src={getOptimizedImageUrl(event?.images?.[0], { width: 1200, quality: "auto", format: "auto" })}
                     alt={event?.title || "Event image"}
                     fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 70vw, 800px"
                     className="object-cover object-center"
-                     loading="lazy"
+                    priority
                   />
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 text-black mb-6">
                   <span className="flex items-center gap-1">
                     <IoCalendarSharp className="text-yellow-400" />
-                    <span>{event?.startDate?.toLocaleDateString() || "N/A"}</span>
+                    <span>{event?.startTime ? new Date(event.startTime).toLocaleDateString() : "N/A"}</span>
                   </span>
                   <span className="flex items-center gap-1">
                     <IoLocationSharp className="text-yellow-400" />
@@ -86,14 +88,22 @@ const EventDetail = () => {
                 </div>
 
                 {/* Detail Images */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-                  <div className="relative w-full h-[300px] rounded-lg overflow-hidden">
-                    <Image src={event?.images?.[1] || eventdetail1} alt="Detail 1" fill className="object-cover"  loading="lazy" />
+                {event?.images && event.images.length > 1 && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                    {event.images.slice(1).map((img, idx) => (
+                      <div key={idx} className={`relative w-full rounded-lg overflow-hidden ${idx === 0 ? 'h-[300px]' : 'h-[220px] sm:h-[300px]'}`}>
+                        <Image
+                          src={getOptimizedImageUrl(img, { width: 800, quality: "auto", format: "auto" })}
+                          alt={`Detail ${idx + 1}`}
+                          fill
+                          sizes="(max-width: 640px) 100vw, 400px"
+                          className="object-cover"
+                          loading="lazy"
+                        />
+                      </div>
+                    ))}
                   </div>
-                  <div className="relative w-full h-[220px] sm:h-[300px] rounded-lg overflow-hidden">
-                    <Image src={event?.images?.[2] || eventdetail1} alt="Detail 2" fill className="object-cover"  loading="lazy" />
-                  </div>
-                </div>
+                )}
 
                 {/* Social Media Grid */}
                 <div className="flex flex-col gap-6 items-center justify-between mb-8">
