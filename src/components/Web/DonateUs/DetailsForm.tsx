@@ -293,23 +293,23 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
                 {({ isSubmitting }) => (
                     <Form className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <InputField name="firstName" placeholder={t("First Name")} icon="mdi:account" />
-                            <InputField name="lastName" placeholder={t("Last Name")} icon="mdi:account" />
+                            <InputField name="firstName" placeholder={t("First Name*")} icon="mdi:account" />
+                            <InputField name="lastName" placeholder={t("Last Name*")} icon="mdi:account" />
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <InputField name="email" placeholder={t("Your Email")} icon="mdi:email" />
-                            <InputField name="phone" placeholder={t("Your Number")} icon="mdi:phone" />
+                            <InputField name="email" placeholder={t("Your Email*")} icon="mdi:email" />
+                            <InputField name="phone" placeholder={t("Your Number*")} icon="mdi:phone" />
                         </div>
-                        <InputField name="address" placeholder={t("Your Address")} icon="mdi:map-marker" />
+                        <InputField name="address" placeholder={t("Your Address*")} icon="mdi:map-marker" />
                         <InputField
                             name="pan"
-                            placeholder={t("PAN Number (Optional, for 80G tax exemption)")}
+                            placeholder={t("PAN Number* (e.g. ABCDE1234F)")}
                             icon="mdi:card-account-details-outline"
                             uppercase
                         />
                         <InputField
                             name="message"
-                            placeholder={t("Your message...")}
+                            placeholder={t("Your message...*")}
                             icon="mdi:email-outline"
                             as="textarea"
                         />

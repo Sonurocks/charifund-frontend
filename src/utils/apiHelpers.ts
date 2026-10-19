@@ -1,6 +1,15 @@
 export const getApiErrorMessage = (error: unknown, fallbackMessage: string = "Something went wrong. Please try again."): string => {
+  if (typeof error === "string" && error.trim()) {
+    return error.trim();
+  }
+
   if (typeof error === "object" && error !== null) {
     const err = error as any;
+
+    // Check if error response body is a raw string
+    if (typeof err.response?.data === "string" && err.response.data.trim()) {
+      return err.response.data.trim();
+    }
 
     // Check data.msg (Common in Charifund / Express backends)
     if (typeof err.response?.data?.msg === "string" && err.response.data.msg.trim()) {
@@ -64,6 +73,10 @@ export const getApiErrorMessage = (error: unknown, fallbackMessage: string = "So
 };
 
 export const getApiSuccessMessage = (data: unknown, fallbackMessage: string = "Operation completed successfully"): string => {
+  if (typeof data === "string" && data.trim()) {
+    return data.trim();
+  }
+
   if (typeof data === "object" && data !== null) {
     const response = data as any;
     
@@ -73,6 +86,10 @@ export const getApiSuccessMessage = (data: unknown, fallbackMessage: string = "O
 
     if (typeof response?.message === "string" && response.message.trim()) {
       return response.message.trim();
+    }
+
+    if (typeof response?.data === "string" && response.data.trim()) {
+      return response.data.trim();
     }
     
     if (typeof response?.data?.msg === "string" && response.data.msg.trim()) {

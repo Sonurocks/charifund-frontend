@@ -289,28 +289,15 @@ export const UnifiedDonations = () => {
 
   return (
     <div className="w-full min-w-0">
-      <Breadcrumb lable="Donations" />
-
-      {/* Header Row: Title & Action Toolbar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 -mt-2">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight">
-            {t("Donations") || "Donations"}
-          </h1>
-          <p className="text-xs sm:text-sm text-gray-500 mt-1">
-            {t("Monitor donor contributions, verify offline pledges, and generate official 80G receipts.") ||
-              "Monitor donor contributions, verify offline pledges, and generate official 80G receipts."}
-          </p>
-        </div>
-
+      <Breadcrumb lable="Donations">
         {/* Action Toolbar: Primary (Record Offline) & Secondary (Export CSV) */}
-        <div className="flex flex-wrap items-center gap-2.5 self-start sm:self-auto shrink-0">
+        <div className="flex flex-wrap items-center gap-2">
           {/* Secondary Action: Export CSV */}
           <button
             type="button"
             onClick={handleExportCsv}
             disabled={isExporting}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-white hover:bg-gray-50 text-gray-700 hover:text-gray-900 border border-gray-300 rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer disabled:opacity-50 h-[38px]"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-gray-50 text-gray-700 hover:text-gray-900 border border-gray-300 rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer disabled:opacity-50 h-[34px] sm:h-[36px]"
             title="Export filtered records as CSV"
           >
             {isExporting ? (
@@ -330,14 +317,14 @@ export const UnifiedDonations = () => {
           <button
             type="button"
             onClick={() => setIsCreateOfflineOpen(true)}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#00715D] hover:bg-[#005a4a] text-white rounded-lg text-xs font-bold shadow-xs transition-colors cursor-pointer h-[38px]"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#00715D] hover:bg-[#005a4a] text-white rounded-lg text-xs font-bold shadow-xs transition-colors cursor-pointer h-[34px] sm:h-[36px]"
             title="Record direct offline donation"
           >
             <Icon icon="mdi:plus-circle" className="w-4 h-4 text-emerald-200" />
             <span>{t("Record Offline Donation") || "Record Offline Donation"}</span>
           </button>
         </div>
-      </div>
+      </Breadcrumb>
 
       {/* Summary Cards */}
       <DonationSummaryCards

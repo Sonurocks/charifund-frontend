@@ -16,8 +16,8 @@ const NavbarActions = ({  setMobileMenuOpen, mobileMenuOpen }: NavbarActionsProp
       {/* Language Switcher */}
       {navScrolled &&(
         <div className="font-bold hidden md:block">
-        <LanguageSwitcher paddingx="px-6 py-4  md:px-4 lg:px-6" paddingy="md:py-[10px] lg:py-4" />
-      </div>
+          <LanguageSwitcher paddingx="px-4 lg:px-5" paddingy="py-2.5 lg:py-3" />
+        </div>
       )}
 
       {/* Donate Button */}

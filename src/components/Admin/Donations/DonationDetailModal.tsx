@@ -103,45 +103,39 @@ export const DonationDetailModal: React.FC<DonationDetailModalProps> = ({
       title={t("Donation Details") || "Donation Details"}
       description={t("Comprehensive donor and financial contribution record.") || "Comprehensive donor and financial contribution record."}
       footer={
-        <div className="flex flex-wrap items-center justify-end gap-3 w-full">
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold rounded-lg transition-colors cursor-pointer"
-          >
-            {t("Close")}
-          </button>
+        (isPendingOffline && onVerifyOffline) || (isConfirmed && onDownloadReceipt) ? (
+          <div className="flex flex-wrap items-center justify-end gap-3 w-full">
+            {isPendingOffline && onVerifyOffline && (
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  onVerifyOffline(donation);
+                }}
+                className="px-4 py-2 bg-[#059669] hover:bg-[#047857] text-white text-xs font-bold rounded-lg shadow-xs transition-colors cursor-pointer flex items-center gap-1.5"
+              >
+                <FaCheckCircle className="text-xs" />
+                <span>{t("Verify Offline Payment")}</span>
+              </button>
+            )}
 
-          {isPendingOffline && onVerifyOffline && (
-            <button
-              type="button"
-              onClick={() => {
-                onClose();
-                onVerifyOffline(donation);
-              }}
-              className="px-4 py-2 bg-[#059669] hover:bg-[#047857] text-white text-xs font-bold rounded-lg shadow-xs transition-colors cursor-pointer flex items-center gap-1.5"
-            >
-              <FaCheckCircle className="text-xs" />
-              <span>{t("Verify Offline Payment")}</span>
-            </button>
-          )}
-
-          {isConfirmed && onDownloadReceipt && (
-            <button
-              type="button"
-              onClick={() => onDownloadReceipt(donation)}
-              disabled={isDownloadingReceipt}
-              className="px-4 py-2 bg-[#0284c7] hover:bg-[#0369a1] text-white text-xs font-bold rounded-lg shadow-xs transition-colors cursor-pointer flex items-center gap-1.5 disabled:opacity-50"
-            >
-              <FaFileDownload className="text-xs" />
-              <span>
-                {isDownloadingReceipt
-                  ? t("Downloading Certificate...")
-                  : t("Download 80G Certificate")}
-              </span>
-            </button>
-          )}
-        </div>
+            {isConfirmed && onDownloadReceipt && (
+              <button
+                type="button"
+                onClick={() => onDownloadReceipt(donation)}
+                disabled={isDownloadingReceipt}
+                className="px-4 py-2 bg-[#0284c7] hover:bg-[#0369a1] text-white text-xs font-bold rounded-lg shadow-xs transition-colors cursor-pointer flex items-center gap-1.5 disabled:opacity-50"
+              >
+                <FaFileDownload className="text-xs" />
+                <span>
+                  {isDownloadingReceipt
+                    ? t("Downloading Certificate...")
+                    : t("Download 80G Certificate")}
+                </span>
+              </button>
+            )}
+          </div>
+        ) : undefined
       }
     >
       <div className="space-y-4 text-gray-800 text-xs sm:text-sm">

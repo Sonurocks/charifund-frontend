@@ -3,7 +3,7 @@ import { generateOpenGraphMetadata } from "@/src/helper/GenerateMetaTags";
 import { fetchCampaignByIdServerSide } from "@/src/services/web/server/serverServices";
 import { MetadataData } from "@/src/types";
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const data = await fetchCampaignByIdServerSide(id);
@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   } catch (error: any) {
     console.error("❌ Error fetching campaign metadata:", error.message);
     return {
-      title: 'Blog not found',
+      title: 'Campaign not found',
       description: 'This campaign could not be loaded.',
     };
   }

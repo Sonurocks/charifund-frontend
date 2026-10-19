@@ -33,19 +33,19 @@ export const createImageFileValidation = (
 
 
 export const DetailsformSchema = Yup.object().shape({
-  firstName: Yup.string().min(2, "First name is required").required(),
-  lastName: Yup.string().min(2, "Last name is required").required(),
-  email: Yup.string().email("Invalid email").required("Email is required"),
-  phone: Yup.string().matches(/^\d{10}$/, "Phone must be exactly 10 digits").required(),
-  address: Yup.string().min(5, "Address is required").required(),
+  firstName: Yup.string().trim().min(2, "First name is required").required("First name is required"),
+  lastName: Yup.string().trim().min(2, "Last name is required").required("Last name is required"),
+  email: Yup.string().trim().email("Invalid email").required("Email is required"),
+  phone: Yup.string().trim().matches(/^\d{10}$/, "Phone must be exactly 10 digits").required("Phone number is required"),
+  address: Yup.string().trim().min(5, "Address is required").required("Address is required"),
   pan: Yup.string()
     .trim()
+    .required("PAN number is required")
     .test(
       "valid-pan",
-      "Please enter a valid 10-character PAN (e.g. ABCDE1234F) or leave blank",
-      (val) => !val || /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/i.test(val)
-    )
-    .notRequired(),
+      "Please enter a valid 10-character PAN (e.g. ABCDE1234F)",
+      (val) => !!val && /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/i.test(val)
+    ),
   message: Yup.string().required("Message is required"),
 });
 export type DetailsFormValues = Yup.InferType<typeof DetailsformSchema>;

@@ -14,6 +14,7 @@ import InputField from "../../UI/web/InputField";
 import Button from "../../UI/web/Buttons/Button";
 import ButtonLoader from "../../UI/web/Loader/ButtonLoader";
 import { VolunteerInformationForm } from "@/src/services/web/client/clientServices";
+import { getApiErrorMessage, getApiSuccessMessage } from "@/src/utils/apiHelpers";
 
 // Dynamic imports for Formik components
 const Formik = lazy(() => import("formik").then(module => ({ default: module.Formik })));
@@ -33,11 +34,13 @@ const VolunteerForm = () => {
   const { t} = useTranslation();
   const mutation = useMutation({
     mutationFn: VolunteerInformationForm,
-    onSuccess: () => {
-      toast.success(t("formSuccess")); 
+    onSuccess: (data: any) => {
+      const message = getApiSuccessMessage(data, t("formSuccess"));
+      toast.success(message); 
     },
     onError: (error: any) => {
-      toast.error(t("formError")); 
+      const message = getApiErrorMessage(error, t("formError"));
+      toast.error(message); 
       console.error("Volunteer form submission error:", error);
     },
   });

@@ -50,12 +50,12 @@ const validationSchema = Yup.object().shape({
   address: Yup.string().trim(),
   pan: Yup.string()
     .trim()
+    .required("PAN number is required")
     .test(
       "valid-pan",
-      "Please enter a valid 10-character PAN (e.g. ABCDE1234F) or leave blank",
-      (val) => !val || /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/i.test(val)
-    )
-    .notRequired(),
+      "Please enter a valid 10-character PAN (e.g. ABCDE1234F)",
+      (val) => !!val && /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/i.test(val)
+    ),
   amount: Yup.number()
     .typeError("Amount must be a number")
     .positive("Amount must be greater than 0")
@@ -367,7 +367,7 @@ export const CreateOfflineDonationModal: React.FC<CreateOfflineDonationModalProp
               </div>
               <div>
                 <CustomInput
-                  label={`${t("PAN Number")} (${t("Optional")})`}
+                  label={`${t("PAN Number")}*`}
                   name="pan"
                   placeholder="e.g. ABCDE1234F"
                   value={values.pan}

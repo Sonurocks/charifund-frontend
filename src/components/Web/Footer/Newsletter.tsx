@@ -19,17 +19,20 @@ import {
 import toast from "react-hot-toast";
 import ButtonLoader from "../../UI/web/Loader/ButtonLoader";
 import { NewsletterEmailForm } from "@/src/services/web/client/clientServices";
+import { getApiErrorMessage, getApiSuccessMessage } from "@/src/utils/apiHelpers";
 
 const Newsletter = () => {
   const { t} = useTranslation();
 
   const mutation = useMutation({
     mutationFn: (email: string) => NewsletterEmailForm(email),
-    onSuccess: () => {
-      toast.success("Email subscribed successfully!");
+    onSuccess: (data: any) => {
+      const message = getApiSuccessMessage(data, t("Email subscribed successfully!"));
+      toast.success(message);
     },
     onError: (error: unknown) => {
-      toast.error("Something went wrong. Try again.");
+      const message = getApiErrorMessage(error, t("Something went wrong. Try again."));
+      toast.error(message);
       console.error("Newsletter subscription error:", error);
     },
   });

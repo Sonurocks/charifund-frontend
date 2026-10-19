@@ -176,15 +176,7 @@ export const VerifyOfflineModal: React.FC<VerifyOfflineModalProps> = ({
         </div>
       }
       footer={
-        <div className="flex items-center justify-between w-full gap-3">
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-4 py-2 border border-gray-300 rounded-lg text-xs font-semibold text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer"
-          >
-            {t("Cancel")}
-          </button>
-
+        <div className="flex items-center justify-end w-full gap-3">
           <button
             type="submit"
             form="verify-offline-form"

@@ -60,7 +60,7 @@ export const getDonationColumns = ({
       return <span className="text-gray-400">-</span>;
     },
     sortable: true,
-    minWidth: "140px",
+    width: "140px",
     grow: 1.2,
   },
   {
@@ -74,7 +74,7 @@ export const getDonationColumns = ({
       ) : (
         <span className="text-gray-400">-</span>
       ),
-    minWidth: "150px",
+    width: "150px",
     grow: 1.2,
   },
   {
@@ -86,7 +86,7 @@ export const getDonationColumns = ({
       ) : (
         <span className="text-gray-400">-</span>
       ),
-    minWidth: "115px",
+    width: "115px",
   },
   {
     name: "Type",
@@ -104,7 +104,7 @@ export const getDonationColumns = ({
         </span>
       );
     },
-    minWidth: "90px",
+    width: "90px",
   },
   {
     name: "Campaign",
@@ -162,7 +162,7 @@ export const getDonationColumns = ({
       );
     },
     sortable: true,
-    minWidth: "150px",
+    width: "150px",
     grow: 1.2,
   },
   {
@@ -179,7 +179,7 @@ export const getDonationColumns = ({
         </span>
       );
     },
-    minWidth: "95px",
+    width: "95px",
   },
   {
     name: "Amount",
@@ -190,7 +190,7 @@ export const getDonationColumns = ({
       </span>
     ),
     sortable: true,
-    minWidth: "95px",
+    width: "95px",
   },
   {
     name: "Status",
@@ -222,7 +222,7 @@ export const getDonationColumns = ({
         </span>
       );
     },
-    minWidth: "115px",
+    width: "115px",
   },
   {
     name: "Date",
@@ -243,7 +243,7 @@ export const getDonationColumns = ({
       }
     },
     sortable: true,
-    minWidth: "105px",
+    width: "105px",
   },
   {
     name: "Actions",
@@ -297,7 +297,7 @@ export const getDonationColumns = ({
         </div>
       );
     },
-    minWidth: "135px",
+    width: "135px",
   },
 ];
 

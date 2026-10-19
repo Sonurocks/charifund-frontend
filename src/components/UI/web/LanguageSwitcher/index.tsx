@@ -86,18 +86,30 @@ const LanguageSwitcher = ({
     <div className="relative inline-block z-40" ref={dropdownRef}>
       {/* Trigger Button */}
       <button
+        type="button"
         onClick={() => setOpen((prev) => !prev)}
-        className={`flex items-center gap-2 cursor-pointer bg-yellow text-foreground text-sm shadow-md hover:shadow-lg transition-all ${rounded} ${paddingx} ${paddingy}`}
+        className={`flex items-center justify-between gap-2.5 whitespace-nowrap cursor-pointer bg-yellow text-foreground text-sm font-semibold shadow-md hover:shadow-lg transition-all ${rounded} ${paddingx} ${paddingy}`}
       >
-        <span className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           {selectedLang.image ? (
-            <img src={selectedLang.image} alt={selectedLang.label} className="w-5 h-5 object-contain" />
+            <img
+              src={selectedLang.image}
+              alt={selectedLang.label}
+              className="w-5 h-5 object-contain shrink-0"
+            />
           ) : (
-            selectedLang.icon && <Icon icon={selectedLang.icon} className="w-5 h-5" />
+            selectedLang.icon && (
+              <Icon icon={selectedLang.icon} className="w-5 h-5 shrink-0" />
+            )
           )}
-          {selectedLang.label}
-        </span>
-        <Icon icon={open ? 'mdi:chevron-up' : 'mdi:chevron-down'} className="text-base" />
+          <span className="text-sm font-semibold whitespace-nowrap leading-none select-none">
+            {selectedLang.label}
+          </span>
+        </div>
+        <Icon
+          icon={open ? "mdi:chevron-up" : "mdi:chevron-down"}
+          className="text-base shrink-0 ml-1"
+        />
       </button>
 
       {/* Dropdown List */}

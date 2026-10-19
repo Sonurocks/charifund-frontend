@@ -15,8 +15,7 @@ import toast from "react-hot-toast";
 import ButtonLoader from "../../UI/web/Loader/ButtonLoader";
 import { ContactUsForm } from "@/src/services/web/client/clientServices";
 import { ContactFormValues } from "@/src/types";
-
-
+import { getApiErrorMessage, getApiSuccessMessage } from "@/src/utils/apiHelpers";
 
 const initialValues: ContactFormValues = {
     name: "",
@@ -37,11 +36,13 @@ const ContactForm = () => {
 
     const ContactformMutation = useMutation({
         mutationFn: ContactUsForm,
-        onSuccess: () => {
-            toast.success("Message sent successfully!");
+        onSuccess: (data: any) => {
+            const message = getApiSuccessMessage(data, t("Message sent successfully!"));
+            toast.success(message);
         },
-        onError: (error:any)=>{
-            toast.error("Something went wrong. Try again.");
+        onError: (error: any) => {
+            const message = getApiErrorMessage(error, t("Something went wrong. Try again."));
+            toast.error(message);
             console.error("Submission error:", error);
         }
     })
