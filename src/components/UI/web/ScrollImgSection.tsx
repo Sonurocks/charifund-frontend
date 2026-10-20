@@ -6,6 +6,7 @@ import { FaInstagram } from "react-icons/fa";
 import { motion, useAnimation } from "framer-motion";
 import { usePublicGallery } from "@/src/hooks/web/useGallery";
 import { useHomeOverview } from "@/src/hooks/web/useHomeOverview";
+import { getOptimizedImageUrl } from "@/src/utils/imageStandards";
 
 export default function ScrollImgSection() {
   const { data: overview, isLoading: isOverviewLoading } = useHomeOverview();
@@ -86,11 +87,12 @@ export default function ScrollImgSection() {
           >
             <div className="relative w-72 h-72 overflow-hidden">
               <Image
-                src={img.imageUrl}
+                src={getOptimizedImageUrl(img.imageUrl, { width: 320, height: 320, quality: "auto", format: "auto", crop: "fill" })}
                 alt={img.altText || `YUWA India Gallery image ${idx + 1}`}
                 loading="lazy"
                 width={288}
                 height={288}
+                sizes="288px"
                 className={`object-cover w-full h-full transition-transform duration-300 ${
                   hoveredIndex === idx ? "scale-110" : "scale-100"
                 }`}

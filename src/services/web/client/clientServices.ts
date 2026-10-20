@@ -175,6 +175,7 @@ export interface CreatePaymentOrderPayload {
   address: string;
   pan?: string;
   message?: string;
+  idempotencyKey?: string;
 }
 
 export interface CreatePaymentOrderResponse {
@@ -190,7 +191,11 @@ export interface CreatePaymentOrderResponse {
 }
 
 export const createPaymentOrder = async (orderData: CreatePaymentOrderPayload): Promise<CreatePaymentOrderResponse> => {
-    const { data } = await api.post<CreatePaymentOrderResponse>(`/web/payment/create-order`, orderData);
+    const headers: Record<string, string> = {};
+    if (orderData.idempotencyKey) {
+        headers["idempotency-key"] = orderData.idempotencyKey;
+    }
+    const { data } = await api.post<CreatePaymentOrderResponse>(`/web/payment/create-order`, orderData, { headers });
     return data;
 }
 
