@@ -244,3 +244,10 @@ export const fetchBlogById = async (id: string) => {
   const { data } = await api.get(`/web/blog/getBlogById/${id}`);
   return data;
 };
+
+// Unified Home Overview Data
+export const fetchHomeOverview = async () => {
+  const { data } = await api.get("/web/home-overview");
+  return data;
+};
+
