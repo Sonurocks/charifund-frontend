@@ -18,6 +18,7 @@ import { useInView } from "framer-motion";
 import CustomLoader from "../../UI/web/Loader/CustomLoader";
 import { bgOneVolunteer, image99, valueableshape } from "@/public/assets";
 import { fetchFeedback } from "@/src/services/web/client/clientServices";
+import { useHomeOverview } from "@/src/hooks/web/useHomeOverview";
 import StarRating from "../../UI/web/StarRating";
 import ComponentLabel from "../../UI/web/ComponentLabel";
 import ComponentTitle from "../../UI/web/ComponentTitle";
@@ -28,10 +29,17 @@ const truncateText = (text: string, maxLength: number): string =>
 const ValueableCustomer = () => {
   const { t } = useTranslation();
 
-  const { data: feedbacks = [], isLoading } = useQuery({
+  const { data: overview, isLoading: isOverviewLoading } = useHomeOverview();
+  const hasOverviewFeedbacks = Boolean(overview?.feedbacks?.length);
+
+  const { data: individualFeedbacks = [], isLoading: isFeedbackLoading } = useQuery({
     queryKey: ["feedback"],
     queryFn: fetchFeedback,
+    enabled: !isOverviewLoading && !hasOverviewFeedbacks,
   });
+
+  const feedbacks = hasOverviewFeedbacks ? overview.feedbacks : individualFeedbacks;
+  const isLoading = hasOverviewFeedbacks ? false : (isOverviewLoading || isFeedbackLoading);
 
   const validFeedbacks = feedbacks.filter(
     (f: any) => f.name && f.feedback && f.rating && f.image

@@ -6,6 +6,7 @@ import { useInView } from "framer-motion";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
 import { useFetchAllMembers } from "@/src/hooks/web/useMembers";
+import { useHomeOverview } from "@/src/hooks/web/useHomeOverview";
 import Button from "../../UI/web/Buttons/Button";
 import { VolunteerCard } from "../Team/TeamMemberCard";
 import CustomLoader from "../../UI/web/Loader/CustomLoader";
@@ -34,11 +35,26 @@ const VolunteerTeam = ({
   const isHeaderInView = useInView(headerRef, { once: true });
   const { t } = useTranslation();
 
-  const { data, isLoading, isError } = useFetchAllMembers(currentPage, limit);
+  const isHomepageSlice = !showPagination && currentPage === 1 && limit === 4;
+  const { data: overview, isLoading: isOverviewLoading } = useHomeOverview();
+  const hasOverviewMembers = Boolean(overview?.members?.length);
+  const shouldUseOverview = isHomepageSlice && hasOverviewMembers;
 
-  const safeMemberData = data ?? { members: [], totalPages: 1 };
+  const { data, isLoading: isFetchLoading, isError: isFetchError } = useFetchAllMembers(
+    currentPage, 
+    limit, 
+    {
+      enabled: !isHomepageSlice || (!isOverviewLoading && !hasOverviewMembers)
+    }
+  );
+
+  const safeMemberData = shouldUseOverview
+    ? { members: overview.members, totalPages: 1 }
+    : (data ?? { members: [], totalPages: 1 });
   const finalMembers = Array.isArray(safeMemberData.members) ? safeMemberData.members : [];
   const totalPages = typeof safeMemberData.totalPages === "number" && safeMemberData.totalPages > 0 ? safeMemberData.totalPages : 1;
+  const isLoading = shouldUseOverview ? false : (isHomepageSlice && isOverviewLoading ? true : isFetchLoading);
+  const isError = shouldUseOverview ? false : isFetchError;
 
   useEffect(() => {
     if (bg && bg.trim() !== "") {

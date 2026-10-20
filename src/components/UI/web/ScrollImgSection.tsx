@@ -5,17 +5,27 @@ import Image from "next/image";
 import { FaInstagram } from "react-icons/fa";
 import { motion, useAnimation } from "framer-motion";
 import { usePublicGallery } from "@/src/hooks/web/useGallery";
+import { useHomeOverview } from "@/src/hooks/web/useHomeOverview";
 
 export default function ScrollImgSection() {
-  const { data, isLoading, isError } = usePublicGallery();
+  const { data: overview, isLoading: isOverviewLoading } = useHomeOverview();
+  const hasOverviewGallery = Boolean(overview?.gallery?.length);
+
+  const { data, isLoading: isGalleryLoading, isError: isGalleryError } = usePublicGallery({
+    enabled: !isOverviewLoading && !hasOverviewGallery,
+  });
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [iconHover, setIconHover] = useState<number | null>(null);
   const controls = useAnimation();
 
+  const rawImages = hasOverviewGallery ? overview.gallery : data?.images;
+  const isLoading = hasOverviewGallery ? false : (isOverviewLoading || isGalleryLoading);
+  const isError = hasOverviewGallery ? false : isGalleryError;
+
   const galleryImages = useMemo(() => {
-    if (!data?.images || !Array.isArray(data.images)) return [];
-    return data.images.filter((img) => Boolean(img?.imageUrl));
-  }, [data?.images]);
+    if (!rawImages || !Array.isArray(rawImages)) return [];
+    return rawImages.filter((img: any) => Boolean(img?.imageUrl));
+  }, [rawImages]);
 
   // Ensure enough items to create a seamless infinite loop
   const displayImages = useMemo(() => {
