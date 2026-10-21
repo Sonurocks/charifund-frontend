@@ -287,7 +287,7 @@ export const DonationsTable: React.FC<DonationsTableProps> = ({
       </div>
 
       {/* Desktop / Tablet Table (hidden sm:block) */}
-      <div className="hidden sm:block relative">
+      <div className="hidden sm:block relative w-full min-w-0">
         {isLoading && (
           <div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] z-10 flex items-center justify-center rounded-xl">
             <div className="text-primaryColor flex items-center gap-2 font-medium text-xs">
