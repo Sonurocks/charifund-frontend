@@ -5,17 +5,28 @@ import Image from "next/image";
 import { FaInstagram } from "react-icons/fa";
 import { motion, useAnimation } from "framer-motion";
 import { usePublicGallery } from "@/src/hooks/web/useGallery";
+import { useHomeOverview } from "@/src/hooks/web/useHomeOverview";
+import { getOptimizedImageUrl } from "@/src/utils/imageStandards";
 
 export default function ScrollImgSection() {
-  const { data, isLoading, isError } = usePublicGallery();
+  const { data: overview, isLoading: isOverviewLoading } = useHomeOverview();
+  const hasOverviewGallery = Boolean(overview?.gallery?.length);
+
+  const { data, isLoading: isGalleryLoading, isError: isGalleryError } = usePublicGallery({
+    enabled: !isOverviewLoading && !hasOverviewGallery,
+  });
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [iconHover, setIconHover] = useState<number | null>(null);
   const controls = useAnimation();
 
+  const rawImages = hasOverviewGallery ? overview.gallery : data?.images;
+  const isLoading = hasOverviewGallery ? false : (isOverviewLoading || isGalleryLoading);
+  const isError = hasOverviewGallery ? false : isGalleryError;
+
   const galleryImages = useMemo(() => {
-    if (!data?.images || !Array.isArray(data.images)) return [];
-    return data.images.filter((img) => Boolean(img?.imageUrl));
-  }, [data?.images]);
+    if (!rawImages || !Array.isArray(rawImages)) return [];
+    return rawImages.filter((img: any) => Boolean(img?.imageUrl));
+  }, [rawImages]);
 
   // Ensure enough items to create a seamless infinite loop
   const displayImages = useMemo(() => {
@@ -76,11 +87,12 @@ export default function ScrollImgSection() {
           >
             <div className="relative w-72 h-72 overflow-hidden">
               <Image
-                src={img.imageUrl}
+                src={getOptimizedImageUrl(img.imageUrl, { width: 320, height: 320, quality: "auto", format: "auto", crop: "fill" })}
                 alt={img.altText || `YUWA India Gallery image ${idx + 1}`}
                 loading="lazy"
                 width={288}
                 height={288}
+                sizes="288px"
                 className={`object-cover w-full h-full transition-transform duration-300 ${
                   hoveredIndex === idx ? "scale-110" : "scale-100"
                 }`}

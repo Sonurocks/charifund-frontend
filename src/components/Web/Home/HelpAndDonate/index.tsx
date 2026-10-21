@@ -12,6 +12,7 @@ import { motion, useInView } from "framer-motion";
 import ArrowButton from "@/src/components/UI/web/Buttons/ArrowButton";
 
 import { useFetchAllCampaigns } from "@/src/hooks/web/useCampaigns";
+import { useHomeOverview } from "@/src/hooks/web/useHomeOverview";
 import { useTranslation } from "react-i18next";
 
 import CarouselIndicators from "./CarouselIndicators";
@@ -44,14 +45,21 @@ const HelpAndDonate: React.FC = () => {
   const isSpadeInView = useInView(spadeRef, { once: true, amount: 0.3 });
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
-  const { data: campaignsData, isLoading } = useFetchAllCampaigns(1, 8) as {
+  const { data: overview, isLoading: isOverviewLoading } = useHomeOverview();
+  const hasOverviewCampaigns = Boolean(overview?.campaigns?.length);
+  const { data: campaignsData, isLoading: isCampaignsLoading } = useFetchAllCampaigns(1, 8, "All", {
+    enabled: !isOverviewLoading && !hasOverviewCampaigns
+  }) as {
     data: { campaigns: CampaignApiResponse[] };
     isLoading: boolean;
   };
 
+  const campaignsList = hasOverviewCampaigns ? overview.campaigns : campaignsData?.campaigns || [];
+  const isLoading = hasOverviewCampaigns ? false : (isOverviewLoading || isCampaignsLoading);
+
   const campaignsToDisplay = useMemo(() => {
-    if (campaignsData?.campaigns?.length) {
-      return campaignsData.campaigns.map((campaign: any) => {
+    if (campaignsList?.length) {
+      return campaignsList.map((campaign: any) => {
         const progress =
           campaign.goalAmount > 0
             ? Math.round((campaign.raisedAmount / campaign.goalAmount) * 100)
@@ -69,7 +77,7 @@ const HelpAndDonate: React.FC = () => {
       });
     }
     return [];
-  }, [campaignsData]);
+  }, [campaignsList]);
 
   const handleCardClick = useCallback(
     (id?: string) => {

@@ -10,17 +10,23 @@ import FadeUpCard from '@/src/animations/FadeButtomUp';
 import CustomLoader from '../../../UI/web/Loader/CustomLoader';
 import BlogCard from '../../Blog/BlogCard';
 import { useFetchAllBlogs } from '@/src/hooks/web/useBlog';
+import { useHomeOverview } from '@/src/hooks/web/useHomeOverview';
 import ComponentLabel from '@/src/components/UI/web/ComponentLabel';
 import ComponentTitle from '@/src/components/UI/web/ComponentTitle';
 
 const LatestNewsArticle: React.FC = () => {
   const { t } = useTranslation();
-  const { data, isLoading, isError } = useFetchAllBlogs(1, 3, 'All');
+  const { data: overview, isLoading: isOverviewLoading } = useHomeOverview();
+  const hasOverviewBlogs = Boolean(overview?.blogs?.length);
+  const { data, isLoading: isBlogsLoading, isError } = useFetchAllBlogs(1, 3, 'All', {
+    enabled: !isOverviewLoading && !hasOverviewBlogs
+  });
 
   const headerRef = useRef(null);
   const isHeaderInView = useInView(headerRef, { once: true });
 
-  const blogs = data?.blogs ?? [];
+  const blogs = hasOverviewBlogs ? overview.blogs : data?.blogs ?? [];
+  const isLoading = hasOverviewBlogs ? false : (isOverviewLoading || isBlogsLoading);
 
   if (!isLoading && blogs.length === 0) {
     return null;

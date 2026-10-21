@@ -2,7 +2,12 @@ import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { fetchPublicSponsors, fetchPublicSponsorBySlug } from "@/src/services/web/client/sponsorApi";
 import { Sponsor } from "@/src/types/web/sponsor";
 
-export const useFetchPublicSponsors = (page: number = 1, limit: number = 20, search?: string) => {
+export const useFetchPublicSponsors = (
+  page: number = 1,
+  limit: number = 20,
+  search?: string,
+  options?: { enabled?: boolean; [key: string]: any }
+) => {
   return useQuery({
     queryKey: ["web-sponsors", page, limit, search],
     queryFn: async () => {
@@ -21,6 +26,7 @@ export const useFetchPublicSponsors = (page: number = 1, limit: number = 20, sea
     },
     placeholderData: keepPreviousData,
     staleTime: 1000 * 60 * 5,
+    ...options,
   });
 };
 

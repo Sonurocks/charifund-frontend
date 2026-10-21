@@ -2,11 +2,17 @@ import { fetchAllBlogs, fetchBlogById } from "@/src/services/web/client/clientSe
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 
 // Fetch blogs with pagination
-export const useFetchAllBlogs = (page: number, limit: number = 10,search?:string) => {
+export const useFetchAllBlogs = (
+  page: number,
+  limit: number = 10,
+  search?: string,
+  options?: { enabled?: boolean; [key: string]: any }
+) => {
   return useQuery({
-    queryKey: ["blogs", page, limit,search],
-    queryFn: () => fetchAllBlogs(page, limit,search),
+    queryKey: ["blogs", page, limit, search],
+    queryFn: () => fetchAllBlogs(page, limit, search),
     placeholderData: keepPreviousData,
+    ...options,
   });
 };
 

@@ -4,11 +4,16 @@ import { fetchAllMembers, fetchMemberById } from "@/src/services/web/client/clie
 
 
 // Fetch members with pagination
-export const useFetchAllMembers = (page: number, limit: number = 10) => {
+export const useFetchAllMembers = (
+  page: number,
+  limit: number = 10,
+  options?: { enabled?: boolean; [key: string]: any }
+) => {
   return useQuery({
     queryKey: ["members", page, limit],
     queryFn: () => fetchAllMembers(page, limit),
     placeholderData: keepPreviousData,
+    ...options,
   });
 };
 
