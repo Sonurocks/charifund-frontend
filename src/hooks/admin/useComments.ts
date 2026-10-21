@@ -22,11 +22,11 @@ export const useFetchComments = (page: number, limit: number, status: string | n
 
 
 export const useFetchCommentById = (id: string) => {
-
   return useQuery({
     queryKey: ["comment", id],
     queryFn: () => fetchCommentsById(id),
     retry: 0,
+    enabled: Boolean(id && id.trim() !== ""),
     select: (data) => data || [],
   });
 };

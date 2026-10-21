@@ -84,7 +84,7 @@ export const DonationFilters: React.FC<DonationFiltersProps> = ({
   const statusOptions = [
     { label: t("All Statuses") || "All Statuses", value: "all" },
     { label: t("Pending Verification") || "Pending Verification", value: "pending" },
-    { label: t("Confirmed / Paid") || "Confirmed / Paid", value: "completed" },
+    { label: t("Confirmed / Paid") || "Confirmed / Paid", value: "paid" },
   ];
 
   // Campaign Options

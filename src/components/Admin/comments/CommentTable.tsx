@@ -43,7 +43,6 @@ const CommentTable = () => {
   const {
     data: singleCommentData,
     isLoading: loadingComment,
-    refetch: refetchSingleComment,
   } = useFetchCommentById(CommentId || "");
 
   const handleEdit = useCallback(
@@ -51,9 +50,8 @@ const CommentTable = () => {
       setCommentId(comment.id);
       setMode("edit");
       setDrawerOpen(true);
-      refetchSingleComment();
     },
-    [refetchSingleComment]
+    []
   );
 
   const handleView = useCallback(
@@ -61,9 +59,8 @@ const CommentTable = () => {
       setCommentId(comment.id);
       setMode("view");
       setDrawerOpen(true);
-      refetchSingleComment();
     },
-    [refetchSingleComment]
+    []
   );
 
   const handleDelete = useCallback(
