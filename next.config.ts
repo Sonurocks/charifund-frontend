@@ -24,7 +24,9 @@ const nextConfig: NextConfig = {
     ],
     dangerouslyAllowSVG: true,
   },
-  experimental: {},
+  experimental: {
+    agentUpgrade: "security",
+  },
 };
 
 export default nextConfig;
