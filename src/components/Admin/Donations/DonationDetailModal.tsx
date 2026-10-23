@@ -25,7 +25,9 @@ interface DonationDetailModalProps {
   donation: UnifiedDonation | null;
   onVerifyOffline?: (donation: UnifiedDonation) => void;
   onDownloadReceipt?: (donation: UnifiedDonation) => void;
+  onSendReceiptEmail?: (donation: UnifiedDonation) => void;
   isDownloadingReceipt?: boolean;
+  isSendingEmail?: boolean;
   currentLang?: string;
 }
 
@@ -35,7 +37,9 @@ export const DonationDetailModal: React.FC<DonationDetailModalProps> = ({
   donation,
   onVerifyOffline,
   onDownloadReceipt,
+  onSendReceiptEmail,
   isDownloadingReceipt = false,
+  isSendingEmail = false,
   currentLang = "en",
 }) => {
   const { t } = useTranslation();
@@ -103,7 +107,7 @@ export const DonationDetailModal: React.FC<DonationDetailModalProps> = ({
       title={t("Donation Details") || "Donation Details"}
       description={t("Comprehensive donor and financial contribution record.") || "Comprehensive donor and financial contribution record."}
       footer={
-        (isPendingOffline && onVerifyOffline) || (isConfirmed && onDownloadReceipt) ? (
+        (isPendingOffline && onVerifyOffline) || (isConfirmed && (onDownloadReceipt || onSendReceiptEmail)) ? (
           <div className="flex flex-wrap items-center justify-end gap-3 w-full">
             {isPendingOffline && onVerifyOffline && (
               <button
@@ -116,6 +120,22 @@ export const DonationDetailModal: React.FC<DonationDetailModalProps> = ({
               >
                 <FaCheckCircle className="text-xs" />
                 <span>{t("Verify Offline Payment")}</span>
+              </button>
+            )}
+
+            {isConfirmed && onSendReceiptEmail && donation.email && (
+              <button
+                type="button"
+                onClick={() => onSendReceiptEmail(donation)}
+                disabled={isSendingEmail}
+                className="px-4 py-2 bg-[#059669] hover:bg-[#047857] text-white text-xs font-bold rounded-lg shadow-xs transition-colors cursor-pointer flex items-center gap-1.5 disabled:opacity-50"
+              >
+                <FaEnvelope className="text-xs" />
+                <span>
+                  {isSendingEmail
+                    ? t("Sending Receipt Email...")
+                    : t("Send 80G Receipt Email")}
+                </span>
               </button>
             )}
 

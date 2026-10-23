@@ -32,6 +32,7 @@ interface DonationsTableProps {
   onViewDetails?: (donation: UnifiedDonation) => void;
   onVerifyOffline?: (donation: UnifiedDonation) => void;
   onDownloadReceipt?: (donation: UnifiedDonation) => void;
+  onSendReceiptEmail?: (donation: UnifiedDonation) => void;
   currentLang?: string;
 }
 
@@ -88,6 +89,7 @@ export const DonationsTable: React.FC<DonationsTableProps> = ({
   onViewDetails,
   onVerifyOffline,
   onDownloadReceipt,
+  onSendReceiptEmail,
   currentLang = "en",
 }) => {
   const { t } = useTranslation();
@@ -100,8 +102,9 @@ export const DonationsTable: React.FC<DonationsTableProps> = ({
       onViewDetails,
       onVerifyOffline,
       onDownloadReceipt,
+      onSendReceiptEmail,
     });
-  }, [currentLang, currentPage, limit, onViewDetails, onVerifyOffline, onDownloadReceipt]);
+  }, [currentLang, currentPage, limit, onViewDetails, onVerifyOffline, onDownloadReceipt, onSendReceiptEmail]);
 
   const pageSizes = [10, 25, 50];
 

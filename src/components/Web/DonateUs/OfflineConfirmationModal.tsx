@@ -105,6 +105,15 @@ export default function OfflineConfirmationModal({
             <p className="text-xs text-gray-700 mt-0.5 leading-relaxed">
               {t("Someone from our organisation will contact you shortly, or you can simply visit our office to complete your donation.")}
             </p>
+            {pledgeData.donorEmail && (
+              <p className="text-[11px] text-emerald-800 font-medium mt-1 flex items-center gap-1">
+                <span>📧</span>
+                <span>
+                  {t("Pledge confirmation & bank details have been emailed to")}{" "}
+                  <strong className="underline">{pledgeData.donorEmail}</strong>
+                </span>
+              </p>
+            )}
           </div>
           <div className="shrink-0 bg-white/90 border border-emerald-200 rounded-xl px-4 py-2 text-right shadow-xs">
             <span className="text-[10px] uppercase font-bold text-gray-500 block">

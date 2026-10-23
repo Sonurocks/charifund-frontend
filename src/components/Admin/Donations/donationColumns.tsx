@@ -1,6 +1,6 @@
 import React from "react";
 import { UnifiedDonation } from "@/src/types/admin/donation";
-import { FaEye, FaCheck, FaFileDownload } from "react-icons/fa";
+import { FaEye, FaCheck, FaFileDownload, FaEnvelope } from "react-icons/fa";
 
 interface ColumnOptions {
   lang?: string;
@@ -9,6 +9,7 @@ interface ColumnOptions {
   onViewDetails?: (row: UnifiedDonation) => void;
   onVerifyOffline?: (row: UnifiedDonation) => void;
   onDownloadReceipt?: (row: UnifiedDonation) => void;
+  onSendReceiptEmail?: (row: UnifiedDonation) => void;
 }
 
 export const isDonationConfirmed = (row: UnifiedDonation): boolean => {
@@ -34,6 +35,7 @@ export const getDonationColumns = ({
   onViewDetails,
   onVerifyOffline,
   onDownloadReceipt,
+  onSendReceiptEmail,
 }: ColumnOptions = {}) => [
   {
     name: "SNo",
@@ -301,11 +303,25 @@ export const getDonationColumns = ({
               <span>Certificate</span>
             </button>
           )}
+
+          {/* Resend Receipt Email Action - For confirmed donations with donor email */}
+          {isConfirmed && onSendReceiptEmail && row.email && (
+            <button
+              type="button"
+              onClick={() => onSendReceiptEmail(row)}
+              className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-[#059669] hover:bg-[#047857] text-white transition-colors cursor-pointer text-[11px] font-semibold whitespace-nowrap shadow-xs"
+              title={`Send 80G receipt email to ${row.email}`}
+              aria-label="Send receipt email"
+            >
+              <FaEnvelope className="w-2.5 h-2.5 text-white" />
+              <span>Email</span>
+            </button>
+          )}
         </div>
       );
     },
-    minWidth: "140px",
-    grow: 0.9,
+    minWidth: "190px",
+    grow: 1.1,
   },
 ];
 

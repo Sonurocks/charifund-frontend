@@ -14,7 +14,7 @@ import VerifyOfflineModal from "./VerifyOfflineModal";
 import CreateOfflineDonationModal from "./CreateOfflineDonationModal";
 import { useFetchDonations } from "@/src/hooks/admin/useDonations";
 import { useFetchAllCampaigns } from "@/src/hooks/admin/useCampaigns";
-import { exportDonationsCsv } from "@/src/services/admin/donationApi";
+import { exportDonationsCsv, resendReceiptEmail } from "@/src/services/admin/donationApi";
 import { fetchDonationReceipt } from "@/src/services/web/client/clientServices";
 import { useLanguageToggle } from "@/src/hooks/web/useLanguageToggle";
 import useDebounce from "@/src/hooks/web/useDebounce";
@@ -52,6 +52,8 @@ export const UnifiedDonations = () => {
   const [isCreateOfflineOpen, setIsCreateOfflineOpen] =
     useState<boolean>(false);
   const [isDownloadingReceipt, setIsDownloadingReceipt] =
+    useState<boolean>(false);
+  const [isSendingEmail, setIsSendingEmail] =
     useState<boolean>(false);
 
   // Debounced search (350 ms satisfies 300–400 ms requirement)
@@ -285,6 +287,34 @@ export const UnifiedDonations = () => {
     }
   };
 
+  // Send / Resend Receipt Email Handler
+  const handleSendReceiptEmail = async (donation: UnifiedDonation) => {
+    if (!donation.id) return;
+    if (!donation.email || donation.email.trim() === "") {
+      toast.error("This donor does not have an email address on record.");
+      return;
+    }
+
+    setIsSendingEmail(true);
+    const toastId = toast.loading(`Sending 80G receipt email to ${donation.email}...`);
+
+    try {
+      const res = await resendReceiptEmail(donation.id);
+      toast.success(
+        res?.msg || `Official 80G receipt successfully emailed to ${donation.email}!`,
+        { id: toastId }
+      );
+    } catch (err: any) {
+      console.error("Resend Receipt Email Error:", err);
+      toast.error(
+        getApiErrorMessage(err, "Failed to send receipt email. Please try again."),
+        { id: toastId }
+      );
+    } finally {
+      setIsSendingEmail(false);
+    }
+  };
+
   const { t } = useTranslation();
 
   return (
@@ -378,6 +408,7 @@ export const UnifiedDonations = () => {
         onViewDetails={(donation) => setSelectedDonationForView(donation)}
         onVerifyOffline={(donation) => setSelectedDonationForVerify(donation)}
         onDownloadReceipt={handleDownloadReceipt}
+        onSendReceiptEmail={handleSendReceiptEmail}
         currentLang={language}
       />
 
@@ -388,7 +419,9 @@ export const UnifiedDonations = () => {
         donation={selectedDonationForView}
         onVerifyOffline={(donation) => setSelectedDonationForVerify(donation)}
         onDownloadReceipt={handleDownloadReceipt}
+        onSendReceiptEmail={handleSendReceiptEmail}
         isDownloadingReceipt={isDownloadingReceipt}
+        isSendingEmail={isSendingEmail}
         currentLang={language}
       />
 
