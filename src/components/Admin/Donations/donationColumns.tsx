@@ -1,6 +1,6 @@
 import React from "react";
 import { UnifiedDonation } from "@/src/types/admin/donation";
-import { FaEye, FaCheck, FaFileDownload } from "react-icons/fa";
+import { FaEye, FaCheck, FaFileDownload, FaEnvelope } from "react-icons/fa";
 
 interface ColumnOptions {
   lang?: string;
@@ -9,22 +9,33 @@ interface ColumnOptions {
   onViewDetails?: (row: UnifiedDonation) => void;
   onVerifyOffline?: (row: UnifiedDonation) => void;
   onDownloadReceipt?: (row: UnifiedDonation) => void;
+  onSendReceiptEmail?: (row: UnifiedDonation) => void;
 }
 
 export const isDonationConfirmed = (row: UnifiedDonation): boolean => {
   const statusLower = (row.status || "").toLowerCase().trim();
+  const isOffline = (row.paymentMethod || "").toLowerCase().trim() === "offline";
+
+  // Offline donations MUST be verified or paid before being considered confirmed
+  if (isOffline) {
+    return statusLower === "verified" || statusLower === "paid" || statusLower === "completed";
+  }
+
+  // Online donations
   if (
     statusLower === "completed" ||
     statusLower === "success" ||
-    statusLower === "paid" ||
-    statusLower === "verified"
+    statusLower === "paid"
   ) {
     return true;
   }
-  if (row.receiptNumber && String(row.receiptNumber).trim()) {
-    return true;
-  }
   return false;
+};
+
+export const hasValidEmail = (email?: string | null): boolean => {
+  if (!email || typeof email !== "string") return false;
+  const clean = email.trim();
+  return clean !== "" && clean !== "-" && clean.includes("@");
 };
 
 export const getDonationColumns = ({
@@ -34,6 +45,7 @@ export const getDonationColumns = ({
   onViewDetails,
   onVerifyOffline,
   onDownloadReceipt,
+  onSendReceiptEmail,
 }: ColumnOptions = {}) => [
   {
     name: "SNo",
@@ -256,8 +268,9 @@ export const getDonationColumns = ({
     name: "Actions",
     cell: (row: UnifiedDonation) => {
       const isConfirmed = isDonationConfirmed(row);
-      const isOffline = row.paymentMethod?.toLowerCase() === "offline";
+      const isOffline = (row.paymentMethod || "").toLowerCase().trim() === "offline";
       const isPendingOffline = isOffline && !isConfirmed;
+      const canEmail = isConfirmed && !isPendingOffline && hasValidEmail(row.email);
 
       return (
         <div className="flex items-center gap-1.5 py-1">
@@ -266,11 +279,11 @@ export const getDonationColumns = ({
             <button
               type="button"
               onClick={() => onViewDetails(row)}
-              className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-white hover:bg-gray-100 text-gray-700 hover:text-gray-900 border border-gray-200 transition-colors cursor-pointer text-[11px] font-medium shadow-xs"
+              className="inline-flex items-center justify-center w-7 h-7 rounded-md bg-white hover:bg-gray-100 text-gray-700 hover:text-gray-900 border border-gray-200 transition-colors cursor-pointer shadow-2xs"
               title="View donation details"
               aria-label="View donation details"
             >
-              <FaEye className="w-3 h-3 text-gray-500" />
+              <FaEye className="w-3.5 h-3.5 text-gray-600" />
             </button>
           )}
 
@@ -279,7 +292,7 @@ export const getDonationColumns = ({
             <button
               type="button"
               onClick={() => onVerifyOffline(row)}
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-[#00715D] hover:bg-[#005a4a] text-white transition-colors cursor-pointer text-[11px] font-semibold whitespace-nowrap shadow-xs"
+              className="inline-flex items-center gap-1 px-2.5 h-7 rounded-md bg-[#00715D] hover:bg-[#005a4a] text-white transition-colors cursor-pointer text-[11px] font-bold whitespace-nowrap shadow-2xs"
               title="Verify offline payment"
               aria-label="Verify offline payment"
             >
@@ -293,19 +306,32 @@ export const getDonationColumns = ({
             <button
               type="button"
               onClick={() => onDownloadReceipt(row)}
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-[#0284c7] hover:bg-[#0369a1] text-white transition-colors cursor-pointer text-[11px] font-semibold whitespace-nowrap shadow-xs"
-              title="Download 80G Certificate"
+              className="inline-flex items-center justify-center w-7 h-7 rounded-md bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 transition-colors cursor-pointer shadow-2xs"
+              title="Download 80G Certificate PDF"
               aria-label="Download donation certificate"
             >
-              <FaFileDownload className="w-2.5 h-2.5 text-white" />
-              <span>Certificate</span>
+              <FaFileDownload className="w-3.5 h-3.5 text-sky-600" />
+            </button>
+          )}
+
+          {/* Resend Receipt Email Action - STRICTLY for confirmed/verified donations with valid email */}
+          {canEmail && onSendReceiptEmail && (
+            <button
+              type="button"
+              onClick={() => onSendReceiptEmail(row)}
+              className="inline-flex items-center justify-center w-7 h-7 rounded-md bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 transition-colors cursor-pointer shadow-2xs"
+              title={`Send 80G receipt & certificate email to ${row.email}`}
+              aria-label="Send receipt email"
+            >
+              <FaEnvelope className="w-3.5 h-3.5 text-emerald-600" />
             </button>
           )}
         </div>
       );
     },
-    minWidth: "140px",
-    grow: 0.9,
+    minWidth: "130px",
+    width: "135px",
+    grow: 0,
   },
 ];
 

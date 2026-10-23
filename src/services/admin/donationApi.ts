@@ -129,3 +129,16 @@ export const exportDonationsCsv = async (
     throw error;
   }
 };
+
+/**
+ * Re-sends official 80G donation receipt email to the donor
+ */
+export const resendReceiptEmail = async (
+  id: string
+): Promise<{ success: boolean; msg: string; receiptNumber?: string }> => {
+  const { data } = await api.post(
+    `/admin/donation/${encodeURIComponent(id)}/send-receipt-email`
+  );
+  return data;
+};
+
