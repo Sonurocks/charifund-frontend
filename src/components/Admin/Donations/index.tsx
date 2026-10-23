@@ -290,20 +290,22 @@ export const UnifiedDonations = () => {
   // Send / Resend Receipt Email Handler
   const handleSendReceiptEmail = async (donation: UnifiedDonation) => {
     if (!donation.id) return;
-    if (!donation.email || donation.email.trim() === "") {
-      toast.error("This donor does not have an email address on record.");
+    const donorEmail = donation.email ? donation.email.trim() : "";
+    if (!donorEmail || donorEmail === "-" || !donorEmail.includes("@")) {
+      toast.error("This donor does not have a valid email address on record.");
       return;
     }
 
     setIsSendingEmail(true);
-    const toastId = toast.loading(`Sending 80G receipt email to ${donation.email}...`);
+    const toastId = toast.loading(`Sending 80G receipt & certificate email to ${donorEmail}...`);
 
     try {
       const res = await resendReceiptEmail(donation.id);
       toast.success(
-        res?.msg || `Official 80G receipt successfully emailed to ${donation.email}!`,
+        res?.msg || `Official 80G receipt and PDF certificate successfully emailed to ${donorEmail}!`,
         { id: toastId }
       );
+      refetch();
     } catch (err: any) {
       console.error("Resend Receipt Email Error:", err);
       toast.error(

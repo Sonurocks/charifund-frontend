@@ -3,9 +3,9 @@
 import React, { useMemo } from "react";
 import dynamic from "next/dynamic";
 import { UnifiedDonation } from "@/src/types/admin/donation";
-import { getDonationColumns, isDonationConfirmed } from "./donationColumns";
+import { getDonationColumns, isDonationConfirmed, hasValidEmail } from "./donationColumns";
 import { useTranslation } from "react-i18next";
-import { FaExclamationTriangle, FaFolderOpen, FaRedo, FaEye, FaCheck, FaFileDownload } from "react-icons/fa";
+import { FaExclamationTriangle, FaFolderOpen, FaRedo, FaEye, FaCheck, FaFileDownload, FaEnvelope } from "react-icons/fa";
 
 const DataTableWrapper = dynamic(
   () => import("@/src/components/UI/admin/DataTableWrapper"),
@@ -280,6 +280,18 @@ export const DonationsTable: React.FC<DonationsTableProps> = ({
                     >
                       <FaFileDownload className="w-2.5 h-2.5 text-white" />
                       <span>Certificate</span>
+                    </button>
+                  )}
+
+                  {isConfirmed && !isPendingOffline && hasValidEmail(donation.email) && onSendReceiptEmail && (
+                    <button
+                      type="button"
+                      onClick={() => onSendReceiptEmail(donation)}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold shadow-xs cursor-pointer"
+                      title={`Send 80G receipt email to ${donation.email}`}
+                    >
+                      <FaEnvelope className="w-2.5 h-2.5 text-white" />
+                      <span>Email</span>
                     </button>
                   )}
                 </div>

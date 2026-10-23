@@ -3,7 +3,7 @@
 import React from "react";
 import Modal from "@/src/components/UI/web/Modal";
 import { UnifiedDonation } from "@/src/types/admin/donation";
-import { isDonationConfirmed } from "./donationColumns";
+import { isDonationConfirmed, hasValidEmail } from "./donationColumns";
 import { useTranslation } from "react-i18next";
 import DonationStatusBadge from "@/src/components/UI/DonationStatusBadge";
 import {
@@ -123,7 +123,7 @@ export const DonationDetailModal: React.FC<DonationDetailModalProps> = ({
               </button>
             )}
 
-            {isConfirmed && onSendReceiptEmail && donation.email && (
+            {isConfirmed && !isPendingOffline && onSendReceiptEmail && hasValidEmail(donation.email) && (
               <button
                 type="button"
                 onClick={() => onSendReceiptEmail(donation)}
