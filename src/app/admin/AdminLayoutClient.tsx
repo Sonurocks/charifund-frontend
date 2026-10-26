@@ -2,8 +2,12 @@
 
 import React from "react";
 import AdminSideBar from "@/src/components/Admin/sidebar";
+import { useAdminRealtime } from "@/src/hooks/admin/useAdminRealtime";
 
 export default function AdminLayoutClient({ children }: { children: React.ReactNode }) {
+  // Real-time SSE listener for live donations, campaigns, and inquiries
+  useAdminRealtime();
+
   return (
     <div className="relative flex flex-col md:flex-row gap-0 md:gap-2 h-screen overflow-hidden">
       <AdminSideBar />
