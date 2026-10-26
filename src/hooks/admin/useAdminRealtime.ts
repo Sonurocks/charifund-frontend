@@ -31,8 +31,8 @@ interface InquiryPayload {
 
 /**
  * Custom React Hook for real-time Server-Sent Events (SSE) updates on the Admin Dashboard.
- * Automatically invalidates relevant TanStack Query caches (dashboard metrics, donations table,
- * campaigns, inquiries) and displays subtle toast notifications when live events occur.
+ * Automatically connects to backend SSE stream, refetches active TanStack Query caches,
+ * and triggers live toast alerts when events occur.
  */
 export const useAdminRealtime = () => {
   const queryClient = useQueryClient();
@@ -40,61 +40,91 @@ export const useAdminRealtime = () => {
   const eventSourceRef = useRef<EventSource | null>(null);
 
   useEffect(() => {
-    // Only run in browser environment
     if (typeof window === "undefined") return;
 
     let isMounted = true;
     let reconnectTimeout: NodeJS.Timeout | null = null;
 
+    const getToken = () => {
+      return (
+        Cookies.get("token") ||
+        (typeof window !== "undefined" ? localStorage.getItem("token") : null)
+      );
+    };
+
     const connectSse = () => {
-      // Retrieve auth token from cookies
-      const token = Cookies.get("token");
+      const token = getToken();
       if (!token) {
         setIsConnected(false);
         return;
       }
 
-      // Clean up any existing connection
+      // Close previous connection if active
       if (eventSourceRef.current) {
         eventSourceRef.current.close();
         eventSourceRef.current = null;
       }
 
-      // Determine backend API base URL
-      const apiBase = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/$/, "");
-      const realtimeEndpoint = apiBase
-        ? apiBase.endsWith("/api/V1")
-          ? `${apiBase}/admin/realtime`
-          : `${apiBase}/api/V1/admin/realtime`
-        : "/api/V1/admin/realtime";
+      // Resolve backend API URL with localhost fallback
+      let apiBase = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/$/, "");
+      if (!apiBase && typeof window !== "undefined") {
+        if (
+          window.location.hostname === "localhost" ||
+          window.location.hostname === "127.0.0.1"
+        ) {
+          apiBase = "http://localhost:8081/api/V1";
+        } else {
+          apiBase = "https://tunnel.yuwaindia.org/api/V1";
+        }
+      }
+
+      const realtimeEndpoint = apiBase.endsWith("/api/V1")
+        ? `${apiBase}/admin/realtime`
+        : `${apiBase}/api/V1/admin/realtime`;
 
       const streamUrl = `${realtimeEndpoint}?token=${encodeURIComponent(token)}`;
+      console.log("[useAdminRealtime] Connecting to SSE endpoint:", streamUrl);
 
       try {
-        const es = new EventSource(streamUrl, { withCredentials: true });
+        // Standard EventSource without withCredentials prevents CORS wildcard rejection in browsers
+        const es = new EventSource(streamUrl);
         eventSourceRef.current = es;
 
-        es.addEventListener("connected", () => {
+        es.addEventListener("open", () => {
           if (!isMounted) return;
           setIsConnected(true);
+          console.log("[useAdminRealtime] SSE connection established successfully ✅");
         });
 
-        // 1. Live Donation Created (Online payment, offline pledge, or direct offline entry)
+        es.addEventListener("connected", (event: MessageEvent) => {
+          if (!isMounted) return;
+          setIsConnected(true);
+          console.log("[useAdminRealtime] Received 'connected' handshake event:", event.data);
+        });
+
+        // 1. Live Donation Event (online payment, offline pledge, direct offline entry)
         es.addEventListener("donation:created", (event: MessageEvent) => {
           if (!isMounted) return;
           try {
             const data: DonationPayload = JSON.parse(event.data);
+            console.log("[useAdminRealtime] ⚡ Realtime donation:created event received:", data);
+
             const formattedAmount = data.amount
               ? `₹${Number(data.amount).toLocaleString("en-IN")}`
               : "a donation";
             const donor = data.donorName || "Generous Donor";
 
-            // Invalidate React Query caches for immediate UI sync without full page reload
-            queryClient.invalidateQueries({ queryKey: ["dashboard-data"] });
-            queryClient.invalidateQueries({ queryKey: ["dashboard"] });
-            queryClient.invalidateQueries({ queryKey: ["unified-donations"] });
+            // Invalidate all related caches
+            queryClient.invalidateQueries({ queryKey: ["dashboard-data"], refetchType: "all" });
+            queryClient.invalidateQueries({ queryKey: ["dashboard"], refetchType: "all" });
+            queryClient.invalidateQueries({ queryKey: ["unified-donations"], refetchType: "all" });
 
-            // Display contextual toast notification
+            // Force immediate active network refetch on the currently viewed page
+            queryClient.refetchQueries({ queryKey: ["dashboard-data"], type: "active" });
+            queryClient.refetchQueries({ queryKey: ["dashboard"], type: "active" });
+            queryClient.refetchQueries({ queryKey: ["unified-donations"], type: "active" });
+
+            // Display toast notification
             if (data.type === "offline") {
               toast(`📝 New Offline Pledge: ${formattedAmount} from ${donor}`, {
                 duration: 5000,
@@ -113,19 +143,25 @@ export const useAdminRealtime = () => {
           }
         });
 
-        // 2. Offline Donation Verified by Admin
+        // 2. Offline Donation Verified
         es.addEventListener("donation:verified", (event: MessageEvent) => {
           if (!isMounted) return;
           try {
             const data: DonationPayload = JSON.parse(event.data);
+            console.log("[useAdminRealtime] ⚡ Realtime donation:verified event received:", data);
+
             const formattedAmount = data.amount
               ? `₹${Number(data.amount).toLocaleString("en-IN")}`
               : "a donation";
             const donor = data.donorName || "Donor";
 
-            queryClient.invalidateQueries({ queryKey: ["dashboard-data"] });
-            queryClient.invalidateQueries({ queryKey: ["dashboard"] });
-            queryClient.invalidateQueries({ queryKey: ["unified-donations"] });
+            queryClient.invalidateQueries({ queryKey: ["dashboard-data"], refetchType: "all" });
+            queryClient.invalidateQueries({ queryKey: ["dashboard"], refetchType: "all" });
+            queryClient.invalidateQueries({ queryKey: ["unified-donations"], refetchType: "all" });
+
+            queryClient.refetchQueries({ queryKey: ["dashboard-data"], type: "active" });
+            queryClient.refetchQueries({ queryKey: ["dashboard"], type: "active" });
+            queryClient.refetchQueries({ queryKey: ["unified-donations"], type: "active" });
 
             toast.success(`✅ Offline Donation Verified: ${formattedAmount} for ${donor}`, {
               duration: 5000,
@@ -136,26 +172,37 @@ export const useAdminRealtime = () => {
         });
 
         // 3. Campaign Created, Updated, or Deleted
-        es.addEventListener("campaign:updated", () => {
+        es.addEventListener("campaign:updated", (event: MessageEvent) => {
           if (!isMounted) return;
-          queryClient.invalidateQueries({ queryKey: ["campaigns"] });
-          queryClient.invalidateQueries({ queryKey: ["campaign"] });
-          queryClient.invalidateQueries({ queryKey: ["dashboard-data"] });
-          queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+          console.log("[useAdminRealtime] ⚡ Realtime campaign:updated event received:", event.data);
+
+          queryClient.invalidateQueries({ queryKey: ["campaigns"], refetchType: "all" });
+          queryClient.invalidateQueries({ queryKey: ["campaign"], refetchType: "all" });
+          queryClient.invalidateQueries({ queryKey: ["dashboard-data"], refetchType: "all" });
+          queryClient.invalidateQueries({ queryKey: ["dashboard"], refetchType: "all" });
+
+          queryClient.refetchQueries({ queryKey: ["campaigns"], type: "active" });
+          queryClient.refetchQueries({ queryKey: ["dashboard-data"], type: "active" });
+          queryClient.refetchQueries({ queryKey: ["dashboard"], type: "active" });
         });
 
-        // 4. Contact Query or Volunteer Inquiry Received
+        // 4. Contact or Volunteer Inquiry Created
         es.addEventListener("inquiry:created", (event: MessageEvent) => {
           if (!isMounted) return;
           try {
             const data: InquiryPayload = JSON.parse(event.data);
+            console.log("[useAdminRealtime] ⚡ Realtime inquiry:created event received:", data);
+
             const typeLabel =
               data.type === "volunteer" ? "Volunteer Application" : "Contact Inquiry";
             const sender = data.name || "Someone";
 
-            queryClient.invalidateQueries({ queryKey: ["queries"] });
-            queryClient.invalidateQueries({ queryKey: ["query"] });
-            queryClient.invalidateQueries({ queryKey: ["dashboard-data"] });
+            queryClient.invalidateQueries({ queryKey: ["queries"], refetchType: "all" });
+            queryClient.invalidateQueries({ queryKey: ["query"], refetchType: "all" });
+            queryClient.invalidateQueries({ queryKey: ["dashboard-data"], refetchType: "all" });
+
+            queryClient.refetchQueries({ queryKey: ["queries"], type: "active" });
+            queryClient.refetchQueries({ queryKey: ["dashboard-data"], type: "active" });
 
             toast(`📬 New ${typeLabel} from ${sender}`, {
               duration: 5000,
@@ -165,25 +212,33 @@ export const useAdminRealtime = () => {
           }
         });
 
-        es.onerror = () => {
+        es.onerror = (err) => {
           if (!isMounted) return;
+          console.warn("[useAdminRealtime] EventSource error or disconnect:", err);
           setIsConnected(false);
-          // EventSource handles reconnection natively, but if the socket closed, retry after delay
+
           if (es.readyState === EventSource.CLOSED) {
             reconnectTimeout = setTimeout(() => {
               if (isMounted) connectSse();
-            }, 5000);
+            }, 3000);
           }
         };
       } catch (err) {
-        console.error("[useAdminRealtime] Failed to establish SSE connection:", err);
+        console.error("[useAdminRealtime] Failed to instantiate EventSource:", err);
         setIsConnected(false);
       }
     };
 
     connectSse();
 
-    // Re-verify connection on tab visibility change (e.g. laptop wake or tab switch)
+    // Check periodically if auth token appeared (e.g. user just logged in)
+    const tokenCheckInterval = setInterval(() => {
+      if (!eventSourceRef.current && getToken()) {
+        connectSse();
+      }
+    }, 3000);
+
+    // Re-verify connection on tab visibility change
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible") {
         if (!eventSourceRef.current || eventSourceRef.current.readyState === EventSource.CLOSED) {
@@ -197,6 +252,7 @@ export const useAdminRealtime = () => {
     return () => {
       isMounted = false;
       document.removeEventListener("visibilitychange", handleVisibilityChange);
+      clearInterval(tokenCheckInterval);
       if (reconnectTimeout) clearTimeout(reconnectTimeout);
       if (eventSourceRef.current) {
         eventSourceRef.current.close();
