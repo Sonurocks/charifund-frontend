@@ -30,6 +30,7 @@ import {
   useFetchMonthlyFunds,
 } from "@/src/hooks/admin/useDashboard";
 import DateSelect from "@/src/components/UI/admin/DateSelect";
+import RollingCounter from "@/src/components/UI/admin/RollingCounter";
 
 export const Dashboard = () => {
   const [selectedYear, setSelectedYear] = useState<number | undefined>(
@@ -52,9 +53,86 @@ export const Dashboard = () => {
     refetch: refetchMonthly,
   } = useFetchMonthlyFunds(selectedYear);
 
-  // Instant live update listener on SSE donation event
+  // Local live state for zero-latency optimistic updates and rolling odometer
+  const [liveData, setLiveData] = useState<{
+    totalFunds: number;
+    generalFunds: number;
+    campaignFunds: number;
+    onlineFunds: number;
+    offlineFunds: number;
+    totalDonationsCount: number;
+    generalDonationsCount: number;
+    campaignDonationsCount: number;
+    offlineDonationsCount: number;
+    activeCampaign: number;
+    totalMembers: number;
+    liveEvents: number;
+  }>({
+    totalFunds: 0,
+    generalFunds: 0,
+    campaignFunds: 0,
+    onlineFunds: 0,
+    offlineFunds: 0,
+    totalDonationsCount: 0,
+    generalDonationsCount: 0,
+    campaignDonationsCount: 0,
+    offlineDonationsCount: 0,
+    activeCampaign: 0,
+    totalMembers: 0,
+    liveEvents: 0,
+  });
+
+  // Sync initial query data or refetched query data into live state
   React.useEffect(() => {
-    const handleLiveDonation = () => {
+    if (dashboardData) {
+      setLiveData({
+        totalFunds: dashboardData.totalFunds ?? 0,
+        generalFunds: dashboardData.generalFunds ?? 0,
+        campaignFunds: dashboardData.campaignFunds ?? 0,
+        onlineFunds: dashboardData.onlineFunds ?? 0,
+        offlineFunds: dashboardData.offlineFunds ?? 0,
+        totalDonationsCount: dashboardData.totalDonationsCount ?? 0,
+        generalDonationsCount: dashboardData.generalDonationsCount ?? 0,
+        campaignDonationsCount: dashboardData.campaignDonationsCount ?? 0,
+        offlineDonationsCount: dashboardData.offlineDonationsCount ?? 0,
+        activeCampaign: dashboardData.activeCampaign ?? 0,
+        totalMembers: dashboardData.totalMembers ?? 0,
+        liveEvents: dashboardData.liveEvents ?? dashboardData.activeCampaign ?? 0,
+      });
+    }
+  }, [dashboardData]);
+
+  // Instant live update listener on SSE donation event: 0ms optimistic bump + background reconciliation
+  React.useEffect(() => {
+    const handleLiveDonation = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const payload = customEvent.detail;
+      const donationAmount = Number(payload?.amount) || 0;
+
+      if (donationAmount > 0) {
+        setLiveData((prev) => {
+          const isOffline = payload?.type === "offline";
+          const isCampaign = Boolean(
+            payload?.campaignTitle && payload.campaignTitle !== "General Welfare Fund"
+          );
+          return {
+            ...prev,
+            totalFunds: prev.totalFunds + donationAmount,
+            onlineFunds: !isOffline ? prev.onlineFunds + donationAmount : prev.onlineFunds,
+            offlineFunds: isOffline ? prev.offlineFunds + donationAmount : prev.offlineFunds,
+            generalFunds: !isCampaign ? prev.generalFunds + donationAmount : prev.generalFunds,
+            campaignFunds: isCampaign ? prev.campaignFunds + donationAmount : prev.campaignFunds,
+            totalDonationsCount: prev.totalDonationsCount + 1,
+            generalDonationsCount: !isCampaign
+              ? prev.generalDonationsCount + 1
+              : prev.generalDonationsCount,
+            campaignDonationsCount: isCampaign
+              ? prev.campaignDonationsCount + 1
+              : prev.campaignDonationsCount,
+          };
+        });
+      }
+
       refetchDashboard();
       refetchDist();
       refetchMonthly();
@@ -64,44 +142,40 @@ export const Dashboard = () => {
     return () => window.removeEventListener("admin-realtime:donation", handleLiveDonation);
   }, [refetchDashboard, refetchDist, refetchMonthly]);
 
-  const safeDashboardData = {
-    totalFunds: dashboardData?.totalFunds ?? 0,
-    liveEvents: dashboardData?.liveEvents ?? dashboardData?.activeCampaign ?? 0,
-    activeCampaign: dashboardData?.activeCampaign ?? 0,
-    totalMembers: dashboardData?.totalMembers ?? 0,
-    pendingRequest: dashboardData?.pendingRequest ?? 0,
-    generalFunds: dashboardData?.generalFunds ?? 0,
-    campaignFunds: dashboardData?.campaignFunds ?? 0,
-    onlineFunds: dashboardData?.onlineFunds ?? 0,
-    offlineFunds: dashboardData?.offlineFunds ?? 0,
-    totalDonationsCount: dashboardData?.totalDonationsCount ?? 0,
-    generalDonationsCount: dashboardData?.generalDonationsCount ?? 0,
-    campaignDonationsCount: dashboardData?.campaignDonationsCount ?? 0,
-    offlineDonationsCount: dashboardData?.offlineDonationsCount ?? 0,
-  };
-
   const cards = [
     {
       title: "Total Funds",
-      value: `₹${safeDashboardData.totalFunds.toLocaleString("en-IN")}`,
+      numericValue: liveData.totalFunds,
+      prefix: "₹",
+      decimals: 2,
+      showTrend: true,
       icon: <FaMoneyBillWave size={24} />,
       color: "from-yellow-400 to-yellow-600",
     },
     {
       title: "Active Campaigns",
-      value: safeDashboardData.activeCampaign.toString(),
+      numericValue: liveData.activeCampaign,
+      prefix: "",
+      decimals: 0,
+      showTrend: false,
       icon: <FaClipboardList size={24} />,
       color: "from-green-400 to-green-600",
     },
     {
       title: "Members",
-      value: safeDashboardData.totalMembers.toString(),
+      numericValue: liveData.totalMembers,
+      prefix: "",
+      decimals: 0,
+      showTrend: false,
       icon: <FaUsers size={24} />,
       color: "from-yellow-300 to-yellow-500",
     },
     {
       title: "Live Events",
-      value: safeDashboardData.liveEvents.toString(),
+      numericValue: liveData.liveEvents,
+      prefix: "",
+      decimals: 0,
+      showTrend: false,
       icon: <FaCalendarAlt size={24} />,
       color: "from-green-300 to-green-500",
     },
@@ -110,8 +184,9 @@ export const Dashboard = () => {
   const donationCards = [
     {
       title: "General Donations",
-      value: `₹${safeDashboardData.generalFunds.toLocaleString("en-IN")}`,
-      count: `${safeDashboardData.generalDonationsCount} donations`,
+      numericValue: liveData.generalFunds,
+      numericCount: liveData.generalDonationsCount,
+      countLabel: "donations",
       icon: <FaHandHoldingHeart size={20} className="text-purple-600" />,
       bg: "bg-[#faf5ff] border-[#e9d5ff]",
       titleColor: "text-purple-700",
@@ -119,8 +194,9 @@ export const Dashboard = () => {
     },
     {
       title: "Campaign Donations",
-      value: `₹${safeDashboardData.campaignFunds.toLocaleString("en-IN")}`,
-      count: `${safeDashboardData.campaignDonationsCount} donations`,
+      numericValue: liveData.campaignFunds,
+      numericCount: liveData.campaignDonationsCount,
+      countLabel: "donations",
       icon: <MdCampaign size={22} className="text-blue-600" />,
       bg: "bg-[#f0f7ff] border-[#bfdbfe]",
       titleColor: "text-blue-700",
@@ -128,8 +204,9 @@ export const Dashboard = () => {
     },
     {
       title: "Online Collections",
-      value: `₹${safeDashboardData.onlineFunds.toLocaleString("en-IN")}`,
-      count: `${safeDashboardData.totalDonationsCount} total donors`,
+      numericValue: liveData.onlineFunds,
+      numericCount: liveData.totalDonationsCount,
+      countLabel: "total donors",
       icon: <FaMoneyBillWave size={20} className="text-emerald-600" />,
       bg: "bg-emerald-50 border-emerald-200",
       titleColor: "text-emerald-700",
@@ -137,10 +214,11 @@ export const Dashboard = () => {
     },
     {
       title: "Offline Collections",
-      value: `₹${safeDashboardData.offlineFunds.toLocaleString("en-IN")}`,
-      count:
-        safeDashboardData.offlineDonationsCount > 0
-          ? `${safeDashboardData.offlineDonationsCount} verified collections`
+      numericValue: liveData.offlineFunds,
+      numericCount: liveData.offlineDonationsCount,
+      countLabel:
+        liveData.offlineDonationsCount > 0
+          ? "verified collections"
           : "Verified collections",
       icon: <FaDonate size={20} className="text-amber-600" />,
       bg: "bg-amber-50 border-amber-200",
@@ -205,9 +283,14 @@ export const Dashboard = () => {
               >
                 {card.title}
               </h3>
-              <p className="text-lg sm:text-xl lg:text-2xl font-bold mt-0.5 truncate">
-                {card.value}
-              </p>
+              <div className="text-lg sm:text-xl lg:text-2xl font-bold mt-0.5 truncate flex items-center">
+                <RollingCounter
+                  value={card.numericValue}
+                  prefix={card.prefix}
+                  decimals={card.decimals}
+                  showTrend={card.showTrend}
+                />
+              </div>
             </div>
           </motion.div>
         ))}
@@ -236,14 +319,24 @@ export const Dashboard = () => {
                 >
                   {dCard.title}
                 </p>
-                <p className="text-sm sm:text-base lg:text-lg font-bold truncate text-gray-900 mt-0.5">
-                  {dCard.value}
-                </p>
-                <p
-                  className={`text-[10px] sm:text-[11px] font-medium truncate ${dCard.countColor}`}
+                <div className="text-sm sm:text-base lg:text-lg font-bold truncate text-gray-900 mt-0.5 flex items-center">
+                  <RollingCounter
+                    value={dCard.numericValue}
+                    prefix="₹"
+                    decimals={2}
+                    className="text-gray-900"
+                  />
+                </div>
+                <div
+                  className={`text-[10px] sm:text-[11px] font-medium truncate flex items-center gap-1 ${dCard.countColor}`}
                 >
-                  {dCard.count}
-                </p>
+                  <RollingCounter
+                    value={dCard.numericCount}
+                    decimals={0}
+                    showTrend={false}
+                  />
+                  <span>{dCard.countLabel}</span>
+                </div>
               </div>
             </motion.div>
           ))}
@@ -376,7 +469,14 @@ export const Dashboard = () => {
                     ]}
                     labelFormatter={(label: string) => `Month: ${label}`}
                   />
-                  <Bar dataKey="funds" radius={[6, 6, 0, 0]} maxBarSize={24}>
+                  <Bar
+                    dataKey="funds"
+                    radius={[6, 6, 0, 0]}
+                    maxBarSize={24}
+                    isAnimationActive={true}
+                    animationDuration={800}
+                    animationEasing="ease-out"
+                  >
                     {monthlyFundsData.monthly.map((entry, index) => (
                       <Cell
                         key={index}

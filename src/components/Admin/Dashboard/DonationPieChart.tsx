@@ -80,7 +80,9 @@ const DonationPieChart: React.FC<DonationPieChartProps> = ({
               startAngle={90}
               endAngle={450}
               paddingAngle={0}
-              isAnimationActive={false}
+              isAnimationActive={true}
+              animationDuration={800}
+              animationEasing="ease-out"
             >
               {data.map((entry, index) => (
                 <Cell
