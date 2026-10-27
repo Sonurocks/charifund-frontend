@@ -103,6 +103,124 @@ export const UnifiedDonations = () => {
     endDate,
   });
 
+  // Local state for instant optimistic updates and row highlight
+  const [liveDonations, setLiveDonations] = useState<UnifiedDonation[]>([]);
+  const [liveSummary, setLiveSummary] = useState<any>(null);
+  const [liveTotalCount, setLiveTotalCount] = useState<number>(0);
+  const [newRowIds, setNewRowIds] = useState<Set<string>>(new Set());
+
+  // Sync server data into live local state whenever query updates
+  useEffect(() => {
+    if (donationData) {
+      if (donationData.donations) setLiveDonations(donationData.donations);
+      if (donationData.summary) setLiveSummary(donationData.summary);
+      if (donationData.total !== undefined) setLiveTotalCount(donationData.total);
+    }
+  }, [donationData]);
+
+  // Instant live update listener on SSE donation event
+  useEffect(() => {
+    let debounceRefetchTimer: NodeJS.Timeout | null = null;
+
+    const handleLiveDonation = (e: any) => {
+      const payload = e?.detail;
+      if (payload && (payload.donationId || payload.amount !== undefined)) {
+        const amount = Number(payload.amount || 0);
+        const isCampaign = payload.type === "campaign";
+        const isOffline = payload.paymentMethod === "offline";
+
+        // Optimistically update summary metrics with zero latency
+        setLiveSummary((prev: any) => {
+          const cur = prev || {};
+          return {
+            ...cur,
+            totalAmount: Number(cur.totalAmount || cur.totalCollected || 0) + amount,
+            totalCollected: Number(cur.totalCollected || cur.totalAmount || 0) + amount,
+            totalCount: Number(cur.totalCount || cur.totalDonationsCount || 0) + 1,
+            totalDonationsCount: Number(cur.totalDonationsCount || cur.totalCount || 0) + 1,
+            generalAmount: !isCampaign
+              ? Number(cur.generalAmount || cur.generalDonations || 0) + amount
+              : Number(cur.generalAmount || cur.generalDonations || 0),
+            generalCount: !isCampaign
+              ? Number(cur.generalCount || cur.generalDonationsCount || 0) + 1
+              : Number(cur.generalCount || cur.generalDonationsCount || 0),
+            campaignAmount: isCampaign
+              ? Number(cur.campaignAmount || cur.campaignDonations || 0) + amount
+              : Number(cur.campaignAmount || cur.campaignDonations || 0),
+            campaignCount: isCampaign
+              ? Number(cur.campaignCount || cur.campaignDonationsCount || 0) + 1
+              : Number(cur.campaignCount || cur.campaignDonationsCount || 0),
+            offlineAmount: isOffline
+              ? Number(cur.offlineAmount || cur.offlineCollections || 0) + amount
+              : Number(cur.offlineAmount || cur.offlineCollections || 0),
+            offlineCount: isOffline
+              ? Number(cur.offlineCount || cur.offlineDonationsCount || 0) + 1
+              : Number(cur.offlineCount || cur.offlineDonationsCount || 0),
+          };
+        });
+        setLiveTotalCount((prev) => prev + 1);
+
+        // Prepend new row if on Page 1 without active text search filter
+        if (currentPage === 1 && !debouncedSearch) {
+          const uniqueId = String(
+            payload.donationId ||
+              `live-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
+          );
+          const newDonation: UnifiedDonation = {
+            id: uniqueId,
+            receiptNumber: payload.receiptNumber || `REC-${Date.now()}`,
+            amount,
+            donorName: payload.donorName || "Generous Supporter",
+            name: payload.donorName || "Generous Supporter",
+            email: payload.donorEmail || payload.email || "—",
+            phone: payload.donorPhone || payload.phone || "—",
+            type: (payload.type as any) || "general",
+            campaignTitle: payload.campaignTitle || "General Welfare Fund",
+            paymentMethod: (payload.paymentMethod as any) || "online",
+            status: "completed",
+            createdAt: payload.emittedAt || new Date().toISOString(),
+            receivedDate: payload.emittedAt || new Date().toISOString(),
+          };
+
+          setLiveDonations((prev) => {
+            if (prev.some((d) => d.id === newDonation.id)) return prev;
+            return [newDonation, ...prev.slice(0, limit - 1)];
+          });
+
+          const newId = newDonation.id;
+          setNewRowIds((prev) => {
+            const next = new Set(prev).add(newId);
+            if (next.size > limit * 2) {
+              const arr = Array.from(next);
+              return new Set(arr.slice(arr.length - limit));
+            }
+            return next;
+          });
+
+          setTimeout(() => {
+            setNewRowIds((prev) => {
+              const next = new Set(prev);
+              next.delete(newId);
+              return next;
+            });
+          }, 5000);
+        }
+      }
+
+      // Debounce server refetch during high-frequency donation bursts
+      if (debounceRefetchTimer) clearTimeout(debounceRefetchTimer);
+      debounceRefetchTimer = setTimeout(() => {
+        refetch();
+      }, 400);
+    };
+
+    window.addEventListener("admin-realtime:donation", handleLiveDonation);
+    return () => {
+      window.removeEventListener("admin-realtime:donation", handleLiveDonation);
+      if (debounceRefetchTimer) clearTimeout(debounceRefetchTimer);
+    };
+  }, [currentPage, debouncedSearch, limit, refetch]);
+
   // Fetch campaigns for campaign selector dropdown
   const { data: campaignResponse, isLoading: isLoadingCampaigns } =
     useFetchAllCampaigns(1, 100) as {
@@ -360,8 +478,8 @@ export const UnifiedDonations = () => {
 
       {/* Summary Cards */}
       <DonationSummaryCards
-        summary={donationData?.summary}
-        totalCount={donationData?.total}
+        summary={liveSummary || donationData?.summary}
+        totalCount={liveTotalCount || donationData?.total}
         isLoading={isLoading && !donationData}
       />
 
@@ -389,8 +507,8 @@ export const UnifiedDonations = () => {
 
       {/* Table & Pagination */}
       <DonationsTable
-        donations={donationData?.donations || []}
-        total={donationData?.total || 0}
+        donations={liveDonations.length > 0 ? liveDonations : (donationData?.donations || [])}
+        total={liveTotalCount || donationData?.total || 0}
         currentPage={donationData?.page || currentPage}
         totalPages={donationData?.totalPages || 1}
         limit={donationData?.limit || limit}
@@ -412,6 +530,7 @@ export const UnifiedDonations = () => {
         onDownloadReceipt={handleDownloadReceipt}
         onSendReceiptEmail={handleSendReceiptEmail}
         currentLang={language}
+        newRowIds={newRowIds}
       />
 
       {/* View Donation Details Drawer */}

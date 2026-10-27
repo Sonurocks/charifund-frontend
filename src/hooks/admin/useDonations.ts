@@ -18,6 +18,6 @@ export const useFetchDonations = (params: DonationFilterParams) => {
     ],
     queryFn: () => fetchDonations(params),
     placeholderData: (previousData) => previousData,
-    staleTime: 60 * 1000,
+    staleTime: 5 * 1000,
   });
 };

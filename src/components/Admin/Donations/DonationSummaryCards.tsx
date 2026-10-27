@@ -7,6 +7,8 @@ import { MdCampaign } from "react-icons/md";
 import { DonationSummary } from "@/src/types/admin/donation";
 import { useTranslation } from "react-i18next";
 
+import RollingCounter from "@/src/components/UI/admin/RollingCounter";
+
 interface DonationSummaryCardsProps {
   summary?: DonationSummary;
   totalCount?: number;
@@ -71,29 +73,33 @@ export const DonationSummaryCards: React.FC<DonationSummaryCardsProps> = ({
   const cards = [
     {
       title: t("Total Collected"),
-      amount: `₹${safeTotalCollected.toLocaleString("en-IN")}`,
-      countText: `${totalDonationsCount.toLocaleString("en-IN")} donations`,
+      numericAmount: safeTotalCollected,
+      numericCount: totalDonationsCount,
+      countSuffix: "donations",
       icon: <FaMoneyBillWave size={20} />,
       color: "from-amber-400 to-amber-600",
     },
     {
       title: t("General Donations"),
-      amount: `₹${safeGeneralDonations.toLocaleString("en-IN")}`,
-      countText: `${generalDonationsCount.toLocaleString("en-IN")} donations`,
+      numericAmount: safeGeneralDonations,
+      numericCount: generalDonationsCount,
+      countSuffix: "donations",
       icon: <FaHandHoldingHeart size={20} />,
       color: "from-purple-500 to-indigo-600",
     },
     {
       title: t("Campaign Donations"),
-      amount: `₹${safeCampaignDonations.toLocaleString("en-IN")}`,
-      countText: `${campaignDonationsCount.toLocaleString("en-IN")} donations`,
+      numericAmount: safeCampaignDonations,
+      numericCount: campaignDonationsCount,
+      countSuffix: "donations",
       icon: <MdCampaign size={22} />,
       color: "from-blue-500 to-blue-700",
     },
     {
       title: t("Offline Collections"),
-      amount: `₹${safeOfflineCollections.toLocaleString("en-IN")}`,
-      countText: `${offlineCollectionsCount.toLocaleString("en-IN")} collections`,
+      numericAmount: safeOfflineCollections,
+      numericCount: offlineCollectionsCount,
+      countSuffix: "collections",
       icon: <FaDonate size={20} />,
       color: "from-emerald-500 to-teal-600",
     },
@@ -118,12 +124,23 @@ export const DonationSummaryCards: React.FC<DonationSummaryCardsProps> = ({
             <h3 className="text-[10px] sm:text-xs uppercase tracking-wider font-semibold text-white/90 leading-tight truncate">
               {card.title}
             </h3>
-            <p className="text-base sm:text-lg lg:text-xl font-bold mt-0.5 text-white truncate">
-              {card.amount}
-            </p>
-            <p className="text-[11px] sm:text-xs text-white/80 mt-0.5 truncate">
-              {card.countText}
-            </p>
+            <div className="text-base sm:text-lg lg:text-xl font-bold mt-0.5 text-white truncate flex items-center">
+              <RollingCounter
+                value={card.numericAmount}
+                prefix="₹"
+                decimals={2}
+                className="text-white"
+              />
+            </div>
+            <div className="text-[11px] sm:text-xs text-white/80 mt-0.5 truncate flex items-center gap-1">
+              <RollingCounter
+                value={card.numericCount}
+                decimals={0}
+                showTrend={false}
+                className="text-white/80"
+              />
+              <span>{card.countSuffix}</span>
+            </div>
           </div>
         </motion.div>
       ))}

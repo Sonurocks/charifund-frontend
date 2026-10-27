@@ -254,6 +254,7 @@ export interface AdminDataTableWrapperProps<T> {
   columns: TableColumn<T>[];
   data: T[];
   loading?: boolean;
+  conditionalRowStyles?: any[];
 }
 
 export interface DashboardData {
