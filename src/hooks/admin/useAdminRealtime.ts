@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import Cookies from "js-cookie";
-import toast from "react-hot-toast";
 
 interface DonationPayload {
   donationId?: string | number;
@@ -31,13 +30,35 @@ interface InquiryPayload {
 
 /**
  * Custom React Hook for real-time Server-Sent Events (SSE) updates on the Admin Dashboard.
- * Automatically connects to backend SSE stream, refetches active TanStack Query caches,
- * and triggers live toast alerts when events occur.
+ * Automatically connects to backend SSE stream, debounces queries to prevent server contention
+ * during high-frequency donation bursts, and triggers bell notifications on the header.
  */
 export const useAdminRealtime = () => {
   const queryClient = useQueryClient();
   const [isConnected, setIsConnected] = useState(false);
   const eventSourceRef = useRef<EventSource | null>(null);
+  const debouncedRefetchTimer = useRef<NodeJS.Timeout | null>(null);
+
+  // Debounced cache invalidator & active refetcher (350ms window)
+  const scheduleDebouncedRefetch = useCallback(() => {
+    if (debouncedRefetchTimer.current) {
+      clearTimeout(debouncedRefetchTimer.current);
+    }
+
+    debouncedRefetchTimer.current = setTimeout(() => {
+      // Invalidate queries so cached data marks stale
+      queryClient.invalidateQueries({ queryKey: ["dashboard-data"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+      queryClient.invalidateQueries({ queryKey: ["unified-donations"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-notifications"] });
+
+      // Actively refetch visible views immediately
+      queryClient.refetchQueries({ queryKey: ["dashboard-data"], type: "active" });
+      queryClient.refetchQueries({ queryKey: ["dashboard"], type: "active" });
+      queryClient.refetchQueries({ queryKey: ["unified-donations"], type: "active" });
+      queryClient.refetchQueries({ queryKey: ["admin-notifications"], type: "active" });
+    }, 350);
+  }, [queryClient]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -50,6 +71,16 @@ export const useAdminRealtime = () => {
         Cookies.get("token") ||
         (typeof window !== "undefined" ? localStorage.getItem("token") : null)
       );
+    };
+
+    const triggerBellBuzz = (data?: any) => {
+      try {
+        window.dispatchEvent(
+          new CustomEvent("admin-notification:buzz", { detail: data })
+        );
+      } catch (e) {
+        console.error("[useAdminRealtime] Failed to dispatch buzz event", e);
+      }
     };
 
     const connectSse = () => {
@@ -86,7 +117,6 @@ export const useAdminRealtime = () => {
       console.log("[useAdminRealtime] Connecting to SSE endpoint:", streamUrl);
 
       try {
-        // Standard EventSource without withCredentials prevents CORS wildcard rejection in browsers
         const es = new EventSource(streamUrl);
         eventSourceRef.current = es;
 
@@ -102,115 +132,78 @@ export const useAdminRealtime = () => {
           console.log("[useAdminRealtime] Received 'connected' handshake event:", event.data);
         });
 
-        // 1. Live Donation Event (online payment, offline pledge, direct offline entry)
+        // 1. Live Notification Event (Dispatches bell shake animation + debounced refetch)
+        es.addEventListener("notification:new", (event: MessageEvent) => {
+          if (!isMounted) return;
+          try {
+            const data = JSON.parse(event.data);
+            console.log("[useAdminRealtime] ⚡ Realtime notification:new event received:", data);
+            triggerBellBuzz(data);
+            scheduleDebouncedRefetch();
+          } catch (e) {
+            console.error("[useAdminRealtime] Failed to parse notification:new payload", e);
+          }
+        });
+
+        // 2. Live Donation Event (online payment, offline pledge, direct offline entry)
         es.addEventListener("donation:created", (event: MessageEvent) => {
           if (!isMounted) return;
           try {
             const data: DonationPayload = JSON.parse(event.data);
             console.log("[useAdminRealtime] ⚡ Realtime donation:created event received:", data);
-
-            const formattedAmount = data.amount
-              ? `₹${Number(data.amount).toLocaleString("en-IN")}`
-              : "a donation";
-            const donor = data.donorName || "Generous Donor";
-
-            // Invalidate all related caches
-            queryClient.invalidateQueries({ queryKey: ["dashboard-data"], refetchType: "all" });
-            queryClient.invalidateQueries({ queryKey: ["dashboard"], refetchType: "all" });
-            queryClient.invalidateQueries({ queryKey: ["unified-donations"], refetchType: "all" });
-
-            // Force immediate active network refetch on the currently viewed page
-            queryClient.refetchQueries({ queryKey: ["dashboard-data"], type: "active" });
-            queryClient.refetchQueries({ queryKey: ["dashboard"], type: "active" });
-            queryClient.refetchQueries({ queryKey: ["unified-donations"], type: "active" });
-
-            // Display toast notification
-            if (data.type === "offline") {
-              toast(`📝 New Offline Pledge: ${formattedAmount} from ${donor}`, {
-                duration: 5000,
-              });
-            } else if (data.type === "direct_offline") {
-              toast(`📋 Direct Offline Donation: ${formattedAmount} recorded for ${donor}`, {
-                duration: 5000,
-              });
-            } else {
-              toast(`🎉 New Donation: ${formattedAmount} received from ${donor}`, {
-                duration: 5000,
-              });
-            }
+            triggerBellBuzz(data);
+            scheduleDebouncedRefetch();
           } catch (e) {
             console.error("[useAdminRealtime] Failed to parse donation:created payload", e);
           }
         });
 
-        // 2. Offline Donation Verified
+        // 3. Offline Donation Verified
         es.addEventListener("donation:verified", (event: MessageEvent) => {
           if (!isMounted) return;
           try {
             const data: DonationPayload = JSON.parse(event.data);
             console.log("[useAdminRealtime] ⚡ Realtime donation:verified event received:", data);
-
-            const formattedAmount = data.amount
-              ? `₹${Number(data.amount).toLocaleString("en-IN")}`
-              : "a donation";
-            const donor = data.donorName || "Donor";
-
-            queryClient.invalidateQueries({ queryKey: ["dashboard-data"], refetchType: "all" });
-            queryClient.invalidateQueries({ queryKey: ["dashboard"], refetchType: "all" });
-            queryClient.invalidateQueries({ queryKey: ["unified-donations"], refetchType: "all" });
-
-            queryClient.refetchQueries({ queryKey: ["dashboard-data"], type: "active" });
-            queryClient.refetchQueries({ queryKey: ["dashboard"], type: "active" });
-            queryClient.refetchQueries({ queryKey: ["unified-donations"], type: "active" });
-
-            toast.success(`✅ Offline Donation Verified: ${formattedAmount} for ${donor}`, {
-              duration: 5000,
-            });
+            triggerBellBuzz(data);
+            scheduleDebouncedRefetch();
           } catch (e) {
             console.error("[useAdminRealtime] Failed to parse donation:verified payload", e);
           }
         });
 
-        // 3. Campaign Created, Updated, or Deleted
+        // 4. Campaign Created, Updated, or Deleted
         es.addEventListener("campaign:updated", (event: MessageEvent) => {
           if (!isMounted) return;
           console.log("[useAdminRealtime] ⚡ Realtime campaign:updated event received:", event.data);
-
-          queryClient.invalidateQueries({ queryKey: ["campaigns"], refetchType: "all" });
-          queryClient.invalidateQueries({ queryKey: ["campaign"], refetchType: "all" });
-          queryClient.invalidateQueries({ queryKey: ["dashboard-data"], refetchType: "all" });
-          queryClient.invalidateQueries({ queryKey: ["dashboard"], refetchType: "all" });
-
-          queryClient.refetchQueries({ queryKey: ["campaigns"], type: "active" });
-          queryClient.refetchQueries({ queryKey: ["dashboard-data"], type: "active" });
-          queryClient.refetchQueries({ queryKey: ["dashboard"], type: "active" });
+          queryClient.invalidateQueries({ queryKey: ["campaigns"] });
+          queryClient.invalidateQueries({ queryKey: ["campaign"] });
+          scheduleDebouncedRefetch();
         });
 
-        // 4. Contact or Volunteer Inquiry Created
+        // 5. Contact or Volunteer Inquiry Created
         es.addEventListener("inquiry:created", (event: MessageEvent) => {
           if (!isMounted) return;
           try {
             const data: InquiryPayload = JSON.parse(event.data);
             console.log("[useAdminRealtime] ⚡ Realtime inquiry:created event received:", data);
-
-            const typeLabel =
-              data.type === "volunteer" ? "Volunteer Application" : "Contact Inquiry";
-            const sender = data.name || "Someone";
-
-            queryClient.invalidateQueries({ queryKey: ["queries"], refetchType: "all" });
-            queryClient.invalidateQueries({ queryKey: ["query"], refetchType: "all" });
-            queryClient.invalidateQueries({ queryKey: ["dashboard-data"], refetchType: "all" });
-
-            queryClient.refetchQueries({ queryKey: ["queries"], type: "active" });
-            queryClient.refetchQueries({ queryKey: ["dashboard-data"], type: "active" });
-
-            toast(`📬 New ${typeLabel} from ${sender}`, {
-              duration: 5000,
-            });
+            triggerBellBuzz(data);
+            queryClient.invalidateQueries({ queryKey: ["queries"] });
+            queryClient.invalidateQueries({ queryKey: ["query"] });
+            scheduleDebouncedRefetch();
           } catch (e) {
             console.error("[useAdminRealtime] Failed to parse inquiry:created payload", e);
           }
         });
+
+        // 6. Notification Mutations (Read, Deleted, Cleared)
+        const handleNotifMutationEvent = () => {
+          queryClient.invalidateQueries({ queryKey: ["admin-notifications"] });
+          queryClient.refetchQueries({ queryKey: ["admin-notifications"], type: "active" });
+        };
+        es.addEventListener("notification:updated", handleNotifMutationEvent);
+        es.addEventListener("notification:all_read", handleNotifMutationEvent);
+        es.addEventListener("notification:deleted", handleNotifMutationEvent);
+        es.addEventListener("notification:cleared", handleNotifMutationEvent);
 
         es.onerror = (err) => {
           if (!isMounted) return;
@@ -254,12 +247,15 @@ export const useAdminRealtime = () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       clearInterval(tokenCheckInterval);
       if (reconnectTimeout) clearTimeout(reconnectTimeout);
+      if (debouncedRefetchTimer.current) {
+        clearTimeout(debouncedRefetchTimer.current);
+      }
       if (eventSourceRef.current) {
         eventSourceRef.current.close();
         eventSourceRef.current = null;
       }
     };
-  }, [queryClient]);
+  }, [queryClient, scheduleDebouncedRefetch]);
 
   return { isConnected };
 };
