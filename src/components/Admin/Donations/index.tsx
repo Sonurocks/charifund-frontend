@@ -103,6 +103,16 @@ export const UnifiedDonations = () => {
     endDate,
   });
 
+  // Instant live update listener on SSE donation event
+  useEffect(() => {
+    const handleLiveDonation = () => {
+      refetch();
+    };
+
+    window.addEventListener("admin-realtime:donation", handleLiveDonation);
+    return () => window.removeEventListener("admin-realtime:donation", handleLiveDonation);
+  }, [refetch]);
+
   // Fetch campaigns for campaign selector dropdown
   const { data: campaignResponse, isLoading: isLoadingCampaigns } =
     useFetchAllCampaigns(1, 100) as {

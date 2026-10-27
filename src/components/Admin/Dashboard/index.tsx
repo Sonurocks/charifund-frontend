@@ -36,7 +36,7 @@ export const Dashboard = () => {
     undefined,
   );
 
-  const { data: dashboardData, isLoading } = useFetchDashboardData();
+  const { data: dashboardData, isLoading, refetch: refetchDashboard } = useFetchDashboardData();
 
   const {
     data: campaignDistData,
@@ -51,6 +51,18 @@ export const Dashboard = () => {
     isError: isMonthlyError,
     refetch: refetchMonthly,
   } = useFetchMonthlyFunds(selectedYear);
+
+  // Instant live update listener on SSE donation event
+  React.useEffect(() => {
+    const handleLiveDonation = () => {
+      refetchDashboard();
+      refetchDist();
+      refetchMonthly();
+    };
+
+    window.addEventListener("admin-realtime:donation", handleLiveDonation);
+    return () => window.removeEventListener("admin-realtime:donation", handleLiveDonation);
+  }, [refetchDashboard, refetchDist, refetchMonthly]);
 
   const safeDashboardData = {
     totalFunds: dashboardData?.totalFunds ?? 0,
