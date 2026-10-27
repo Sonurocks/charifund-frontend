@@ -79,18 +79,20 @@ export const RollingCounter: React.FC<RollingCounterProps> = ({
     };
   }, [value]);
 
+  const safeValue = Number.isFinite(displayValue) ? displayValue : 0;
+
   const formattedStr =
     decimals > 0
-      ? displayValue.toLocaleString("en-IN", {
+      ? safeValue.toLocaleString("en-IN", {
           minimumFractionDigits: decimals,
           maximumFractionDigits: decimals,
         })
-      : Math.round(displayValue).toLocaleString("en-IN");
+      : Math.round(safeValue).toLocaleString("en-IN");
 
   const characters = formattedStr.split("");
 
   return (
-    <span className={`inline-flex items-center gap-1.5 min-w-0 ${className}`}>
+    <span className={`inline-flex flex-wrap sm:flex-nowrap items-baseline gap-1.5 min-w-0 ${className}`}>
       {/* Prefix e.g. ₹ */}
       {prefix && <span className="select-none">{prefix}</span>}
 

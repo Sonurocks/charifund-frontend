@@ -104,6 +104,8 @@ export const Dashboard = () => {
 
   // Instant live update listener on SSE donation event: 0ms optimistic bump + background reconciliation
   React.useEffect(() => {
+    let debounceRefetchTimer: NodeJS.Timeout | null = null;
+
     const handleLiveDonation = (e: Event) => {
       const customEvent = e as CustomEvent;
       const payload = customEvent.detail;
@@ -133,13 +135,20 @@ export const Dashboard = () => {
         });
       }
 
-      refetchDashboard();
-      refetchDist();
-      refetchMonthly();
+      // Debounce server reconciliation during high-frequency donation bursts
+      if (debounceRefetchTimer) clearTimeout(debounceRefetchTimer);
+      debounceRefetchTimer = setTimeout(() => {
+        refetchDashboard();
+        refetchDist();
+        refetchMonthly();
+      }, 400);
     };
 
     window.addEventListener("admin-realtime:donation", handleLiveDonation);
-    return () => window.removeEventListener("admin-realtime:donation", handleLiveDonation);
+    return () => {
+      window.removeEventListener("admin-realtime:donation", handleLiveDonation);
+      if (debounceRefetchTimer) clearTimeout(debounceRefetchTimer);
+    };
   }, [refetchDashboard, refetchDist, refetchMonthly]);
 
   const cards = [

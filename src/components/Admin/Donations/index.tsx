@@ -120,9 +120,11 @@ export const UnifiedDonations = () => {
 
   // Instant live update listener on SSE donation event
   useEffect(() => {
+    let debounceRefetchTimer: NodeJS.Timeout | null = null;
+
     const handleLiveDonation = (e: any) => {
       const payload = e?.detail;
-      if (payload) {
+      if (payload && (payload.donationId || payload.amount !== undefined)) {
         const amount = Number(payload.amount || 0);
         const isCampaign = payload.type === "campaign";
         const isOffline = payload.paymentMethod === "offline";
@@ -160,8 +162,12 @@ export const UnifiedDonations = () => {
 
         // Prepend new row if on Page 1 without active text search filter
         if (currentPage === 1 && !debouncedSearch) {
+          const uniqueId = String(
+            payload.donationId ||
+              `live-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
+          );
           const newDonation: UnifiedDonation = {
-            id: payload.donationId || `live-${Date.now()}`,
+            id: uniqueId,
             receiptNumber: payload.receiptNumber || `REC-${Date.now()}`,
             amount,
             donorName: payload.donorName || "Generous Supporter",
@@ -182,7 +188,14 @@ export const UnifiedDonations = () => {
           });
 
           const newId = newDonation.id;
-          setNewRowIds((prev) => new Set(prev).add(newId));
+          setNewRowIds((prev) => {
+            const next = new Set(prev).add(newId);
+            if (next.size > limit * 2) {
+              const arr = Array.from(next);
+              return new Set(arr.slice(arr.length - limit));
+            }
+            return next;
+          });
 
           setTimeout(() => {
             setNewRowIds((prev) => {
@@ -193,11 +206,19 @@ export const UnifiedDonations = () => {
           }, 5000);
         }
       }
-      refetch();
+
+      // Debounce server refetch during high-frequency donation bursts
+      if (debounceRefetchTimer) clearTimeout(debounceRefetchTimer);
+      debounceRefetchTimer = setTimeout(() => {
+        refetch();
+      }, 400);
     };
 
     window.addEventListener("admin-realtime:donation", handleLiveDonation);
-    return () => window.removeEventListener("admin-realtime:donation", handleLiveDonation);
+    return () => {
+      window.removeEventListener("admin-realtime:donation", handleLiveDonation);
+      if (debounceRefetchTimer) clearTimeout(debounceRefetchTimer);
+    };
   }, [currentPage, debouncedSearch, limit, refetch]);
 
   // Fetch campaigns for campaign selector dropdown

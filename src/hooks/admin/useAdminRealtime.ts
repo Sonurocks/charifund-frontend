@@ -38,14 +38,15 @@ export const useAdminRealtime = () => {
   const [isConnected, setIsConnected] = useState(false);
   const eventSourceRef = useRef<EventSource | null>(null);
   const debouncedRefetchTimer = useRef<NodeJS.Timeout | null>(null);
+  const lastRefetchTimeRef = useRef<number>(0);
 
-  // Debounced cache invalidator (200ms window)
+  // Throttled debounced cache invalidator (250ms debounce with 1500ms maxWait to prevent starvation)
   const scheduleDebouncedRefetch = useCallback(() => {
-    if (debouncedRefetchTimer.current) {
-      clearTimeout(debouncedRefetchTimer.current);
-    }
+    const now = Date.now();
+    const timeSinceLast = now - lastRefetchTimeRef.current;
 
-    debouncedRefetchTimer.current = setTimeout(() => {
+    const performRefetch = () => {
+      lastRefetchTimeRef.current = Date.now();
       // Invalidate queries so TanStack Query automatically refetches all active views with fresh data
       queryClient.invalidateQueries({ queryKey: ["dashboard-data"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
@@ -54,7 +55,19 @@ export const useAdminRealtime = () => {
       queryClient.invalidateQueries({ queryKey: ["unified-donations"] });
       queryClient.invalidateQueries({ queryKey: ["admin-notifications"] });
       queryClient.invalidateQueries({ queryKey: ["queries"] });
-    }, 200);
+    };
+
+    if (timeSinceLast >= 1500) {
+      if (debouncedRefetchTimer.current) clearTimeout(debouncedRefetchTimer.current);
+      performRefetch();
+      return;
+    }
+
+    if (debouncedRefetchTimer.current) {
+      clearTimeout(debouncedRefetchTimer.current);
+    }
+
+    debouncedRefetchTimer.current = setTimeout(performRefetch, 250);
   }, [queryClient]);
 
   useEffect(() => {
@@ -146,7 +159,6 @@ export const useAdminRealtime = () => {
             const data = JSON.parse(event.data);
             console.log("[useAdminRealtime] ⚡ Realtime notification:new event received:", data);
             triggerBellBuzz(data);
-            triggerDataUpdate(data);
             scheduleDebouncedRefetch();
           } catch (e) {
             console.error("[useAdminRealtime] Failed to parse notification:new payload", e);
@@ -187,7 +199,6 @@ export const useAdminRealtime = () => {
           console.log("[useAdminRealtime] ⚡ Realtime campaign:updated event received:", event.data);
           queryClient.invalidateQueries({ queryKey: ["campaigns"], refetchType: "all" });
           queryClient.invalidateQueries({ queryKey: ["campaign"], refetchType: "all" });
-          triggerDataUpdate(event.data);
           scheduleDebouncedRefetch();
         });
 
