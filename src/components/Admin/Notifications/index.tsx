@@ -86,18 +86,18 @@ export default function NotificationsComponent() {
     }
   };
 
-  const getNotificationIcon = (type: string) => {
+  const getNotificationIcon = (type: string, isRead: boolean) => {
     switch (type) {
       case "donation":
-        return <FaHandHoldingHeart className="w-5 h-5 text-emerald-600" />;
+        return <FaHandHoldingHeart className={`w-5 h-5 ${!isRead ? "text-emerald-700" : "text-emerald-600"}`} />;
       case "offline_verification":
-        return <MdVolunteerActivism className="w-5 h-5 text-blue-600" />;
+        return <MdVolunteerActivism className={`w-5 h-5 ${!isRead ? "text-blue-700" : "text-blue-600"}`} />;
       case "inquiry":
-        return <MdEmail className="w-5 h-5 text-purple-600" />;
+        return <MdEmail className={`w-5 h-5 ${!isRead ? "text-purple-700" : "text-purple-600"}`} />;
       case "campaign":
-        return <MdCampaign className="w-5 h-5 text-amber-600" />;
+        return <MdCampaign className={`w-5 h-5 ${!isRead ? "text-amber-700" : "text-amber-600"}`} />;
       default:
-        return <FaRegBell className="w-5 h-5 text-gray-500" />;
+        return <FaRegBell className={`w-5 h-5 ${!isRead ? "text-gray-700" : "text-gray-500"}`} />;
     }
   };
 
@@ -105,31 +105,31 @@ export default function NotificationsComponent() {
     switch (type) {
       case "donation":
         return (
-          <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+          <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
             Donation
           </span>
         );
       case "offline_verification":
         return (
-          <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+          <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 border border-blue-200">
             Verification
           </span>
         );
       case "inquiry":
         return (
-          <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-purple-50 text-purple-700 border border-purple-200">
+          <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-purple-100 text-purple-800 border border-purple-200">
             Inquiry
           </span>
         );
       case "campaign":
         return (
-          <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+          <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-amber-100 text-amber-800 border border-amber-200">
             Campaign
           </span>
         );
       default:
         return (
-          <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-gray-100 text-gray-700">
+          <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-gray-200 text-gray-800">
             System
           </span>
         );
@@ -145,15 +145,19 @@ export default function NotificationsComponent() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Top Header Card */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 bg-white rounded-2xl border border-gray-200 shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-5 bg-white rounded-2xl border border-gray-200 shadow-xs">
         <div>
           <div className="flex items-center gap-3">
             <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Notifications</h2>
-            {unreadCount > 0 && (
-              <span className="px-2.5 py-0.5 bg-red-500 text-white text-xs font-bold rounded-full">
+            {unreadCount > 0 ? (
+              <span className="px-2.5 py-0.5 bg-red-600 text-white text-xs font-bold rounded-full shadow-xs">
                 {unreadCount} Unread
+              </span>
+            ) : (
+              <span className="px-2.5 py-0.5 bg-emerald-100 text-emerald-800 text-xs font-semibold rounded-full border border-emerald-200">
+                All Read
               </span>
             )}
           </div>
@@ -167,21 +171,21 @@ export default function NotificationsComponent() {
           <button
             onClick={() => refetch()}
             disabled={isFetching}
-            className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-gray-800 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-xl transition-all cursor-pointer shadow-xs active:scale-95 disabled:opacity-50"
             title="Refresh notifications"
           >
-            <MdRefresh className={`w-4 h-4 ${isFetching ? "animate-spin" : ""}`} />
-            <span>Refresh</span>
+            <MdRefresh className={`w-4 h-4 text-gray-700 ${isFetching ? "animate-spin" : ""}`} />
+            <span className="text-gray-800">Refresh</span>
           </button>
 
           {unreadCount > 0 && (
             <button
               onClick={() => markAllReadMutation.mutate()}
               disabled={markAllReadMutation.isPending}
-              className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-xl transition-colors cursor-pointer disabled:opacity-50"
+              className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-emerald-900 bg-emerald-100 hover:bg-emerald-200 border border-emerald-300 rounded-xl transition-all cursor-pointer shadow-xs active:scale-95 disabled:opacity-50"
             >
-              <MdOutlineDoneAll className="w-4 h-4" />
-              <span>Mark All Read</span>
+              <MdOutlineDoneAll className="w-4 h-4 text-emerald-800" />
+              <span className="text-emerald-900 font-bold">Mark All Read</span>
             </button>
           )}
 
@@ -189,22 +193,22 @@ export default function NotificationsComponent() {
             <button
               onClick={() => setShowClearConfirm(true)}
               disabled={clearAllMutation.isPending}
-              className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 rounded-xl transition-colors cursor-pointer disabled:opacity-50"
+              className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-white bg-red-600 hover:bg-red-700 border border-red-700 rounded-xl transition-all cursor-pointer shadow-xs active:scale-95 disabled:opacity-50"
             >
-              <MdDeleteOutline className="w-4 h-4" />
-              <span>Clear All</span>
+              <MdDeleteOutline className="w-4 h-4 text-white" />
+              <span className="text-white font-bold">Clear All</span>
             </button>
           )}
         </div>
       </div>
 
       {/* Tabs Filter Bar */}
-      <div className="flex items-center gap-2 border-b border-gray-200 pb-2 overflow-x-auto">
+      <div className="flex items-center gap-2 border-b border-gray-200 pb-2 overflow-x-auto scrollbar-hide -mx-1 px-1">
         <button
           onClick={() => handleTabChange("all")}
-          className={`px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl transition-colors cursor-pointer whitespace-nowrap ${
+          className={`px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl transition-all cursor-pointer whitespace-nowrap ${
             activeTab === "all"
-              ? "bg-yellow text-foreground shadow-xs"
+              ? "bg-yellow text-foreground shadow-xs font-bold"
               : "text-gray-600 hover:bg-gray-100"
           }`}
         >
@@ -213,9 +217,9 @@ export default function NotificationsComponent() {
 
         <button
           onClick={() => handleTabChange("donation")}
-          className={`px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl transition-colors cursor-pointer whitespace-nowrap ${
+          className={`px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl transition-all cursor-pointer whitespace-nowrap ${
             activeTab === "donation"
-              ? "bg-yellow text-foreground shadow-xs"
+              ? "bg-yellow text-foreground shadow-xs font-bold"
               : "text-gray-600 hover:bg-gray-100"
           }`}
         >
@@ -224,9 +228,9 @@ export default function NotificationsComponent() {
 
         <button
           onClick={() => handleTabChange("inquiry")}
-          className={`px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl transition-colors cursor-pointer whitespace-nowrap ${
+          className={`px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl transition-all cursor-pointer whitespace-nowrap ${
             activeTab === "inquiry"
-              ? "bg-yellow text-foreground shadow-xs"
+              ? "bg-yellow text-foreground shadow-xs font-bold"
               : "text-gray-600 hover:bg-gray-100"
           }`}
         >
@@ -235,9 +239,9 @@ export default function NotificationsComponent() {
 
         <button
           onClick={() => handleTabChange("unread")}
-          className={`px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl transition-colors cursor-pointer whitespace-nowrap ${
+          className={`px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl transition-all cursor-pointer whitespace-nowrap ${
             activeTab === "unread"
-              ? "bg-yellow text-foreground shadow-xs"
+              ? "bg-yellow text-foreground shadow-xs font-bold"
               : "text-gray-600 hover:bg-gray-100"
           }`}
         >
@@ -272,6 +276,8 @@ export default function NotificationsComponent() {
                 ? `₹${Number(metadata.amount).toLocaleString("en-IN")}`
                 : null;
 
+              const isUnread = !item.isRead;
+
               return (
                 <motion.div
                   key={item.id}
@@ -279,125 +285,144 @@ export default function NotificationsComponent() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.98 }}
                   transition={{ duration: 0.2 }}
-                  className={`p-4 sm:p-5 rounded-2xl border transition-all ${
-                    !item.isRead
-                      ? "bg-amber-50/30 border-amber-200/80 shadow-xs"
-                      : "bg-white border-gray-200 hover:border-gray-300"
+                  className={`p-4 sm:p-5 rounded-2xl transition-all ${
+                    isUnread
+                      ? "bg-[#fffdf5] border-l-4 border-l-[#ffc107] border-t border-r border-b border-amber-300 shadow-sm"
+                      : "bg-white border border-gray-200 opacity-90 hover:opacity-100 hover:border-gray-300 shadow-xs"
                   }`}
                 >
-                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
-                    {/* Left: Icon & Content */}
-                    <div className="flex items-start gap-3.5 flex-1 min-w-0">
-                      <div className="p-3 rounded-2xl bg-gray-100 shrink-0">
-                        {getNotificationIcon(item.type)}
+                  <div className="flex flex-col md:flex-row md:items-start justify-between gap-3.5">
+                    {/* Left: Icon & Notification Details */}
+                    <div className="flex items-start gap-3 sm:gap-3.5 flex-1 min-w-0">
+                      <div
+                        className={`p-2.5 sm:p-3 rounded-2xl shrink-0 ${
+                          isUnread ? "bg-amber-100/80 border border-amber-200" : "bg-gray-100"
+                        }`}
+                      >
+                        {getNotificationIcon(item.type, item.isRead)}
                       </div>
 
                       <div className="flex-1 min-w-0">
+                        {/* Title, Badge, and Status */}
                         <div className="flex items-center gap-2 flex-wrap mb-1">
                           {getTypeBadge(item.type)}
                           <h4
                             className={`text-sm ${
-                              !item.isRead ? "font-bold text-gray-900" : "font-semibold text-gray-700"
+                              isUnread ? "font-bold text-gray-950" : "font-semibold text-gray-700"
                             }`}
                           >
                             {item.title}
                           </h4>
-                          {!item.isRead && (
-                            <span className="w-2 h-2 rounded-full bg-yellow shrink-0" />
+
+                          {isUnread ? (
+                            <span className="px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide rounded-full bg-amber-400 text-gray-950 shadow-xs">
+                              New
+                            </span>
+                          ) : (
+                            <span className="px-2 py-0.5 text-[10px] font-medium rounded-full bg-gray-100 text-gray-500">
+                              Read
+                            </span>
                           )}
                         </div>
 
-                        <p className="text-xs sm:text-sm text-gray-600 mb-2 leading-relaxed">
+                        {/* Message description */}
+                        <p
+                          className={`text-xs sm:text-sm mb-2.5 leading-relaxed ${
+                            isUnread ? "text-gray-800 font-medium" : "text-gray-600"
+                          }`}
+                        >
                           {item.message}
                         </p>
 
                         {/* Metadata Pills */}
-                        <div className="flex items-center gap-2 flex-wrap text-xs text-gray-500">
+                        <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap text-xs text-gray-600">
                           {formattedAmount && (
-                            <span className="font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+                            <span className="font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-md border border-emerald-300">
                               Amount: {formattedAmount}
                             </span>
                           )}
 
                           {metadata.donorName && (
-                            <span className="bg-gray-100 px-2 py-0.5 rounded-md">
-                              Donor: <strong className="text-gray-700">{metadata.donorName}</strong>
+                            <span className="bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-md">
+                              Donor: <strong className="text-gray-800">{metadata.donorName}</strong>
                             </span>
                           )}
 
                           {metadata.receiptNumber && (
-                            <span className="bg-gray-100 px-2 py-0.5 rounded-md font-mono text-[11px]">
+                            <span className="bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-md font-mono text-[11px] text-gray-700">
                               Receipt: {metadata.receiptNumber}
                             </span>
                           )}
 
                           {metadata.campaignTitle && (
-                            <span className="bg-gray-100 px-2 py-0.5 rounded-md truncate max-w-xs">
+                            <span className="bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-md truncate max-w-xs text-gray-700">
                               Campaign: {metadata.campaignTitle}
                             </span>
                           )}
 
                           {metadata.email && (
-                            <span className="bg-gray-100 px-2 py-0.5 rounded-md font-mono text-[11px]">
+                            <span className="bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-md font-mono text-[11px] text-gray-700">
                               Email: {metadata.email}
                             </span>
                           )}
 
                           {metadata.phone && (
-                            <span className="bg-gray-100 px-2 py-0.5 rounded-md text-[11px]">
+                            <span className="bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-md text-[11px] text-gray-700">
                               Phone: {metadata.phone}
                             </span>
                           )}
 
-                          <span className="text-gray-400 text-[11px] ml-auto">
+                          <span className="text-gray-400 text-[11px] ml-auto font-medium">
                             {formatRelativeTime(item.createdAt)}
                           </span>
                         </div>
                       </div>
                     </div>
 
-                    {/* Right: Actions */}
-                    <div className="flex items-center gap-1.5 self-end sm:self-start shrink-0 pt-1 sm:pt-0">
+                    {/* Right: Explicit High-Contrast Action Buttons (Fully Responsive) */}
+                    <div className="flex items-center gap-2 flex-wrap pt-2 md:pt-0 border-t md:border-t-0 border-gray-100 md:self-start w-full md:w-auto justify-end shrink-0">
                       {(item.type === "donation" || item.type === "offline_verification") && (
                         <Link
                           href="/admin/donations"
-                          className="px-2.5 py-1.5 text-xs font-semibold text-gray-600 hover:text-green hover:bg-gray-100 rounded-lg transition-colors flex items-center gap-1"
+                          className="px-3 py-1.5 text-xs font-semibold text-blue-700 bg-blue-100 hover:bg-blue-200 border border-blue-300 rounded-xl transition-all flex items-center gap-1.5 shadow-xs whitespace-nowrap active:scale-95"
                           title="View in donations table"
                         >
                           <span>View</span>
-                          <MdArrowForward className="w-3.5 h-3.5" />
+                          <MdArrowForward className="w-3.5 h-3.5 text-blue-700" />
                         </Link>
                       )}
 
                       {item.type === "inquiry" && (
                         <Link
                           href="/admin/queries"
-                          className="px-2.5 py-1.5 text-xs font-semibold text-gray-600 hover:text-green hover:bg-gray-100 rounded-lg transition-colors flex items-center gap-1"
+                          className="px-3 py-1.5 text-xs font-semibold text-blue-700 bg-blue-100 hover:bg-blue-200 border border-blue-300 rounded-xl transition-all flex items-center gap-1.5 shadow-xs whitespace-nowrap active:scale-95"
                           title="View in inquiries table"
                         >
                           <span>View</span>
-                          <MdArrowForward className="w-3.5 h-3.5" />
+                          <MdArrowForward className="w-3.5 h-3.5 text-blue-700" />
                         </Link>
                       )}
 
-                      {!item.isRead && (
+                      {isUnread && (
                         <button
                           onClick={() => markReadMutation.mutate(item.id)}
                           disabled={markReadMutation.isPending}
-                          className="p-1.5 text-gray-500 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors cursor-pointer"
-                          title="Mark as read"
+                          className="px-3 py-1.5 text-xs font-bold text-emerald-800 bg-emerald-100 hover:bg-emerald-200 border border-emerald-300 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 shadow-xs whitespace-nowrap active:scale-95 disabled:opacity-50"
+                          title="Mark notification as read"
                         >
-                          <MdCheck className="w-4 h-4" />
+                          <MdCheck className="w-4 h-4 text-emerald-700" />
+                          <span>Mark as Read</span>
                         </button>
                       )}
 
                       <button
                         onClick={() => deleteMutation.mutate(item.id)}
                         disabled={deleteMutation.isPending}
-                        className="p-1.5 text-gray-400 hover:text-red hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                        className="px-3 py-1.5 text-xs font-bold text-red-700 bg-red-100 hover:bg-red-200 border border-red-300 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 shadow-xs whitespace-nowrap active:scale-95 disabled:opacity-50"
                         title="Delete notification"
                       >
-                        <MdDeleteOutline className="w-4 h-4" />
+                        <MdDeleteOutline className="w-4 h-4 text-red-700" />
+                        <span>Delete</span>
                       </button>
                     </div>
                   </div>
@@ -442,7 +467,7 @@ export default function NotificationsComponent() {
               <button
                 onClick={handleClearAll}
                 disabled={clearAllMutation.isPending}
-                className="px-4 py-2 text-xs font-semibold text-white bg-red hover:bg-red/90 rounded-xl transition-colors cursor-pointer disabled:opacity-50"
+                className="px-4 py-2 text-xs font-bold text-white bg-red-600 hover:bg-red-700 rounded-xl transition-colors cursor-pointer disabled:opacity-50"
               >
                 {clearAllMutation.isPending ? "Clearing..." : "Yes, Clear All"}
               </button>

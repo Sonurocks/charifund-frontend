@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   MdNotificationsNone,
@@ -28,7 +28,6 @@ interface AdminHeaderProps {
 }
 
 export default function AdminHeader({ isConnected = false }: AdminHeaderProps) {
-  const pathname = usePathname();
   const router = useRouter();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isBuzzing, setIsBuzzing] = useState(false);
@@ -63,14 +62,6 @@ export default function AdminHeader({ isConnected = false }: AdminHeaderProps) {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  // Derive human-readable page title
-  const getPageTitle = () => {
-    const segments = pathname.split("/").filter(Boolean);
-    if (segments.length <= 1) return "Dashboard";
-    const last = segments[segments.length - 1];
-    return last.charAt(0).toUpperCase() + last.slice(1);
-  };
 
   const formatTimeAgo = (dateString: string) => {
     try {
@@ -120,37 +111,9 @@ export default function AdminHeader({ isConnected = false }: AdminHeaderProps) {
   };
 
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between px-4 sm:px-6 py-3 bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-xs">
-      {/* Left: Page Title & Realtime Live Status */}
-      <div className="flex items-center gap-3 sm:gap-4">
-        <h1 className="text-lg sm:text-xl font-bold text-gray-800 tracking-tight">
-          {getPageTitle()}
-        </h1>
-
-        <div
-          title={isConnected ? "Real-time SSE Sync Connected" : "Connecting to Real-time Stream..."}
-          className={`flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border transition-colors ${
-            isConnected
-              ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-              : "bg-amber-50 text-amber-700 border-amber-200"
-          }`}
-        >
-          <span className="relative flex h-2 w-2">
-            {isConnected && (
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            )}
-            <span
-              className={`relative inline-flex rounded-full h-2 w-2 ${
-                isConnected ? "bg-emerald-500" : "bg-amber-400"
-              }`}
-            ></span>
-          </span>
-          <span className="hidden sm:inline">{isConnected ? "Live Sync" : "Connecting"}</span>
-        </div>
-      </div>
-
+    <header className="sticky top-0 z-30 flex items-center justify-end px-4 sm:px-6 py-2.5 bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-xs">
       {/* Right: Notification Bell & Logout */}
-      <div className="flex items-center gap-3" ref={dropdownRef}>
+      <div className="flex items-center gap-3 sm:gap-4" ref={dropdownRef}>
         {/* Notification Bell with Badge & Wobble Animation */}
         <div className="relative">
           <motion.button
@@ -177,7 +140,7 @@ export default function AdminHeader({ isConnected = false }: AdminHeaderProps) {
 
             {/* Unread Count Badge */}
             {unreadCount > 0 && (
-              <span className="absolute top-1 right-1 min-w-[18px] h-[18px] px-1 bg-red text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-md animate-pulse">
+              <span className="absolute top-1 right-1 min-w-[18px] h-[18px] px-1 bg-red-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-md animate-pulse">
                 {unreadCount > 99 ? "99+" : unreadCount}
               </span>
             )}
@@ -198,7 +161,7 @@ export default function AdminHeader({ isConnected = false }: AdminHeaderProps) {
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-gray-800 text-sm">Notifications</span>
                     {unreadCount > 0 && (
-                      <span className="text-xs bg-red/10 text-red font-medium px-2 py-0.5 rounded-full">
+                      <span className="text-xs bg-red-100 text-red-700 font-bold px-2 py-0.5 rounded-full">
                         {unreadCount} new
                       </span>
                     )}
@@ -207,7 +170,7 @@ export default function AdminHeader({ isConnected = false }: AdminHeaderProps) {
                     <button
                       onClick={() => markAllReadMutation.mutate()}
                       disabled={markAllReadMutation.isPending}
-                      className="text-xs text-gray-500 hover:text-green flex items-center gap-1 cursor-pointer transition-colors"
+                      className="text-xs font-medium text-emerald-700 hover:text-emerald-800 flex items-center gap-1 cursor-pointer transition-colors"
                     >
                       <MdOutlineDoneAll className="w-4 h-4" />
                       Mark all read
@@ -228,7 +191,7 @@ export default function AdminHeader({ isConnected = false }: AdminHeaderProps) {
                         key={item.id}
                         onClick={() => handleNotificationClick(item)}
                         className={`p-3.5 flex gap-3 items-start cursor-pointer transition-colors hover:bg-gray-50 ${
-                          !item.isRead ? "bg-amber-50/40" : ""
+                          !item.isRead ? "bg-amber-50/70" : ""
                         }`}
                       >
                         <div className="p-2 rounded-xl bg-gray-100 shrink-0">
@@ -238,7 +201,7 @@ export default function AdminHeader({ isConnected = false }: AdminHeaderProps) {
                           <div className="flex items-center justify-between gap-1 mb-0.5">
                             <h4
                               className={`text-xs truncate ${
-                                !item.isRead ? "font-semibold text-gray-900" : "font-medium text-gray-700"
+                                !item.isRead ? "font-bold text-gray-900" : "font-medium text-gray-700"
                               }`}
                             >
                               {item.title}
@@ -250,7 +213,7 @@ export default function AdminHeader({ isConnected = false }: AdminHeaderProps) {
                           <p className="text-[11px] text-gray-500 line-clamp-2">{item.message}</p>
                         </div>
                         {!item.isRead && (
-                          <span className="w-2 h-2 rounded-full bg-yellow shrink-0 mt-1" />
+                          <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0 mt-1" />
                         )}
                       </div>
                     ))
