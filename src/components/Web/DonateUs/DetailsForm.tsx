@@ -34,11 +34,17 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
     const [verifiedReceipt, setVerifiedReceipt] = React.useState<DonationReceipt | null>(null);
     const [offlinePledgeData, setOfflinePledgeData] = React.useState<OfflinePledgeData | null>(null);
     const isVerifyingRef = React.useRef(false);
+    const isSubmittingRef = React.useRef(false);
+
+    const resetToIdle = React.useCallback(() => {
+        isSubmittingRef.current = false;
+        setPaymentStep("idle");
+    }, []);
 
     const createOrderMutation = useMutation<CreatePaymentOrderResponse, AxiosError<{ message: string; msg?: string }>, CreatePaymentOrderPayload>({
         mutationFn: createPaymentOrder,
         onError: (error) => {
-            setPaymentStep("idle");
+            resetToIdle();
             toast.error(getApiErrorMessage(error, t("Failed to initiate donation order. Please try again.")));
         }
     });
@@ -51,9 +57,11 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
         values: DetailsFormValues,
         { resetForm }: { resetForm: () => void }
     ) => {
-        if (paymentStep !== "idle") return; // Prevent duplicate payments
+        if (isSubmittingRef.current || paymentStep !== "idle") return; // Synchronous guard against double-clicks
+        isSubmittingRef.current = true;
         const rawAmount = parseFloat(amount);
         if (isNaN(rawAmount) || rawAmount <= 0) {
+            isSubmittingRef.current = false;
             toast.error(t("Please enter a valid donation amount."));
             return;
         }
@@ -61,6 +69,7 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
         // Limit decimal precision to 2 decimal places for financial integrity
         const parsedAmount = Math.round(rawAmount * 100) / 100;
         if (parsedAmount > 100000000) {
+            isSubmittingRef.current = false;
             toast.error(t("Donation amount exceeds the maximum allowed limit."));
             return;
         }
@@ -68,6 +77,9 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
         setPaymentStep("creating");
 
         const cleanPan = values.pan?.trim() ? values.pan.trim().toUpperCase() : undefined;
+        const idempotencyKey = typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+            ? crypto.randomUUID()
+            : `YUWA-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 
         const orderPayload: CreatePaymentOrderPayload = {
             amount: parsedAmount,
@@ -79,6 +91,7 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
             address: values.address.trim(),
             pan: cleanPan,
             message: values.message?.trim(),
+            idempotencyKey,
         };
 
         if (campaignId) {
@@ -123,7 +136,7 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
                     getApiErrorMessage(error, t("Failed to register offline donation. Please try again."))
                 );
             } finally {
-                setPaymentStep("idle");
+                resetToIdle();
             }
             return;
         }
@@ -135,7 +148,7 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
         const isLoaded = await loadRazorpayScript();
         if (!isLoaded) {
             toast.error(t("Razorpay SDK failed to load. Check your connection."));
-            setPaymentStep("idle");
+            resetToIdle();
             return;
         }
 
@@ -153,7 +166,7 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
                 if (!razorpayOrderId) throw new Error("Order ID missing from backend response.");
             } catch (backendError) {
                 console.error("Payment Order Creation Failed:", backendError);
-                setPaymentStep("idle");
+                resetToIdle();
                 return; // Stop the flow
             }
 
@@ -161,7 +174,7 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
             if (!rzpKey) {
                 console.error("Critical Error: NEXT_PUBLIC_RAZORPAY_KEY_ID is missing.");
                 toast.error(t("Payment gateway is temporarily unavailable. Please contact support."));
-                setPaymentStep("idle");
+                resetToIdle();
                 return;
             }
 
@@ -238,7 +251,7 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
                         toast.error(e?.response?.data?.msg || e?.response?.data?.message || t("Payment Verification Failed"));
                     } finally {
                         isVerifyingRef.current = false;
-                        setPaymentStep("idle");
+                        resetToIdle();
                     }
                 },
                 prefill: {
@@ -250,7 +263,7 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
                 modal: {
                     ondismiss: function () {
                         // Resets button state if user closes modal or Razorpay fails to load
-                        setPaymentStep("idle");
+                        resetToIdle();
                     }
                 }
             };
@@ -261,12 +274,12 @@ const DetailsForm = ({ campaignId, campaignTitle }: { campaignId?: string; campa
             rzp.on("payment.failed", function (response: any) {
                 const errorMsg = response?.error?.description || response?.error?.message || t("Payment Failed. Your payment could not be completed.");
                 toast.error(errorMsg);
-                setPaymentStep("idle");
+                resetToIdle();
             });
 
             rzp.open();
         } catch (error) {
-            setPaymentStep("idle");
+            resetToIdle();
         }
     };
     return (

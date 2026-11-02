@@ -33,11 +33,8 @@ const DataTableWrapper = <T,>({
   const safeColumns = Array.isArray(columns)
     ? columns.map((col: any) => {
         if (!col || typeof col !== "object") return col;
-        const { allowOverflow, ignoreRowClick, button, minWidth, maxWidth, ...rest } = col;
-        return {
-          ...rest,
-          ...(minWidth && !rest.width ? { width: minWidth } : {}),
-        };
+        const { allowOverflow, ignoreRowClick, button, ...rest } = col;
+        return rest;
       })
     : [];
   const safeData = Array.isArray(data) ? data : [];
@@ -53,6 +50,27 @@ const DataTableWrapper = <T,>({
           striped
           responsive
           customStyles={{
+            table: {
+              style: {
+                width: "100%",
+                minWidth: "100%",
+              },
+            },
+            tableWrapper: {
+              style: {
+                width: "100%",
+                minWidth: "100%",
+                display: "block",
+              },
+            },
+            headRow: {
+              style: {
+                backgroundColor: "var(--color-primaryColor)",
+                borderTopLeftRadius: "0.75rem",
+                borderTopRightRadius: "0.75rem",
+                minHeight: "44px",
+              },
+            },
             headCells: {
               style: {
                 fontWeight: 600,
@@ -69,7 +87,7 @@ const DataTableWrapper = <T,>({
             },
             rows: {
               style: {
-                minHeight: "40px",
+                minHeight: "44px",
               },
             },
           }}

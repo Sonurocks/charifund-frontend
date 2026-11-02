@@ -20,7 +20,19 @@ import ClientRedirect from "../middleware/clientMiddleware";
 import GlobalActionCTA from "../components/UI/web/GlobalActionCTA";
 
 export default function AppProviders({ children }: { children: ReactNode }) {
-  const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 5 * 60 * 1000, // 5 minutes stale time (cached in memory)
+            gcTime: 10 * 60 * 1000,    // 10 minutes garbage collection time
+            refetchOnWindowFocus: false, // Prevents refetch storms when switching browser tabs
+            retry: 1, // Avoid aggressive retry storms during high traffic
+          },
+        },
+      })
+  );
   const pathname = usePathname();
 
   const [loading, setLoading] = useState(false);

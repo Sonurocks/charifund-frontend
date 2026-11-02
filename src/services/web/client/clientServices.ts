@@ -175,6 +175,7 @@ export interface CreatePaymentOrderPayload {
   address: string;
   pan?: string;
   message?: string;
+  idempotencyKey?: string;
 }
 
 export interface CreatePaymentOrderResponse {
@@ -190,7 +191,11 @@ export interface CreatePaymentOrderResponse {
 }
 
 export const createPaymentOrder = async (orderData: CreatePaymentOrderPayload): Promise<CreatePaymentOrderResponse> => {
-    const { data } = await api.post<CreatePaymentOrderResponse>(`/web/payment/create-order`, orderData);
+    const headers: Record<string, string> = {};
+    if (orderData.idempotencyKey) {
+        headers["idempotency-key"] = orderData.idempotencyKey;
+    }
+    const { data } = await api.post<CreatePaymentOrderResponse>(`/web/payment/create-order`, orderData, { headers });
     return data;
 }
 
@@ -244,3 +249,10 @@ export const fetchBlogById = async (id: string) => {
   const { data } = await api.get(`/web/blog/getBlogById/${id}`);
   return data;
 };
+
+// Unified Home Overview Data
+export const fetchHomeOverview = async () => {
+  const { data } = await api.get("/web/home-overview");
+  return data;
+};
+

@@ -16,8 +16,12 @@ const ValueableCustomer = dynamic(() => import("../Volunteer/ValueableCustomer")
 const HelpingEachOther = dynamic(() => import("./HelpingEachOther"));
 import HeroStaticSlider from "./Hero";
 import CharityWithDifference from "./Charity_with_Difference/CharityWithDiffrence";
+import { useHomeOverview } from "@/src/hooks/web/useHomeOverview";
 
 const Home = () => {
+  // Bundled single-request data loader (primes TanStack cache for all homepage sections)
+  useHomeOverview();
+
   const [hasFeedback, setHasFeedback] = useState<boolean | null>(true);
   return (
     <div>

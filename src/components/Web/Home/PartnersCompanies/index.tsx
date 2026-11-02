@@ -8,15 +8,25 @@ import { Autoplay } from "swiper/modules";
 import Image from "next/image";
 import Link from "next/link";
 import { useFetchPublicSponsors } from "@/src/hooks/web/useSponsors";
+import { useHomeOverview } from "@/src/hooks/web/useHomeOverview";
+import { getOptimizedImageUrl } from "@/src/utils/imageStandards";
 
 const PartnersCompanies = () => {
-  const { data } = useFetchPublicSponsors();
+  const { data: overview, isLoading: isOverviewLoading } = useHomeOverview();
+  const hasOverviewSponsors = Boolean(overview?.sponsors?.length);
+  const { data } = useFetchPublicSponsors(1, 20, undefined, {
+    enabled: !isOverviewLoading && !hasOverviewSponsors
+  });
 
   const displaySponsors = useMemo(() => {
-    const list = data?.sponsors && data.sponsors.length > 0 ? data.sponsors : [];
+    const list = hasOverviewSponsors 
+      ? overview.sponsors 
+      : data?.sponsors && data.sponsors.length > 0 
+      ? data.sponsors 
+      : [];
     if (list.length === 0) return [];
     return [...list, ...list];
-  }, [data?.sponsors]);
+  }, [hasOverviewSponsors, overview?.sponsors, data?.sponsors]);
 
   if (!displaySponsors || displaySponsors.length === 0) {
     return null;
@@ -65,10 +75,11 @@ const PartnersCompanies = () => {
                   aria-label={`View ${name} details`}
                 >
                   <Image
-                    src={sponsor.logo || "/assets/aboutus.webp"}
+                    src={getOptimizedImageUrl(sponsor.logo || (sponsor as any).image, { width: 240, height: 160, quality: "auto", format: "auto", crop: "fit" })}
                     alt={name}
                     width={120}
                     height={80}
+                    sizes="120px"
                     className="object-contain opacity-75 hover:opacity-100 transition duration-300 cursor-pointer"
                   />
                 </Link>

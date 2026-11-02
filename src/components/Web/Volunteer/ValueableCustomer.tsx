@@ -18,6 +18,8 @@ import { useInView } from "framer-motion";
 import CustomLoader from "../../UI/web/Loader/CustomLoader";
 import { bgOneVolunteer, image99, valueableshape } from "@/public/assets";
 import { fetchFeedback } from "@/src/services/web/client/clientServices";
+import { useHomeOverview } from "@/src/hooks/web/useHomeOverview";
+import { getOptimizedImageUrl } from "@/src/utils/imageStandards";
 import StarRating from "../../UI/web/StarRating";
 import ComponentLabel from "../../UI/web/ComponentLabel";
 import ComponentTitle from "../../UI/web/ComponentTitle";
@@ -28,10 +30,17 @@ const truncateText = (text: string, maxLength: number): string =>
 const ValueableCustomer = () => {
   const { t } = useTranslation();
 
-  const { data: feedbacks = [], isLoading } = useQuery({
+  const { data: overview, isLoading: isOverviewLoading } = useHomeOverview();
+  const hasOverviewFeedbacks = Boolean(overview?.feedbacks?.length);
+
+  const { data: individualFeedbacks = [], isLoading: isFeedbackLoading } = useQuery({
     queryKey: ["feedback"],
     queryFn: fetchFeedback,
+    enabled: !isOverviewLoading && !hasOverviewFeedbacks,
   });
+
+  const feedbacks = hasOverviewFeedbacks ? overview.feedbacks : individualFeedbacks;
+  const isLoading = hasOverviewFeedbacks ? false : (isOverviewLoading || isFeedbackLoading);
 
   const validFeedbacks = feedbacks.filter(
     (f: any) => f.name && f.feedback && f.rating && f.image
@@ -124,10 +133,11 @@ const ValueableCustomer = () => {
                 <div className="flex items-center mt-6 gap-4">
                   <div className="w-12 h-12 rounded-full overflow-hidden">
                     <Image
-                      src={item.image || item.avatar || "/assets/author.webp"}
+                      src={getOptimizedImageUrl(item.image || item.avatar, { width: 96, height: 96, quality: "auto", format: "auto", crop: "thumb" })}
                       alt={item.name}
                       width={48}
                       height={48}
+                      sizes="48px"
                       className="w-full h-full object-cover"
                     />
                   </div>

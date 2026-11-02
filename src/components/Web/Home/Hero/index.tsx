@@ -13,6 +13,7 @@ import AnimatedReveal from "@/src/animations/AnimatedReveal";
 import Image from "next/image";
 import Link from "next/link";
 import { useFetchAllBanners } from "@/src/hooks/web/useBanner";
+import { useHomeOverview } from "@/src/hooks/web/useHomeOverview";
 import { pageBannerBackgourndColor } from "@/src/helper/PageBanner";
 import { Banner } from "@/src/types/web/banner";
 import ArrowButton from "@/src/components/UI/web/Buttons/ArrowButton";
@@ -52,9 +53,14 @@ const HeroStaticSlider = () => {
   const [paused, setPaused] = useState(false);
   const [failedIndices, setFailedIndices] = useState<Record<number, boolean>>({});
 
-  const { data: bannersData, isLoading, isError } = useFetchAllBanners(1, 10, "Home");
+  const { data: overview, isLoading: isOverviewLoading } = useHomeOverview();
+  const hasOverviewBanners = Boolean(overview?.banners?.length);
+  const { data: bannersData, isLoading: isBannerLoading, isError } = useFetchAllBanners(1, 10, "Home", {
+    enabled: !isOverviewLoading && !hasOverviewBanners
+  });
 
-  const rawBanners: Banner[] = bannersData?.banners || bannersData?.data || (Array.isArray(bannersData) ? bannersData : []);
+  const rawBanners: Banner[] = hasOverviewBanners ? overview.banners : (bannersData?.banners || bannersData?.data || (Array.isArray(bannersData) ? bannersData : []));
+  const isLoading = hasOverviewBanners ? false : (isOverviewLoading || isBannerLoading);
   const banners: Banner[] = rawBanners
     .filter((banner: Banner) => banner.image && banner.image.trim() !== "")
     .sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999));
