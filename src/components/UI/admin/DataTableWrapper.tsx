@@ -30,12 +30,14 @@ const DataTableWrapper = <T,>({
   loading = false,
   conditionalRowStyles,
 }: AdminDataTableWrapperProps<T>) => {
-  // Defensive check & stripping of properties that React 19 forwards to DOM elements
   const safeColumns = Array.isArray(columns)
     ? columns.map((col: any) => {
         if (!col || typeof col !== "object") return col;
-        const { allowOverflow, ignoreRowClick, button, ...rest } = col;
-        return rest;
+        const { allowOverflow, ignoreRowClick, button, minWidth, maxWidth, ...rest } = col;
+        return {
+          ...rest,
+          ...(minWidth && !rest.width ? { width: minWidth } : {}),
+        };
       })
     : [];
   const safeData = Array.isArray(data) ? data : [];

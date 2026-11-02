@@ -57,11 +57,21 @@ export const RollingCounter: React.FC<RollingCounterProps> = ({
   const [uptickDiff, setUptickDiff] = useState<number | null>(null);
   const [isFlashing, setIsFlashing] = useState(false);
   const prevValueRef = useRef(value);
+  const hasInitializedRef = useRef(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
+    if (!hasInitializedRef.current) {
+      prevValueRef.current = value;
+      setDisplayValue(value);
+      if (value > 0) {
+        hasInitializedRef.current = true;
+      }
+      return;
+    }
+
     const diff = value - prevValueRef.current;
-    if (diff > 0) {
+    if (diff > 0 && showTrend) {
       setUptickDiff(diff);
       setIsFlashing(true);
 
@@ -77,7 +87,7 @@ export const RollingCounter: React.FC<RollingCounterProps> = ({
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [value]);
+  }, [value, showTrend]);
 
   const safeValue = Number.isFinite(displayValue) ? displayValue : 0;
 

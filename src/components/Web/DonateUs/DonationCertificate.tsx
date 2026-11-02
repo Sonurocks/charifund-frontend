@@ -72,7 +72,9 @@ const DonationCertificate = forwardRef<HTMLDivElement, DonationCertificateProps>
     const headOffice =
       org.address ||
       "H.No. RZC-13, KH. No. 72/23, 78/3, Nihal Vihar, Nangloi, New Delhi-110041";
-    const branchOffice = "393i, Rajiv Nagar, West Basharatpur, Gorakhpur (U.P.)-273001";
+    const branchOffice =
+      org.branchAddress ||
+      "Behind Sankat Mochan Hanuman Mandir, Azad Nagar Colony East, Taramandal Road, Rustampur, Gorakhpur, Uttar Pradesh-273001";
     const orgEmail = org.email || "yuwaaindia@gmail.com";
     const orgPhone = org.phone || "9450886855, 7394886855";
     const orgWeb = org.website || "yuwaindia.org";

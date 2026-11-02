@@ -10,6 +10,7 @@ export interface ReceiptOrgInfo {
   name: string;
   tagline?: string;
   address?: string;
+  branchAddress?: string;
   email?: string;
   phone?: string;
   website?: string;

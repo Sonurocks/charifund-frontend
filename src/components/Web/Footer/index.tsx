@@ -242,7 +242,7 @@ const Footer = () => {
       >
         <div className="flex flex-col lg:flex-row md:items-center justify-between gap-4 font-nunito text-[16px] xl:text-base 2xl:text-[16px] lg:text-[16px] sm:text-[16px]">
           <p className="lg:text-center text-white/70">
-            © <span className="text-yellow">Charifund</span>. All Rights
+            © <span className="text-yellow">YuwaIndia</span>. All Rights
             Reserved.
           </p>
           <div className="flex flex-col md:flex-row justify-baseline items-baseline lg:glex-row gap-5 md:justify-center text-white">

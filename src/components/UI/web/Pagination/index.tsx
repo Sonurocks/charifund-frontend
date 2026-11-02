@@ -63,8 +63,8 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
           <button
             key={page}
             onClick={() => onPageChange(Number(page))}
-            className={`w-10 h-10 flex items-center justify-center rounded-full  
-              transition-all duration-300 transform hover:scale-110 animate-slide-up
+            className={`min-w-10 h-10 px-2.5 flex items-center justify-center rounded-full whitespace-nowrap shrink-0
+              transition-all duration-300 transform hover:scale-110 animate-slide-up font-semibold text-sm
               ${page === currentPage
                 ? "bg-yellow text-foreground font-bold shadow-lg"
                 : "bg-white text-foreground hover:bg-green hover:text-white cursor-pointer"}

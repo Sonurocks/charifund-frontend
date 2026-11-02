@@ -16,12 +16,10 @@ export const isDonationConfirmed = (row: UnifiedDonation): boolean => {
   const statusLower = (row.status || "").toLowerCase().trim();
   const isOffline = (row.paymentMethod || "").toLowerCase().trim() === "offline";
 
-  // Offline donations MUST be verified or paid before being considered confirmed
   if (isOffline) {
     return statusLower === "verified" || statusLower === "paid" || statusLower === "completed";
   }
 
-  // Online donations
   if (
     statusLower === "completed" ||
     statusLower === "success" ||
@@ -49,10 +47,12 @@ export const getDonationColumns = ({
 }: ColumnOptions = {}) => [
   {
     name: "SNo",
-    cell: (_row: UnifiedDonation, index: number) =>
-      (currentPage - 1) * limit + index + 1,
-    minWidth: "65px",
-    width: "65px",
+    cell: (_row: UnifiedDonation, index: number) => (
+      <span className="whitespace-nowrap font-medium text-gray-700">
+        {(currentPage - 1) * limit + index + 1}
+      </span>
+    ),
+    width: "95px",
   },
   {
     name: "Donor Name",
@@ -73,7 +73,7 @@ export const getDonationColumns = ({
       return <span className="text-gray-400">-</span>;
     },
     sortable: true,
-    minWidth: "150px",
+    width: "160px",
     grow: 1.5,
   },
   {
@@ -87,7 +87,7 @@ export const getDonationColumns = ({
       ) : (
         <span className="text-gray-400">-</span>
       ),
-    minWidth: "160px",
+    width: "170px",
     grow: 1.5,
   },
   {
@@ -99,7 +99,7 @@ export const getDonationColumns = ({
       ) : (
         <span className="text-gray-400">-</span>
       ),
-    minWidth: "115px",
+    width: "120px",
     grow: 0.8,
   },
   {
@@ -118,7 +118,7 @@ export const getDonationColumns = ({
         </span>
       );
     },
-    minWidth: "90px",
+    width: "95px",
     grow: 0.6,
   },
   {
@@ -177,7 +177,7 @@ export const getDonationColumns = ({
       );
     },
     sortable: true,
-    minWidth: "160px",
+    width: "170px",
     grow: 1.8,
   },
   {
@@ -194,7 +194,7 @@ export const getDonationColumns = ({
         </span>
       );
     },
-    minWidth: "95px",
+    width: "105px",
     grow: 0.6,
   },
   {
@@ -206,7 +206,7 @@ export const getDonationColumns = ({
       </span>
     ),
     sortable: true,
-    minWidth: "110px",
+    width: "115px",
     grow: 0.7,
   },
   {
@@ -239,7 +239,7 @@ export const getDonationColumns = ({
         </span>
       );
     },
-    minWidth: "115px",
+    width: "125px",
     grow: 0.8,
   },
   {
@@ -261,7 +261,7 @@ export const getDonationColumns = ({
       }
     },
     sortable: true,
-    minWidth: "110px",
+    width: "115px",
     grow: 0.8,
   },
   {
@@ -274,7 +274,6 @@ export const getDonationColumns = ({
 
       return (
         <div className="flex items-center gap-1.5 py-1">
-          {/* View Details Action */}
           {onViewDetails && (
             <button
               type="button"
@@ -287,7 +286,6 @@ export const getDonationColumns = ({
             </button>
           )}
 
-          {/* Verify Offline Action - Only for unverified offline donations */}
           {isPendingOffline && onVerifyOffline && (
             <button
               type="button"
@@ -301,7 +299,6 @@ export const getDonationColumns = ({
             </button>
           )}
 
-          {/* Download Certificate Action - For confirmed / verified donations */}
           {isConfirmed && onDownloadReceipt && (
             <button
               type="button"
@@ -314,7 +311,6 @@ export const getDonationColumns = ({
             </button>
           )}
 
-          {/* Resend Receipt Email Action - STRICTLY for confirmed/verified donations with valid email */}
           {canEmail && onSendReceiptEmail && (
             <button
               type="button"
@@ -329,8 +325,7 @@ export const getDonationColumns = ({
         </div>
       );
     },
-    minWidth: "130px",
-    width: "135px",
+    width: "140px",
     grow: 0,
   },
 ];

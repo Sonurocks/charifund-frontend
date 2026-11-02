@@ -247,7 +247,7 @@ const ContactUs = () => {
                  {t("Branch Office- Gorakhpur")}
               </h4>
               <p className="text-muted-gray text-[15px] leading-7">
-                 {t("393-I, Rajeev Nagar, West Basharatpur, Gorakhpur, Uttar Pradesh – 273004, India")}
+                 {t("Behind Sankat Mochan Hanuman Mandir, Azad Nagar Colony East, Taramandal Road, Rustampur, Gorakhpur, Uttar Pradesh – 273001, India")}
               </p>
             </div>
 

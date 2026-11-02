@@ -264,7 +264,7 @@ export default function OfflineConfirmationModal({
                   <span>{t("BRANCH OFFICE (GORAKHPUR, U.P.)")}</span>
                 </div>
                 <p className="text-xs font-bold text-gray-800 leading-relaxed pl-5">
-                  Behind Sankat Mochan Hanuman Mandir, Azad Nagar Colony East, Taramandal Road, Rustampur, Gorakhpur, Uttar Pradesh-273016, India
+                  Behind Sankat Mochan Hanuman Mandir, Azad Nagar Colony East, Taramandal Road, Rustampur, Gorakhpur, Uttar Pradesh-273001, India
                 </p>
               </div>
 

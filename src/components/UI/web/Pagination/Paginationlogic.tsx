@@ -65,7 +65,7 @@ const WebCustomPagination: React.FC<WebCustomPaginationProps> = ({
           <button
             key={page}
             onClick={() => onPageChange(Number(page))}
-            className={`w-10 h-10 flex items-center justify-center rounded-full cursor-pointer
+            className={`min-w-10 h-10 px-2.5 flex items-center justify-center rounded-full cursor-pointer whitespace-nowrap shrink-0
               ${
                 page === currentPage
                   ? "bg-yellow text-foreground font-semibold"

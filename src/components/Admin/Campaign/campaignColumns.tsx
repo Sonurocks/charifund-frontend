@@ -1,9 +1,8 @@
 "use client";
 
-import React from "react";
 import { Campaign, CampaignColumnCallbacks } from "@/src/types/admin/campaign";
+import { FaEdit, FaEye, FaTrash, FaUsers } from "react-icons/fa";
 import TableRowActions from "./CampaignActions";
-import { FaEye, FaEdit, FaTrash, FaUsers } from "react-icons/fa";
 
 export const getCampaignColumns = ({
   onEdit,
@@ -23,7 +22,27 @@ export const getCampaignColumns = ({
     name: "Raised",
     selector: (row: Campaign) => `₹${row.raisedAmount?.toLocaleString() ?? "-"}`,
   },
-  { name: "Status", selector: (row: Campaign) => row.status },
+  {
+    name: "Status",
+    selector: (row: Campaign) => row.status,
+    cell: (row: Campaign) => {
+      const s = row.status?.toLowerCase().trim();
+      const badgeClass =
+        s === "completed"
+          ? "bg-[#eff6ff] text-[#1e40af] border-[#bfdbfe]"
+          : s === "active"
+          ? "bg-[#ecfdf5] text-[#047857] border-[#a7f3d0]"
+          : "bg-[#fef2f2] text-[#991b1b] border-[#fecaca]";
+      return (
+        <span
+          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold capitalize border ${badgeClass} whitespace-nowrap shadow-2xs`}
+        >
+          {row.status || "-"}
+        </span>
+      );
+    },
+    sortable: true,
+  },
   {
     name: "Actions",
     cell: (row: Campaign) => (

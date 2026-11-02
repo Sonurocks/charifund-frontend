@@ -52,7 +52,7 @@ export const socialIcons = [
 
 export const footerData = {
   brand: {
-    name: "Charifund",
+    name: "YuwaIndia",
     description:
       "Youth Util Welfare Association is a non-profit organization working for child welfare, education, women empowerment, skill development, healthcare, environmental protection, and community development.",
     socials: [
@@ -97,7 +97,7 @@ export const footerData = {
   ],
   contact: {
     address:
-      "Head Office: H.No. RZC-13, Kh. No. 72/23, 78/3, Nihal Vihar, Nangloi, New Delhi-110041, India\n\nBranch Office: Behind Sankat Mochan Hanuman Mandir, Azad Nagar Colony East, Taramandal Road, Rustampur, Gorakhpur, Uttar Pradesh-273016, India",
+      "Head Office: H.No. RZC-13, Kh. No. 72/23, 78/3, Nihal Vihar, Nangloi, New Delhi-110041, India\n\nBranch Office: Behind Sankat Mochan Hanuman Mandir, Azad Nagar Colony East, Taramandal Road, Rustampur, Gorakhpur, Uttar Pradesh-273001, India",
     phone_label: "+91 8565006669",
     phone_number: "+918565006669",
     email: "yuwaaindia@gmail.com",

@@ -67,20 +67,20 @@ export const Dashboard = () => {
     activeCampaign: number;
     totalMembers: number;
     liveEvents: number;
-  }>({
-    totalFunds: 0,
-    generalFunds: 0,
-    campaignFunds: 0,
-    onlineFunds: 0,
-    offlineFunds: 0,
-    totalDonationsCount: 0,
-    generalDonationsCount: 0,
-    campaignDonationsCount: 0,
-    offlineDonationsCount: 0,
-    activeCampaign: 0,
-    totalMembers: 0,
-    liveEvents: 0,
-  });
+  }>(() => ({
+    totalFunds: dashboardData?.totalFunds ?? 0,
+    generalFunds: dashboardData?.generalFunds ?? 0,
+    campaignFunds: dashboardData?.campaignFunds ?? 0,
+    onlineFunds: dashboardData?.onlineFunds ?? 0,
+    offlineFunds: dashboardData?.offlineFunds ?? 0,
+    totalDonationsCount: dashboardData?.totalDonationsCount ?? 0,
+    generalDonationsCount: dashboardData?.generalDonationsCount ?? 0,
+    campaignDonationsCount: dashboardData?.campaignDonationsCount ?? 0,
+    offlineDonationsCount: dashboardData?.offlineDonationsCount ?? 0,
+    activeCampaign: dashboardData?.activeCampaign ?? 0,
+    totalMembers: dashboardData?.totalMembers ?? 0,
+    liveEvents: dashboardData?.liveEvents ?? dashboardData?.activeCampaign ?? 0,
+  }));
 
   // Sync initial query data or refetched query data into live state
   React.useEffect(() => {
@@ -250,29 +250,22 @@ export const Dashboard = () => {
     visible: { opacity: 1, transition: { duration: 0.8 } },
   };
 
-  if (isLoading) {
-    return (
-      <div className="md:p-5 md:pr-0 w-full">
-        <Breadcrumb lable="Dashboard" />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
-          {[1, 2, 3, 4].map((index) => (
-            <div
-              key={index}
-              className="bg-gray-200 animate-pulse rounded-xl p-6 h-24"
-            ></div>
-          ))}
-        </div>
-      </div>
-    );
-  }
+
 
   return (
     <div className="w-full min-w-0">
       <Breadcrumb lable="Dashboard" />
 
       {/* Top 4 Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2  md:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-5">
-        {cards.map((card, index) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-5">
+        {isLoading
+          ? [1, 2, 3, 4].map((index) => (
+              <div
+                key={index}
+                className="bg-gray-200/80 animate-pulse rounded-xl p-4 sm:p-5 h-[88px]"
+              />
+            ))
+          : cards.map((card, index) => (
           <motion.div
             key={index}
             custom={index}
@@ -308,7 +301,14 @@ export const Dashboard = () => {
       {/* Unified Donation Metrics Overview */}
       <div className="mt-6 sm:mt-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
-          {donationCards.map((dCard, index) => (
+          {isLoading
+            ? [1, 2, 3, 4].map((index) => (
+                <div
+                  key={index}
+                  className="bg-gray-100 animate-pulse rounded-xl p-3 sm:p-3.5 lg:p-4 h-[76px] border border-gray-200/70"
+                />
+              ))
+            : donationCards.map((dCard, index) => (
             <motion.div
               key={index}
               custom={index}
@@ -333,6 +333,7 @@ export const Dashboard = () => {
                     value={dCard.numericValue}
                     prefix="₹"
                     decimals={2}
+                    showTrend={false}
                     className="text-gray-900"
                   />
                 </div>
