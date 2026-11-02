@@ -28,7 +28,7 @@
     "js-cookie": "^3.0.5",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.542.0",
-    "next": "^16.4.0",
+    "next": "^16.4.3",
     "next-intl": "^4.14.9",
     "puppeteer-core": "^25.14.0",
     "react": "^19.1.0",
@@ -61,7 +61,7 @@
     "@types/react-dom": "^19",
     "@types/react-slick": "^0.23.13",
     "eslint": "^9",
-    "eslint-config-next": "^16.4.0",
+    "eslint-config-next": "^16.4.3",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
