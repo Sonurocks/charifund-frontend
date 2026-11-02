@@ -215,11 +215,21 @@ export default function ThankYouModal({
         <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">
           {t("Thank You for Your Generous Donation!")}
         </h3>
-        <p className="text-xs sm:text-sm text-gray-600 max-w-lg mb-4">
+        <p className="text-xs sm:text-sm text-gray-600 max-w-lg mb-2">
           {t(
             "Your meaningful contribution makes a profound impact. A preview of your official receipt is displayed below.",
           )}
         </p>
+
+        {normalizedReceipt.donor?.email && (
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-full text-xs font-medium mb-4">
+            <span>📧</span>
+            <span>
+              {t("A copy of this 80G receipt has been emailed to")}{" "}
+              <strong className="underline">{normalizedReceipt.donor.email}</strong>
+            </span>
+          </div>
+        )}
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 w-full max-w-md mb-4">
           <button

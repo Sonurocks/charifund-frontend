@@ -3,9 +3,9 @@
 import React, { useMemo } from "react";
 import dynamic from "next/dynamic";
 import { UnifiedDonation } from "@/src/types/admin/donation";
-import { getDonationColumns, isDonationConfirmed } from "./donationColumns";
+import { getDonationColumns, isDonationConfirmed, hasValidEmail } from "./donationColumns";
 import { useTranslation } from "react-i18next";
-import { FaExclamationTriangle, FaFolderOpen, FaRedo, FaEye, FaCheck, FaFileDownload } from "react-icons/fa";
+import { FaExclamationTriangle, FaFolderOpen, FaRedo, FaEye, FaCheck, FaFileDownload, FaEnvelope } from "react-icons/fa";
 
 const DataTableWrapper = dynamic(
   () => import("@/src/components/UI/admin/DataTableWrapper"),
@@ -32,7 +32,9 @@ interface DonationsTableProps {
   onViewDetails?: (donation: UnifiedDonation) => void;
   onVerifyOffline?: (donation: UnifiedDonation) => void;
   onDownloadReceipt?: (donation: UnifiedDonation) => void;
+  onSendReceiptEmail?: (donation: UnifiedDonation) => void;
   currentLang?: string;
+  newRowIds?: Set<string>;
 }
 
 const TableSkeleton = () => {
@@ -88,9 +90,25 @@ export const DonationsTable: React.FC<DonationsTableProps> = ({
   onViewDetails,
   onVerifyOffline,
   onDownloadReceipt,
+  onSendReceiptEmail,
   currentLang = "en",
+  newRowIds,
 }) => {
   const { t } = useTranslation();
+
+  const conditionalRowStyles = useMemo(
+    () => [
+      {
+        when: (row: UnifiedDonation) => Boolean(newRowIds && newRowIds.has(row.id)),
+        style: {
+          backgroundColor: "rgba(16, 185, 129, 0.12)",
+          borderLeft: "4px solid #10b981",
+          transition: "all 0.8s ease",
+        },
+      },
+    ],
+    [newRowIds]
+  );
 
   const columns = useMemo(() => {
     return getDonationColumns({
@@ -100,8 +118,9 @@ export const DonationsTable: React.FC<DonationsTableProps> = ({
       onViewDetails,
       onVerifyOffline,
       onDownloadReceipt,
+      onSendReceiptEmail,
     });
-  }, [currentLang, currentPage, limit, onViewDetails, onVerifyOffline, onDownloadReceipt]);
+  }, [currentLang, currentPage, limit, onViewDetails, onVerifyOffline, onDownloadReceipt, onSendReceiptEmail]);
 
   const pageSizes = [10, 25, 50];
 
@@ -177,11 +196,16 @@ export const DonationsTable: React.FC<DonationsTableProps> = ({
           const isConfirmed = isDonationConfirmed(donation);
           const isOffline = donation.paymentMethod?.toLowerCase() === "offline";
           const isPendingOffline = isOffline && !isConfirmed;
+          const isNew = Boolean(newRowIds && newRowIds.has(donation.id));
 
           return (
             <div
               key={donation.id || index}
-              className="bg-white border border-gray-200 rounded-xl p-4 shadow-xs space-y-3"
+              className={`bg-white border rounded-xl p-4 shadow-xs space-y-3 transition-all duration-700 ${
+                isNew
+                  ? "border-l-4 border-emerald-500 bg-emerald-50/60 shadow-md ring-1 ring-emerald-400"
+                  : "border-gray-200"
+              }`}
             >
               <div className="flex items-start justify-between gap-2 border-b border-gray-100 pb-2.5">
                 <div>
@@ -279,6 +303,18 @@ export const DonationsTable: React.FC<DonationsTableProps> = ({
                       <span>Certificate</span>
                     </button>
                   )}
+
+                  {isConfirmed && !isPendingOffline && hasValidEmail(donation.email) && onSendReceiptEmail && (
+                    <button
+                      type="button"
+                      onClick={() => onSendReceiptEmail(donation)}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold shadow-xs cursor-pointer"
+                      title={`Send 80G receipt email to ${donation.email}`}
+                    >
+                      <FaEnvelope className="w-2.5 h-2.5 text-white" />
+                      <span>Email</span>
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -296,7 +332,12 @@ export const DonationsTable: React.FC<DonationsTableProps> = ({
             </div>
           </div>
         )}
-        <DataTableWrapper columns={columns as any} data={donations} loading={false} />
+        <DataTableWrapper
+          columns={columns as any}
+          data={donations}
+          loading={false}
+          conditionalRowStyles={conditionalRowStyles}
+        />
       </div>
 
       {/* Pagination & Controls Bar */}

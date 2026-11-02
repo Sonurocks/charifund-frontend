@@ -28,6 +28,7 @@ const DataTableWrapper = <T,>({
   columns,
   data,
   loading = false,
+  conditionalRowStyles,
 }: AdminDataTableWrapperProps<T>) => {
   // Defensive check & stripping of properties that React 19 forwards to DOM elements
   const safeColumns = Array.isArray(columns)
@@ -44,6 +45,7 @@ const DataTableWrapper = <T,>({
         <DataTable
           columns={safeColumns as any}
           data={safeData}
+          conditionalRowStyles={conditionalRowStyles}
           progressPending={loading}
           progressComponent={<TableSpinner />}
           highlightOnHover
