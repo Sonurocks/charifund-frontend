@@ -31,47 +31,47 @@ export const socialIcons = [
   {
     icon: "fa6-brands:facebook-f",
     label: "Facebook",
-    link: "https://www.facebook.com/yuwaaindia",
+    link: "https://facebook.com",
   },
   {
     icon: "fa6-brands:instagram",
     label: "Instagram",
-    link: "https://www.instagram.com/yuwaaindia",
+    link: "https://instagram.com",
   },
   {
     icon: "fa6-brands:whatsapp",
     label: "WhatsApp",
-    link: "https://wa.me/918565006669",
+    link: "https://whatsapp.com",
   },
   {
     icon: "fa6-brands:youtube",
     label: "YouTube",
-    link: "https://www.youtube.com/@yuwaindiaofficial",
+    link: "https://youtube.com",
   },
 ];
 
 export const footerData = {
   brand: {
-    name: "YuwaIndia",
+    name: "GiveSphere",
     description:
-      "Youth Util Welfare Association is a non-profit organization working for child welfare, education, women empowerment, skill development, healthcare, environmental protection, and community development.",
+      "GiveSphere is a modern non-profit and crowdfunding initiative dedicated to empowering communities, education, women empowerment, healthcare, environmental protection, and sustainable social impact.",
     socials: [
       {
         icon: "fa6-brands:facebook-f",
         label: "Facebook",
-        link: "https://www.facebook.com/yuwaaindia",
+        link: "https://facebook.com",
       },
       {
         icon: "fa6-brands:instagram",
         label: "Instagram",
-        link: "https://www.instagram.com/yuwaaindia",
+        link: "https://instagram.com",
       },
       {
         icon: "fa6-brands:whatsapp",
         label: "WhatsApp",
-        link: "https://wa.me/918565006669",
+        link: "https://whatsapp.com",
       },
-      { icon: "fa6-brands:linkedin-in", label: "LinkedIn", link: "#" },
+      { icon: "fa6-brands:linkedin-in", label: "LinkedIn", link: "https://linkedin.com" },
     ],
   },
   quickLinks: [
@@ -97,11 +97,11 @@ export const footerData = {
   ],
   contact: {
     address:
-      "Head Office: H.No. RZC-13, Kh. No. 72/23, 78/3, Nihal Vihar, Nangloi, New Delhi-110041, India\n\nBranch Office: Behind Sankat Mochan Hanuman Mandir, Azad Nagar Colony East, Taramandal Road, Rustampur, Gorakhpur, Uttar Pradesh-273001, India",
-    phone_label: "+91 8565006669",
-    phone_number: "+918565006669",
-    email: "yuwaaindia@gmail.com",
-    website: "yuwaindia.org",
+      "Head Office: 100 Innovation Parkway, Suite 500, New Delhi-110041, India\n\nRegional Office: 45 Technology Park, Sector 62, Noida, Uttar Pradesh-201301, India",
+    phone_label: "+91 98765 43210",
+    phone_number: "+919876543210",
+    email: "contact@givesphere.org",
+    website: "givesphere.org",
   },
   bottomLinks: [
     { label: "Terms & Conditions", href: "/term-and-conditions" },
@@ -125,12 +125,12 @@ export const PartnersCompaniesData = [
 
 export const faqData: FAQItem[] = [
   {
-    question: "What is YUWA INDIA and what does it do?",
+    question: "What is GiveSphere and what does it do?",
     answer:
-      "YUWA INDIA is a social welfare initiative working for education, child welfare, women empowerment, livelihood development, health, nutrition, environmental protection and community development.",
+      "GiveSphere is a social welfare initiative working for education, child welfare, women empowerment, livelihood development, health, nutrition, environmental protection and community development.",
   },
   {
-    question: "How can I support YUWA INDIA?",
+    question: "How can I support GiveSphere?",
     answer:
       "You can support our work by making a donation, volunteering, participating in our campaigns, or contributing your time, skills and resources.",
   },
@@ -160,7 +160,7 @@ export const faqData: FAQItem[] = [
       "After making a donation, an official donation receipt can be provided as per the applicable requirements. Please provide your correct name, contact details and email address while donating.",
   },
   {
-    question: "How can I contact YUWA INDIA?",
+    question: "How can I contact GiveSphere?",
     answer:
       "You can contact us through the details provided on our Contact Us page. Our team will be happy to assist you.",
   },
@@ -511,27 +511,27 @@ export const SocialMedia = [
   {
     label: "Facebook",
     icon: FaFacebookF,
-    href: "https://www.facebook.com/yuwaaindia",
+    href: "https://facebook.com",
     getShareUrl: (url: string, title?: string) =>
       `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(title || "")}`,
   },
   {
     label: "WhatsApp",
     icon: FaWhatsapp,
-    href: "https://wa.me/918565006669",
+    href: "https://whatsapp.com",
     getShareUrl: (url: string, title?: string) =>
       `https://api.whatsapp.com/send?text=${encodeURIComponent(title || "")}%20${encodeURIComponent(url)}`,
   },
   {
     label: "YouTube",
     icon: FaYoutube,
-    href: "https://www.youtube.com/@yuwaaindiaofficial",
+    href: "https://youtube.com",
     getShareUrl: (url: string, title?: string) => ``, // YouTube does not have a direct share URL
   },
   {
     label: "Instagram",
     icon: FaInstagram,
-    href: "https://www.instagram.com/yuwaaindia",
+    href: "https://instagram.com",
   },
 ];
 
@@ -539,22 +539,22 @@ export const contactInfo: InfoItem[] = [
   {
     icon: FaMapMarkerAlt,
     title: "Location",
-    lines: ["55 main street, 2nd block,", "Melbourne, Australia"],
+    lines: ["100 Innovation Parkway, Suite 500,", "New Delhi, India"],
     links: [
-      "https://www.google.com/maps/search/?api=1&query=55+main+street,+Melbourne,+Australia",
+      "https://maps.google.com",
     ],
   },
   {
     icon: FaPhoneAlt,
     title: "Phone",
-    lines: ["+91 85650 06669"],
-    links: ["tel:+918565006669"],
+    lines: ["+91 98765 43210"],
+    links: ["tel:+919876543210"],
   },
   {
     icon: FaEnvelope,
     title: "Email",
-    lines: ["yuwaaindia@gmail.com"],
-    links: ["mailto:yuwaaindia@gmail.com"],
+    lines: ["contact@givesphere.org"],
+    links: ["mailto:contact@givesphere.org"],
   },
   {
     icon: FaShareAlt,
@@ -609,7 +609,7 @@ export const termsSections = [
     id: 8,
     title: "Contact Us",
     content:
-      "If you have any questions about these Terms and Conditions, please contact us at yuwaaindia@gmail.com. We are here to help and provide clarity where needed.",
+      "If you have any questions about these Terms and Conditions, please contact us at contact@givesphere.org. We are here to help and provide clarity where needed.",
   },
 ];
 
@@ -674,6 +674,6 @@ export const privacyPolicySections = [
     id: 8,
     title: "8. Contact Us",
     content:
-      "If you have any questions, concerns, or requests related to this Privacy Policy, please contact us at yuwaaindia@gmail.com. We are here to ensure your experience with us remains safe, transparent, and respectful of your privacy.",
+      "If you have any questions, concerns, or requests related to this Privacy Policy, please contact us at privacy@givesphere.org. We are here to ensure your experience with us remains safe, transparent, and respectful of your privacy.",
   },
 ];

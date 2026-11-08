@@ -1,6 +1,7 @@
 {
-  "name": "charifund-frontend",
-  "version": "0.1.0",
+  "name": "givesphere-platform",
+  "version": "1.0.0",
+  "description": "Modern Crowdfunding, NGO Impact & Donor Management Platform",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",

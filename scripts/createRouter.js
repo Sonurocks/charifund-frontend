@@ -6,7 +6,7 @@ const routes = [
 ];
 
 routes.forEach(route => {
-  const dir = path.join('g:/charifund/charifund-frontend/src/app/admin/', route);
+  const dir = path.join(__dirname, '../src/app/admin/', route);
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
   const componentName = route.charAt(0).toUpperCase() + route.slice(1);

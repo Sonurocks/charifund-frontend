@@ -1,4 +1,4 @@
-const API_URL = "https://tunnel.yuwaindia.org/api/v1/admin/campaign/add-campaign";
+const API_URL = process.env.API_URL || "http://localhost:5000/api/v1/admin/campaign/add-campaign";
 
 const token = process.argv[2];
 

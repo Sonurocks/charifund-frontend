@@ -2,7 +2,7 @@
  * Dynamic Image Management & Optimization Standards
  * ----------------------------------------------------
  * Standard definitions, file-size limits, dimension constraints,
- * and Cloudinary dynamic transformation pipeline for YUWA India.
+ * and Cloudinary dynamic transformation pipeline for GiveSphere.
  */
 
 export interface ImageStandard {

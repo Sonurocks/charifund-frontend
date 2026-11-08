@@ -1,7 +1,7 @@
 import { logo } from "@/public/assets";
 import { MetadataData } from "../types";
 
-export function generateOpenGraphMetadata(data: MetadataData, siteName = "Charifund") {
+export function generateOpenGraphMetadata(data: MetadataData, siteName = "GiveSphere") {
   const title = data.title.replace(/["',]$/g, '');
   const fullTitle = `${siteName} | ${title}`; 
   const description = data.description || data.summary || '';

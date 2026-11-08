@@ -31,19 +31,19 @@ function escapeHtml(str: any): string {
 
 export function generateCertificateHtml(receipt: DonationReceipt): string {
   const org: Partial<ReceiptOrgInfo> = receipt.organization || {};
-  const orgName = escapeHtml(org.name || "YOUTH UTIL WELFARE ASSOCIATION");
+  const orgName = escapeHtml(org.name || "GIVESPHERE FOUNDATION");
   const headOffice = escapeHtml(
     org.address ||
-      "H.No. RZC-13, KH. No. 72/23, 78/3, Nihal Vihar, Nangloi, New Delhi-110041"
+      "100 Innovation Parkway, Suite 500, New Delhi-110041, India"
   );
   const branchOffice = escapeHtml(
     org.branchAddress ||
-      "Behind Sankat Mochan Hanuman Mandir, Azad Nagar Colony East, Taramandal Road, Rustampur, Gorakhpur, Uttar Pradesh-273001"
+      "45 Technology Park, Sector 62, Noida, Uttar Pradesh-201301, India"
   );
-  const orgEmail = escapeHtml(org.email || "yuwaaindia@gmail.com");
-  const orgPhone = escapeHtml(org.phone || "9450886855, 7394886855");
-  const orgWeb = escapeHtml(org.website || "yuwaindia.org");
-  const regNumber = escapeHtml(org.regNumber || "SOCIETY/WEST/ 2016/8902080");
+  const orgEmail = escapeHtml(org.email || "support@givesphere.org");
+  const orgPhone = escapeHtml(org.phone || "+91 98765 43210");
+  const orgWeb = escapeHtml(org.website || "givesphere.org");
+  const regNumber = escapeHtml(org.regNumber || "SOCIETY/REG/2026/8900001");
 
   let formattedDate = receipt.paymentDate || new Date().toISOString();
   try {

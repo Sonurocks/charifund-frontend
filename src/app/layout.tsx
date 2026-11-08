@@ -15,8 +15,8 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "charifund",
-  description: "development environment for charifund",
+  title: "GiveSphere | Empowering Communities & Transparent Giving",
+  description: "A modern, full-stack crowdfunding and NGO fundraising management platform featuring real-time donations, 80G certificate generation, donor management, and campaign analytics.",
   icons: {
     icon: [
       { url: "/favicon-16x16.ico", sizes: "16x16", type: "image/x-icon" },

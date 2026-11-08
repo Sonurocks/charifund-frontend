@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 
 export const metadata = {
-  title: "charifund | Admin"
+  title: "GiveSphere | Admin"
 };
 
 export default function AdminPage() {

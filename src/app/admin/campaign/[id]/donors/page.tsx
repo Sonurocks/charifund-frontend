@@ -2,7 +2,7 @@ import Breadcrumb from "@/src/components/Admin/Breadcrumb";
 import DonorTable from "@/src/components/Admin/Campaign/Donors/DonorTable";
 
 export const metadata = {
-  title: "charifund | Campaign Donors",
+  title: "GiveSphere | Campaign Donors",
 };
 
 export default async function DonorsPage({ params }: { params: Promise<{ id: string }> }) {

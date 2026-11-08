@@ -16,8 +16,8 @@ const nunito = Nunito({
 import AdminLayoutClient from "./AdminLayoutClient";
 
 export const metadata: Metadata = {
-  title: "charifund-frontend | Admin",
-  description: "development environment for charifund admin panel",
+  title: "GiveSphere | Admin Dashboard",
+  description: "Comprehensive administrative control center for GiveSphere campaigns, donors, analytics, and content.",
 };
 
 export default function AdminRootLayout({
